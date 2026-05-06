@@ -92,8 +92,8 @@ Validation cases:
     parser.add_argument(
         "--max-iter",
         type=int,
-        default=200,
-        help="Maximum solver iterations (default: 200)",
+        default=5000,
+        help="Maximum solver iterations (default: 5000)",
     )
     parser.add_argument(
         "-v", "--verbose",

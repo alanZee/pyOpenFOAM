@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<![CDATA][<div align="center">
 
 <img src="logo.svg" alt="pyOpenFOAM Logo" width="200"/>
 

@@ -156,41 +156,42 @@ class CouetteFlowCase(ValidationCaseBase):
         # d²u/dy² = 0  (no pressure gradient, fully developed)
         # with BCs: u(0) = 0, u(H) = U_top
         #
-        # We solve this iteratively using a simple relaxation scheme
-        # that mimics what SIMPLE would do.
+        # We solve this iteratively using a vectorized Jacobi relaxation
+        # with ghost cells for wall BCs.
 
         U = self._U_init.clone()
         n_cells = nx * ny
-        nu = self.nu
 
         # Under-relaxation factor
         alpha = 0.5
 
-        # Iterative solve (Jacobi-style relaxation)
+        # Use padded array with ghost cells for wall BCs
+        # For cell-centered scheme with walls at y=0 and y=H:
+        # Bottom wall (u_wall=0): u_ghost = -u_interior (antisymmetric)
+        # Top wall (u_wall=U_top): u_ghost = 2*U_top - u_interior
+        u_padded = torch.zeros(ny + 2, nx, dtype=dtype)
+        # Initialize ghost cells with antisymmetric BC
+        u_padded[1:-1, :] = U[:, 0].reshape(ny, nx).clone()
+        u_padded[0, :] = -u_padded[1, :]    # bottom wall
+        u_padded[-1, :] = 2.0 * self.U_top - u_padded[-2, :]  # top wall
+
+        # Iterative solve (vectorized Jacobi relaxation)
         for iteration in range(self.max_iterations):
-            U_old = U.clone()
+            u_old = u_padded.clone()
 
-            # Interior cells: apply d²u/dy² = 0
-            # u(i,j) = 0.5 * (u(i,j-1) + u(i,j+1))
-            for j in range(1, ny - 1):
-                for i in range(nx):
-                    idx = j * nx + i
-                    idx_below = (j - 1) * nx + i
-                    idx_above = (j + 1) * nx + i
-                    U_new = 0.5 * (U[idx_below, 0] + U[idx_above, 0])
-                    U[idx, 0] = alpha * U_new + (1.0 - alpha) * U[idx, 0]
+            # All real cells: apply d²u/dy² = 0
+            # u_new[j] = 0.5 * (u[j-1] + u[j+1])
+            u_new = 0.5 * (u_padded[:-2, :] + u_padded[2:, :])
+            u_padded[1:-1, :] = alpha * u_new + (1.0 - alpha) * u_padded[1:-1, :]
 
-            # Bottom wall (j=0): u = 0 (no-slip)
-            for i in range(nx):
-                U[i, 0] = 0.0
-
-            # Top wall (j=ny-1): u = U_top (moving wall)
-            for i in range(nx):
-                idx = (ny - 1) * nx + i
-                U[idx, 0] = self.U_top
+            # Wall BCs: antisymmetric ghost cells
+            # Bottom wall (u_wall=0): u_ghost = -u_interior
+            u_padded[0, :] = -u_padded[1, :]
+            # Top wall (u_wall=U_top): u_ghost = 2*U_top - u_interior
+            u_padded[-1, :] = 2.0 * self.U_top - u_padded[-2, :]
 
             # Check convergence
-            diff = (U - U_old).abs().max().item()
+            diff = (u_padded - u_old).abs().max().item()
             if diff < self.tolerance:
                 logger.info("Couette flow converged in %d iterations (max_diff=%.6e)",
                            iteration + 1, diff)
@@ -208,7 +209,11 @@ class CouetteFlowCase(ValidationCaseBase):
                 "final_residual": diff,
             }
 
-        # Velocity components v, w remain zero
+        # Extract real cells (skip ghost cells)
+        u_grid = u_padded[1:-1, :]
+
+        # Convert back to flat array
+        U[:, 0] = u_grid.reshape(-1)
         U[:, 1] = 0.0
         U[:, 2] = 0.0
 

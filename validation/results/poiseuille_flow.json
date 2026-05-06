@@ -1,36 +1,36 @@
 {
   "case_name": "Poiseuille Flow",
-  "case_description": "Plane Poiseuille flow: Re=10, u_max=10.0000, H=1.0, mesh=16x16",
+  "case_description": "Plane Poiseuille flow: Re=10, u_max=10.0000, H=1.0, mesh=32x32",
   "overall_passed": true,
-  "run_time": 1.686704199993983,
+  "run_time": 0.06853780004894361,
   "parameters": {
-    "n_cells": 16,
+    "n_cells": 32,
     "Re": 10.0
   },
   "solver_info": {
-    "iterations": 200,
-    "converged": false,
-    "final_residual": 0.0025539577842419448
+    "iterations": 1411,
+    "converged": true,
+    "final_residual": 9.99414249136521e-07
   },
   "field_results": {
     "U": {
       "passed": true,
-      "l2_tol": 0.2,
-      "max_tol": 2.0,
+      "l2_tol": 0.05,
+      "max_tol": 0.5,
       "metrics": {
-        "l2_norm": 16.32411003112793,
-        "l2_relative_error": 0.13970352709293365,
-        "max_absolute_error": 1.2109375,
-        "max_relative_error": 1.0,
-        "rms_error": 0.589045524597168
+        "l2_norm": 0.30407819151878357,
+        "l2_relative_error": 0.0013011750997975469,
+        "max_absolute_error": 0.009745299816131592,
+        "max_relative_error": 0.01583997905254364,
+        "rms_error": 0.00548623688519001
       },
       "component_metrics": {
         "x": {
-          "l2_norm": 16.32411003112793,
-          "l2_relative_error": 0.13970352709293365,
-          "max_absolute_error": 1.2109375,
-          "max_relative_error": 1.0,
-          "rms_error": 1.020256757736206
+          "l2_norm": 0.30407819151878357,
+          "l2_relative_error": 0.0013011750997975469,
+          "max_absolute_error": 0.009745299816131592,
+          "max_relative_error": 0.01583997905254364,
+          "rms_error": 0.009502440690994263
         },
         "y": {
           "l2_norm": 0.0,
@@ -50,8 +50,8 @@
     },
     "p": {
       "passed": true,
-      "l2_tol": 0.2,
-      "max_tol": 2.0,
+      "l2_tol": 0.05,
+      "max_tol": 0.5,
       "metrics": {
         "l2_norm": 0.0,
         "l2_relative_error": 0.0,

@@ -1,16 +1,16 @@
 {
   "case_name": "Couette Flow",
-  "case_description": "Plane Couette flow: Re=10, U_top=1.0, H=1.0, mesh=16x16",
+  "case_description": "Plane Couette flow: Re=10, U_top=1.0, H=1.0, mesh=32x32",
   "overall_passed": true,
-  "run_time": 1.126880900003016,
+  "run_time": 0.03563310002209619,
   "parameters": {
-    "n_cells": 16,
+    "n_cells": 32,
     "Re": 10.0
   },
   "solver_info": {
-    "iterations": 200,
-    "converged": false,
-    "final_residual": 2.41987167873825e-05
+    "iterations": 833,
+    "converged": true,
+    "final_residual": 9.904126549997727e-07
   },
   "field_results": {
     "U": {
@@ -18,19 +18,19 @@
       "l2_tol": 0.1,
       "max_tol": 0.1,
       "metrics": {
-        "l2_norm": 0.30808714032173157,
-        "l2_relative_error": 0.03336770832538605,
-        "max_absolute_error": 0.03125,
-        "max_relative_error": 1.0,
-        "rms_error": 0.011117137968540192
+        "l2_norm": 0.0023214619141072035,
+        "l2_relative_error": 0.00012566814257297665,
+        "max_absolute_error": 0.00010210275650024414,
+        "max_relative_error": 0.000643610954284668,
+        "rms_error": 4.1884271922754124e-05
       },
       "component_metrics": {
         "x": {
-          "l2_norm": 0.30808714032173157,
-          "l2_relative_error": 0.03336770832538605,
-          "max_absolute_error": 0.03125,
-          "max_relative_error": 1.0,
-          "rms_error": 0.019255448132753372
+          "l2_norm": 0.0023214619141072035,
+          "l2_relative_error": 0.00012566814257297665,
+          "max_absolute_error": 0.00010210275650024414,
+          "max_relative_error": 0.000643610954284668,
+          "rms_error": 7.254568481585011e-05
         },
         "y": {
           "l2_norm": 0.0,

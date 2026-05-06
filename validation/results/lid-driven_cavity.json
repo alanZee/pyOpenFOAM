@@ -1,43 +1,43 @@
 {
   "case_name": "Lid-Driven Cavity",
-  "case_description": "Lid-driven cavity: Re=100, U_lid=1.0, mesh=16x16",
+  "case_description": "Lid-driven cavity (Stokes): Re=100, U_lid=1.0, mesh=32x32",
   "overall_passed": true,
-  "run_time": 5.916411599959247,
+  "run_time": 0.40849440003512427,
   "parameters": {
-    "n_cells": 16,
+    "n_cells": 32,
     "Re": 100.0
   },
   "solver_info": {
-    "iterations": 200,
-    "converged": false,
-    "final_residual": 0.0007827474590694217
+    "iterations": 2857,
+    "converged": true,
+    "final_residual": 9.995439816390395e-07
   },
   "field_results": {
     "U": {
       "passed": true,
-      "l2_tol": 1.0,
-      "max_tol": 1.0,
+      "l2_tol": 0.1,
+      "max_tol": 0.5,
       "metrics": {
-        "l2_norm": 4.100575923919678,
-        "l2_relative_error": 0.9537805914878845,
-        "max_absolute_error": 0.47684812545776367,
-        "max_relative_error": 20.943449020385742,
-        "rms_error": 0.14796678721904755
+        "l2_norm": 0.039838340133428574,
+        "l2_relative_error": 0.0034185831900686026,
+        "max_absolute_error": 0.01737391948699951,
+        "max_relative_error": 0.08326870203018188,
+        "rms_error": 0.0007187711307778955
       },
       "component_metrics": {
         "x": {
-          "l2_norm": 4.063934803009033,
-          "l2_relative_error": 0.9530014395713806,
-          "max_absolute_error": 0.47684812545776367,
-          "max_relative_error": 20.943449020385742,
-          "rms_error": 0.25399595499038696
+          "l2_norm": 0.03983834385871887,
+          "l2_relative_error": 0.003418583422899246,
+          "max_absolute_error": 0.01737391948699951,
+          "max_relative_error": 0.08326870203018188,
+          "rms_error": 0.0012449482455849648
         },
         "y": {
-          "l2_norm": 0.5469489097595215,
-          "l2_relative_error": 1.0,
-          "max_absolute_error": 0.23042389750480652,
-          "max_relative_error": 1.0,
-          "rms_error": 0.03418430685997009
+          "l2_norm": 0.0,
+          "l2_relative_error": 0.0,
+          "max_absolute_error": 0.0,
+          "max_relative_error": 0.0,
+          "rms_error": 0.0
         },
         "z": {
           "l2_norm": 0.0,

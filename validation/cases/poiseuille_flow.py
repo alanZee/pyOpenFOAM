@@ -70,7 +70,7 @@ class PoiseuilleFlowCase(ValidationCaseBase):
         H: float = 1.0,
         L: float = 1.0,
         dp_dx: float | None = None,
-        max_iterations: int = 1000,
+        max_iterations: int = 5000,
         tolerance: float = 1e-6,
     ) -> None:
         self.n_cells = n_cells
@@ -172,6 +172,8 @@ class PoiseuilleFlowCase(ValidationCaseBase):
 
         Solves the steady-state momentum equation with pressure gradient:
         nu * d²u/dy² = (1/rho) * dp/dx
+
+        Uses vectorized Jacobi iteration with ghost cells for wall BCs.
         """
         nx, ny = self._nx, self._ny
         dx, dy = self._dx, self._dy
@@ -184,45 +186,45 @@ class PoiseuilleFlowCase(ValidationCaseBase):
         # Under-relaxation (higher alpha for faster convergence)
         alpha = 0.5
 
-        # Iterative solve
+        # Reshape u-velocity to 2D grid for vectorized operations
+        # u_grid[j, i] = u-velocity at cell (i, j)
+        u_grid = U[:, 0].reshape(ny, nx).clone()
+
+        # Use padded array with ghost cells for wall BCs
+        # For cell-centered scheme with no-slip walls at y=0 and y=H:
+        # Wall value = 0 = 0.5*(u_ghost + u_interior)
+        # => u_ghost = -u_interior (antisymmetric BC)
+        u_padded = torch.zeros(ny + 2, nx, dtype=dtype)
+        u_padded[1:-1, :] = u_grid  # copy initial values
+        # Initialize ghost cells with antisymmetric BC
+        u_padded[0, :] = -u_padded[1, :]    # bottom wall
+        u_padded[-1, :] = -u_padded[-2, :]  # top wall
+
         # The steady-state momentum equation for Poiseuille flow:
         #   nu * d²u/dy² = (1/rho) * dp/dx
         # Discretised Jacobi update:
-        #   u(i,j) = 0.5*(u(i,j-1) + u(i,j+1)) + (dy²/(2*nu)) * dp/dx
+        #   u(j) = 0.5*(u(j-1) + u(j+1)) - (dy²/(2*nu)) * dp/dx
         #
-        # Since dp/dx < 0 for flow in +x direction, the source term
-        # (dy²/(2*nu)) * dp/dx is negative, which means:
-        #   u_new = 0.5*(u_below + u_above) + source_term
-        # where source_term < 0, so u_new < average of neighbours.
-        #
-        # Correct discretisation: nu * (u_below - 2*u + u_above)/dy² = dp/dx
-        # => u = 0.5*(u_below + u_above) - dy²/(2*nu) * dp/dx
-        # Since dp/dx < 0, -dp/dx > 0, so we ADD the magnitude.
+        # Since dp/dx < 0 for flow in +x direction:
+        #   source_term = -(dy²/(2*nu)) * dp/dx > 0
         dy2_over_2nu = (dy * dy) / (2.0 * nu)
         source_term = -dy2_over_2nu * self.dp_dx  # positive since dp/dx < 0
 
         for iteration in range(self.max_iterations):
-            U_old = U.clone()
+            u_old = u_padded.clone()
 
-            for j in range(1, ny - 1):
-                for i in range(nx):
-                    idx = j * nx + i
-                    idx_below = (j - 1) * nx + i
-                    idx_above = (j + 1) * nx + i
-                    U_new = 0.5 * (U[idx_below, 0] + U[idx_above, 0]) + source_term
-                    U[idx, 0] = alpha * U_new + (1.0 - alpha) * U[idx, 0]
+            # All real cells (j=0 to j=ny-1 in u_grid, j=1 to j=ny in u_padded)
+            # u_new[j] = 0.5*(u[j-1] + u[j+1]) + source_term
+            u_new = 0.5 * (u_padded[:-2, :] + u_padded[2:, :]) + source_term
+            u_padded[1:-1, :] = alpha * u_new + (1.0 - alpha) * u_padded[1:-1, :]
 
-            # Bottom wall (j=0): u = 0 (no-slip)
-            for i in range(nx):
-                U[i, 0] = 0.0
-
-            # Top wall (j=ny-1): u = 0 (no-slip)
-            for i in range(nx):
-                idx = (ny - 1) * nx + i
-                U[idx, 0] = 0.0
+            # Wall BCs: antisymmetric ghost cells for no-slip
+            # u_wall = 0 = 0.5*(u_ghost + u_interior) => u_ghost = -u_interior
+            u_padded[0, :] = -u_padded[1, :]    # bottom wall
+            u_padded[-1, :] = -u_padded[-2, :]  # top wall
 
             # Check convergence
-            diff = (U - U_old).abs().max().item()
+            diff = (u_padded - u_old).abs().max().item()
             if diff < self.tolerance:
                 logger.info("Poiseuille flow converged in %d iterations (max_diff=%.6e)",
                            iteration + 1, diff)
@@ -240,7 +242,11 @@ class PoiseuilleFlowCase(ValidationCaseBase):
                 "final_residual": diff,
             }
 
-        # Velocity components v, w remain zero
+        # Extract real cells (skip ghost cells)
+        u_grid = u_padded[1:-1, :]
+
+        # Convert back to flat array
+        U[:, 0] = u_grid.reshape(-1)
         U[:, 1] = 0.0
         U[:, 2] = 0.0
 
@@ -296,8 +302,8 @@ class PoiseuilleFlowCase(ValidationCaseBase):
         }
 
     def get_tolerances(self) -> dict[str, float]:
-        """Poiseuille flow tolerances (relaxed for simplified solver)."""
+        """Poiseuille flow tolerances (tightened with improved solver)."""
         return {
-            "l2_tol": 0.2,    # 20% L2 relative error
-            "max_tol": 2.0,   # 2.0 max absolute error
+            "l2_tol": 0.05,   # 5% L2 relative error
+            "max_tol": 0.5,   # 0.5 max absolute error
         }
