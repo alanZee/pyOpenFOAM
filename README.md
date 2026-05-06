@@ -6,7 +6,7 @@
 
 **Pure Python CFD Solver with PyTorch GPU Acceleration**
 
-*The OpenFOAM rewrite for the AI/ML era*
+*An open-source Python reimplementation of OpenFOAM*
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -19,39 +19,51 @@
 
 ---
 
-## Why pyOpenFOAM?
+## Overview
 
-**OpenFOAM is powerful but inaccessible.** Its 1.5M lines of C++ create a steep learning curve. pyOpenFOAM brings CFD to the Python ecosystem while maintaining full OpenFOAM compatibility.
+**pyOpenFOAM** is an open-source Python reimplementation of [OpenFOAM](https://www.openfoam.com/) (Foundation v13), the widely-used C++ computational fluid dynamics (CFD) toolbox. Our goal is to bring OpenFOAM's capabilities to the Python ecosystem while leveraging PyTorch for GPU acceleration.
+
+### Motivation
+
+OpenFOAM is a powerful and mature CFD solver with a large user community. However, its C++ codebase presents challenges for:
+- Integration with modern machine learning workflows
+- Rapid prototyping and experimentation
+- GPU acceleration
+
+pyOpenFOAM aims to address these gaps by providing a Python-native implementation that maintains compatibility with OpenFOAM's file formats and case structure.
 
 ### Comparison with Existing Tools
 
-| Feature | OpenFOAM (C++) | pyOpenFOAM (Python) | JAX-Fluids (JAX) |
-|---------|----------------|---------------------|------------------|
+We acknowledge that there are excellent CFD tools available. Here is an honest comparison:
+
+| Feature | OpenFOAM | pyOpenFOAM | JAX-Fluids |
+|---------|----------|------------|------------|
 | **Language** | C++ | Python | Python |
-| **GPU Support** | ❌ CPU only | ✅ PyTorch CUDA/MPS | ✅ JAX/TPU/GPU |
-| **Differentiable** | ❌ Manual adjoint | ⚠️ Partial (see note) | ✅ End-to-end |
-| **OpenFOAM Compatible** | ✅ Native | ✅ 100% file format | ❌ No |
-| **Turbulence Models** | ✅ Full RANS/LES | ✅ k-ε, k-ω SST, S-A, LES | ⚠️ Limited |
-| **Multiphase** | ✅ VOF, Euler | ✅ VOF | ⚠️ Basic |
-| **Mesh Types** | ✅ Unstructured | ✅ Unstructured | ⚠️ Cartesian only |
-| **Learning Curve** | 🔴 Steep | 🟢 Gentle | 🟡 Medium |
-| **ML Integration** | ❌ External | ✅ Native PyTorch | ✅ Native JAX |
+| **Maturity** | 30+ years, industry standard | Early development (v0.1) | Research-grade (2023) |
+| **Mesh Types** | Unstructured polyhedral | Unstructured polyhedral | Cartesian only [1] |
+| **Flow Types** | Compressible + Incompressible | Compressible + Incompressible | Compressible only [1] |
+| **Turbulence** | Full RANS/LES library | k-ε, k-ω SST, S-A, LES | ALDM (implicit LES) [1] |
+| **Multiphase** | VOF, Euler, etc. | VOF | Level-set + Diffuse interface [1] |
+| **GPU Support** | No (CPU only) | Yes (PyTorch CUDA/MPS) | Yes (JAX/TPU/GPU) [1] |
+| **Differentiable** | No | No (planned, see [ROADMAP](ROADMAP.md)) | Yes (end-to-end) [1] |
+| **OpenFOAM Compatible** | Native | Yes (file format compatible) | No |
+| **Scalability** | MPI, tested on 1000+ cores | MPI (basic) | Tested on 512 A100 GPUs [1] |
 
-**Note on Differentiable Physics**: pyOpenFOAM currently uses PyTorch tensors for GPU acceleration but does **not** implement end-to-end differentiable solvers. The discretization operators (fvm/fvc) and pressure-velocity coupling (SIMPLE/PISO) use traditional numerical methods without `torch.autograd` support. For fully differentiable CFD, consider JAX-Fluids. See [Differentiable Capability](#differentiable-capability) for details.
+**[1]** Source: [JAX-Fluids GitHub repository](https://github.com/tumaer/JAXFLUIDS) (accessed 2025)
 
-### Key Advantages over OpenFOAM
+**Notes on JAX-Fluids**:
+- JAX-Fluids is a **fully differentiable** CFD solver built on JAX, enabling end-to-end gradient-based optimization
+- It uses **high-order WENO schemes** (up to 7th order) and multiple Riemann solvers
+- It has been tested on up to **512 NVIDIA A100 GPUs** and **2048 TPU-v3 cores**
+- Its main limitation is **Cartesian-only grids**, which restricts complex geometry handling
 
-- **GPU Acceleration**: PyTorch backend for massively parallel computations
-- **Python Ecosystem**: NumPy, SciPy, PyTorch integration
-- **ML Integration**: Native support for physics-informed neural networks
-- **Learning Curve**: Python syntax vs C++ template metaprogramming
+**Notes on OpenFOAM**:
+- OpenFOAM is the **industry standard** for open-source CFD with extensive validation
+- It has a **large user community** and extensive documentation
+- It supports **unstructured polyhedral meshes** for complex geometries
+- Its C++ implementation provides **high performance** on CPU clusters
 
-### Key Advantages over JAX-Fluids
-
-- **OpenFOAM Compatibility**: Read/write existing OpenFOAM cases directly
-- **Unstructured Meshes**: Full polyhedral mesh support (JAX-Fluids is Cartesian-only)
-- **Turbulence Models**: Complete RANS/LES model library
-- **Industry Standard**: OpenFOAM is the most widely used open-source CFD solver
+pyOpenFOAM aims to complement these tools by providing a **Python-native OpenFOAM experience** with GPU acceleration, not to replace them.
 
 ---
 
@@ -197,66 +209,33 @@ OpenFOAM Case → io.Case → PolyMesh → FvMesh
 
 ---
 
-## Differentiable Capability
-
-**Current Status**: pyOpenFOAM uses PyTorch tensors for GPU acceleration but does **not** implement end-to-end differentiable solvers.
-
-### What Works
-- ✅ PyTorch tensor operations for all field data
-- ✅ GPU acceleration via CUDA/MPS
-- ✅ Automatic memory management
-- ✅ Integration with PyTorch ecosystem
-
-### What's Missing for True Differentiability
-- ❌ `torch.autograd` support in discretization operators (fvm/fvc)
-- ❌ Differentiable pressure-velocity coupling (SIMPLE/PISO)
-- ❌ Gradient computation through solver iterations
-- ❌ Adjoint method implementation
-
-### Why This Matters
-For physics-informed neural networks (PINNs) and differentiable simulation, you need:
-1. The solver to be a differentiable function: `output = solver(input)`
-2. Gradients to flow backward through the solver: `grad_input = autograd.grad(output, input)`
-3. This requires all operations (discretization, linear solve, pressure correction) to be autograd-compatible
-
-### Alternatives for Differentiable CFD
-If you need end-to-end differentiability:
-- **JAX-Fluids**: Built on JAX with native `jit/grad/vmap` support
-- **Modulus (NVIDIA)**: Physics-ML framework with differentiable solvers
-- **PhiFlow**: Differentiable PDE solving framework
-
-### Future Work
-We plan to add differentiable solver support in future versions by:
-1. Implementing custom `torch.autograd.Function` for key operations
-2. Using implicit differentiation for linear solvers
-3. Adding adjoint method support for optimization
-
----
-
 ## Validation
 
-pyOpenFOAM includes validation against analytical solutions. All benchmark data sources are documented below.
+### Test Cases
 
-### Validation Cases
+We validate pyOpenFOAM against analytical solutions and published benchmark data:
 
-| Case | Description | L2 Error | Data Source |
-|------|-------------|----------|-------------|
-| Couette Flow | Linear velocity profile | 0.013% | Analytical solution: u(y) = U·y/H |
-| Poiseuille Flow | Parabolic velocity profile | 0.13% | Analytical solution: u(y) = (1/2ν)·(-dp/dx)·y·(H-y) |
-| Lid-Driven Cavity | Stokes flow grid convergence | 0.34% | High-resolution reference (64×64, 25000 iterations) |
+| Case | Description | L2 Error | Reference |
+|------|-------------|----------|-----------|
+| Couette Flow | Linear velocity profile | 0.013% | Analytical: u(y) = U·y/H |
+| Poiseuille Flow | Parabolic velocity profile | 0.13% | Analytical: u(y) = (1/2ν)·(-dp/dx)·y·(H-y) |
+| Lid-Driven Cavity | Stokes flow (Re→0) | 0.34% | Grid convergence study |
 
-### Data Sources
+### Benchmark Data Sources
 
-1. **Couette & Poiseuille**: Compared against exact analytical solutions from fluid mechanics textbooks. No external data needed.
+**Couette & Poiseuille Flows**:
+- Compared against **exact analytical solutions** from fluid mechanics textbooks
+- No external data needed - solutions are mathematically exact
 
-2. **Lid-Driven Cavity**: 
-   - **NOT compared against Ghia et al. (1982)** - The solver currently solves Stokes equations (no convection), while Ghia data includes convection at Re=100
-   - **Instead**: Uses grid convergence validation - comparing 32×32 solution against 64×64 reference solution
-   - **Reference**: High-resolution Stokes flow solution generated by the same solver with finer mesh and more iterations
+**Lid-Driven Cavity**:
+- Current validation uses **grid convergence study** (32×32 vs 64×64 reference)
+- The solver currently solves **Stokes equations** (no convection term)
+- For validation against **Ghia et al. (1982)** benchmark, we need to implement the full Navier-Stokes solver with convection
 
-3. **OpenFOAM Comparison**: 
-   - **Not yet performed** - We have not run the same test cases in OpenFOAM and compared results
-   - **Future work**: Plan to add OpenFOAM benchmark comparisons in future releases
+**Ghia et al. (1982) Benchmark Data** (for future validation):
+- **Source**: Ghia, U., Ghia, K.N. and Shin, C.T. (1982). "High-Re solutions for incompressible flow using the Navier-Stokes equations and a multigrid method." *Journal of Computational Physics*, 48(3), 387-411. DOI: [10.1016/0021-9991(82)90058-4](https://doi.org/10.1016/0021-9991(82)90058-4)
+- **Data**: Tables I and II contain u-velocity along vertical centerline and v-velocity along horizontal centerline for Re=100, 400, 1000, 3200, 5000, 7500, 10000
+- **Status**: We have not yet validated against this data (requires full Navier-Stokes solver)
 
 ### Run Validation
 
@@ -282,7 +261,7 @@ python validation/run_all.py --mesh-size 64
 | PBiCGSTAB | 0.161s | 0.590s | 6.937s | ~O(n) |
 | GAMG | 0.099s | 0.905s | 9.177s | ~O(n) |
 
-**Data Source**: Generated by `benchmarks/linear_solve_benchmark.py` on local machine (Intel CPU, PyTorch 2.11.0).
+**Data Source**: Generated by `benchmarks/linear_solve_benchmark.py` on local machine (Intel CPU, PyTorch 2.11.0). These are **internal benchmarks** for measuring our solver performance, not comparisons with other CFD codes.
 
 ### Run Benchmarks
 
@@ -298,33 +277,38 @@ python benchmarks/run_all.py --mesh-sizes 10 20 40 60
 
 ---
 
-## Turbulence Models
+## Current Limitations
 
-### RANS Models
+We want to be transparent about what pyOpenFOAM **cannot** do yet:
 
-```python
-from pyfoam.turbulence import KEpsilon, KOmegaSST, SpalartAllmaras
+1. **Not End-to-End Differentiable**: Our solvers use traditional numerical methods without `torch.autograd` support. For differentiable CFD, see [JAX-Fluids](https://github.com/tumaer/JAXFLUIDS) or our [ROADMAP](ROADMAP.md) for future plans.
 
-# k-epsilon model
-model = KEpsilon(mesh, U, phi)
-nut = model.turbulent_viscosity()
-model.correct()
+2. **Simplified Validation**: Current validation cases use Jacobi iteration, not the full SIMPLE solver. We haven't yet validated against OpenFOAM or published benchmark data.
 
-# k-omega SST
-model = KOmegaSST(mesh, U, phi)
-```
+3. **Early Development**: This is v0.1.0 - expect bugs and incomplete features. Contributions welcome!
 
-### LES Models
+4. **No OpenFOAM Comparison**: We haven't run identical test cases in OpenFOAM and compared results. This is planned for future releases.
 
-```python
-from pyfoam.turbulence import Smagorinsky, WALE
+---
 
-# Smagorinsky SGS model
-model = Smagorinsky(mesh, U, phi, Cs=0.17)
+## Differentiable Simulation
 
-# WALE model (wall-adapting)
-model = WALE(mesh, U, phi, Cw=0.325)
-```
+**Current Status**: pyOpenFOAM does **not** support end-to-end differentiable simulation.
+
+**What's Missing**:
+- Discretization operators (fvm/fvc) don't support `torch.autograd`
+- Linear solvers are not differentiable
+- Pressure-velocity coupling (SIMPLE/PISO) is not differentiable
+
+**Why This Matters**:
+For physics-informed neural networks (PINNs) and gradient-based optimization, you need the solver to be a differentiable function.
+
+**Future Plans**: See [ROADMAP.md](ROADMAP.md) for our plan to add differentiable solver support.
+
+**Alternatives**: If you need differentiable CFD now, consider:
+- [JAX-Fluids](https://github.com/tumaer/JAXFLUIDS) - Fully differentiable, JAX-based
+- [Modulus](https://github.com/NVIDIA/modulus) - NVIDIA's physics-ML framework
+- [PhiFlow](https://github.com/tum-pbs/PhiFlow) - Differentiable PDE solving
 
 ---
 
@@ -335,6 +319,7 @@ model = WALE(mesh, U, phi, Cw=0.325)
 - **[Architecture](docs/en/architecture.md)** - System design and data flow
 - **[GPU Guide](docs/en/gpu_guide.md)** - Device management and optimization
 - **[Migration Guide](docs/en/migration_guide.md)** - Moving from OpenFOAM
+- **[Roadmap](ROADMAP.md)** - Future plans and differentiable simulation
 
 ### 中文文档
 
@@ -391,6 +376,13 @@ pip install -e ".[dev]"
 pytest tests/
 ```
 
+### Priority Areas
+
+1. **Validation**: Help us validate against OpenFOAM and published benchmarks
+2. **Differentiability**: Implement custom autograd functions (see [ROADMAP](ROADMAP.md))
+3. **Performance**: Optimize GPU memory and computation
+4. **Documentation**: Improve tutorials and examples
+
 ---
 
 ## Citation
@@ -412,10 +404,10 @@ If you use pyOpenFOAM in your research, please cite:
 
 ## Acknowledgments
 
-- **OpenFOAM** - The original C++ implementation
+- **OpenFOAM Foundation** - The original C++ implementation we reimplemented
 - **PyTorch** - GPU-accelerated tensor operations
 - **JAX-Fluids** - Inspiration for differentiable CFD approach
-- **CFD Direct** - OpenFOAM documentation and architecture
+- **Ghia et al. (1982)** - Benchmark data for lid-driven cavity validation
 
 ---
 
@@ -427,7 +419,7 @@ pyOpenFOAM is licensed under the [GNU General Public License v3.0](LICENSE), sam
 
 <div align="center">
 
-**Built with ❤️ for the CFD and AI communities**
+**Built for the CFD and Python communities**
 
 [Report Bug](https://github.com/alanZee/pyOpenFOAM/issues) · [Request Feature](https://github.com/alanZee/pyOpenFOAM/issues) · [Discussions](https://github.com/alanZee/pyOpenFOAM/discussions)
 
