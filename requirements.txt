@@ -1,0 +1,21 @@
+# Core dependencies
+torch>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Optional: GPU acceleration (install separately based on your CUDA version)
+# pip install torch --index-url https://download.pytorch.org/whl/cu121
+
+# Optional: MPI parallel support
+# mpi4py>=3.1.0
+
+# Optional: Visualization
+# matplotlib>=3.7.0
+# pyvista>=0.40.0
+
+# Optional: Development
+# pytest>=7.0.0
+# pytest-cov>=4.0.0
+# black>=23.0.0
+# ruff>=0.1.0
+# mypy>=1.0.0
