@@ -1,0 +1,65 @@
+{
+  "case_name": "Couette Flow",
+  "case_description": "Plane Couette flow: Re=10, U_top=1.0, H=1.0, mesh=16x16",
+  "overall_passed": true,
+  "run_time": 1.126880900003016,
+  "parameters": {
+    "n_cells": 16,
+    "Re": 10.0
+  },
+  "solver_info": {
+    "iterations": 200,
+    "converged": false,
+    "final_residual": 2.41987167873825e-05
+  },
+  "field_results": {
+    "U": {
+      "passed": true,
+      "l2_tol": 0.1,
+      "max_tol": 0.1,
+      "metrics": {
+        "l2_norm": 0.30808714032173157,
+        "l2_relative_error": 0.03336770832538605,
+        "max_absolute_error": 0.03125,
+        "max_relative_error": 1.0,
+        "rms_error": 0.011117137968540192
+      },
+      "component_metrics": {
+        "x": {
+          "l2_norm": 0.30808714032173157,
+          "l2_relative_error": 0.03336770832538605,
+          "max_absolute_error": 0.03125,
+          "max_relative_error": 1.0,
+          "rms_error": 0.019255448132753372
+        },
+        "y": {
+          "l2_norm": 0.0,
+          "l2_relative_error": 0.0,
+          "max_absolute_error": 0.0,
+          "max_relative_error": 0.0,
+          "rms_error": 0.0
+        },
+        "z": {
+          "l2_norm": 0.0,
+          "l2_relative_error": 0.0,
+          "max_absolute_error": 0.0,
+          "max_relative_error": 0.0,
+          "rms_error": 0.0
+        }
+      }
+    },
+    "p": {
+      "passed": true,
+      "l2_tol": 0.1,
+      "max_tol": 0.1,
+      "metrics": {
+        "l2_norm": 0.0,
+        "l2_relative_error": 0.0,
+        "max_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "rms_error": 0.0
+      },
+      "component_metrics": {}
+    }
+  }
+}

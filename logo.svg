@@ -1,0 +1,54 @@
+﻿<svg width="256" height="256" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <title>pyOpenFOAM Logo</title>
+  <desc>
+    A logo for pyOpenFOAM, a Python rewrite of OpenFOAM with PyTorch GPU acceleration.
+    The logo combines three concepts:
+    1. Python: The two intertwined, colored shapes are inspired by the Python logo.
+    2. Fluid Dynamics: The blue, smooth, continuous line represents a fluid streamline.
+    3. GPU Acceleration: The yellow, segmented line represents the discrete, digital processing of a GPU breaking down the problem.
+  </desc>
+  
+  <defs>
+    <!-- Gradient for the blue "fluid" line -->
+    <linearGradient id="fluid-gradient" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3776AB" /> <!-- Python Blue -->
+      <stop offset="100%" stop-color="#5691c8" />
+    </linearGradient>
+    
+    <!-- Gradient for the yellow "GPU" line -->
+    <linearGradient id="gpu-gradient" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFD43B" /> <!-- Python Yellow -->
+      <stop offset="100%" stop-color="#FCAF3D" />
+    </linearGradient>
+  </defs>
+
+  <g transform="rotate(15 50 50)">
+    <!-- 
+      Element 1: Fluid Dynamics
+      A smooth, continuous path representing a fluid streamline. Its shape and color
+      are inspired by the blue half of the Python logo.
+    -->
+    <path 
+      d="M50,88 C 20,85 10,65 20,40 C 30,15 60,15 75,30" 
+      fill="none" 
+      stroke="url(#fluid-gradient)" 
+      stroke-width="15" 
+      stroke-linecap="round" 
+    />
+    
+    <!-- 
+      Element 2: GPU Acceleration & Python
+      A segmented path representing digital computation by a GPU. The dashes show
+      the problem being broken into discrete parts. Its shape and color are
+      inspired by the yellow half of the Python logo, creating the full symbol.
+    -->
+    <path 
+      d="M50,12 C 80,15 90,35 80,60 C 70,85 40,85 25,70" 
+      fill="none" 
+      stroke="url(#gpu-gradient)" 
+      stroke-width="15" 
+      stroke-linecap="butt"
+      stroke-dasharray="12 7"
+    />
+  </g>
+</svg>

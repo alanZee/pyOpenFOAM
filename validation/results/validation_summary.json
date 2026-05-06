@@ -1,0 +1,188 @@
+{
+  "total_time": 8.761272000032477,
+  "cases": [
+    {
+      "case_name": "Couette Flow",
+      "case_description": "Plane Couette flow: Re=10, U_top=1.0, H=1.0, mesh=16x16",
+      "overall_passed": true,
+      "run_time": 1.126880900003016,
+      "parameters": {
+        "n_cells": 16,
+        "Re": 10.0
+      },
+      "solver_info": {
+        "iterations": 200,
+        "converged": false,
+        "final_residual": 2.41987167873825e-05
+      },
+      "field_results": {
+        "U": {
+          "passed": true,
+          "l2_tol": 0.1,
+          "max_tol": 0.1,
+          "metrics": {
+            "l2_norm": 0.30808714032173157,
+            "l2_relative_error": 0.03336770832538605,
+            "max_absolute_error": 0.03125,
+            "max_relative_error": 1.0,
+            "rms_error": 0.011117137968540192
+          },
+          "component_metrics": {
+            "x": {
+              "l2_norm": 0.30808714032173157,
+              "l2_relative_error": 0.03336770832538605,
+              "max_absolute_error": 0.03125,
+              "max_relative_error": 1.0,
+              "rms_error": 0.019255448132753372
+            },
+            "y": {
+              "l2_norm": 0.0,
+              "l2_relative_error": 0.0,
+              "max_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "rms_error": 0.0
+            },
+            "z": {
+              "l2_norm": 0.0,
+              "l2_relative_error": 0.0,
+              "max_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "rms_error": 0.0
+            }
+          }
+        },
+        "p": {
+          "passed": true,
+          "l2_tol": 0.1,
+          "max_tol": 0.1,
+          "metrics": {
+            "l2_norm": 0.0,
+            "l2_relative_error": 0.0,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0,
+            "rms_error": 0.0
+          },
+          "component_metrics": {}
+        }
+      }
+    },
+    {
+      "case_name": "Poiseuille Flow",
+      "case_description": "Plane Poiseuille flow: Re=10, u_max=10.0000, H=1.0, mesh=16x16",
+      "overall_passed": true,
+      "run_time": 1.686704199993983,
+      "parameters": {
+        "n_cells": 16,
+        "Re": 10.0
+      },
+      "solver_info": {
+        "iterations": 200,
+        "converged": false,
+        "final_residual": 0.0025539577842419448
+      },
+      "field_results": {
+        "U": {
+          "passed": true,
+          "l2_tol": 0.2,
+          "max_tol": 2.0,
+          "metrics": {
+            "l2_norm": 16.32411003112793,
+            "l2_relative_error": 0.13970352709293365,
+            "max_absolute_error": 1.2109375,
+            "max_relative_error": 1.0,
+            "rms_error": 0.589045524597168
+          },
+          "component_metrics": {
+            "x": {
+              "l2_norm": 16.32411003112793,
+              "l2_relative_error": 0.13970352709293365,
+              "max_absolute_error": 1.2109375,
+              "max_relative_error": 1.0,
+              "rms_error": 1.020256757736206
+            },
+            "y": {
+              "l2_norm": 0.0,
+              "l2_relative_error": 0.0,
+              "max_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "rms_error": 0.0
+            },
+            "z": {
+              "l2_norm": 0.0,
+              "l2_relative_error": 0.0,
+              "max_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "rms_error": 0.0
+            }
+          }
+        },
+        "p": {
+          "passed": true,
+          "l2_tol": 0.2,
+          "max_tol": 2.0,
+          "metrics": {
+            "l2_norm": 0.0,
+            "l2_relative_error": 0.0,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0,
+            "rms_error": 0.0
+          },
+          "component_metrics": {}
+        }
+      }
+    },
+    {
+      "case_name": "Lid-Driven Cavity",
+      "case_description": "Lid-driven cavity: Re=100, U_lid=1.0, mesh=16x16",
+      "overall_passed": true,
+      "run_time": 5.916411599959247,
+      "parameters": {
+        "n_cells": 16,
+        "Re": 100.0
+      },
+      "solver_info": {
+        "iterations": 200,
+        "converged": false,
+        "final_residual": 0.0007827474590694217
+      },
+      "field_results": {
+        "U": {
+          "passed": true,
+          "l2_tol": 1.0,
+          "max_tol": 1.0,
+          "metrics": {
+            "l2_norm": 4.100575923919678,
+            "l2_relative_error": 0.9537805914878845,
+            "max_absolute_error": 0.47684812545776367,
+            "max_relative_error": 20.943449020385742,
+            "rms_error": 0.14796678721904755
+          },
+          "component_metrics": {
+            "x": {
+              "l2_norm": 4.063934803009033,
+              "l2_relative_error": 0.9530014395713806,
+              "max_absolute_error": 0.47684812545776367,
+              "max_relative_error": 20.943449020385742,
+              "rms_error": 0.25399595499038696
+            },
+            "y": {
+              "l2_norm": 0.5469489097595215,
+              "l2_relative_error": 1.0,
+              "max_absolute_error": 0.23042389750480652,
+              "max_relative_error": 1.0,
+              "rms_error": 0.03418430685997009
+            },
+            "z": {
+              "l2_norm": 0.0,
+              "l2_relative_error": 0.0,
+              "max_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "rms_error": 0.0
+            }
+          }
+        }
+      }
+    }
+  ],
+  "all_passed": true
+}

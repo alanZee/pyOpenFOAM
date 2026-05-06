@@ -1,0 +1,321 @@
+"""Tests for FoamFile header parsing and I/O."""
+
+import pytest
+from pathlib import Path
+
+from pyfoam.io.foam_file import (
+    FileFormat,
+    FoamFileHeader,
+    detect_format,
+    get_header_end,
+    parse_header,
+    read_foam_file,
+    split_header_body,
+    write_foam_file,
+)
+
+
+# ---------------------------------------------------------------------------
+# FoamFileHeader
+# ---------------------------------------------------------------------------
+
+
+class TestFoamFileHeader:
+    def test_default_values(self):
+        """Default header has expected values."""
+        h = FoamFileHeader()
+        assert h.version == "2.0"
+        assert h.format == FileFormat.ASCII
+        assert h.class_name == ""
+        assert h.location == ""
+        assert h.object == ""
+
+    def test_custom_values(self):
+        """Custom header values."""
+        h = FoamFileHeader(
+            version="2.0",
+            format=FileFormat.BINARY,
+            class_name="volScalarField",
+            location="0",
+            object="p",
+        )
+        assert h.version == "2.0"
+        assert h.is_binary is True
+        assert h.is_ascii is False
+        assert h.class_name == "volScalarField"
+        assert h.location == "0"
+        assert h.object == "p"
+
+    def test_is_binary(self):
+        """is_binary property."""
+        h = FoamFileHeader(format=FileFormat.BINARY)
+        assert h.is_binary is True
+        h2 = FoamFileHeader(format=FileFormat.ASCII)
+        assert h2.is_binary is False
+
+    def test_is_ascii(self):
+        """is_ascii property."""
+        h = FoamFileHeader(format=FileFormat.ASCII)
+        assert h.is_ascii is True
+        h2 = FoamFileHeader(format=FileFormat.BINARY)
+        assert h2.is_ascii is False
+
+    def test_to_header_string(self):
+        """Generate header string."""
+        h = FoamFileHeader(
+            version="2.0",
+            format=FileFormat.ASCII,
+            class_name="volScalarField",
+            object="p",
+        )
+        s = h.to_header_string()
+        assert "FoamFile" in s
+        assert "version     2.0;" in s
+        assert "format      ascii;" in s
+        assert "class       volScalarField;" in s
+        assert "object      p;" in s
+
+    def test_to_header_string_with_location(self):
+        """Header string includes location when set."""
+        h = FoamFileHeader(location="0", object="U")
+        s = h.to_header_string()
+        assert 'location    "0";' in s
+        assert "object      U;" in s
+
+    def test_repr(self):
+        """repr includes key info."""
+        h = FoamFileHeader(class_name="volScalarField", object="p")
+        r = repr(h)
+        assert "FoamFileHeader" in r
+        assert "volScalarField" in r
+
+
+# ---------------------------------------------------------------------------
+# parse_header
+# ---------------------------------------------------------------------------
+
+
+class TestParseHeader:
+    def test_parse_ascii_header(self):
+        """Parse a standard ASCII header."""
+        content = """FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+"""
+        header = parse_header(content)
+        assert header.version == "2.0"
+        assert header.format == FileFormat.ASCII
+        assert header.class_name == "volScalarField"
+        assert header.object == "p"
+
+    def test_parse_binary_header(self):
+        """Parse a binary format header."""
+        content = """FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       volVectorField;
+    object      U;
+}
+"""
+        header = parse_header(content)
+        assert header.format == FileFormat.BINARY
+        assert header.class_name == "volVectorField"
+        assert header.object == "U"
+
+    def test_parse_header_with_location(self):
+        """Parse header with location field."""
+        content = """FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      p;
+}
+"""
+        header = parse_header(content)
+        assert header.location == "0"
+
+    def test_parse_header_with_comments(self):
+        """Parse header with C-style comments."""
+        content = """// This is a comment
+FoamFile
+{
+    version     2.0; // inline comment
+    format      ascii;
+    /* block comment */
+    class       volScalarField;
+    object      p;
+}
+"""
+        header = parse_header(content)
+        assert header.version == "2.0"
+        assert header.format == FileFormat.ASCII
+
+    def test_parse_header_no_header_raises(self):
+        """ValueError when no header found."""
+        with pytest.raises(ValueError, match="No FoamFile header"):
+            parse_header("some random content")
+
+    def test_parse_header_with_note(self):
+        """Parse header with note field."""
+        content = """FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    note        "Generated by utility";
+    object      controlDict;
+}
+"""
+        header = parse_header(content)
+        assert header.note == "Generated by utility"
+
+
+# ---------------------------------------------------------------------------
+# split_header_body
+# ---------------------------------------------------------------------------
+
+
+class TestSplitHeaderBody:
+    def test_split(self):
+        """Split header and body."""
+        content = """FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+
+dimensions      [0 2 -2 0 0 0 0];
+"""
+        header, body = split_header_body(content)
+        assert header.object == "p"
+        assert "dimensions" in body
+
+    def test_split_no_header_raises(self):
+        """ValueError when no header found."""
+        with pytest.raises(ValueError):
+            split_header_body("no header here")
+
+
+# ---------------------------------------------------------------------------
+# detect_format
+# ---------------------------------------------------------------------------
+
+
+class TestDetectFormat:
+    def test_detect_ascii(self):
+        """Detect ASCII format."""
+        content = 'FoamFile { format ascii; }'
+        assert detect_format(content) == FileFormat.ASCII
+
+    def test_detect_binary(self):
+        """Detect binary format."""
+        content = 'FoamFile { format binary; }'
+        assert detect_format(content) == FileFormat.BINARY
+
+    def test_detect_default_ascii(self):
+        """Default to ASCII when no header."""
+        assert detect_format("no header") == FileFormat.ASCII
+
+
+# ---------------------------------------------------------------------------
+# get_header_end
+# ---------------------------------------------------------------------------
+
+
+class TestGetHeaderEnd:
+    def test_get_header_end(self):
+        """Get position after header block."""
+        content = """FoamFile
+{
+    version     2.0;
+    format      ascii;
+}
+
+body content"""
+        pos = get_header_end(content)
+        remaining = content[pos:].strip()
+        assert remaining.startswith("body content")
+
+    def test_get_header_end_no_header_raises(self):
+        """ValueError when no header found."""
+        with pytest.raises(ValueError):
+            get_header_end("no header")
+
+
+# ---------------------------------------------------------------------------
+# read_foam_file / write_foam_file
+# ---------------------------------------------------------------------------
+
+
+class TestFileIO:
+    def test_write_and_read(self, tmp_path):
+        """Write then read back a FoamFile."""
+        header = FoamFileHeader(
+            class_name="volScalarField",
+            object="p",
+        )
+        body = "dimensions      [0 2 -2 0 0 0 0];\n"
+        path = tmp_path / "p"
+
+        write_foam_file(path, header, body)
+        read_header, read_body = read_foam_file(path)
+
+        assert read_header.class_name == "volScalarField"
+        assert read_header.object == "p"
+        assert "dimensions" in read_body
+
+    def test_write_creates_parent_dirs(self, tmp_path):
+        """Write creates parent directories."""
+        header = FoamFileHeader()
+        path = tmp_path / "sub" / "dir" / "file"
+        write_foam_file(path, header, "body")
+        assert path.exists()
+
+    def test_write_no_overwrite(self, tmp_path):
+        """FileExistsError when file exists and overwrite=False."""
+        header = FoamFileHeader()
+        path = tmp_path / "file"
+        write_foam_file(path, header, "body")
+        with pytest.raises(FileExistsError):
+            write_foam_file(path, header, "body2")
+
+    def test_write_overwrite(self, tmp_path):
+        """Overwrite existing file."""
+        header = FoamFileHeader()
+        path = tmp_path / "file"
+        write_foam_file(path, header, "body1")
+        write_foam_file(path, header, "body2", overwrite=True)
+        _, body = read_foam_file(path)
+        assert "body2" in body
+
+    def test_read_nonexistent_raises(self, tmp_path):
+        """FileNotFoundError when file doesn't exist."""
+        with pytest.raises(FileNotFoundError):
+            read_foam_file(tmp_path / "nonexistent")
+
+    def test_roundtrip_preserves_header(self, tmp_path):
+        """Roundtrip preserves all header fields."""
+        header = FoamFileHeader(
+            version="2.0",
+            format=FileFormat.ASCII,
+            class_name="volVectorField",
+            location="0",
+            object="U",
+        )
+        path = tmp_path / "U"
+        write_foam_file(path, header, "body content")
+
+        read_header, _ = read_foam_file(path)
+        assert read_header.version == "2.0"
+        assert read_header.class_name == "volVectorField"
+        assert read_header.location == "0"
+        assert read_header.object == "U"
