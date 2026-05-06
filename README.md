@@ -283,11 +283,13 @@ We want to be transparent about what pyOpenFOAM **cannot** do yet:
 
 1. **Not End-to-End Differentiable**: Our solvers use traditional numerical methods without `torch.autograd` support. For differentiable CFD, see [JAX-Fluids](https://github.com/tumaer/JAXFLUIDS) or our [ROADMAP](ROADMAP.md) for future plans.
 
-2. **Simplified Validation**: Current validation cases use Jacobi iteration, not the full SIMPLE solver. We haven't yet validated against OpenFOAM or published benchmark data.
+2. **Simplified Validation**: Current validation cases use Jacobi iteration for Stokes equations, not the full SIMPLE solver. The SIMPLE solver exists but requires further debugging for complex cases.
 
 3. **Early Development**: This is v0.1.0 - expect bugs and incomplete features. Contributions welcome!
 
 4. **No OpenFOAM Comparison**: We haven't run identical test cases in OpenFOAM and compared results. This is planned for future releases.
+
+5. **SIMPLE Solver Issues**: The SIMPLE solver in `pyfoam.solvers.simple` has numerical stability issues for the lid-driven cavity case. We are actively debugging this.
 
 ---
 
@@ -406,8 +408,6 @@ If you use pyOpenFOAM in your research, please cite:
 
 - **OpenFOAM Foundation** - The original C++ implementation we reimplemented
 - **PyTorch** - GPU-accelerated tensor operations
-- **JAX-Fluids** - Inspiration for differentiable CFD approach
-- **Ghia et al. (1982)** - Benchmark data for lid-driven cavity validation
 
 ---
 

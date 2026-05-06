@@ -70,15 +70,19 @@ class SIMPLEConfig(CoupledSolverConfig):
     ----------
     n_correctors : int
         Number of pressure correction steps per outer iteration (default 1).
+    nu : float
+        Kinematic viscosity (default 1.0).
     """
 
     def __init__(
         self,
         n_correctors: int = 1,
+        nu: float = 1.0,
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)
         self.n_correctors = n_correctors
+        self.nu = nu
 
 
 class SIMPLESolver(CoupledSolverBase):
@@ -310,7 +314,7 @@ class SIMPLESolver(CoupledSolverBase):
         int_neigh = neighbour
 
         # Diffusion coefficient (viscous)
-        nu = 1.0  # kinematic viscosity (dimensionless for now)
+        nu = config.nu  # kinematic viscosity from config
         S_mag = face_areas[:n_internal].norm(dim=1)
         delta_f = delta_coeffs[:n_internal]
         diff_coeff = nu * S_mag * delta_f
