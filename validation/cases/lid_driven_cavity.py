@@ -316,7 +316,7 @@ class LidDrivenCavityCase(ValidationCaseBase):
 
         config = SIMPLEConfig(
             relaxation_factor_U=0.7,
-            relaxation_factor_p=0.02,
+            relaxation_factor_p=0.3,
             nu=self.nu,
             consistent=False,
             p_tolerance=1e-6,

@@ -136,7 +136,7 @@ def assemble_pressure_equation(
 
     # Source: divergence of phiHbyA
     # In OpenFOAM: fvc::div(phiHbyA) returns per-unit-volume (∑φ/V)
-    # But we store WITHOUT dividing by V to match the original working formulation
+    # We store WITHOUT dividing by V to match the original working formulation
     source = torch.zeros(n_cells, dtype=dtype, device=device)
     source = source + scatter_add(-phiHbyA[:n_internal], int_owner, n_cells)
     source = source + scatter_add(phiHbyA[:n_internal], int_neigh, n_cells)
