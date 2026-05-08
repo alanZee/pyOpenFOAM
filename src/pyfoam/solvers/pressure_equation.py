@@ -123,6 +123,8 @@ def assemble_pressure_equation(
     V_N = gather(cell_volumes, int_neigh)
 
     # Matrix coefficients (Laplacian discretisation)
+    # NOTE: Dividing by cell volume to store in per-unit-volume form.
+    # This matches how our FvMatrix solver applies the matrix directly.
     mat.lower = -face_coeff / V_P
     mat.upper = -face_coeff / V_N
 
@@ -132,8 +134,9 @@ def assemble_pressure_equation(
     diag = diag + scatter_add(face_coeff / V_N, int_neigh, n_cells)
     mat.diag = diag
 
-    # Source: divergence of phiHbyA (negative because moving to RHS)
-    # For each internal face: flux contribution to owner and neighbour
+    # Source: divergence of phiHbyA
+    # In OpenFOAM: fvc::div(phiHbyA) returns per-unit-volume (∑φ/V)
+    # But we store WITHOUT dividing by V to match the original working formulation
     source = torch.zeros(n_cells, dtype=dtype, device=device)
     source = source + scatter_add(-phiHbyA[:n_internal], int_owner, n_cells)
     source = source + scatter_add(phiHbyA[:n_internal], int_neigh, n_cells)
@@ -237,16 +240,25 @@ def correct_velocity(
     grad_p.index_add_(0, int_owner, face_contrib)
     grad_p.index_add_(0, int_neigh, -face_contrib)
 
-    # Boundary face contributions (assuming zero gradient / no correction)
-    # For boundary faces, the pressure gradient contribution is zero
-    # if we assume dp/dn = 0 on boundaries
+    # Boundary face contributions to gradient
+    if n_faces > n_internal:
+        bnd_owner = owner[n_internal:]
+        # For boundary faces, use owner cell pressure as face pressure
+        # (equivalent to zero-gradient BC: dp/dn = 0)
+        p_bnd = gather(p, bnd_owner)
+        bnd_face_contrib = p_bnd.unsqueeze(-1) * face_areas[n_internal:]
+        grad_p.index_add_(0, bnd_owner, bnd_face_contrib)
 
     # Divide by cell volume
     V = cell_volumes.unsqueeze(-1).clamp(min=1e-30)
     grad_p = grad_p / V
 
-    # Velocity correction: U = HbyA - (1/A_p) * grad(p)
-    U_corrected = HbyA - inv_A_p.unsqueeze(-1) * grad_p
+    # Velocity correction: U = HbyA - (V/A_p) * grad(p)
+    # NOTE: A_p is in integral form (kg/s), p is in per-unit-volume form (Pa)
+    # So we need to multiply by V to get correct units:
+    # (m³) * (s/kg) * (Pa/m) = (m³) * (s/kg) * (kg/(m²·s²)) = m/s
+    V_scalar = cell_volumes.clamp(min=1e-30)
+    U_corrected = HbyA - (V_scalar / A_p_safe).unsqueeze(-1) * grad_p
 
     return U_corrected
 
@@ -296,6 +308,10 @@ def correct_face_flux(
 
     inv_A_p_f = w * gather(inv_A_p, int_owner) + (1.0 - w) * gather(inv_A_p, int_neigh)
 
+    # Face-interpolated cell volume (for unit conversion)
+    V = mesh.cell_volumes.clamp(min=1e-30)
+    V_f = w * gather(V, int_owner) + (1.0 - w) * gather(V, int_neigh)
+
     # Pressure difference across internal faces
     p_P = gather(p, int_owner)
     p_N = gather(p, int_neigh)
@@ -305,8 +321,11 @@ def correct_face_flux(
     S_mag = face_areas[:n_internal].norm(dim=1)
     delta_f = delta_coeffs[:n_internal]
 
-    # Flux correction
-    flux_correction = inv_A_p_f * dp * S_mag * delta_f
+    # Flux correction: φ_f = φHbyA_f - (V/A_p)_f * (p_N - p_P) * |S_f| * delta_f
+    # NOTE: A_p is in integral form (kg/s), p is in per-unit-volume form (Pa)
+    # So we need to multiply by V to get correct units:
+    # (m³) * (s/kg) * (Pa) * (m²) * (1/m) = m³/s
+    flux_correction = V_f * inv_A_p_f * dp * S_mag * delta_f
 
     # Apply correction to internal faces only
     phi_corrected = phi.clone()

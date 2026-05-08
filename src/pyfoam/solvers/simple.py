@@ -72,17 +72,23 @@ class SIMPLEConfig(CoupledSolverConfig):
         Number of pressure correction steps per outer iteration (default 1).
     nu : float
         Kinematic viscosity (default 1.0).
+    consistent : bool
+        If True, use SIMPLEC (SIMPLE-Consistent) algorithm.
+        Uses rAtU = 1/(A_p - H1) instead of rAU = 1/A_p,
+        which reduces the need for under-relaxation (default False).
     """
 
     def __init__(
         self,
         n_correctors: int = 1,
         nu: float = 1.0,
+        consistent: bool = False,
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)
         self.n_correctors = n_correctors
         self.nu = nu
+        self.consistent = consistent
 
 
 class SIMPLESolver(CoupledSolverBase):
@@ -122,6 +128,7 @@ class SIMPLESolver(CoupledSolverBase):
         p: torch.Tensor,
         phi: torch.Tensor,
         *,
+        U_bc: torch.Tensor | None = None,
         U_old: torch.Tensor | None = None,
         p_old: torch.Tensor | None = None,
         max_outer_iterations: int = 100,
@@ -133,6 +140,9 @@ class SIMPLESolver(CoupledSolverBase):
             U: ``(n_cells, 3)`` — velocity field.
             p: ``(n_cells,)`` — pressure field.
             phi: ``(n_faces,)`` — face flux field.
+            U_bc: ``(n_cells, 3)`` — prescribed velocity for boundary cells.
+                Cells with fixed-value BCs should have their prescribed values;
+                cells without BCs should have NaN. If None, no BC enforcement.
             U_old: Previous time-step velocity (unused in SIMPLE, kept for API).
             p_old: Previous time-step pressure (unused in SIMPLE, kept for API).
             max_outer_iterations: Maximum outer-loop iterations.
@@ -165,12 +175,19 @@ class SIMPLESolver(CoupledSolverBase):
             # ============================================
             # Step 1: Momentum predictor
             # ============================================
-            U, A_p, H = self._momentum_predictor(U, p, phi)
+            U, A_p, H, mat_lower, mat_upper = self._momentum_predictor(U, p, phi, U_bc=U_bc)
 
             # ============================================
             # Step 2: Compute HbyA
             # ============================================
             HbyA = compute_HbyA(H, A_p)
+
+            # Constrain HbyA at boundary cells to match prescribed velocity
+            # This matches OpenFOAM's constrainHbyA() function
+            if U_bc is not None:
+                bc_mask = ~torch.isnan(U_bc[:, 0])
+                if bc_mask.any():
+                    HbyA[bc_mask] = U_bc[bc_mask]
 
             # ============================================
             # Step 3: Compute phiHbyA
@@ -181,32 +198,89 @@ class SIMPLESolver(CoupledSolverBase):
             )
 
             # ============================================
+            # SIMPLEC modification (if enabled)
+            # In OpenFOAM: rAtU = 1/(1/rAU - H1) = 1/(A_p - H1)
+            # where H1 = sum of off-diagonal coefficients / V
+            # ============================================
+            A_p_eff = A_p.clone()  # Will be rAtU if SIMPLEC, else A_p
+            if config.consistent:
+                # Compute H1 = sum of off-diagonal coefficients / cell volume
+                # NOTE: H1 is the SUM (negative), not sum of ABS
+                n_cells = mesh.n_cells
+                n_internal = mesh.n_internal_faces
+                int_owner = mesh.owner[:n_internal]
+                int_neigh = mesh.neighbour
+
+                H1 = torch.zeros(n_cells, dtype=dtype, device=device)
+                H1 = H1 + scatter_add(mat_lower, int_owner, n_cells)
+                H1 = H1 + scatter_add(mat_upper, int_neigh, n_cells)
+                H1 = H1 / mesh.cell_volumes.clamp(min=1e-30)
+
+                # rAtU = 1/(A_p - H1)
+                rAU = 1.0 / A_p.abs().clamp(min=1e-30)
+                rAtU = 1.0 / (A_p - H1).abs().clamp(min=1e-30)
+
+                # Modify phiHbyA:
+                # phiHbyA += interpolate(rAtU - rAU) * snGrad(p) * magSf
+                w = mesh.face_weights[:n_internal]
+                rAtU_f = w * gather(rAtU, int_owner) + (1.0 - w) * gather(rAtU, int_neigh)
+                rAU_f = w * gather(rAU, int_owner) + (1.0 - w) * gather(rAU, int_neigh)
+                p_P = gather(p, int_owner)
+                p_N = gather(p, int_neigh)
+                delta_f = mesh.delta_coefficients[:n_internal]
+                S_mag = mesh.face_areas[:n_internal].norm(dim=1)
+                snGrad_p = (p_N - p_P) * delta_f
+                phiHbyA[:n_internal] = phiHbyA[:n_internal] + (rAtU_f - rAU_f) * snGrad_p * S_mag
+
+                # Modify HbyA: HbyA -= (rAU - rAtU) * grad(p)
+                grad_p = self._compute_pressure_gradient(p, mesh)
+                HbyA = HbyA - (rAU - rAtU).unsqueeze(-1) * grad_p
+
+                # Use rAtU for pressure equation and velocity correction
+                A_p_eff = rAtU
+
+            # ============================================
             # Step 4-5: Assemble and solve pressure equation
+            # Solves: laplacian(A_p_eff, p') = div(phiHbyA)
+            # where A_p_eff = rAtU if SIMPLEC, else A_p
             # ============================================
             p_eqn = assemble_pressure_equation(
-                phiHbyA, A_p, mesh, mesh.face_weights,
+                phiHbyA, A_p_eff, mesh, mesh.face_weights,
             )
 
-            p, p_iters, p_res = solve_pressure_equation(
-                p_eqn, p, self._p_solver,
+            # Solve for pressure correction (initial guess = 0)
+            p_prime, p_iters, p_res = solve_pressure_equation(
+                p_eqn, torch.zeros_like(p), self._p_solver,
                 tolerance=config.p_tolerance,
                 max_iter=config.p_max_iter,
             )
 
             # Under-relax pressure correction
             alpha_p = config.relaxation_factor_p
-            if alpha_p < 1.0:
-                p = alpha_p * p + (1.0 - alpha_p) * p_prev
+            p_prime = alpha_p * p_prime
+
+            # Accumulate pressure: p = p_old + p'
+            p = p_prev + p_prime
 
             # ============================================
             # Step 6: Correct velocity
+            # U = HbyA - A_p_eff * grad(p)
+            # where A_p_eff = rAtU if SIMPLEC, else 1/A_p
             # ============================================
-            U = correct_velocity(U, HbyA, p, A_p, mesh)
+            U = correct_velocity(U, HbyA, p, A_p_eff, mesh)
+
+            # Re-apply boundary conditions after velocity correction
+            if U_bc is not None:
+                bc_mask = ~torch.isnan(U_bc[:, 0])
+                if bc_mask.any():
+                    U[bc_mask] = U_bc[bc_mask]
 
             # ============================================
             # Step 7: Correct face flux
+            # In OpenFOAM: phi = phiHbyA - pEqn.flux()
+            # Using phiHbyA as base (matching OpenFOAM)
             # ============================================
-            phi = correct_face_flux(phi, p, A_p, mesh, mesh.face_weights)
+            phi = correct_face_flux(phiHbyA, p, A_p_eff, mesh, mesh.face_weights)
 
             # ============================================
             # Step 8: Check convergence
@@ -234,16 +308,26 @@ class SIMPLESolver(CoupledSolverBase):
             if outer % 10 == 0 or outer < 5:
                 logger.info(
                     "SIMPLE iteration %d: U_res=%.6e, p_res=%.6e, "
-                    "continuity=%.6e",
+                    "continuity=%.6e, p_range=[%.6e, %.6e], HbyA_range=[%.6e, %.6e]",
                     outer, U_residual, p_residual, continuity_error,
+                    p.min().item(), p.max().item(),
+                    HbyA[:, 0].min().item(), HbyA[:, 0].max().item(),
                 )
 
-            # Check convergence
+            # Check convergence — use continuity error as primary criterion
             if continuity_error < tolerance and outer > 0:
                 convergence.converged = True
                 logger.info(
-                    "SIMPLE converged in %d iterations (continuity=%.6e)",
-                    outer + 1, continuity_error,
+                    "SIMPLE converged in %d iterations (continuity=%.6e, U_res=%.6e)",
+                    outer + 1, continuity_error, U_residual,
+                )
+                break
+
+            # NaN detection — stop if solution diverges
+            if torch.isnan(U).any() or torch.isnan(p).any():
+                logger.error(
+                    "SIMPLE diverged at iteration %d (NaN detected)",
+                    outer + 1,
                 )
                 break
 
@@ -261,25 +345,27 @@ class SIMPLESolver(CoupledSolverBase):
         U: torch.Tensor,
         p: torch.Tensor,
         phi: torch.Tensor,
+        U_bc: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Solve the momentum equation with under-relaxation.
 
-        The momentum equation:
-            A_p * U = H(U) - grad(p)
-
-        With under-relaxation:
-            A_p/α_U * U = H(U) - grad(p) + (1-α_U)/α_U * A_p * U_old
+        Follows OpenFOAM's approach:
+        1. Build matrix from current U and phi
+        2. Apply implicit under-relaxation (modify diagonal and source)
+        3. Solve using linear solver
+        4. Compute H from SOLVED U using STORED matrix coefficients
 
         Args:
             U: ``(n_cells, 3)`` — current velocity.
             p: ``(n_cells,)`` — current pressure.
             phi: ``(n_faces,)`` — current face flux.
+            U_bc: ``(n_cells, 3)`` — prescribed velocity for boundary cells.
 
         Returns:
-            Tuple of ``(U_new, A_p, H)`` where:
-            - U_new: ``(n_cells, 3)`` — relaxed velocity.
-            - A_p: ``(n_cells,)`` — diagonal coefficients.
-            - H: ``(n_cells, 3)`` — H(U) vector.
+            Tuple of ``(U_new, A_p_eff, H)`` where:
+            - U_new: ``(n_cells, 3)`` — solved velocity.
+            - A_p_eff: ``(n_cells,)`` — effective diagonal (after relaxation).
+            - H: ``(n_cells, 3)`` — H(U★) vector for pressure equation.
         """
         mesh = self._mesh
         device = self._device
@@ -293,28 +379,23 @@ class SIMPLESolver(CoupledSolverBase):
         neighbour = mesh.neighbour
         cell_volumes = mesh.cell_volumes
 
-        # Build the momentum matrix
-        # For simplicity, we assemble a convection-diffusion matrix
-        # In a full implementation, this would use fvm.div(phi, U) + fvm.laplacian(nu, U)
-        # Here we build the matrix directly from the mesh topology
+        # ============================================
+        # Step 1: Build momentum matrix
+        # ============================================
+        face_areas = mesh.face_areas
+        delta_coeffs = mesh.delta_coefficients
+        cell_volumes_safe = cell_volumes.clamp(min=1e-30)
 
         mat = FvMatrix(
             n_cells, owner[:n_internal], neighbour,
             device=device, dtype=dtype,
         )
 
-        # Simple convection-diffusion coefficients
-        # Diffusion: lower[f] = upper[f] = -coeff
-        # Convection: upwind bias
-        face_areas = mesh.face_areas
-        delta_coeffs = mesh.delta_coefficients
-        cell_volumes_safe = cell_volumes.clamp(min=1e-30)
-
         int_owner = owner[:n_internal]
         int_neigh = neighbour
 
         # Diffusion coefficient (viscous)
-        nu = config.nu  # kinematic viscosity from config
+        nu = config.nu
         S_mag = face_areas[:n_internal].norm(dim=1)
         delta_f = delta_coeffs[:n_internal]
         diff_coeff = nu * S_mag * delta_f
@@ -324,45 +405,31 @@ class SIMPLESolver(CoupledSolverBase):
         flux_pos = torch.where(flux >= 0, flux, torch.zeros_like(flux))
         flux_neg = torch.where(flux < 0, flux, torch.zeros_like(flux))
 
-        # Matrix coefficients
+        # Matrix coefficients (per unit volume)
         V_P = gather(cell_volumes_safe, int_owner)
         V_N = gather(cell_volumes_safe, int_neigh)
 
-        # Lower = -diff_coeff + flux_neg (owner receives from neighbour)
         mat.lower = (-diff_coeff + flux_neg) / V_P
-        # Upper = -diff_coeff + flux_pos (neighbour receives from owner)
         mat.upper = (-diff_coeff - flux_pos) / V_N
 
         # Diagonal: sum of absolute off-diagonal + convection
         diag = torch.zeros(n_cells, dtype=dtype, device=device)
         diag = diag + scatter_add((diff_coeff - flux_neg) / V_P, int_owner, n_cells)
         diag = diag + scatter_add((diff_coeff + flux_pos) / V_N, int_neigh, n_cells)
-        mat.diag = diag
+        mat.diag = diag.clone()
 
-        # Store A_p (diagonal) for later use
-        A_p = diag.clone()
+        # ============================================
+        # Step 2: Compute H from OLD U (for source term)
+        # ============================================
+        H_old = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        U_neigh = U[int_neigh]
+        H_old.index_add_(0, int_owner, -mat.lower.unsqueeze(-1) * U_neigh)
+        U_own = U[int_owner]
+        H_old.index_add_(0, int_neigh, -mat.upper.unsqueeze(-1) * U_own)
 
-        # Compute H(U): off-diagonal contributions
-        # H = -sum(off-diag * U_neigh) + source
-        H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
-
-        # Owner receives from neighbour: lower * U_neigh
-        # Use direct indexing for 2D U tensor and index_add_ for 2D scatter
-        U_neigh = U[int_neigh]  # (n_internal, 3)
-        owner_contrib = mat.lower.unsqueeze(-1) * U_neigh * V_P.unsqueeze(-1)
-        H.index_add_(0, int_owner, owner_contrib)
-
-        # Neighbour receives from owner: upper * U_owner
-        U_own = U[int_owner]  # (n_internal, 3)
-        neigh_contrib = mat.upper.unsqueeze(-1) * U_own * V_N.unsqueeze(-1)
-        H.index_add_(0, int_neigh, neigh_contrib)
-
-        # Note: H already includes the off-diagonal terms multiplied by V
-        # The momentum equation is: A_p * U = H - grad(p)
-        # where A_p and H are per-volume quantities
-
-        # Pressure gradient contribution to source
-        # grad(p) using Gauss theorem
+        # ============================================
+        # Step 3: Pressure gradient (source term)
+        # ============================================
         w = mesh.face_weights[:n_internal]
         p_P = gather(p, int_owner)
         p_N = gather(p, int_neigh)
@@ -372,19 +439,161 @@ class SIMPLESolver(CoupledSolverBase):
         grad_p = torch.zeros(n_cells, 3, dtype=dtype, device=device)
         grad_p.index_add_(0, int_owner, p_contrib)
         grad_p.index_add_(0, int_neigh, -p_contrib)
+        grad_p = grad_p / cell_volumes_safe.unsqueeze(-1)
 
-        # Source = H - grad(p) (per cell, not per volume)
-        source = H - grad_p
+        # Source = H_old - grad(p)
+        source = H_old - grad_p
 
-        # Solve momentum equation: A_p * U = source
-        # U = source / A_p (point Jacobi for simplicity)
-        A_p_safe = A_p.abs().clamp(min=1e-30)
-        U_solved = source / A_p_safe.unsqueeze(-1)
+        # ============================================
+        # Boundary condition enforcement (penalty method)
+        # ============================================
+        if U_bc is not None:
+            bc_mask = ~torch.isnan(U_bc[:, 0])
+            if bc_mask.any():
+                penalty = 1000.0
+                penalty_diag = torch.zeros(n_cells, dtype=dtype, device=device)
+                penalty_diag[bc_mask] = penalty
+                diag = diag + penalty_diag
 
-        # Under-relaxation: U_new = α * U_solved + (1-α) * U_old
-        U_new = alpha_U * U_solved + (1.0 - alpha_U) * U
+                penalty_source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+                penalty_source[bc_mask] = penalty * U_bc[bc_mask]
+                source = source + penalty_source
 
-        return U_new, A_p, H
+        # ============================================
+        # Step 4: Implicit under-relaxation (OpenFOAM style)
+        # D_dominant = max(|D|, Σ|off-diag|)
+        # D_new = D_dominant / alpha
+        # source += (D_new - D_old) * U_old
+        # ============================================
+        # Compute sum of off-diagonal magnitudes
+        sum_off = torch.zeros(n_cells, dtype=dtype, device=device)
+        sum_off = sum_off + scatter_add(mat.lower.abs(), int_owner, n_cells)
+        sum_off = sum_off + scatter_add(mat.upper.abs(), int_neigh, n_cells)
+
+        # Ensure diagonal dominance
+        D_dominant = torch.max(diag.abs(), sum_off)
+
+        # Apply relaxation
+        D_new = D_dominant / alpha_U
+        mat.diag = D_new
+
+        # Add relaxation contribution to source
+        source = source + (D_new - diag).unsqueeze(-1) * U
+
+        # Store A_p_eff for downstream use
+        A_p_eff = D_new.clone()
+
+        mat.source = source
+
+        # ============================================
+        # Step 5: Solve momentum equation using linear solver
+        # ============================================
+        U_solved = torch.zeros_like(U)
+        for comp in range(3):
+            mat.source = source[:, comp]
+            U_comp, _, _ = mat.solve(
+                self._U_solver, U[:, comp],
+                tolerance=config.U_tolerance,
+                max_iter=config.U_max_iter,
+            )
+            U_solved[:, comp] = U_comp
+
+        # Re-apply boundary conditions directly after solve
+        # This must happen BEFORE computing H from U_solved
+        if U_bc is not None:
+            bc_mask = ~torch.isnan(U_bc[:, 0])
+            if bc_mask.any():
+                U_solved[bc_mask] = U_bc[bc_mask]
+
+        # ============================================
+        # Step 6: Compute H from SOLVED U
+        # In OpenFOAM: H = source + off_diag_product(U★)
+        # where off_diag_product = lower * U_neigh + upper * U_own
+        #
+        # Since lower and upper are NEGATIVE (from diffusion),
+        # lower*U_neigh + upper*U_own is NEGATIVE.
+        # So H = source - |lower*U_neigh + upper*U_own|
+        #
+        # At convergence: D_new * U★ = H, so HbyA = U★
+        # ============================================
+        H_from_Ustar = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        U_neigh_solved = U_solved[int_neigh]
+        H_from_Ustar.index_add_(0, int_owner, mat.lower.unsqueeze(-1) * U_neigh_solved)
+        U_own_solved = U_solved[int_owner]
+        H_from_Ustar.index_add_(0, int_neigh, mat.upper.unsqueeze(-1) * U_own_solved)
+
+        # Add source term (H_old - grad(p) + penalty + under-relaxation)
+        H_from_Ustar = H_from_Ustar + source
+
+        # Add penalty source contribution (this is part of the source term
+        # that is NOT included in the off-diagonal product)
+        # In OpenFOAM, boundary conditions contribute to both source and diag,
+        # and H() = source - diag*psi includes these contributions.
+        # At boundary cells where U★ = U_bc, the penalty terms give:
+        #   penalty*U_bc - penalty*U★ = 0
+        # So the net effect is that H includes H_old - grad(p) - D_orig*U★
+        # We need to add the source term (minus pressure gradient) to H
+        # But we don't have the source stored separately. Instead, we can
+        # use the relationship: source = H_old - grad(p) + penalty*(U_bc - U★)
+        # At boundary cells, penalty*(U_bc - U★) = 0, so source = H_old - grad(p)
+        # And H = source - D_orig*U★ = H_old - grad(p) - D_orig*U★
+        #
+        # Since H_from_Ustar = -off_diag * U★, and H_old = -off_diag * U_old,
+        # we have: H = H_from_Ustar + (H_old - H_from_Ustar) - grad(p) - D_orig*U★
+        # But this requires storing H_old and grad(p) separately.
+        #
+        # Simpler approach: just set HbyA at boundary cells to U_bc
+        # (which we already do below)
+
+        return U_solved, A_p_eff, H_from_Ustar, mat.lower.clone(), mat.upper.clone()
+
+    def _compute_pressure_gradient(
+        self,
+        p: torch.Tensor,
+        mesh: Any,
+    ) -> torch.Tensor:
+        """Compute pressure gradient using Gauss theorem.
+
+        grad(p)_P = (1/V_P) * sum_f(p_f * S_f)
+
+        Args:
+            p: ``(n_cells,)`` — pressure field.
+            mesh: The finite volume mesh.
+
+        Returns:
+            ``(n_cells, 3)`` — pressure gradient.
+        """
+        device = self._device
+        dtype = self._dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+        owner = mesh.owner
+        neighbour = mesh.neighbour
+
+        w = mesh.face_weights[:n_internal]
+        int_owner = owner[:n_internal]
+        int_neigh = neighbour
+
+        p_P = gather(p, int_owner)
+        p_N = gather(p, int_neigh)
+        p_face = w * p_P + (1.0 - w) * p_N
+        face_contrib = p_face.unsqueeze(-1) * mesh.face_areas[:n_internal]
+
+        grad_p = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        grad_p.index_add_(0, int_owner, face_contrib)
+        grad_p.index_add_(0, int_neigh, -face_contrib)
+
+        if n_faces > n_internal:
+            bnd_owner = owner[n_internal:]
+            p_bnd = gather(p, bnd_owner)
+            bnd_face_contrib = p_bnd.unsqueeze(-1) * mesh.face_areas[n_internal:]
+            grad_p.index_add_(0, bnd_owner, bnd_face_contrib)
+
+        V = mesh.cell_volumes.unsqueeze(-1).clamp(min=1e-30)
+        grad_p = grad_p / V
+
+        return grad_p
 
     def _compute_continuity_error(self, phi: torch.Tensor) -> float:
         """Compute the global continuity error.

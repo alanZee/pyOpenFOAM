@@ -238,6 +238,9 @@ def compute_cell_volumes_and_centres(
                 vol = _tet_volume_signed(ref, fc, verts[j], verts[(j + 1) % n_v])
                 if vol.abs() < 1e-30:
                     continue
+                # Use absolute value to ensure consistent contribution
+                # regardless of vertex ordering
+                vol = vol.abs()
                 cent = _tet_centroid(ref, fc, verts[j], verts[(j + 1) % n_v])
                 total_vol += vol
                 weighted_centre += vol * cent

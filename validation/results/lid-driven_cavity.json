@@ -2,15 +2,15 @@
   "case_name": "Lid-Driven Cavity",
   "case_description": "Lid-driven cavity: Re=100, U_lid=1.0, mesh=32x32",
   "overall_passed": false,
-  "run_time": 131.54598180000903,
+  "run_time": 0.07093009998789057,
   "parameters": {
     "n_cells": 32,
     "Re": 100.0
   },
   "solver_info": {
-    "iterations": 5000,
-    "converged": false,
-    "final_residual": NaN
+    "iterations": 2,
+    "converged": true,
+    "final_residual": 0.0
   },
   "field_results": {
     "U": {
@@ -18,33 +18,33 @@
       "l2_tol": 0.15,
       "max_tol": 0.15,
       "metrics": {
-        "l2_norm": NaN,
-        "l2_relative_error": NaN,
-        "max_absolute_error": NaN,
-        "max_relative_error": NaN,
-        "rms_error": NaN
+        "l2_norm": 7.0598883628845215,
+        "l2_relative_error": 0.8148981332778931,
+        "max_absolute_error": 0.6873385906219482,
+        "max_relative_error": 1.000011920928955,
+        "rms_error": 0.12737588584423065
       },
       "component_metrics": {
         "x": {
-          "l2_norm": NaN,
-          "l2_relative_error": NaN,
-          "max_absolute_error": NaN,
-          "max_relative_error": NaN,
-          "rms_error": NaN
+          "l2_norm": 7.017336845397949,
+          "l2_relative_error": 0.8132382035255432,
+          "max_absolute_error": 0.6873385906219482,
+          "max_relative_error": 1.000011920928955,
+          "rms_error": 0.21929174661636353
         },
         "y": {
-          "l2_norm": NaN,
-          "l2_relative_error": NaN,
-          "max_absolute_error": NaN,
-          "max_relative_error": NaN,
-          "rms_error": NaN
+          "l2_norm": 0.7739632725715637,
+          "l2_relative_error": 1.0,
+          "max_absolute_error": 0.23762904107570648,
+          "max_relative_error": 1.0,
+          "rms_error": 0.024186352267861366
         },
         "z": {
-          "l2_norm": NaN,
-          "l2_relative_error": NaN,
-          "max_absolute_error": NaN,
-          "max_relative_error": NaN,
-          "rms_error": NaN
+          "l2_norm": 0.0,
+          "l2_relative_error": 0.0,
+          "max_absolute_error": 0.0,
+          "max_relative_error": 0.0,
+          "rms_error": 0.0
         }
       }
     }
