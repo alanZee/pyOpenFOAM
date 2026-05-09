@@ -46,3 +46,8 @@ Thumbs.db
 *.vtu
 *.foam
 processor*/
+
+# OpenCode
+AGENTS.md
+.opencode/
+.sisyphus/
