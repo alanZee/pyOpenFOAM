@@ -123,8 +123,7 @@ def assemble_pressure_equation(
     V_N = gather(cell_volumes, int_neigh)
 
     # Matrix coefficients (Laplacian discretisation)
-    # NOTE: Dividing by cell volume to store in per-unit-volume form.
-    # This matches how our FvMatrix solver applies the matrix directly.
+    # Per-unit-volume form (divided by V).
     mat.lower = -face_coeff / V_P
     mat.upper = -face_coeff / V_N
 
@@ -135,8 +134,10 @@ def assemble_pressure_equation(
     mat.diag = diag
 
     # Source: divergence of phiHbyA
-    # In OpenFOAM: fvc::div(phiHbyA) returns per-unit-volume (∑φ/V)
-    # But we store WITHOUT dividing by V to match the original working formulation
+    # NOTE: Source is in integrated form (NOT divided by V).
+    # This creates a dimensional inconsistency with the per-unit-volume matrix,
+    # but changing to per-unit-volume causes divergence due to penalty-based BCs.
+    # TODO: Fix by implementing proper boundary conditions instead of penalty method.
     source = torch.zeros(n_cells, dtype=dtype, device=device)
     source = source + scatter_add(-phiHbyA[:n_internal], int_owner, n_cells)
     source = source + scatter_add(phiHbyA[:n_internal], int_neigh, n_cells)
