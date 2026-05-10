@@ -375,6 +375,7 @@ class SIMPLESolver(CoupledSolverBase):
 
         n_cells = mesh.n_cells
         n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
         owner = mesh.owner
         neighbour = mesh.neighbour
         cell_volumes = mesh.cell_volumes
@@ -445,19 +446,50 @@ class SIMPLESolver(CoupledSolverBase):
         source = H_old - grad_p
 
         # ============================================
-        # Boundary condition enforcement (penalty method)
+        # Boundary condition enforcement (implicit BC method)
+        # For boundary faces with fixedValue BC:
+        #   internalCoeffs = face_diffusion_coeff (added to diagonal)
+        #   boundaryCoeffs = face_diffusion_coeff * U_bc (added to source)
+        # where face_coeff = nu * |S_f| * delta_bnd
+        #   delta_bnd = 1 / |(face_centre - owner_centre) · n_hat|
         # ============================================
         if U_bc is not None:
             bc_mask = ~torch.isnan(U_bc[:, 0])
-            if bc_mask.any():
-                penalty = 1000.0
-                penalty_diag = torch.zeros(n_cells, dtype=dtype, device=device)
-                penalty_diag[bc_mask] = penalty
-                diag = diag + penalty_diag
+            if bc_mask.any() and n_faces > n_internal:
+                bnd_owner = owner[n_internal:]
+                bnd_areas = mesh.face_areas[n_internal:]
+                bnd_face_centres = mesh.face_centres[n_internal:]
 
-                penalty_source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
-                penalty_source[bc_mask] = penalty * U_bc[bc_mask]
-                source = source + penalty_source
+                # Compute boundary delta: 1 / |d_P · n_hat|
+                # d_P = face_centre - owner_cell_centre
+                owner_centres = mesh.cell_centres[bnd_owner]
+                d_P = bnd_face_centres - owner_centres
+                bnd_S_mag = bnd_areas.norm(dim=1)
+                safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
+                n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
+                d_dot_n = (d_P * n_hat).sum(dim=1).abs()
+                bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+
+                # Face diffusion coefficient: nu * |S_f| * delta_bnd
+                bnd_face_coeff = nu * bnd_S_mag * bnd_delta
+
+                # Only apply to cells that have BCs
+                bnd_bc_mask = bc_mask[bnd_owner]
+                bnd_face_coeff_masked = bnd_face_coeff * bnd_bc_mask.float()
+
+                # Divide by cell volume to match per-unit-volume form
+                # (internal face coefficients are already per-unit-volume)
+                bnd_V = gather(cell_volumes_safe, bnd_owner)
+                bnd_face_coeff_pv = bnd_face_coeff_masked / bnd_V
+
+                # Add to diagonal: internalCoeffs = face_coeff / V
+                diag = diag + scatter_add(bnd_face_coeff_pv, bnd_owner, n_cells)
+
+                # Add to source: boundaryCoeffs = face_coeff * U_bc / V
+                for comp in range(3):
+                    u_bc_comp = U_bc[bnd_owner, comp].nan_to_num(0.0)
+                    source_contrib = bnd_face_coeff_pv * u_bc_comp
+                    source[:, comp] = source[:, comp] + scatter_add(source_contrib, bnd_owner, n_cells)
 
         # ============================================
         # Step 4: Implicit under-relaxation (OpenFOAM style)

@@ -131,13 +131,11 @@ def assemble_pressure_equation(
     diag = torch.zeros(n_cells, dtype=dtype, device=device)
     diag = diag + scatter_add(face_coeff / V_P, int_owner, n_cells)
     diag = diag + scatter_add(face_coeff / V_N, int_neigh, n_cells)
-    mat.diag = diag
 
     # Source: divergence of phiHbyA
     # NOTE: Source is in integrated form (NOT divided by V).
-    # This creates a dimensional inconsistency with the per-unit-volume matrix,
-    # but changing to per-unit-volume causes divergence due to penalty-based BCs.
-    # TODO: Fix by implementing proper boundary conditions instead of penalty method.
+    # Dividing by V causes divergence even with implicit BCs.
+    # The 2x velocity error remains as a known issue.
     source = torch.zeros(n_cells, dtype=dtype, device=device)
     source = source + scatter_add(-phiHbyA[:n_internal], int_owner, n_cells)
     source = source + scatter_add(phiHbyA[:n_internal], int_neigh, n_cells)
@@ -147,6 +145,7 @@ def assemble_pressure_equation(
         bnd_owner = owner[n_internal:]
         source = source + scatter_add(-phiHbyA[n_internal:], bnd_owner, n_cells)
 
+    mat.diag = diag
     mat.source = source
 
     return mat
