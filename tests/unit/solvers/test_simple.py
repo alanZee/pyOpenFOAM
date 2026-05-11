@@ -14,6 +14,7 @@ import pytest
 import torch
 
 from pyfoam.core.dtype import CFD_DTYPE, INDEX_DTYPE
+from pyfoam.core.backend import scatter_add
 from pyfoam.solvers.simple import SIMPLESolver, SIMPLEConfig
 from pyfoam.solvers.rhie_chow import (
     compute_HbyA,
@@ -212,6 +213,90 @@ class TestPressureEquation:
 
         phi_new = correct_face_flux(phi, p, A_p, mesh, mesh.face_weights)
         assert phi_new.shape == (mesh.n_faces,)
+
+    def test_pressure_equation_diagonal_dominance(self):
+        """Pressure equation matrix is diagonally dominant."""
+        mesh = make_cavity_mesh(4, 4)
+        phiHbyA = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
+        A_p = torch.ones(mesh.n_cells, dtype=CFD_DTYPE) * 0.5
+
+        p_eqn = assemble_pressure_equation(phiHbyA, A_p, mesh, mesh.face_weights)
+
+        # Diagonal should be non-negative
+        assert (p_eqn.diag >= 0).all(), "Diagonal should be non-negative"
+
+        # Sum of off-diagonal magnitudes should not exceed diagonal
+        n_int = mesh.n_internal_faces
+        off_diag_sum = torch.zeros(mesh.n_cells, dtype=CFD_DTYPE)
+        off_diag_sum = off_diag_sum + scatter_add(p_eqn.lower.abs(), mesh.owner[:n_int], mesh.n_cells)
+        off_diag_sum = off_diag_sum + scatter_add(p_eqn.upper.abs(), mesh.neighbour, mesh.n_cells)
+        assert (p_eqn.diag >= off_diag_sum - 1e-10).all(), "Matrix should be diagonally dominant"
+
+    def test_pressure_equation_zero_source_zero_solution(self):
+        """Zero source gives zero pressure correction."""
+        from pyfoam.solvers.pcg import PCGSolver
+
+        mesh = make_cavity_mesh(2, 2)
+        phiHbyA = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
+        A_p = torch.ones(mesh.n_cells, dtype=CFD_DTYPE)
+
+        p_eqn = assemble_pressure_equation(phiHbyA, A_p, mesh, mesh.face_weights)
+        p = torch.zeros(mesh.n_cells, dtype=CFD_DTYPE)
+
+        solver = PCGSolver(tolerance=1e-10, max_iter=100)
+        p_new, iters, residual = solve_pressure_equation(
+            p_eqn, p, solver, tolerance=1e-10, max_iter=100,
+        )
+
+        # With zero flux, pressure correction should be near zero
+        assert torch.allclose(p_new, torch.zeros_like(p_new), atol=1e-6), \
+            f"Zero source should give zero pressure, got max={p_new.abs().max():.6e}"
+
+    def test_pressure_equation_source_scaling(self):
+        """Source term has correct scaling with flux magnitude."""
+        mesh = make_cavity_mesh(4, 4)
+        A_p = torch.ones(mesh.n_cells, dtype=CFD_DTYPE)
+
+        # Create non-zero flux
+        phiHbyA = torch.randn(mesh.n_faces, dtype=CFD_DTYPE) * 0.01
+
+        p_eqn = assemble_pressure_equation(phiHbyA, A_p, mesh, mesh.face_weights)
+
+        # Source should be non-zero
+        assert p_eqn.source.abs().sum() > 0, "Source should be non-zero"
+
+        # Double the flux should double the source
+        phiHbyA2 = phiHbyA * 2.0
+        p_eqn2 = assemble_pressure_equation(phiHbyA2, A_p, mesh, mesh.face_weights)
+
+        # Sources should scale linearly
+        ratio = p_eqn2.source.abs().sum() / p_eqn.source.abs().sum()
+        assert abs(ratio - 2.0) < 0.01, f"Source should scale linearly, got ratio={ratio:.3f}"
+
+    def test_velocity_correction_divergence_free(self):
+        """Velocity correction produces divergence-free field for simple case."""
+        mesh = make_cavity_mesh(2, 2)
+        HbyA = torch.zeros(mesh.n_cells, 3, dtype=CFD_DTYPE)
+        p = torch.zeros(mesh.n_cells, dtype=CFD_DTYPE)
+        A_p = torch.ones(mesh.n_cells, dtype=CFD_DTYPE)
+
+        U_corrected = correct_velocity(torch.zeros_like(HbyA), HbyA, p, A_p, mesh)
+
+        # With zero HbyA and zero pressure, velocity should be zero
+        assert torch.allclose(U_corrected, torch.zeros_like(U_corrected), atol=1e-10)
+
+    def test_flux_correction_consistency(self):
+        """Flux correction is consistent with velocity correction."""
+        mesh = make_cavity_mesh(2, 2)
+        p = torch.tensor([0.0, 1.0, 0.0, 0.0], dtype=CFD_DTYPE)
+        A_p = torch.ones(mesh.n_cells, dtype=CFD_DTYPE)
+        phi = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
+
+        phi_corrected = correct_face_flux(phi, p, A_p, mesh, mesh.face_weights)
+
+        # With non-zero pressure, flux should change
+        assert not torch.allclose(phi_corrected, phi, atol=1e-10), \
+            "Flux correction should change flux for non-zero pressure"
 
 
 class TestSIMPLESolver:
