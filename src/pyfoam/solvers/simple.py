@@ -460,14 +460,20 @@ class SIMPLESolver(CoupledSolverBase):
                 bnd_areas = mesh.face_areas[n_internal:]
                 bnd_face_centres = mesh.face_centres[n_internal:]
 
-                # Compute boundary delta: 1 / |d_P · n_hat|
-                # d_P = face_centre - owner_cell_centre
+                # Compute boundary delta using the FULL cell distance (2×d_P)
+                # to match internal face delta. In OpenFOAM, boundary delta
+                # is 1/|d_P·n̂| where d_P = face_centre - owner_centre = h/2,
+                # giving delta = 2/h. But our formulation uses per-unit-volume
+                # coefficients where the internal delta is 1/h. Using 2×d_P
+                # gives delta = 1/h, matching internal faces.
                 owner_centres = mesh.cell_centres[bnd_owner]
                 d_P = bnd_face_centres - owner_centres
+                # Use 2× the distance to match internal face convention
+                d_full = 2.0 * d_P
                 bnd_S_mag = bnd_areas.norm(dim=1)
                 safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
                 n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
-                d_dot_n = (d_P * n_hat).sum(dim=1).abs()
+                d_dot_n = (d_full * n_hat).sum(dim=1).abs()
                 bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
                 # Face diffusion coefficient: nu * |S_f| * delta_bnd

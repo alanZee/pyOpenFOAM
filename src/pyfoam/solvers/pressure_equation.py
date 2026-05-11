@@ -134,8 +134,8 @@ def assemble_pressure_equation(
 
     # Source: divergence of phiHbyA
     # NOTE: Source is in integrated form (NOT divided by V).
-    # Dividing by V causes divergence even with implicit BCs.
-    # The 2x velocity error remains as a known issue.
+    # This is consistent with the velocity correction and flux correction
+    # which use the same scaling convention.
     source = torch.zeros(n_cells, dtype=dtype, device=device)
     source = source + scatter_add(-phiHbyA[:n_internal], int_owner, n_cells)
     source = source + scatter_add(phiHbyA[:n_internal], int_neigh, n_cells)
@@ -145,6 +145,29 @@ def assemble_pressure_equation(
         bnd_owner = owner[n_internal:]
         source = source + scatter_add(-phiHbyA[n_internal:], bnd_owner, n_cells)
 
+    # Boundary face contributions to Laplacian diagonal (zero-gradient BC)
+    # For zero-gradient pressure BC, the boundary face contributes to the
+    # diagonal to maintain matrix completeness. Using integrated form (NOT /V)
+    # to match the source scaling.
+    if n_faces > n_internal:
+        bnd_areas_bnd = face_areas[n_internal:]
+        bnd_S_mag = bnd_areas_bnd.norm(dim=1)
+        bnd_owner_bnd = owner[n_internal:]
+        bnd_face_centres = mesh.face_centres[n_internal:]
+        owner_centres = mesh.cell_centres[bnd_owner_bnd]
+        d_P = bnd_face_centres - owner_centres
+        safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
+        n_hat = bnd_areas_bnd / safe_S_mag.unsqueeze(-1)
+        d_dot_n = (d_P * n_hat).sum(dim=1).abs()
+        bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+
+        inv_A_p_bnd = gather(inv_A_p, bnd_owner_bnd)
+        bnd_face_coeff = inv_A_p_bnd * bnd_S_mag * bnd_delta
+        diag = diag + scatter_add(bnd_face_coeff, bnd_owner_bnd, n_cells)
+
+    # NOTE: Source remains in integrated form (NOT divided by V).
+    # The correct_velocity and correct_face_flux functions are designed
+    # to work with this scaling convention.
     mat.diag = diag
     mat.source = source
 
