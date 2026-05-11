@@ -131,11 +131,10 @@ def assemble_pressure_equation(
     diag = torch.zeros(n_cells, dtype=dtype, device=device)
     diag = diag + scatter_add(face_coeff / V_P, int_owner, n_cells)
     diag = diag + scatter_add(face_coeff / V_N, int_neigh, n_cells)
+    mat.diag = diag
 
     # Source: divergence of phiHbyA
     # NOTE: Source is in integrated form (NOT divided by V).
-    # This is consistent with the velocity correction and flux correction
-    # which use the same scaling convention.
     source = torch.zeros(n_cells, dtype=dtype, device=device)
     source = source + scatter_add(-phiHbyA[:n_internal], int_owner, n_cells)
     source = source + scatter_add(phiHbyA[:n_internal], int_neigh, n_cells)
@@ -146,9 +145,6 @@ def assemble_pressure_equation(
         source = source + scatter_add(-phiHbyA[n_internal:], bnd_owner, n_cells)
 
     # Boundary face contributions to Laplacian diagonal (zero-gradient BC)
-    # For zero-gradient pressure BC, the boundary face contributes to the
-    # diagonal to maintain matrix completeness. Using integrated form (NOT /V)
-    # to match the source scaling.
     if n_faces > n_internal:
         bnd_areas_bnd = face_areas[n_internal:]
         bnd_S_mag = bnd_areas_bnd.norm(dim=1)
@@ -165,10 +161,6 @@ def assemble_pressure_equation(
         bnd_face_coeff = inv_A_p_bnd * bnd_S_mag * bnd_delta
         diag = diag + scatter_add(bnd_face_coeff, bnd_owner_bnd, n_cells)
 
-    # NOTE: Source remains in integrated form (NOT divided by V).
-    # The correct_velocity and correct_face_flux functions are designed
-    # to work with this scaling convention.
-    mat.diag = diag
     mat.source = source
 
     return mat
