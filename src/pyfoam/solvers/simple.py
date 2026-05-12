@@ -217,26 +217,15 @@ class SIMPLESolver(CoupledSolverBase):
                 H1 = H1 / mesh.cell_volumes.clamp(min=1e-30)
 
                 # rAtU = 1/(A_p - H1)
+                # H1 is sum of negative off-diags, so A_p - H1 = A_p + |H1|
+                # This makes rAtU SMALLER than rAU, which is more accurate
+                # and allows using alpha_p = 1.0 (SIMPLEC's key advantage).
                 rAU = 1.0 / A_p.abs().clamp(min=1e-30)
                 rAtU = 1.0 / (A_p - H1).abs().clamp(min=1e-30)
 
-                # Modify phiHbyA:
-                # phiHbyA += interpolate(rAtU - rAU) * snGrad(p) * magSf
-                w = mesh.face_weights[:n_internal]
-                rAtU_f = w * gather(rAtU, int_owner) + (1.0 - w) * gather(rAtU, int_neigh)
-                rAU_f = w * gather(rAU, int_owner) + (1.0 - w) * gather(rAU, int_neigh)
-                p_P = gather(p, int_owner)
-                p_N = gather(p, int_neigh)
-                delta_f = mesh.delta_coefficients[:n_internal]
-                S_mag = mesh.face_areas[:n_internal].norm(dim=1)
-                snGrad_p = (p_N - p_P) * delta_f
-                phiHbyA[:n_internal] = phiHbyA[:n_internal] + (rAtU_f - rAU_f) * snGrad_p * S_mag
-
-                # Modify HbyA: HbyA -= (rAU - rAtU) * grad(p)
-                grad_p = self._compute_pressure_gradient(p, mesh)
-                HbyA = HbyA - (rAU - rAtU).unsqueeze(-1) * grad_p
-
-                # Use rAtU for pressure equation and velocity correction
+                # SIMPLEC: just replace rAU with rAtU for pressure equation.
+                # No extra modifications to phiHbyA or HbyA needed —
+                # the pressure equation assembles with rAtU directly.
                 A_p_eff = rAtU
 
             # ============================================
@@ -263,7 +252,12 @@ class SIMPLESolver(CoupledSolverBase):
             phi = correct_face_flux(phiHbyA, p_prime, A_p_eff, mesh, mesh.face_weights)
 
             # Under-relax pressure correction
-            alpha_p = config.relaxation_factor_p
+            # SIMPLEC uses alpha_p = 1.0 because rAtU already provides
+            # more accurate corrections (Van Doormaal & Raithby, 1984).
+            if config.consistent:
+                alpha_p = 1.0
+            else:
+                alpha_p = config.relaxation_factor_p
             p_prime = alpha_p * p_prime
 
             # Accumulate pressure: p = p_old + p'
