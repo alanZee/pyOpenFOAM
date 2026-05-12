@@ -228,13 +228,66 @@ def main():
     all_converged = all(r.get("converged", False) for r in results)
 
     if all_converged:
-        print("\n  OVERALL: ALL CASES CONVERGED ✓")
+        print("\n  OVERALL: ALL CASES CONVERGED [OK]")
     elif any_converged:
         print("\n  OVERALL: SOME CASES CONVERGED (partial)")
     else:
-        print("\n  OVERALL: NO CASES CONVERGED ✗")
+        print("\n  OVERALL: NO CASES CONVERGED [FAIL]")
+
+    # Generate velocity profile plot
+    try:
+        _plot_velocity_profiles(results)
+    except Exception as e:
+        print(f"\n  Plot generation failed: {e}")
 
     return results
+
+
+def _plot_velocity_profiles(results: list[dict]) -> None:
+    """Plot u-velocity along vertical centreline vs Ghia benchmark."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    # Ghia benchmark data (full set for plot)
+    ghia_y = [d[0] for d in GHIA_RE100_U_VCENTRELINE]
+    ghia_u = [d[1] for d in GHIA_RE100_U_VCENTRELINE]
+
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+
+    # Plot Ghia benchmark as reference
+    ax.plot(ghia_u, ghia_y, "ks-", markersize=8, linewidth=1.5,
+            label="Ghia et al. (1982)", zorder=5)
+
+    colours = ["#e74c3c", "#3498db", "#2ecc71"]
+    markers = ["o", "^", "D"]
+
+    for i, r in enumerate(results):
+        if not r.get("converged", False) or "centreline" not in r:
+            continue
+        n = r["n_cells"]
+        centreline = r["centreline"]
+        ys = [p[0] for p in centreline]
+        us = [p[1] for p in centreline]
+        l2 = r.get("l2_error", float("nan"))
+        ax.plot(us, ys, f"{markers[i]}--", color=colours[i],
+                markersize=6, linewidth=1.2,
+                label=f"{n}x{n} (L2={l2:.1%})")
+
+    ax.set_xlabel("u-velocity", fontsize=12)
+    ax.set_ylabel("y", fontsize=12)
+    ax.set_title("Lid-Driven Cavity Re=100: u along x=0.5 centreline", fontsize=13)
+    ax.legend(fontsize=10, loc="upper left")
+    ax.grid(True, alpha=0.3)
+    ax.set_xlim(-0.4, 1.1)
+    ax.set_ylim(0, 1.05)
+
+    out_path = "reports/validation_velocity_profile.png"
+    import os
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"\n  Velocity profile plot saved to: {out_path}")
 
 
 if __name__ == "__main__":

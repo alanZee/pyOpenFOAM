@@ -146,27 +146,7 @@ def assemble_pressure_equation(
     # Scale source to per-unit-volume (matching matrix coefficients)
     source = source / cell_volumes
 
-    # Boundary face contributions to Laplacian diagonal (zero-gradient BC)
-    if n_faces > n_internal:
-        bnd_areas_bnd = face_areas[n_internal:]
-        bnd_S_mag = bnd_areas_bnd.norm(dim=1)
-        bnd_owner_bnd = owner[n_internal:]
-        bnd_face_centres = mesh.face_centres[n_internal:]
-        owner_centres = mesh.cell_centres[bnd_owner_bnd]
-        d_P = bnd_face_centres - owner_centres
-        safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
-        n_hat = bnd_areas_bnd / safe_S_mag.unsqueeze(-1)
-        d_dot_n = (d_P * n_hat).sum(dim=1).abs()
-        bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
-
-        inv_A_p_bnd = gather(inv_A_p, bnd_owner_bnd)
-        bnd_face_coeff = inv_A_p_bnd * bnd_S_mag * bnd_delta
-        # Divide by cell volume to match per-unit-volume form
-        bnd_V = gather(cell_volumes, bnd_owner_bnd)
-        diag = diag + scatter_add(bnd_face_coeff / bnd_V, bnd_owner_bnd, n_cells)
-
     mat.source = source
-    mat.diag = diag  # Re-assign after boundary contribution
 
     return mat
 
