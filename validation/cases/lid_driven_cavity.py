@@ -157,10 +157,11 @@ class LidDrivenCavityCase(ValidationCaseBase):
                 cell_top = (j + 1) * nx + i
 
                 # Vertices for horizontal face at y = (j+1)*dy
+                # Winding order produces +y normal (owner=bottom → neighbour=top)
                 p0 = (j + 1) * (nx + 1) + i  # front-left
-                p1 = (j + 1) * (nx + 1) + i + 1  # front-right
+                p1 = offset + (j + 1) * (nx + 1) + i  # back-left
                 p2 = offset + (j + 1) * (nx + 1) + i + 1  # back-right
-                p3 = offset + (j + 1) * (nx + 1) + i  # back-left
+                p3 = (j + 1) * (nx + 1) + i + 1  # front-right
 
                 add_face(p0, p1, p2, p3, cell_bottom, cell_top)
 
@@ -170,23 +171,25 @@ class LidDrivenCavityCase(ValidationCaseBase):
         boundary_patches = []
 
         # Bottom wall (y=0, j=0)
+        # Winding order produces -y normal (outward from cavity)
         start_face = len(faces_list)
         for i in range(nx):
             p0 = i
-            p1 = offset + i
+            p1 = i + 1
             p2 = offset + i + 1
-            p3 = i + 1
+            p3 = offset + i
             add_face(p0, p1, p2, p3, i)
         boundary_patches.append({"name": "bottomWall", "type": "wall", "startFace": start_face, "nFaces": nx})
 
         # Top wall (y=1, j=ny) - moving lid
+        # Winding order produces +y normal (outward from cavity)
         start_face = len(faces_list)
         for i in range(nx):
             cell_idx = (ny - 1) * nx + i
             p0 = ny * (nx + 1) + i
-            p1 = ny * (nx + 1) + i + 1
+            p1 = offset + ny * (nx + 1) + i
             p2 = offset + ny * (nx + 1) + i + 1
-            p3 = offset + ny * (nx + 1) + i
+            p3 = ny * (nx + 1) + i + 1
             add_face(p0, p1, p2, p3, cell_idx)
         boundary_patches.append({"name": "topWall", "type": "wall", "startFace": start_face, "nFaces": nx})
 

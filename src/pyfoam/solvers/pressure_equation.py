@@ -62,7 +62,7 @@ def assemble_pressure_equation(
         upper[f] = -face_coeff / V_N
         diag = -sum(off-diag)
 
-    The source is -div(phiHbyA) (negative because we move it to RHS).
+    The source is -div(phiHbyA) scaled to per-unit-volume.
 
     Args:
         phiHbyA: ``(n_faces,)`` — face flux from HbyA interpolation.
@@ -133,8 +133,7 @@ def assemble_pressure_equation(
     diag = diag + scatter_add(face_coeff / V_N, int_neigh, n_cells)
     mat.diag = diag
 
-    # Source: divergence of phiHbyA
-    # NOTE: Source is in integrated form (NOT divided by V).
+    # Source: -div(phiHbyA) in per-unit-volume form (to match matrix)
     source = torch.zeros(n_cells, dtype=dtype, device=device)
     source = source + scatter_add(-phiHbyA[:n_internal], int_owner, n_cells)
     source = source + scatter_add(phiHbyA[:n_internal], int_neigh, n_cells)
@@ -143,6 +142,9 @@ def assemble_pressure_equation(
     if n_faces > n_internal:
         bnd_owner = owner[n_internal:]
         source = source + scatter_add(-phiHbyA[n_internal:], bnd_owner, n_cells)
+
+    # Scale source to per-unit-volume (matching matrix coefficients)
+    source = source / cell_volumes
 
     # Boundary face contributions to Laplacian diagonal (zero-gradient BC)
     if n_faces > n_internal:
@@ -159,9 +161,12 @@ def assemble_pressure_equation(
 
         inv_A_p_bnd = gather(inv_A_p, bnd_owner_bnd)
         bnd_face_coeff = inv_A_p_bnd * bnd_S_mag * bnd_delta
-        diag = diag + scatter_add(bnd_face_coeff, bnd_owner_bnd, n_cells)
+        # Divide by cell volume to match per-unit-volume form
+        bnd_V = gather(cell_volumes, bnd_owner_bnd)
+        diag = diag + scatter_add(bnd_face_coeff / bnd_V, bnd_owner_bnd, n_cells)
 
     mat.source = source
+    mat.diag = diag  # Re-assign after boundary contribution
 
     return mat
 

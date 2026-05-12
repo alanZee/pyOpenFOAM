@@ -255,6 +255,13 @@ class SIMPLESolver(CoupledSolverBase):
                 max_iter=config.p_max_iter,
             )
 
+            # ============================================
+            # Step 7: Correct face flux (BEFORE pressure relaxation)
+            # In OpenFOAM: phi = phiHbyA - pEqn.flux()
+            # pEqn.flux() uses the SOLVED p' (un-relaxed).
+            # ============================================
+            phi = correct_face_flux(phiHbyA, p_prime, A_p_eff, mesh, mesh.face_weights)
+
             # Under-relax pressure correction
             alpha_p = config.relaxation_factor_p
             p_prime = alpha_p * p_prime
@@ -264,8 +271,8 @@ class SIMPLESolver(CoupledSolverBase):
 
             # ============================================
             # Step 6: Correct velocity
-            # U = HbyA - A_p_eff * grad(p)
-            # where A_p_eff = rAtU if SIMPLEC, else 1/A_p
+            # U = HbyA - (1/A_p) * grad(p)
+            # Uses the relaxed total pressure (matching OpenFOAM).
             # ============================================
             U = correct_velocity(U, HbyA, p, A_p_eff, mesh)
 
@@ -274,13 +281,6 @@ class SIMPLESolver(CoupledSolverBase):
                 bc_mask = ~torch.isnan(U_bc[:, 0])
                 if bc_mask.any():
                     U[bc_mask] = U_bc[bc_mask]
-
-            # ============================================
-            # Step 7: Correct face flux
-            # In OpenFOAM: phi = phiHbyA - pEqn.flux()
-            # Using phiHbyA as base (matching OpenFOAM)
-            # ============================================
-            phi = correct_face_flux(phiHbyA, p, A_p_eff, mesh, mesh.face_weights)
 
             # ============================================
             # Step 8: Check convergence
@@ -420,17 +420,15 @@ class SIMPLESolver(CoupledSolverBase):
         mat.diag = diag.clone()
 
         # ============================================
-        # Step 2: Compute H from OLD U (for source term)
+        # Step 2-3: Compute source term
         # ============================================
-        H_old = torch.zeros(n_cells, 3, dtype=dtype, device=device)
-        U_neigh = U[int_neigh]
-        H_old.index_add_(0, int_owner, -mat.lower.unsqueeze(-1) * U_neigh)
-        U_own = U[int_owner]
-        H_old.index_add_(0, int_neigh, -mat.upper.unsqueeze(-1) * U_own)
-
-        # ============================================
-        # Step 3: Pressure gradient (source term)
-        # ============================================
+        # The source term for the momentum equation.
+        # In OpenFOAM: source = -grad(p) + bc + relaxation
+        # Note: H_old (off-diagonal product of old velocity) must NOT be
+        # included in the source. The off-diagonal part is handled by the
+        # matrix itself. Including H_old causes the equation to converge
+        # to (diag + 2*A_offdiag)*U = -grad(p) instead of the correct
+        # (diag + A_offdiag)*U = -grad(p), which inflates HbyA.
         w = mesh.face_weights[:n_internal]
         p_P = gather(p, int_owner)
         p_N = gather(p, int_neigh)
@@ -442,8 +440,8 @@ class SIMPLESolver(CoupledSolverBase):
         grad_p.index_add_(0, int_neigh, -p_contrib)
         grad_p = grad_p / cell_volumes_safe.unsqueeze(-1)
 
-        # Source = H_old - grad(p)
-        source = H_old - grad_p
+        # Source = -grad(p)  (NO H_old term)
+        source = -grad_p
 
         # ============================================
         # Boundary condition enforcement (implicit BC method)
@@ -553,11 +551,15 @@ class SIMPLESolver(CoupledSolverBase):
         # ============================================
         H_from_Ustar = torch.zeros(n_cells, 3, dtype=dtype, device=device)
         U_neigh_solved = U_solved[int_neigh]
-        H_from_Ustar.index_add_(0, int_owner, mat.lower.unsqueeze(-1) * U_neigh_solved)
+        H_from_Ustar.index_add_(0, int_owner, -mat.lower.unsqueeze(-1) * U_neigh_solved)
         U_own_solved = U_solved[int_owner]
-        H_from_Ustar.index_add_(0, int_neigh, mat.upper.unsqueeze(-1) * U_own_solved)
+        H_from_Ustar.index_add_(0, int_neigh, -mat.upper.unsqueeze(-1) * U_own_solved)
 
-        # Add source term (H_old - grad(p) + penalty + under-relaxation)
+        # Add source term.
+        # source = -grad(p) + penalty + under-relaxation (NO H_old term)
+        # H_from_Ustar already has -A_offdiag * U_solved.
+        # H = -A_offdiag * U★ + source
+        # At convergence: A * U★ = source, so H = diag * U★ and HbyA = U★.
         H_from_Ustar = H_from_Ustar + source
 
         # Add penalty source contribution (this is part of the source term
