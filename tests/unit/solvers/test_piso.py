@@ -246,3 +246,201 @@ class TestPISOvsSIMPLE:
         # Both should produce finite results
         assert torch.isfinite(torch.tensor(conv_2.continuity_error))
         assert torch.isfinite(torch.tensor(conv_3.continuity_error))
+
+
+class TestPISOBoundaryConditions:
+    """Tests for PISO with boundary conditions (U_bc)."""
+
+    def _make_cavity_bc(self, mesh, U_lid=1.0):
+        """Create boundary condition tensor for lid-driven cavity."""
+        n_cells = mesh.n_cells
+        U_bc = torch.full((n_cells, 3), float('nan'), dtype=CFD_DTYPE)
+
+        # For 2x2 mesh: cells 0,1 are bottom row, 2,3 are top row
+        # Bottom wall cells: U = (0, 0, 0)
+        U_bc[0, :] = 0.0
+        U_bc[1, :] = 0.0
+
+        # Top wall cells (lid): U = (U_lid, 0, 0)
+        U_bc[2, 0] = U_lid
+        U_bc[2, 1] = 0.0
+        U_bc[2, 2] = 0.0
+        U_bc[3, 0] = U_lid
+        U_bc[3, 1] = 0.0
+        U_bc[3, 2] = 0.0
+
+        # Left wall cell: U = (0, 0, 0)
+        U_bc[0, :] = 0.0
+        U_bc[2, 0] = U_lid  # Re-set lid after left wall
+
+        # Right wall cell: U = (0, 0, 0)
+        U_bc[1, :] = 0.0
+        U_bc[3, 0] = U_lid  # Re-set lid after right wall
+
+        return U_bc
+
+    def test_piso_with_bc_returns_correct_shapes(self):
+        """PISO with U_bc returns correct shapes."""
+        mesh = make_cavity_mesh(2, 2)
+        solver = PISOSolver(mesh, PISOConfig(n_correctors=2))
+
+        U = torch.zeros(mesh.n_cells, 3, dtype=CFD_DTYPE)
+        p = torch.zeros(mesh.n_cells, dtype=CFD_DTYPE)
+        phi = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
+        U_bc = self._make_cavity_bc(mesh)
+
+        U_out, p_out, phi_out, convergence = solver.solve(
+            U, p, phi, U_bc=U_bc, tolerance=1e-3,
+        )
+
+        assert U_out.shape == (mesh.n_cells, 3)
+        assert p_out.shape == (mesh.n_cells,)
+        assert phi_out.shape == (mesh.n_faces,)
+
+    def test_piso_bc_enforced_after_solve(self):
+        """PISO enforces boundary conditions after solve."""
+        mesh = make_cavity_mesh(2, 2)
+        solver = PISOSolver(mesh, PISOConfig(n_correctors=2))
+
+        U = torch.zeros(mesh.n_cells, 3, dtype=CFD_DTYPE)
+        p = torch.zeros(mesh.n_cells, dtype=CFD_DTYPE)
+        phi = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
+        U_bc = self._make_cavity_bc(mesh, U_lid=1.0)
+
+        U_out, _, _, _ = solver.solve(U, p, phi, U_bc=U_bc, tolerance=1e-3)
+
+        # Top wall cells should have u=1.0
+        assert abs(U_out[2, 0].item() - 1.0) < 1e-10
+        assert abs(U_out[3, 0].item() - 1.0) < 1e-10
+
+        # Bottom wall cells should have u=0
+        assert abs(U_out[0, 0].item()) < 1e-10
+        assert abs(U_out[1, 0].item()) < 1e-10
+
+    def test_piso_bc_preserves_lid_velocity(self):
+        """PISO preserves lid velocity across multiple time steps."""
+        mesh = make_cavity_mesh(2, 2)
+        solver = PISOSolver(mesh, PISOConfig(n_correctors=2))
+
+        U = torch.zeros(mesh.n_cells, 3, dtype=CFD_DTYPE)
+        p = torch.zeros(mesh.n_cells, dtype=CFD_DTYPE)
+        phi = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
+        U_bc = self._make_cavity_bc(mesh, U_lid=1.0)
+
+        # Run 5 time steps
+        for step in range(5):
+            U, p, phi, convergence = solver.solve(
+                U, p, phi, U_bc=U_bc, tolerance=1e-3,
+            )
+
+        # Lid velocity should still be 1.0
+        assert abs(U[2, 0].item() - 1.0) < 1e-10
+        assert abs(U[3, 0].item() - 1.0) < 1e-10
+
+    def test_piso_bc_no_bc_same_as_before(self):
+        """PISO without U_bc behaves same as before."""
+        mesh = make_cavity_mesh(2, 2)
+        solver = PISOSolver(mesh, PISOConfig(n_correctors=2))
+
+        U = torch.zeros(mesh.n_cells, 3, dtype=CFD_DTYPE)
+        U[:, 0] = 1.0
+        p = torch.zeros(mesh.n_cells, dtype=CFD_DTYPE)
+        phi = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
+
+        U_out, p_out, phi_out, convergence = solver.solve(
+            U, p, phi, tolerance=1e-3,
+        )
+
+        assert U_out.shape == (mesh.n_cells, 3)
+        assert torch.isfinite(U_out).all()
+
+    def test_piso_bc_continuity_error_finite(self):
+        """PISO with BC produces finite continuity error."""
+        mesh = make_cavity_mesh(2, 2)
+        solver = PISOSolver(mesh, PISOConfig(n_correctors=2))
+
+        U = torch.zeros(mesh.n_cells, 3, dtype=CFD_DTYPE)
+        p = torch.zeros(mesh.n_cells, dtype=CFD_DTYPE)
+        phi = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
+        U_bc = self._make_cavity_bc(mesh)
+
+        _, _, _, convergence = solver.solve(U, p, phi, U_bc=U_bc, tolerance=1e-3)
+
+        assert torch.isfinite(torch.tensor(convergence.continuity_error))
+
+    def test_piso_bc_larger_mesh(self):
+        """PISO with BC on 4x4 mesh."""
+        mesh = make_cavity_mesh(4, 4)
+        solver = PISOSolver(mesh, PISOConfig(n_correctors=2))
+
+        U = torch.zeros(mesh.n_cells, 3, dtype=CFD_DTYPE)
+        p = torch.zeros(mesh.n_cells, dtype=CFD_DTYPE)
+        phi = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
+
+        # Create BC for 4x4 mesh
+        n_cells = mesh.n_cells
+        U_bc = torch.full((n_cells, 3), float('nan'), dtype=CFD_DTYPE)
+
+        # Bottom wall (j=0): cells 0-3
+        for i in range(4):
+            U_bc[i, :] = 0.0
+
+        # Top wall (j=3): cells 12-15 (lid)
+        for i in range(4):
+            U_bc[12 + i, 0] = 1.0
+            U_bc[12 + i, 1] = 0.0
+            U_bc[12 + i, 2] = 0.0
+
+        # Left wall (i=0): cells 0, 4, 8, 12
+        for j in range(4):
+            U_bc[j * 4, :] = 0.0
+
+        # Right wall (i=3): cells 3, 7, 11, 15
+        for j in range(4):
+            U_bc[j * 4 + 3, :] = 0.0
+
+        # Re-set lid (corners belong to lid)
+        for i in range(4):
+            U_bc[12 + i, 0] = 1.0
+
+        U_out, p_out, phi_out, convergence = solver.solve(
+            U, p, phi, U_bc=U_bc, tolerance=1e-3,
+        )
+
+        assert U_out.shape == (n_cells, 3)
+        assert torch.isfinite(U_out).all()
+
+        # Check BC enforcement
+        for i in range(4):
+            assert abs(U_out[12 + i, 0].item() - 1.0) < 1e-10
+
+    def test_piso_bc_transient_convergence(self):
+        """PISO with BC runs multiple time steps without crashing."""
+        mesh = make_cavity_mesh(4, 4)
+        solver = PISOSolver(mesh, PISOConfig(n_correctors=3))
+
+        U = torch.zeros(mesh.n_cells, 3, dtype=CFD_DTYPE)
+        p = torch.zeros(mesh.n_cells, dtype=CFD_DTYPE)
+        phi = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
+
+        n_cells = mesh.n_cells
+        U_bc = torch.full((n_cells, 3), float('nan'), dtype=CFD_DTYPE)
+        for i in range(4):
+            U_bc[i, :] = 0.0
+            U_bc[12 + i, 0] = 1.0
+        for j in range(4):
+            U_bc[j * 4, :] = 0.0
+            U_bc[j * 4 + 3, :] = 0.0
+        for i in range(4):
+            U_bc[12 + i, 0] = 1.0
+
+        # Run multiple time steps - just verify it doesn't crash
+        for step in range(5):
+            U, p, phi, convergence = solver.solve(
+                U, p, phi, U_bc=U_bc, tolerance=1e-3,
+            )
+
+        # Verify shapes are preserved
+        assert U.shape == (n_cells, 3)
+        assert p.shape == (n_cells,)
+        assert phi.shape == (mesh.n_faces,)

@@ -124,6 +124,7 @@ class PIMPLESolver(CoupledSolverBase):
         p: torch.Tensor,
         phi: torch.Tensor,
         *,
+        U_bc: torch.Tensor | None = None,
         U_old: torch.Tensor | None = None,
         p_old: torch.Tensor | None = None,
         max_outer_iterations: int = 100,
@@ -135,6 +136,9 @@ class PIMPLESolver(CoupledSolverBase):
             U: ``(n_cells, 3)`` — velocity field.
             p: ``(n_cells,)`` — pressure field.
             phi: ``(n_faces,)`` — face flux field.
+            U_bc: ``(n_cells, 3)`` — prescribed velocity for boundary cells.
+                Cells with fixed-value BCs should have their prescribed values;
+                cells without BCs should have NaN. If None, no BC enforcement.
             U_old: Previous time-step velocity (for time derivative).
             p_old: Previous time-step pressure (for time derivative).
             max_outer_iterations: Maximum outer-loop iterations (overrides config).
@@ -167,7 +171,7 @@ class PIMPLESolver(CoupledSolverBase):
             # ============================================
             # Momentum predictor (with relaxation)
             # ============================================
-            U, A_p, H = self._momentum_predictor(U, p, phi, U_old)
+            U, A_p, H = self._momentum_predictor(U, p, phi, U_old, U_bc=U_bc)
 
             # ============================================
             # PISO correction loop
@@ -199,6 +203,12 @@ class PIMPLESolver(CoupledSolverBase):
                 # Correct face flux
                 phi = correct_face_flux(phi, p, A_p, mesh, mesh.face_weights)
 
+                # Re-apply BCs after velocity correction
+                if U_bc is not None:
+                    bc_mask = ~torch.isnan(U_bc[:, 0])
+                    if bc_mask.any():
+                        U[bc_mask] = U_bc[bc_mask]
+
                 # Recompute H for subsequent corrections
                 if corr < config.n_correctors - 1:
                     H = self._recompute_H(U, phi)
@@ -213,6 +223,12 @@ class PIMPLESolver(CoupledSolverBase):
                 U = alpha_U * U + (1.0 - alpha_U) * U_prev
             if alpha_p < 1.0:
                 p = alpha_p * p + (1.0 - alpha_p) * p_prev
+
+            # Re-apply boundary conditions after relaxation
+            if U_bc is not None:
+                bc_mask = ~torch.isnan(U_bc[:, 0])
+                if bc_mask.any():
+                    U[bc_mask] = U_bc[bc_mask]
 
             # ============================================
             # Check convergence
@@ -263,6 +279,7 @@ class PIMPLESolver(CoupledSolverBase):
         p: torch.Tensor,
         phi: torch.Tensor,
         U_old: torch.Tensor | None = None,
+        U_bc: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Solve the momentum equation with under-relaxation.
 
@@ -271,6 +288,7 @@ class PIMPLESolver(CoupledSolverBase):
             p: ``(n_cells,)`` — current pressure.
             phi: ``(n_faces,)`` — current face flux.
             U_old: Previous time-step velocity.
+            U_bc: ``(n_cells, 3)`` — prescribed velocity for boundary cells.
 
         Returns:
             Tuple of ``(U_new, A_p, H)``.
@@ -283,6 +301,7 @@ class PIMPLESolver(CoupledSolverBase):
 
         n_cells = mesh.n_cells
         n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
         owner = mesh.owner
         neighbour = mesh.neighbour
         cell_volumes = mesh.cell_volumes
@@ -310,13 +329,56 @@ class PIMPLESolver(CoupledSolverBase):
         lower = (-diff_coeff + flux_neg) / V_P
         upper = (-diff_coeff - flux_pos) / V_N
 
-        A_p = torch.zeros(n_cells, dtype=dtype, device=device)
-        A_p = A_p + scatter_add((diff_coeff - flux_neg) / V_P, int_owner, n_cells)
-        A_p = A_p + scatter_add((diff_coeff + flux_pos) / V_N, int_neigh, n_cells)
+        # Diagonal
+        diag = torch.zeros(n_cells, dtype=dtype, device=device)
+        diag = diag + scatter_add((diff_coeff - flux_neg) / V_P, int_owner, n_cells)
+        diag = diag + scatter_add((diff_coeff + flux_pos) / V_N, int_neigh, n_cells)
 
-        # H(U)
+        # Source term
+        source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+
+        # ============================================
+        # Boundary condition enforcement (implicit BC method)
+        # ============================================
+        if U_bc is not None:
+            bc_mask = ~torch.isnan(U_bc[:, 0])
+            if bc_mask.any() and n_faces > n_internal:
+                bnd_owner = owner[n_internal:]
+                bnd_areas = mesh.face_areas[n_internal:]
+                bnd_face_centres = mesh.face_centres[n_internal:]
+
+                # Compute boundary delta using 2×d_P to match internal face convention
+                owner_centres = mesh.cell_centres[bnd_owner]
+                d_P = bnd_face_centres - owner_centres
+                d_full = 2.0 * d_P
+                bnd_S_mag = bnd_areas.norm(dim=1)
+                safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
+                n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
+                d_dot_n = (d_full * n_hat).sum(dim=1).abs()
+                bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+
+                # Face diffusion coefficient: nu * |S_f| * delta_bnd
+                bnd_face_coeff = nu * bnd_S_mag * bnd_delta
+
+                # Only apply to cells that have BCs
+                bnd_bc_mask = bc_mask[bnd_owner]
+                bnd_face_coeff_masked = bnd_face_coeff * bnd_bc_mask.float()
+
+                # Divide by cell volume to match per-unit-volume form
+                bnd_V = gather(cell_volumes_safe, bnd_owner)
+                bnd_face_coeff_pv = bnd_face_coeff_masked / bnd_V
+
+                # Add to diagonal: internalCoeffs = face_coeff / V
+                diag = diag + scatter_add(bnd_face_coeff_pv, bnd_owner, n_cells)
+
+                # Add to source: boundaryCoeffs = face_coeff * U_bc / V
+                for comp in range(3):
+                    u_bc_comp = U_bc[bnd_owner, comp].nan_to_num(0.0)
+                    source_contrib = bnd_face_coeff_pv * u_bc_comp
+                    source[:, comp] = source[:, comp] + scatter_add(source_contrib, bnd_owner, n_cells)
+
+        # H(U) - off-diagonal contributions
         H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
-        # Use direct indexing for 2D U tensor and index_add_ for 2D scatter
         U_neigh = U[int_neigh]  # (n_internal, 3)
         U_own = U[int_owner]  # (n_internal, 3)
 
@@ -325,6 +387,12 @@ class PIMPLESolver(CoupledSolverBase):
 
         neigh_contrib = upper.unsqueeze(-1) * U_own * V_N.unsqueeze(-1)
         H.index_add_(0, int_neigh, neigh_contrib)
+
+        # H includes off-diagonal product + BC source (no pressure gradient)
+        H = H + source
+
+        # Store BC source for _recompute_H
+        self._bc_source = source.clone()
 
         # Pressure gradient
         w = mesh.face_weights[:n_internal]
@@ -337,16 +405,22 @@ class PIMPLESolver(CoupledSolverBase):
         grad_p.index_add_(0, int_owner, p_contrib)
         grad_p.index_add_(0, int_neigh, -p_contrib)
 
-        source = H - grad_p
+        # Solve: A_p * U = H - grad(p)
+        total_source = H - grad_p
 
-        # Solve: U = source / A_p
-        A_p_safe = A_p.abs().clamp(min=1e-30)
-        U_solved = source / A_p_safe.unsqueeze(-1)
+        diag_safe = diag.abs().clamp(min=1e-30)
+        U_solved = total_source / diag_safe.unsqueeze(-1)
 
         # Under-relaxation
         U_new = alpha_U * U_solved + (1.0 - alpha_U) * U
 
-        return U_new, A_p, H
+        # Re-apply boundary conditions directly after solve
+        if U_bc is not None:
+            bc_mask = ~torch.isnan(U_bc[:, 0])
+            if bc_mask.any():
+                U_new[bc_mask] = U_bc[bc_mask]
+
+        return U_new, diag, H
 
     def _recompute_H(
         self,
@@ -354,6 +428,8 @@ class PIMPLESolver(CoupledSolverBase):
         phi: torch.Tensor,
     ) -> torch.Tensor:
         """Recompute H(U) from the corrected velocity field.
+
+        Includes BC source contributions stored from momentum predictor.
 
         Args:
             U: ``(n_cells, 3)`` — corrected velocity.
@@ -394,7 +470,6 @@ class PIMPLESolver(CoupledSolverBase):
         upper = (-diff_coeff - flux_pos) / V_N
 
         H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
-        # Use direct indexing for 2D U tensor and index_add_ for 2D scatter
         U_neigh = U[int_neigh]  # (n_internal, 3)
         U_own = U[int_owner]  # (n_internal, 3)
 
@@ -403,6 +478,10 @@ class PIMPLESolver(CoupledSolverBase):
 
         neigh_contrib = upper.unsqueeze(-1) * U_own * V_N.unsqueeze(-1)
         H.index_add_(0, int_neigh, neigh_contrib)
+
+        # Add stored BC source contributions
+        if hasattr(self, '_bc_source'):
+            H = H + self._bc_source
 
         return H
 
