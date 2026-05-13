@@ -11,6 +11,7 @@ The solver reads:
 - ``0/U``, ``0/p`` — initial/boundary conditions
 - ``constant/polyMesh`` — mesh
 - ``constant/transportProperties`` — kinematic viscosity (nu)
+- ``constant/turbulenceProperties`` — turbulence model selection (optional)
 - ``system/controlDict`` — endTime, deltaT, writeControl, writeInterval
 - ``system/fvSchemes`` — discretisation schemes
 - ``system/fvSolution`` — SIMPLE settings, linear solver tolerances
@@ -26,8 +27,9 @@ Usage::
 from __future__ import annotations
 
 import logging
+import re
 from pathlib import Path
-from typing import Union
+from typing import Any, Union
 
 import torch
 
@@ -50,6 +52,11 @@ class SimpleFoam(SolverBase):
     Reads an OpenFOAM case directory and solves the steady-state
     incompressible Navier-Stokes equations using the SIMPLE algorithm.
 
+    Supports optional RANS turbulence modelling via
+    ``constant/turbulenceProperties``.  When enabled, the effective
+    viscosity ``ν_eff = ν + ν_t`` is passed to the SIMPLE solver
+    each outer iteration.
+
     Parameters
     ----------
     case_path : str | Path
@@ -65,6 +72,10 @@ class SimpleFoam(SolverBase):
         ``(n_faces,)`` face flux field.
     nu : float
         Kinematic viscosity.
+    turbulence_enabled : bool
+        Whether RANS turbulence modelling is active.
+    ras : RASModel or None
+        The RAS turbulence model wrapper (None if turbulence is disabled).
     """
 
     def __init__(self, case_path: Union[str, Path]) -> None:
@@ -85,7 +96,12 @@ class SimpleFoam(SolverBase):
         # Store raw field data for writing
         self._U_data, self._p_data = self._init_field_data()
 
+        # Turbulence model (optional)
+        self.ras, self.turbulence_enabled = self._init_turbulence()
+
         logger.info("SimpleFoam ready: nu=%.6e, Re~%.0f", self.nu, 1.0 / max(self.nu, 1e-30))
+        if self.turbulence_enabled:
+            logger.info("  Turbulence: %s", self.ras)
 
     # ------------------------------------------------------------------
     # Property reading
@@ -100,7 +116,6 @@ class SimpleFoam(SolverBase):
         tp_path = self.case_path / "constant" / "transportProperties"
         if tp_path.exists():
             try:
-                import re
                 from pyfoam.io.dictionary import parse_dict_file
                 tp = parse_dict_file(tp_path)
                 raw = tp.get("nu", 1.0)
@@ -188,6 +203,143 @@ class SimpleFoam(SolverBase):
         return U_data, p_data
 
     # ------------------------------------------------------------------
+    # Turbulence model
+    # ------------------------------------------------------------------
+
+    def _init_turbulence(self) -> tuple[Any, bool]:
+        """Initialise RAS turbulence model from turbulenceProperties.
+
+        Reads ``constant/turbulenceProperties`` to determine:
+        - ``simulationType``: ``laminar`` (default) or ``RAS``
+        - ``RAS/model``: model name (e.g. ``kEpsilon``, ``kOmegaSST``)
+
+        Returns:
+            Tuple of ``(RASModel | None, enabled)``.
+        """
+        tp_path = self.case_path / "constant" / "turbulenceProperties"
+        if not tp_path.exists():
+            return None, False
+
+        try:
+            from pyfoam.io.dictionary import parse_dict_file
+            from pyfoam.turbulence.ras_model import RASModel, RASConfig
+
+            tp = parse_dict_file(tp_path)
+            sim_type = str(tp.get("simulationType", "laminar")).strip()
+
+            if sim_type != "RAS":
+                return None, False
+
+            # Read RAS settings
+            ras_dict = tp.get("RAS", {})
+            if isinstance(ras_dict, dict):
+                model_name = str(ras_dict.get("model", "kEpsilon")).strip()
+                ras_enabled = str(ras_dict.get("enabled", "true")).strip().lower() == "true"
+            else:
+                model_name = "kEpsilon"
+                ras_enabled = True
+
+            if not ras_enabled:
+                return None, False
+
+            config = RASConfig(
+                model_name=model_name,
+                enabled=True,
+                nu=self.nu,
+            )
+            ras = RASModel(self.mesh, self.U, self.phi, config)
+            logger.info("Turbulence model: %s", model_name)
+            return ras, True
+
+        except Exception as e:
+            logger.warning("Could not initialise turbulence model: %s", e)
+            return None, False
+
+    # ------------------------------------------------------------------
+    # Boundary conditions
+    # ------------------------------------------------------------------
+
+    def _build_boundary_conditions(self) -> torch.Tensor:
+        """Build the velocity BC tensor from the 0/U boundary field.
+
+        Reads the boundary conditions from the ``0/U`` file and constructs
+        a tensor of prescribed velocities.  Cells with fixed-value BCs get
+        their prescribed values; cells without BCs get NaN.
+
+        Returns:
+            ``(n_cells, 3)`` — prescribed velocity (NaN where no BC).
+        """
+        device = get_device()
+        dtype = get_default_dtype()
+        n_cells = self.mesh.n_cells
+
+        U_bc = torch.full((n_cells, 3), float('nan'), dtype=dtype, device=device)
+
+        # Read boundary field from 0/U
+        U_field_data = self.case.read_field("U", 0)
+        boundary_field = U_field_data.boundary_field
+
+        if boundary_field is None or len(boundary_field) == 0:
+            return U_bc
+
+        # Get mesh boundary info (has startFace and nFaces)
+        mesh_boundary = self.case.boundary
+        owner = self.mesh.owner
+
+        # Build a lookup from patch name to mesh boundary info
+        mesh_patches = {}
+        for bp in mesh_boundary:
+            mesh_patches[bp.name] = {
+                "startFace": bp.start_face,
+                "nFaces": bp.n_faces,
+            }
+
+        # Iterate over BoundaryPatch objects from the field file
+        for patch in boundary_field:
+            if patch.patch_type == "fixedValue" and patch.value is not None:
+                value = self._parse_vector_value(patch.value)
+                if value is not None:
+                    # Get face range from mesh boundary info
+                    mesh_info = mesh_patches.get(patch.name)
+                    if mesh_info is not None:
+                        start_face = mesh_info["startFace"]
+                        n_faces = mesh_info["nFaces"]
+                        for i in range(n_faces):
+                            face_idx = start_face + i
+                            cell_idx = owner[face_idx].item()
+                            U_bc[cell_idx, 0] = value[0]
+                            U_bc[cell_idx, 1] = value[1]
+                            U_bc[cell_idx, 2] = value[2]
+
+        return U_bc
+
+    @staticmethod
+    def _parse_vector_value(value: Any) -> tuple[float, float, float] | None:
+        """Parse a vector value from field data.
+
+        Handles both tuple/list and string formats like ``'uniform ( 1 0 0 )'``.
+
+        Args:
+            value: Raw value from BoundaryPatch.
+
+        Returns:
+            Tuple of (x, y, z) floats, or None if unparseable.
+        """
+        if isinstance(value, (tuple, list)) and len(value) >= 3:
+            return (float(value[0]), float(value[1]), float(value[2]))
+
+        if isinstance(value, str):
+            # Parse "uniform ( x y z )" format
+            match = re.search(
+                r"\(\s*([\d.eE+\-]+)\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)\s*\)",
+                value,
+            )
+            if match:
+                return (float(match.group(1)), float(match.group(2)), float(match.group(3)))
+
+        return None
+
+    # ------------------------------------------------------------------
     # SIMPLE solver construction
     # ------------------------------------------------------------------
 
@@ -204,6 +356,7 @@ class SimpleFoam(SolverBase):
             n_non_orthogonal_correctors=self.n_non_orth_correctors,
             relaxation_factor_p=self.alpha_p,
             relaxation_factor_U=self.alpha_U,
+            nu=self.nu,
         )
         return SIMPLESolver(self.mesh, config)
 
@@ -215,7 +368,9 @@ class SimpleFoam(SolverBase):
         """Run the simpleFoam solver.
 
         Executes the SIMPLE algorithm in a time-stepping loop until
-        convergence or ``endTime`` is reached.
+        convergence or ``endTime`` is reached.  When a turbulence model
+        is active, it is corrected each outer iteration and the effective
+        viscosity ``ν + ν_t`` is passed to the SIMPLE solver.
 
         Returns:
             Final :class:`ConvergenceData`.
@@ -239,6 +394,9 @@ class SimpleFoam(SolverBase):
         logger.info("  endTime=%.6g, deltaT=%.6g", self.end_time, self.delta_t)
         logger.info("  relaxation: alpha_U=%.2f, alpha_p=%.2f", self.alpha_U, self.alpha_p)
 
+        # Build boundary conditions
+        U_bc = self._build_boundary_conditions()
+
         # Write initial fields
         self._write_fields(self.start_time)
         time_loop.mark_written()
@@ -246,9 +404,14 @@ class SimpleFoam(SolverBase):
         last_convergence: ConvergenceData | None = None
 
         for t, step in time_loop:
+            # Update turbulence model (if active)
+            nu_field = self._update_turbulence()
+
             # Run one SIMPLE outer iteration
             self.U, self.p, self.phi, conv = solver.solve(
                 self.U, self.p, self.phi,
+                U_bc=U_bc,
+                nu_field=nu_field,
                 max_outer_iterations=self.max_outer_iterations,
                 tolerance=self.convergence_tolerance,
             )
@@ -282,6 +445,28 @@ class SimpleFoam(SolverBase):
                 logger.warning("simpleFoam completed without full convergence")
 
         return last_convergence or ConvergenceData()
+
+    def _update_turbulence(self) -> torch.Tensor | None:
+        """Update the turbulence model and return the effective viscosity.
+
+        If turbulence is disabled, returns ``None`` (solver uses scalar ν).
+
+        Returns:
+            ``(n_cells,)`` effective viscosity ``ν + ν_t``, or ``None``.
+        """
+        if not self.turbulence_enabled or self.ras is None:
+            return None
+
+        # Update velocity and flux references in the turbulence model
+        self.ras._model._U = self.U
+        self.ras._model._phi = self.phi
+
+        # Correct turbulence (solve transport equations)
+        self.ras.correct()
+
+        # Return effective viscosity: ν + ν_t
+        nu_eff = self.ras.mu_eff()
+        return nu_eff
 
     # ------------------------------------------------------------------
     # Field writing

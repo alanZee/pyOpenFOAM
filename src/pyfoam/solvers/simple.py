@@ -131,6 +131,7 @@ class SIMPLESolver(CoupledSolverBase):
         U_bc: torch.Tensor | None = None,
         U_old: torch.Tensor | None = None,
         p_old: torch.Tensor | None = None,
+        nu_field: torch.Tensor | None = None,
         max_outer_iterations: int = 100,
         tolerance: float = 1e-4,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, ConvergenceData]:
@@ -145,6 +146,10 @@ class SIMPLESolver(CoupledSolverBase):
                 cells without BCs should have NaN. If None, no BC enforcement.
             U_old: Previous time-step velocity (unused in SIMPLE, kept for API).
             p_old: Previous time-step pressure (unused in SIMPLE, kept for API).
+            nu_field: ``(n_cells,)`` — per-cell effective viscosity (ν + ν_t).
+                If provided, overrides the scalar ``config.nu`` for turbulence
+                coupling.  Values are interpolated to faces in the momentum
+                predictor.
             max_outer_iterations: Maximum outer-loop iterations.
             tolerance: Convergence tolerance on continuity residual.
 
@@ -175,7 +180,9 @@ class SIMPLESolver(CoupledSolverBase):
             # ============================================
             # Step 1: Momentum predictor
             # ============================================
-            U, A_p, H, mat_lower, mat_upper = self._momentum_predictor(U, p, phi, U_bc=U_bc)
+            U, A_p, H, mat_lower, mat_upper = self._momentum_predictor(
+                U, p, phi, U_bc=U_bc, nu_field=nu_field,
+            )
 
             # ============================================
             # Step 2: Compute HbyA
@@ -340,6 +347,7 @@ class SIMPLESolver(CoupledSolverBase):
         p: torch.Tensor,
         phi: torch.Tensor,
         U_bc: torch.Tensor | None = None,
+        nu_field: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Solve the momentum equation with under-relaxation.
 
@@ -354,6 +362,8 @@ class SIMPLESolver(CoupledSolverBase):
             p: ``(n_cells,)`` — current pressure.
             phi: ``(n_faces,)`` — current face flux.
             U_bc: ``(n_cells, 3)`` — prescribed velocity for boundary cells.
+            nu_field: ``(n_cells,)`` — per-cell effective viscosity.
+                If None, uses ``config.nu`` (scalar).
 
         Returns:
             Tuple of ``(U_new, A_p_eff, H)`` where:
@@ -390,10 +400,18 @@ class SIMPLESolver(CoupledSolverBase):
         int_neigh = neighbour
 
         # Diffusion coefficient (viscous)
-        nu = config.nu
+        # Use per-cell nu_field (face-interpolated) if provided, else scalar nu
         S_mag = face_areas[:n_internal].norm(dim=1)
         delta_f = delta_coeffs[:n_internal]
-        diff_coeff = nu * S_mag * delta_f
+        if nu_field is not None:
+            nu_field = nu_field.to(device=device, dtype=dtype)
+            nu_face = 0.5 * (
+                gather(nu_field, int_owner) + gather(nu_field, int_neigh)
+            )
+            diff_coeff = nu_face * S_mag * delta_f
+        else:
+            nu = config.nu
+            diff_coeff = nu * S_mag * delta_f
 
         # Convection (upwind)
         flux = phi[:n_internal]
@@ -466,7 +484,11 @@ class SIMPLESolver(CoupledSolverBase):
                 bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
                 # Face diffusion coefficient: nu * |S_f| * delta_bnd
-                bnd_face_coeff = nu * bnd_S_mag * bnd_delta
+                if nu_field is not None:
+                    bnd_nu = gather(nu_field, bnd_owner)
+                    bnd_face_coeff = bnd_nu * bnd_S_mag * bnd_delta
+                else:
+                    bnd_face_coeff = nu * bnd_S_mag * bnd_delta
 
                 # Only apply to cells that have BCs
                 bnd_bc_mask = bc_mask[bnd_owner]
