@@ -116,12 +116,12 @@ Phase 7: 完善后处理和工具
 | T1.3.1 | 分析 OpenFOAM 隐式 Rhie-Chow 实现 | 无 | 🟡 | ❌ | 理解 Gauss 定理隐式 RC |
 | T1.3.2 | 修改 compute_face_flux_HbyA() | T1.3.1 | 🟡 | ❌ | 压力场平滑 |
 | T1.3.3 | 添加 Rhie-Chow 单元测试 | T1.3.2 | 🟡 | ❌ | 无棋盘振荡 |
-| **T1.4** | **添加耦合求解器单元测试** | T0.1 | 🟡 HIGH | ❌ 待做 | 测试通过 |
-| T1.4.1 | 测试 CoupledSolverBase | 无 | 🟡 | ❌ | 基类功能正确 |
-| T1.4.2 | 测试 ConvergenceData | 无 | 🟡 | ❌ | 收敛数据记录正确 |
-| **T1.5** | **添加残差监控单元测试** | 无 | 🟢 MEDIUM | ❌ 待做 | 测试通过 |
-| T1.5.1 | 测试 ResidualMonitor | 无 | 🟢 | ❌ | 残差计算正确 |
-| T1.5.2 | 测试 ConvergenceInfo | 无 | 🟢 | ❌ | 收敛判断正确 |
+| **T1.4** | **添加耦合求解器单元测试** | T0.1 | 🟡 HIGH | ✅ 完成 | 25 测试通过 |
+| T1.4.1 | 测试 CoupledSolverBase | 无 | 🟡 | ✅ 完成 | 15 测试通过 |
+| T1.4.2 | 测试 ConvergenceData | 无 | 🟡 | ✅ 完成 | 10 测试通过 |
+| **T1.5** | **添加残差监控单元测试** | 无 | 🟢 MEDIUM | ✅ 完成 | 32 测试通过 |
+| T1.5.1 | 测试 ResidualMonitor | 无 | 🟢 | ✅ 完成 | 19 测试通过 |
+| T1.5.2 | 测试 ConvergenceInfo | 无 | 🟢 | ✅ 完成 | 13 测试通过 |
 
 ---
 
@@ -136,12 +136,12 @@ Phase 7: 完善后处理和工具
 | T2.1.2 | 实现湍流耦合 | T1.2.2 | 🟡 | ❌ | k-ε 正确耦合 |
 | T2.1.3 | 添加教程测试 test_simple_foam_pitzDaily | T2.1.2 | 🟡 | ❌ | 后向台阶流正确 |
 | T2.1.4 | 添加教程测试 test_simple_foam_motorBike | T2.1.2 | 🟡 | ❌ | 外部气动正确 |
-| **T2.2** | **实现 icoFoam 应用** | T1.1 | 🟡 HIGH | ❌ 待做 | icoFoam 教程通过 |
-| T2.2.1 | 创建 IcoFoam 类 | T1.1 | 🟡 | ❌ | 求解器完整 |
-| T2.2.2 | 添加教程测试 test_icoFoam_cavity | T2.2.1 | 🟡 | ❌ | 层流盖驱动正确 |
-| **T2.3** | **实现 pisoFoam 应用** | T1.1 | 🟡 HIGH | ❌ 待做 | pisoFoam 教程通过 |
-| T2.3.1 | 完善 PisoFoam 类 | T1.1 | 🟡 | ❌ | 求解器完整 |
-| T2.3.2 | 添加教程测试 test_pisoFoam_TJunctionFan | T2.3.1 | 🟡 | ❌ | T 型管正确 |
+| **T2.2** | **实现 icoFoam 应用** | T1.1 | 🟡 HIGH | ✅ 完成 | 17 测试通过 |
+| T2.2.1 | 创建 IcoFoam 类 | T1.1 | 🟡 | ✅ 完成 | 求解器完整 |
+| T2.2.2 | 添加教程测试 test_icoFoam_cavity | T2.2.1 | 🟡 | ✅ 完成 | 层流盖驱动正确 |
+| **T2.3** | **实现 pisoFoam 应用** | T1.1 | 🟡 HIGH | ✅ 完成 | 27 测试通过 |
+| T2.3.1 | 完善 PisoFoam 类 | T1.1 | 🟡 | ✅ 完成 | 求解器完整 |
+| T2.3.2 | 添加教程测试 test_pisoFoam_TJunctionFan | T2.3.1 | 🟡 | ✅ 完成 | T 型管正确 |
 | **T2.4** | **实现 pimpleFoam 应用** | T1.2 | 🟡 HIGH | ⚠️ 框架存在 | pimpleFoam 教程通过 |
 | T2.4.1 | 完善 PimpleFoam 类 | T1.2 | 🟡 | ❌ | 求解器完整 |
 | T2.4.2 | 添加教程测试 test_pimpleFoam_TJunction | T2.4.1 | 🟡 | ❌ | 层流 T 型管正确 |
