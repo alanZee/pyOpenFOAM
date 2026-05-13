@@ -6,6 +6,7 @@ and run simulations using the pyOpenFOAM infrastructure.
 
 Available solvers:
 
+- :class:`IcoFoam` — Transient incompressible laminar (PISO algorithm)
 - :class:`SimpleFoam` — Steady-state incompressible (SIMPLE algorithm)
 - :class:`RhoSimpleFoam` — Steady-state compressible (SIMPLE algorithm)
 - :class:`RhoPimpleFoam` — Transient compressible (PIMPLE algorithm)
@@ -13,6 +14,7 @@ Available solvers:
 """
 
 from pyfoam.applications.solver_base import SolverBase
+from pyfoam.applications.ico_foam import IcoFoam
 from pyfoam.applications.simple_foam import SimpleFoam
 from pyfoam.applications.rho_simple_foam import RhoSimpleFoam
 from pyfoam.applications.rho_pimple_foam import RhoPimpleFoam
@@ -22,6 +24,7 @@ from pyfoam.applications.convergence import ConvergenceMonitor
 
 __all__ = [
     "SolverBase",
+    "IcoFoam",
     "SimpleFoam",
     "RhoSimpleFoam",
     "RhoPimpleFoam",
