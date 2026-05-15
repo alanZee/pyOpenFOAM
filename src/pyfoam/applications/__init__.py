@@ -10,6 +10,7 @@ Available solvers:
 - :class:`PimpleFoam` — Transient incompressible (PIMPLE algorithm with turbulence)
 - :class:`SimpleFoam` — Steady-state incompressible (SIMPLE algorithm)
 - :class:`RhoSimpleFoam` — Steady-state compressible (SIMPLE algorithm)
+- :class:`BuoyantSimpleFoam` — Steady-state buoyant compressible (SIMPLE algorithm)
 - :class:`RhoPimpleFoam` — Transient compressible (PIMPLE algorithm)
 - :class:`RhoCentralFoam` — Density-based compressible (Kurganov-Tadmor central scheme)
 - :class:`InterFoam` — VOF two-phase incompressible
@@ -21,6 +22,7 @@ from pyfoam.applications.ico_foam import IcoFoam
 from pyfoam.applications.pimple_foam import PimpleFoam
 from pyfoam.applications.simple_foam import SimpleFoam
 from pyfoam.applications.rho_simple_foam import RhoSimpleFoam
+from pyfoam.applications.buoyant_simple_foam import BuoyantSimpleFoam
 from pyfoam.applications.rho_pimple_foam import RhoPimpleFoam
 from pyfoam.applications.rho_central_foam import RhoCentralFoam
 from pyfoam.applications.inter_foam import InterFoam
@@ -35,6 +37,7 @@ __all__ = [
     "PimpleFoam",
     "SimpleFoam",
     "RhoSimpleFoam",
+    "BuoyantSimpleFoam",
     "RhoPimpleFoam",
     "RhoCentralFoam",
     "InterFoam",
