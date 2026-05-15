@@ -23,6 +23,7 @@ from pyfoam.applications.pimple_foam import PimpleFoam
 from pyfoam.applications.simple_foam import SimpleFoam
 from pyfoam.applications.rho_simple_foam import RhoSimpleFoam
 from pyfoam.applications.buoyant_simple_foam import BuoyantSimpleFoam
+from pyfoam.applications.buoyant_boussinesq_simple_foam import BuoyantBoussinesqSimpleFoam
 from pyfoam.applications.rho_pimple_foam import RhoPimpleFoam
 from pyfoam.applications.rho_central_foam import RhoCentralFoam
 from pyfoam.applications.inter_foam import InterFoam
@@ -38,6 +39,7 @@ __all__ = [
     "SimpleFoam",
     "RhoSimpleFoam",
     "BuoyantSimpleFoam",
+    "BuoyantBoussinesqSimpleFoam",
     "RhoPimpleFoam",
     "RhoCentralFoam",
     "InterFoam",
