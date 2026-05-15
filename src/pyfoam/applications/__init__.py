@@ -16,6 +16,7 @@ Available solvers:
 """
 
 from pyfoam.applications.solver_base import SolverBase
+from pyfoam.applications.boundary_foam import BoundaryFoam
 from pyfoam.applications.ico_foam import IcoFoam
 from pyfoam.applications.pimple_foam import PimpleFoam
 from pyfoam.applications.simple_foam import SimpleFoam
@@ -23,11 +24,13 @@ from pyfoam.applications.rho_simple_foam import RhoSimpleFoam
 from pyfoam.applications.rho_pimple_foam import RhoPimpleFoam
 from pyfoam.applications.rho_central_foam import RhoCentralFoam
 from pyfoam.applications.inter_foam import InterFoam
+from pyfoam.applications.porous_simple_foam import PorousSimpleFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
 __all__ = [
     "SolverBase",
+    "BoundaryFoam",
     "IcoFoam",
     "PimpleFoam",
     "SimpleFoam",
@@ -35,6 +38,7 @@ __all__ = [
     "RhoPimpleFoam",
     "RhoCentralFoam",
     "InterFoam",
+    "PorousSimpleFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
