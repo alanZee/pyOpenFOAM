@@ -16,7 +16,7 @@
 - ✅ MPI parallel support
 - ✅ GPU acceleration via PyTorch tensors
 - ✅ Incompressible solvers: simpleFoam, icoFoam, pisoFoam, pimpleFoam, SRFSimpleFoam, porousSimpleFoam, boundaryFoam
-- ✅ Compressible solvers: rhoSimpleFoam, rhoPimpleFoam, sonicFoam (框架), rhoCentralFoam (框架)
+- ✅ Compressible solvers: rhoSimpleFoam, rhoPimpleFoam, sonicFoam, rhoCentralFoam
 
 ### Current Capabilities
 - **GPU Acceleration**: All field operations use PyTorch tensors on CUDA/MPS

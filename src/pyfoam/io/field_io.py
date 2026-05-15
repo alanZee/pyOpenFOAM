@@ -205,7 +205,7 @@ _INTERNAL_UNIFORM_PATTERN = re.compile(
 )
 
 _INTERNAL_NONUNIFORM_PATTERN = re.compile(
-    r"internalField\s+nonuniform\s+(\w+)<(\w+)>\s+(\d+)",
+    r"internalField\s+nonuniform\s+(?:(\w+)<(\w+)>\s+)?(\d+)",
     re.DOTALL,
 )
 

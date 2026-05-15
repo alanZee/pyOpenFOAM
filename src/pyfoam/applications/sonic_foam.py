@@ -686,8 +686,8 @@ class SonicFoam(SolverBase):
         grad_phi = self._compute_grad_scalar(phi, mesh)
 
         # Upwind cell centres and face centres
-        cc_P = gather(mesh.cell_centres, int_owner)
-        cc_N = gather(mesh.cell_centres, int_neigh)
+        cc_P = gather(mesh.cell_centres, int_owner.unsqueeze(-1).expand(-1, 3))
+        cc_N = gather(mesh.cell_centres, int_neigh.unsqueeze(-1).expand(-1, 3))
         fc = mesh.face_centres[:mesh.n_internal_faces]
 
         # Distance from upwind cell centre to face
@@ -695,8 +695,8 @@ class SonicFoam(SolverBase):
             is_positive.unsqueeze(-1), fc - cc_P, fc - cc_N,
         )
         grad_upwind = torch.where(
-            is_positive.unsqueeze(-1), gather(grad_phi, int_owner),
-            gather(grad_phi, int_neigh),
+            is_positive.unsqueeze(-1), gather(grad_phi, int_owner.unsqueeze(-1).expand(-1, 3)),
+            gather(grad_phi, int_neigh.unsqueeze(-1).expand(-1, 3)),
         )
 
         # Extrapolated value at face from upwind cell gradient

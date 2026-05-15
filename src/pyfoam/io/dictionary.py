@@ -163,6 +163,7 @@ class Token:
     LBRACKET = "LBRACKET"
     RBRACKET = "RBRACKET"
     SEMICOLON = "SEMICOLON"
+    COMMA = "COMMA"
     DOLLAR = "DOLLAR"
     HASH = "HASH"
     EOF = "EOF"
@@ -269,7 +270,7 @@ class Tokenizer:
         start = self._pos
         while self._pos < self._len:
             ch = self._text[self._pos]
-            if ch.isalnum() or ch in "_-.:+*^/\\<>":
+            if ch.isalnum() or ch in "_-.:+*^/\\<>(),":
                 self._pos += 1
             else:
                 break
@@ -345,6 +346,9 @@ class Tokenizer:
         elif ch == ";":
             self._advance()
             return Token(Token.SEMICOLON, ";")
+        elif ch == ",":
+            self._advance()
+            return Token(Token.COMMA, ",")
         elif ch == "$":
             self._advance()
             return Token(Token.DOLLAR, "$")
@@ -433,6 +437,11 @@ class _Parser:
 
         # Skip standalone semicolons (empty statements)
         if tok.type == Token.SEMICOLON:
+            self._advance()
+            return
+
+        # Skip standalone commas (separators in keys like div(rhoPhi,U))
+        if tok.type == Token.COMMA:
             self._advance()
             return
 
