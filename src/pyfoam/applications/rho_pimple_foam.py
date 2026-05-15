@@ -264,7 +264,7 @@ class RhoPimpleFoam(SolverBase):
                 grad_p = self._compute_grad(p, mesh)
                 U = HbyA - grad_p / A_p.abs().clamp(min=1e-30).unsqueeze(-1)
 
-                # Correct flux
+                # Correct flux (internal faces only)
                 p_P = gather(p, int_owner)
                 p_N = gather(p, int_neigh)
                 A_p_inv = 1.0 / A_p.abs().clamp(min=1e-30)
@@ -272,7 +272,10 @@ class RhoPimpleFoam(SolverBase):
                     w * gather(A_p_inv, int_owner)
                     + (1.0 - w) * gather(A_p_inv, int_neigh)
                 )
-                phi = phiHbyA - (p_N - p_P) * A_p_inv_face
+                phi_internal = phiHbyA - (p_N - p_P) * A_p_inv_face
+                # Update only internal faces, preserve boundary face values
+                phi = phi.clone()
+                phi[:n_internal] = phi_internal
 
                 # Recompute H for subsequent corrections
                 if corr < self.n_correctors - 1:
@@ -682,6 +685,19 @@ class RhoPimpleFoam(SolverBase):
         V = mesh.cell_volumes.clamp(min=1e-30)
         return div / V
 
+    def _compute_residual(
+        self,
+        field: torch.Tensor,
+        field_old: torch.Tensor,
+    ) -> float:
+        """Compute the L2 norm of the field change, normalised by field magnitude."""
+        diff = field - field_old
+        norm_diff = float(torch.norm(diff).item())
+        norm_field = float(torch.norm(field).item())
+        if norm_field > 1e-30:
+            return norm_diff / norm_field
+        return norm_diff
+
     def _compute_continuity_error(
         self, phi: torch.Tensor, rho: torch.Tensor
     ) -> float:
@@ -712,7 +728,11 @@ class RhoPimpleFoam(SolverBase):
 
     def _write_fields(self, time: float) -> None:
         """Write U, p, T to a time directory."""
-        time_str = f"{time:g}"
+        # Use fixed-point format for small times to avoid 'e' notation
+        if abs(time) < 0.001 and time != 0:
+            time_str = f"{time:.10f}".rstrip("0").rstrip(".")
+        else:
+            time_str = f"{time:g}"
         self.write_field("U", self.U, time_str, self._U_data)
         self.write_field("p", self.p, time_str, self._p_data)
         self.write_field("T", self.T, time_str, self._T_data)

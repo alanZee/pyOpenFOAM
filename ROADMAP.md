@@ -11,10 +11,12 @@
 - ✅ Linear solvers (PCG, PBiCGSTAB, GAMG)
 - ✅ Pressure-velocity coupling (SIMPLE, PISO, PIMPLE)
 - ✅ Turbulence models (k-ε, k-ω SST, S-A, Smagorinsky, WALE)
-- ✅ Thermophysical models (perfect gas, Sutherland)
+- ✅ Thermophysical models (perfect gas, Sutherland, JANAF, constant Cp)
 - ✅ Multiphase (VOF)
 - ✅ MPI parallel support
 - ✅ GPU acceleration via PyTorch tensors
+- ✅ Incompressible solvers: simpleFoam, icoFoam, pisoFoam, pimpleFoam, SRFSimpleFoam
+- ✅ Compressible solvers: rhoSimpleFoam, rhoPimpleFoam, sonicFoam (框架), rhoCentralFoam (框架)
 
 ### Current Capabilities
 - **GPU Acceleration**: All field operations use PyTorch tensors on CUDA/MPS
