@@ -186,12 +186,12 @@ Phase 7: 完善后处理和工具
 | T3.6.1 | 实现浮力项 ρg | T3.2 | 🟢 | ✅ 完成 | 浮力正确 |
 | T3.6.2 | 实现辐射模型 | T3.6.1 | 🟢 | ✅ 完成 | P1 辐射正确 |
 | T3.6.3 | 添加教程测试 test_buoyantSimpleFoam_hotRoom | T3.6.2 | 🟢 | ✅ 完成 | 热房间正确 |
-| **T3.7** | **实现 buoyantPimpleFoam** | T3.3, T3.6 | 🟢 MEDIUM | ❌ 待做 | 瞬态浮力正确 |
-| T3.7.1 | 完善 BuoyantPimpleFoam 类 | T3.6 | 🟢 | ❌ | 求解器完整 |
-| T3.7.2 | 添加教程测试 test_buoyantPimpleFoam_hotRoom | T3.7.1 | 🟢 | ❌ | 瞬态热房间正确 |
-| **T3.8** | **实现 buoyantBoussinesqSimpleFoam** | T3.6 | 🟢 MEDIUM | ❌ 待做 | Boussinesq 正确 |
-| T3.8.1 | 实现 Boussinesq 近似 | T3.6 | 🟢 | ❌ | ρ = ρ₀[1 − β(T − T₀)] |
-| T3.8.2 | 添加教程测试 | T3.8.1 | 🟢 | ❌ | 自然对流正确 |
+| **T3.7** | **实现 buoyantPimpleFoam** | T3.3, T3.6 | 🟢 MEDIUM | ✅ 完成 | 37 测试通过 |
+| T3.7.1 | 完善 BuoyantPimpleFoam 类 | T3.6 | 🟢 | ✅ 完成 | 求解器完整 |
+| T3.7.2 | 添加教程测试 test_buoyantPimpleFoam_hotRoom | T3.7.1 | 🟢 | ✅ 完成 | 瞬态热房间正确 |
+| **T3.8** | **实现 buoyantBoussinesqSimpleFoam** | T3.6 | 🟢 MEDIUM | ✅ 完成 | 28 测试通过 |
+| T3.8.1 | 实现 Boussinesq 近似 | T3.6 | 🟢 | ✅ 完成 | ρ = ρ₀[1 − β(T − T₀)] |
+| T3.8.2 | 添加教程测试 | T3.8.1 | 🟢 | ✅ 完成 | 自然对流正确 |
 
 ---
 
