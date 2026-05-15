@@ -15,7 +15,7 @@
 - ✅ Multiphase (VOF)
 - ✅ MPI parallel support
 - ✅ GPU acceleration via PyTorch tensors
-- ✅ Incompressible solvers: simpleFoam, icoFoam, pisoFoam, pimpleFoam, SRFSimpleFoam
+- ✅ Incompressible solvers: simpleFoam, icoFoam, pisoFoam, pimpleFoam, SRFSimpleFoam, porousSimpleFoam, boundaryFoam
 - ✅ Compressible solvers: rhoSimpleFoam, rhoPimpleFoam, sonicFoam (框架), rhoCentralFoam (框架)
 
 ### Current Capabilities
