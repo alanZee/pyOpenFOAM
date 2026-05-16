@@ -33,6 +33,7 @@ from pyfoam.core.device import get_device, get_default_dtype
 
 __all__ = [
     "compute_nut_wall",
+    "compute_nut_low_re_wall",
     "compute_k_wall",
     "compute_omega_wall",
     "compute_epsilon_wall",
@@ -212,3 +213,24 @@ def compute_epsilon_wall(
     epsilon = C_mu**0.75 * k.clamp(min=1e-16) ** 1.5 / (kappa * y.clamp(min=1e-10))
 
     return epsilon.clamp(min=1e-10)
+
+
+def compute_nut_low_re_wall(
+    nu: float,
+) -> torch.Tensor:
+    """Compute turbulent viscosity for low-Re wall function.
+
+    For low-Reynolds-number models, the wall function sets ν_t = 0
+    at the wall (no wall function applied, viscous sublayer resolved).
+
+    This is used by nutLowReWallFunction boundary condition.
+
+    Args:
+        nu: Molecular kinematic viscosity (unused, kept for API consistency).
+
+    Returns:
+        ν_t = 0 at each wall face (scalar, to be broadcast).
+    """
+    # Low-Re wall function: ν_t = 0 at wall
+    # The wall-adjacent cell resolves the viscous sublayer
+    return torch.tensor(0.0)

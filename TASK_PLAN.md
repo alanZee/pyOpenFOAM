@@ -337,22 +337,22 @@ Phase 7: 完善后处理和工具
 
 | 任务 ID | 任务 | 依赖 | 优先级 | 状态 | 验证标准 |
 |---------|------|------|--------|------|----------|
-| **T10.1** | **实现更多 RANS 模型** | 无 | 🟡 HIGH | ❌ 待做 | RANS 模型完整 |
-| T10.1.1 | kOmega | 无 | 🟡 | ❌ | 标准 k-ω 正确 |
-| T10.1.2 | LaunderSharmaKE | 无 | 🟡 | ❌ | 低 Re k-ε 正确 |
-| T10.1.3 | v2f | 无 | 🟡 | ❌ | v²-f 正确 |
-| T10.1.4 | RNGkEpsilon | 无 | 🟢 | ❌ | RNG k-ε 正确 |
-| **T10.2** | **实现更多 LES 模型** | 无 | 🟢 MEDIUM | ❌ 待做 | LES 模型完整 |
-| T10.2.1 | dynamicSmagorinsky | 无 | 🟢 | ❌ | 动态 Smagorinsky 正确 |
-| T10.2.2 | dynamicLagrangian | 无 | 🟢 | ❌ | Lagrangian 动态正确 |
-| T10.2.3 | kEqn | 无 | 🟢 | ❌ | 单方程 k 正确 |
-| **T10.3** | **实现 DES 模型** | T10.1 | 🟢 MEDIUM | ❌ 待做 | DES 模型正确 |
-| T10.3.1 | kOmegaSSTDES | T10.1.1 | 🟢 | ❌ | SST DES 正确 |
-| T10.3.2 | SpalartAllmarasDDES | 无 | 🟢 | ❌ | SA DDES 正确 |
-| **T10.4** | **实现壁面函数完善** | 无 | 🟡 HIGH | ❌ 待做 | 壁面函数完整 |
-| T10.4.1 | nutLowReWallFunction | 无 | 🟡 | ❌ | 低 Re 正确 |
-| T10.4.2 | epsilonWallFunction | 无 | 🟡 | ❌ | ε 壁面正确 |
-| T10.4.3 | omegaWallFunction | 无 | 🟡 | ❌ | ω 壁面正确 |
+| **T10.1** | **实现更多 RANS 模型** | 无 | 🟡 HIGH | ✅ 完成 | RANS 模型完整 |
+| T10.1.1 | kOmega | 无 | 🟡 | ✅ 完成 | 标准 k-ω 正确 |
+| T10.1.2 | LaunderSharmaKE | 无 | 🟡 | ✅ 完成 | 低 Re k-ε 正确 |
+| T10.1.3 | v2f | 无 | 🟡 | ✅ 完成 | v²-f 正确 |
+| T10.1.4 | RNGkEpsilon | 无 | 🟢 | ✅ 完成 | RNG k-ε 正确 |
+| **T10.2** | **实现更多 LES 模型** | 无 | 🟢 MEDIUM | ✅ 完成 | LES 模型完整 |
+| T10.2.1 | dynamicSmagorinsky | 无 | 🟢 | ✅ 完成 | 动态 Smagorinsky 正确 |
+| T10.2.2 | dynamicLagrangian | 无 | 🟢 | ✅ 完成 | Lagrangian 动态正确 |
+| T10.2.3 | kEqn | 无 | 🟢 | ✅ 完成 | 单方程 k 正确 |
+| **T10.3** | **实现 DES 模型** | T10.1 | 🟢 MEDIUM | ✅ 完成 | DES 模型正确 |
+| T10.3.1 | kOmegaSSTDES | T10.1.1 | 🟢 | ✅ 完成 | SST DES 正确 |
+| T10.3.2 | SpalartAllmarasDDES | 无 | 🟢 | ✅ 完成 | SA DDES 正确 |
+| **T10.4** | **实现壁面函数完善** | 无 | 🟡 HIGH | ✅ 完成 | 壁面函数完整 |
+| T10.4.1 | nutLowReWallFunction | 无 | 🟡 | ✅ 完成 | 低 Re 正确 |
+| T10.4.2 | epsilonWallFunction | 无 | 🟡 | ✅ 完成 | ε 壁面正确 |
+| T10.4.3 | omegaWallFunction | 无 | 🟡 | ✅ 完成 | ω 壁面正确 |
 
 ---
 
