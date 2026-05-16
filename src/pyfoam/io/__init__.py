@@ -7,6 +7,7 @@ Reads and writes all OpenFOAM file formats:
 - Mesh files (points, faces, owner, neighbour, boundary)
 - Configuration files (controlDict, fvSchemes, fvSolution)
 - Complete case directory structure
+- Mesh format converters (Gmsh, Fluent, VTK)
 """
 
 from pyfoam.io.binary_io import (
@@ -70,6 +71,25 @@ from pyfoam.io.mesh_io import (
     write_owner,
     write_points,
 )
+from pyfoam.io.gmsh_io import (
+    GmshElement,
+    GmshMesh,
+    GmshPhysicalGroup,
+    gmsh_to_foam,
+    read_gmsh,
+)
+from pyfoam.io.fluent_io import (
+    FluentFace,
+    FluentMesh,
+    FluentZone,
+    fluent_to_foam,
+    read_fluent,
+)
+from pyfoam.io.vtk_io import (
+    foam_to_vtk,
+    write_vtk_unstructured,
+    write_vtu_unstructured,
+)
 
 __all__ = [
     # Binary I/O
@@ -129,4 +149,20 @@ __all__ = [
     "write_neighbour",
     "write_boundary",
     "read_mesh",
+    # Gmsh I/O (gmshToFoam)
+    "GmshElement",
+    "GmshMesh",
+    "GmshPhysicalGroup",
+    "read_gmsh",
+    "gmsh_to_foam",
+    # Fluent I/O (fluentMeshToFoam)
+    "FluentFace",
+    "FluentMesh",
+    "FluentZone",
+    "read_fluent",
+    "fluent_to_foam",
+    # VTK I/O (foamToVTK)
+    "write_vtk_unstructured",
+    "write_vtu_unstructured",
+    "foam_to_vtk",
 ]
