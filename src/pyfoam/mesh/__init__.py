@@ -31,6 +31,15 @@ build_face_to_cells
     Face → cell index mapping (n_faces, 2).
 cell_neighbours
     Neighbouring cell indices for a given cell.
+
+Mesh generation
+--------------
+BlockMesh
+    Structured hex mesh generation from block definitions.
+SnappyHexMesh
+    Unstructured hex mesh generation from STL surfaces.
+STLReader
+    Read STL files for surface mesh import.
 """
 
 from pyfoam.mesh.poly_mesh import PolyMesh
@@ -48,6 +57,9 @@ from pyfoam.mesh.topology import (
     build_face_to_cells,
     cell_neighbours,
 )
+from pyfoam.mesh.generation.block_mesh import BlockMesh, Block, Grading
+from pyfoam.mesh.generation.snappy_hex_mesh import SnappyHexMesh
+from pyfoam.mesh.generation.stl import STLReader
 
 __all__ = [
     # Mesh classes
@@ -64,4 +76,10 @@ __all__ = [
     "build_cell_to_faces",
     "build_face_to_cells",
     "cell_neighbours",
+    # Mesh generation
+    "BlockMesh",
+    "Block",
+    "Grading",
+    "SnappyHexMesh",
+    "STLReader",
 ]
