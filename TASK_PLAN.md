@@ -234,13 +234,13 @@ Phase 7: 完善后处理和工具
 
 | 任务 ID | 任务 | 依赖 | 优先级 | 状态 | 验证标准 |
 |---------|------|------|--------|------|----------|
-| **T5.1** | **实现 laplacianFoam** | 无 | 🟡 HIGH | ❌ 待做 | 热传导正确 |
-| T5.1.1 | 实现标量扩散方程 | 无 | 🟡 | ❌ | ∂T/∂t = ∇·(D∇T) |
-| T5.1.2 | 添加教程测试 | T5.1.1 | 🟡 | ❌ | 热传导正确 |
-| **T5.2** | **实现 chtMultiRegionFoam** | T3.6, T5.1 | 🟡 HIGH | ❌ 待做 | CHT 正确 |
-| T5.2.1 | 实现多区域耦合 | T5.1 | 🟡 | ❌ | 流体-固体耦合 |
-| T5.2.2 | 实现 coupledTemperature BC | T5.2.1 | 🟡 | ❌ | 界面温度正确 |
-| T5.2.3 | 添加教程测试 test_chtMultiRegionFoam | T5.2.2 | 🟡 | ❌ | CHT 正确 |
+| **T5.1** | **实现 laplacianFoam** | 无 | 🟡 HIGH | ✅ 完成 | 19 测试通过 |
+| T5.1.1 | 实现标量扩散方程 | 无 | 🟡 | ✅ 完成 | ∂T/∂t = ∇·(D∇T) |
+| T5.1.2 | 添加教程测试 | T5.1.1 | 🟡 | ✅ 完成 | 热传导正确 |
+| **T5.2** | **实现 chtMultiRegionFoam** | T3.6, T5.1 | 🟡 HIGH | ✅ 完成 | 12 测试通过 |
+| T5.2.1 | 实现多区域耦合 | T5.1 | 🟡 | ✅ 完成 | 流体-固体耦合 |
+| T5.2.2 | 实现 coupledTemperature BC | T5.2.1 | 🟡 | ✅ 完成 | 界面温度正确 |
+| T5.2.3 | 添加教程测试 test_chtMultiRegionFoam | T5.2.2 | 🟡 | ✅ 完成 | CHT 正确 |
 
 ---
 
@@ -291,18 +291,18 @@ Phase 7: 完善后处理和工具
 
 | 任务 ID | 任务 | 依赖 | 优先级 | 状态 | 验证标准 |
 |---------|------|------|--------|------|----------|
-| **T8.1** | **完善域分解** | 无 | 🟡 HIGH | ⚠️ 框架存在 | 分解正确 |
-| T8.1.1 | 完善 Decomposition 类 | 无 | 🟡 | ❌ | 几何分解正确 |
-| T8.1.2 | 实现简单分区 | T8.1.1 | 🟡 | ❌ | 负载均衡 |
-| **T8.2** | **完善并行场操作** | T8.1 | 🟡 HIGH | ⚠️ 框架存在 | 并行场正确 |
-| T8.2.1 | 完善 Halo 交换 | T8.1 | 🟡 | ❌ | 鬼单元正确 |
-| T8.2.2 | 实现 gather/scatter | T8.2.1 | 🟡 | ❌ | 全局操作正确 |
-| **T8.3** | **完善并行求解器** | T8.2 | 🟡 HIGH | ⚠️ 框架存在 | 并行求解正确 |
-| T8.3.1 | 完善 ParallelSolver | T8.2 | 🟡 | ❌ | 并行 PCG 正确 |
-| T8.3.2 | 测试并行 SIMPLE | T8.3.1 | 🟡 | ❌ | 并行 SIMPLE 正确 |
-| **T8.4** | **完善并行 I/O** | T8.1 | 🟢 MEDIUM | ⚠️ 框架存在 | 并行 I/O 正确 |
-| T8.4.1 | 完善 processor 目录写入 | T8.1 | 🟢 | ❌ | 分区文件正确 |
-| T8.4.2 | 实现 reconstructPar | T8.4.1 | 🟢 | ❌ | 重构正确 |
+| **T8.1** | **完善域分解** | 无 | 🟡 HIGH | ✅ 完成 | 分解正确 |
+| T8.1.1 | 完善 Decomposition 类 | 无 | 🟡 | ✅ 完成 | 几何分解正确 |
+| T8.1.2 | 实现简单分区 | T8.1.1 | 🟡 | ✅ 完成 | 负载均衡 |
+| **T8.2** | **完善并行场操作** | T8.1 | 🟡 HIGH | ✅ 完成 | 并行场正确 |
+| T8.2.1 | 完善 Halo 交换 | T8.1 | 🟡 | ✅ 完成 | 鬼单元正确 |
+| T8.2.2 | 实现 gather/scatter | T8.2.1 | 🟡 | ✅ 完成 | 全局操作正确 |
+| **T8.3** | **完善并行求解器** | T8.2 | 🟡 HIGH | ✅ 完成 | 并行求解正确 |
+| T8.3.1 | 完善 ParallelSolver | T8.2 | 🟡 | ✅ 完成 | 并行 PCG 正确 |
+| T8.3.2 | 测试并行 SIMPLE | T8.3.1 | 🟡 | ✅ 完成 | 并行 SIMPLE 正确 |
+| **T8.4** | **完善并行 I/O** | T8.1 | 🟢 MEDIUM | ✅ 完成 | 并行 I/O 正确 |
+| T8.4.1 | 完善 processor 目录写入 | T8.1 | 🟢 | ✅ 完成 | 分区文件正确 |
+| T8.4.2 | 实现 reconstructPar | T8.4.1 | 🟢 | ✅ 完成 | 重构正确 |
 
 ---
 
@@ -312,22 +312,22 @@ Phase 7: 完善后处理和工具
 
 | 任务 ID | 任务 | 依赖 | 优先级 | 状态 | 验证标准 |
 |---------|------|------|--------|------|----------|
-| **T9.1** | **实现速度 BC** | 无 | 🟡 HIGH | ❌ 待做 | 速度 BC 完整 |
-| T9.1.1 | flowRateInletVelocity | 无 | 🟡 | ❌ | 流量入口正确 |
-| T9.1.2 | pressureInletOutletVelocity | 无 | 🟡 | ❌ | 压力驱动正确 |
-| T9.1.3 | rotatingWallVelocity | 无 | 🟡 | ❌ | 旋转壁面正确 |
-| **T9.2** | **实现压力 BC** | 无 | 🟡 HIGH | ❌ 待做 | 压力 BC 完整 |
-| T9.2.1 | totalPressure | 无 | 🟡 | ❌ | 总压正确 |
-| T9.2.2 | fixedFluxPressure | 无 | 🟡 | ❌ | 通量压力正确 |
-| T9.2.3 | prghPressure | 无 | 🟡 | ❌ | 浮力压力正确 |
-| T9.2.4 | waveTransmissive | 无 | 🟡 | ❌ | 无反射正确 |
-| **T9.3** | **实现湍流 BC** | 无 | 🟡 HIGH | ❌ 待做 | 湍流 BC 完整 |
-| T9.3.1 | turbulentIntensityKineticEnergyInlet | 无 | 🟡 | ❌ | k 入口正确 |
-| T9.3.2 | turbulentMixingLengthDissipationRateInlet | 无 | 🟡 | ❌ | ε 入口正确 |
-| T9.3.3 | turbulentMixingLengthFrequencyInlet | 无 | 🟡 | ❌ | ω 入口正确 |
-| **T9.4** | **实现 VOF BC** | T4.2 | 🟡 HIGH | ❌ 待做 | VOF BC 完整 |
-| T9.4.1 | alphaContactAngle | T4.2 | 🟡 | ❌ | 接触角正确 |
-| T9.4.2 | constantAlphaContactAngle | T4.2 | 🟡 | ❌ | 常接触角正确 |
+| **T9.1** | **实现速度 BC** | 无 | 🟡 HIGH | ✅ 完成 | 速度 BC 完整 |
+| T9.1.1 | flowRateInletVelocity | 无 | 🟡 | ✅ 完成 | 流量入口正确 |
+| T9.1.2 | pressureInletOutletVelocity | 无 | 🟡 | ✅ 完成 | 压力驱动正确 |
+| T9.1.3 | rotatingWallVelocity | 无 | 🟡 | ✅ 完成 | 旋转壁面正确 |
+| **T9.2** | **实现压力 BC** | 无 | 🟡 HIGH | ✅ 完成 | 压力 BC 完整 |
+| T9.2.1 | totalPressure | 无 | 🟡 | ✅ 完成 | 总压正确 |
+| T9.2.2 | fixedFluxPressure | 无 | 🟡 | ✅ 完成 | 通量压力正确 |
+| T9.2.3 | prghPressure | 无 | 🟡 | ✅ 完成 | 浮力压力正确 |
+| T9.2.4 | waveTransmissive | 无 | 🟡 | ✅ 完成 | 无反射正确 |
+| **T9.3** | **实现湍流 BC** | 无 | 🟡 HIGH | ✅ 完成 | 湍流 BC 完整 |
+| T9.3.1 | turbulentIntensityKineticEnergyInlet | 无 | 🟡 | ✅ 完成 | k 入口正确 |
+| T9.3.2 | turbulentMixingLengthDissipationRateInlet | 无 | 🟡 | ✅ 完成 | ε 入口正确 |
+| T9.3.3 | turbulentMixingLengthFrequencyInlet | 无 | 🟡 | ✅ 完成 | ω 入口正确 |
+| **T9.4** | **实现 VOF BC** | T4.2 | 🟡 HIGH | ✅ 完成 | VOF BC 完整 |
+| T9.4.1 | alphaContactAngle | T4.2 | 🟡 | ✅ 完成 | 接触角正确 |
+| T9.4.2 | constantAlphaContactAngle | T4.2 | 🟡 | ✅ 完成 | 常接触角正确 |
 
 ---
 

@@ -32,6 +32,7 @@ from pyfoam.core.device import get_device, get_default_dtype
 from pyfoam.core.dtype import INDEX_DTYPE
 from pyfoam.mesh.poly_mesh import PolyMesh
 from pyfoam.mesh.fv_mesh import FvMesh
+from pyfoam.parallel.processor_patch import ProcessorPatch
 
 __all__ = ["Decomposition", "SubDomain"]
 
@@ -59,6 +60,8 @@ class SubDomain:
         Indices of ghost cells in the local mesh (cells owned by neighbours).
     n_owned_cells : int
         Number of cells owned by this processor (ghost cells excluded).
+    processor_patches : list[ProcessorPatch]
+        Processor boundary patches for halo exchange with each neighbour.
     """
 
     processor_id: int
@@ -66,6 +69,7 @@ class SubDomain:
     global_cell_ids: torch.Tensor
     ghost_cells: torch.Tensor
     n_owned_cells: int
+    processor_patches: list[ProcessorPatch] = field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -311,7 +315,7 @@ class Decomposition:
         1. Identify owned cells
         2. Identify ghost cells (neighbours of owned cells that belong to other procs)
         3. Build a subdomain mesh with local numbering
-        4. Identify processor boundary faces
+        4. Create ProcessorPatch objects for halo exchange
         """
         assignment = self._cell_assignment
         mesh = self._mesh
@@ -319,26 +323,32 @@ class Decomposition:
         subdomains: list[SubDomain] = []
 
         for proc_id in range(n_procs):
+            # --- Step 1: Identify owned and ghost cells ---
             owned_mask = assignment == proc_id
             owned_global = torch.where(owned_mask)[0]
             n_owned = owned_global.shape[0]
 
             # Find ghost cells: cells adjacent to owned cells but belonging to other procs
-            ghost_set: set[int] = set()
+            # ghost_global_set: set of global cell IDs that are ghosts
+            # ghost_to_neighbour: maps global ghost cell ID → neighbour proc ID
+            ghost_global_set: set[int] = set()
+            ghost_to_neighbour: dict[int, int] = {}
             for f_idx in range(mesh.n_internal_faces):
                 own = mesh.owner[f_idx].item()
                 nbr = mesh.neighbour[f_idx].item()
                 own_proc = assignment[own].item()
                 nbr_proc = assignment[nbr].item()
                 if own_proc == proc_id and nbr_proc != proc_id:
-                    ghost_set.add(nbr)
+                    ghost_global_set.add(nbr)
+                    ghost_to_neighbour[nbr] = nbr_proc
                 elif nbr_proc == proc_id and own_proc != proc_id:
-                    ghost_set.add(own)
+                    ghost_global_set.add(own)
+                    ghost_to_neighbour[own] = own_proc
 
-            ghost_global = torch.tensor(sorted(ghost_set), dtype=INDEX_DTYPE, device=self._device)
+            ghost_global = torch.tensor(sorted(ghost_global_set), dtype=INDEX_DTYPE, device=self._device)
             n_ghost = ghost_global.shape[0]
 
-            # All cells in subdomain (owned + ghost)
+            # All cells in subdomain (owned first, then ghost)
             all_cells = torch.cat([owned_global, ghost_global])
             n_total = all_cells.shape[0]
 
@@ -348,41 +358,80 @@ class Decomposition:
             )
             global_to_local[all_cells] = torch.arange(n_total, dtype=INDEX_DTYPE, device=self._device)
 
-            # Extract faces that belong to this subdomain
-            # A face belongs to the subdomain if at least one of its cells is in it
+            # --- Step 2: Per-neighbor tracking for ProcessorPatch ---
+            # For each neighbour proc, track:
+            #   owned_boundary_cells: our owned cells adjacent to that neighbour (for SENDING)
+            #   ghost_pairs: (local_ghost_idx, global_ghost_id) pairs (for RECEIVING)
+            neighbour_owned_cells: dict[int, set[int]] = {}
+            neighbour_ghost_pairs: dict[int, list[tuple[int, int]]] = {}  # nbr_proc → [(local_idx, global_id), ...]
+
+            for f_idx in range(mesh.n_internal_faces):
+                own = mesh.owner[f_idx].item()
+                nbr = mesh.neighbour[f_idx].item()
+                own_proc = assignment[own].item()
+                nbr_proc = assignment[nbr].item()
+
+                if own_proc == proc_id and nbr_proc != proc_id:
+                    local_own = global_to_local[own].item()
+                    neighbour_owned_cells.setdefault(nbr_proc, set()).add(local_own)
+                    local_nbr = global_to_local[nbr].item()
+                    neighbour_ghost_pairs.setdefault(nbr_proc, []).append((local_nbr, nbr))
+                elif nbr_proc == proc_id and own_proc != proc_id:
+                    local_nbr = global_to_local[nbr].item()
+                    neighbour_owned_cells.setdefault(own_proc, set()).add(local_nbr)
+                    local_own = global_to_local[own].item()
+                    neighbour_ghost_pairs.setdefault(own_proc, []).append((local_own, own))
+
+            # --- Step 3: Build subdomain mesh faces ---
             sub_faces_list: list[torch.Tensor] = []
             sub_owner_list: list[int] = []
             sub_neighbour_list: list[int] = []
 
-            # Track which original faces are internal in the subdomain
+            # Internal faces (both cells in subdomain)
             for f_idx in range(mesh.n_internal_faces):
                 own = mesh.owner[f_idx].item()
                 nbr = mesh.neighbour[f_idx].item()
                 own_in = int(assignment[own].item()) == proc_id
                 nbr_in = int(assignment[nbr].item()) == proc_id
 
-                if own_in or nbr_in:
-                    # This face is part of the subdomain
+                if own_in and nbr_in:
                     local_own = global_to_local[own].item()
                     local_nbr = global_to_local[nbr].item()
-                    # Remap face vertex indices
                     face_pts = mesh.faces[f_idx]
                     sub_faces_list.append(face_pts)
                     sub_owner_list.append(local_own)
-                    if own_in and nbr_in:
-                        # Both cells in subdomain — internal face
-                        sub_neighbour_list.append(local_nbr)
-                    # If only one cell is in subdomain, this becomes a processor boundary face
+                    sub_neighbour_list.append(local_nbr)
 
-            # Build processor boundary patches from faces where only one cell is owned
-            proc_boundary_faces: list[dict] = []
             n_sub_internal = len(sub_neighbour_list)
 
-            # Add original boundary faces that touch owned cells
+            # Cross-processor faces (one cell in subdomain → becomes processor boundary face)
+            for f_idx in range(mesh.n_internal_faces):
+                own = mesh.owner[f_idx].item()
+                nbr = mesh.neighbour[f_idx].item()
+                own_proc = assignment[own].item()
+                nbr_proc = assignment[nbr].item()
+
+                if own_proc == proc_id and nbr_proc != proc_id:
+                    local_own = global_to_local[own].item()
+                    local_nbr = global_to_local[nbr].item()
+                    face_pts = mesh.faces[f_idx]
+                    sub_faces_list.append(face_pts)
+                    sub_owner_list.append(local_own)
+                    sub_neighbour_list.append(local_nbr)
+                elif nbr_proc == proc_id and own_proc != proc_id:
+                    local_own = global_to_local[own].item()
+                    local_nbr = global_to_local[nbr].item()
+                    face_pts = mesh.faces[f_idx]
+                    sub_faces_list.append(face_pts)
+                    sub_owner_list.append(local_nbr)
+                    sub_neighbour_list.append(local_own)
+
+            # Original boundary faces that touch owned cells
+            proc_boundary_faces: list[dict] = []
             for patch_idx, patch in enumerate(mesh.boundary):
                 start = patch["startFace"]
                 n_faces_patch = patch["nFaces"]
-                patch_face_indices: list[int] = []
+                patch_face_count = 0
                 for f_off in range(n_faces_patch):
                     f_idx = start + f_off
                     own = mesh.owner[f_idx].item()
@@ -391,46 +440,62 @@ class Decomposition:
                         face_pts = mesh.faces[f_idx]
                         sub_faces_list.append(face_pts)
                         sub_owner_list.append(local_own)
-                        patch_face_indices.append(len(sub_faces_list) - 1)
+                        patch_face_count += 1
 
-                if patch_face_indices:
+                if patch_face_count > 0:
+                    current_start = n_sub_internal + sum(
+                        pf.get("nFaces", 0) for pf in proc_boundary_faces
+                    )
                     proc_boundary_faces.append({
                         "name": patch["name"],
                         "type": patch.get("type", "patch"),
-                        "startFace": n_sub_internal + sum(
-                            pf.get("nFaces", 0)
-                            for pf in proc_boundary_faces
-                        ),
-                        "nFaces": len(patch_face_indices),
+                        "startFace": current_start,
+                        "nFaces": patch_face_count,
                     })
 
-            # Build processor patches for ghost cell communication
-            # Identify faces between owned and ghost cells
-            proc_patch_faces: list[int] = []
-            for f_idx in range(mesh.n_internal_faces):
-                own = mesh.owner[f_idx].item()
-                nbr = mesh.neighbour[f_idx].item()
-                own_proc = assignment[own].item()
-                nbr_proc = assignment[nbr].item()
-                if (own_proc == proc_id and nbr_proc != proc_id) or \
-                   (nbr_proc == proc_id and own_proc != proc_id):
-                    local_own = global_to_local[own].item()
-                    face_pts = mesh.faces[f_idx]
-                    sub_faces_list.append(face_pts)
-                    sub_owner_list.append(local_own)
-                    proc_patch_faces.append(len(sub_faces_list) - 1)
+            # --- Step 4: Build ProcessorPatch objects ---
+            processor_patches: list[ProcessorPatch] = []
+            all_neighbours = set(neighbour_owned_cells.keys()) | set(neighbour_ghost_pairs.keys())
+            for nbr_proc in sorted(all_neighbours):
+                # Owned boundary cells that this neighbour needs (for sending)
+                owned_bc = sorted(neighbour_owned_cells.get(nbr_proc, set()))
 
-            if proc_patch_faces:
-                proc_boundary_faces.append({
-                    "name": f"procBoundary{proc_id}Patch",
-                    "type": "processor",
-                    "startFace": n_sub_internal + sum(
-                        pf.get("nFaces", 0) for pf in proc_boundary_faces
-                    ),
-                    "nFaces": len(proc_patch_faces),
-                })
+                # Ghost cells from this neighbour (for receiving)
+                # Deduplicate and sort by local index
+                ghost_pairs = neighbour_ghost_pairs.get(nbr_proc, [])
+                # Deduplicate: same local ghost cell might appear from multiple faces
+                seen: set[int] = set()
+                unique_pairs: list[tuple[int, int]] = []
+                for local_idx, global_id in ghost_pairs:
+                    if local_idx not in seen:
+                        seen.add(local_idx)
+                        unique_pairs.append((local_idx, global_id))
+                unique_pairs.sort(key=lambda p: p[0])  # Sort by local index
 
-            # Build subdomain mesh
+                ghost_lc = [p[0] for p in unique_pairs]
+                ghost_gi = [p[1] for p in unique_pairs]
+
+                if owned_bc:
+                    owned_tensor = torch.tensor(owned_bc, dtype=INDEX_DTYPE, device=self._device)
+                else:
+                    owned_tensor = torch.zeros(0, dtype=INDEX_DTYPE, device=self._device)
+
+                if ghost_lc:
+                    ghost_tensor = torch.tensor(ghost_lc, dtype=INDEX_DTYPE, device=self._device)
+                    global_tensor = torch.tensor(ghost_gi, dtype=INDEX_DTYPE, device=self._device)
+                else:
+                    ghost_tensor = torch.zeros(0, dtype=INDEX_DTYPE, device=self._device)
+                    global_tensor = torch.zeros(0, dtype=INDEX_DTYPE, device=self._device)
+
+                processor_patches.append(ProcessorPatch(
+                    name=f"procBoundary{proc_id}To{nbr_proc}Patch",
+                    neighbour_rank=nbr_proc,
+                    local_ghost_cells=ghost_tensor,
+                    remote_cells=owned_tensor,
+                    remote_global_ids=global_tensor,
+                ))
+
+            # --- Step 5: Build subdomain mesh ---
             if sub_faces_list:
                 sub_points = mesh.points.clone()
                 sub_owner = torch.tensor(sub_owner_list, dtype=INDEX_DTYPE, device=self._device)
@@ -455,6 +520,7 @@ class Decomposition:
                 global_cell_ids=all_cells,
                 ghost_cells=torch.arange(n_owned, n_total, dtype=INDEX_DTYPE, device=self._device),
                 n_owned_cells=n_owned,
+                processor_patches=processor_patches,
             ))
 
         return subdomains

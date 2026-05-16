@@ -118,13 +118,17 @@ class ParallelField:
     # Halo exchange
     # ------------------------------------------------------------------
 
-    def update_halos(self) -> None:
+    def update_halos(self, all_fields: dict[int, torch.Tensor] | None = None) -> None:
         """Refresh ghost cell values via halo exchange.
 
         After this call, ghost cells contain the latest values from the
         owning processor.
+
+        Args:
+            all_fields: Dict mapping processor rank → field tensor.
+                Used in serial fallback to access other processors' fields.
         """
-        self._halo.exchange(self._field)
+        self._halo.exchange(self._field, all_fields=all_fields)
 
     # ------------------------------------------------------------------
     # Global reductions

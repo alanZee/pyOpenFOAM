@@ -52,19 +52,25 @@ except ImportError:
 
 @dataclass
 class ProcessorPatch:
-    """A processor boundary patch linking local ghost cells to remote cells.
+    """A processor boundary patch linking local cells to remote cells.
 
     Attributes
     ----------
     name : str
-        Patch name (e.g. ``"procBoundary0Patch"``).
+        Patch name (e.g. ``"procBoundary0To1Patch"``).
     neighbour_rank : int
         MPI rank of the neighbour processor.
     local_ghost_cells : torch.Tensor
         Indices of ghost cells in the local subdomain that belong to this
-        neighbour.  Shape ``(n_ghost_cells,)``.
+        neighbour.  These are cells we RECEIVE values from the neighbour.
+        Shape ``(n_ghost_cells,)``.
     remote_cells : torch.Tensor
-        Corresponding cell indices in the neighbour's local numbering.
+        Our owned boundary cells that the neighbour needs as its ghost cells.
+        These are cells we SEND values to the neighbour.
+        Shape ``(n_send_cells,)``.
+    remote_global_ids : torch.Tensor
+        Global cell IDs of the ghost cells (same order as local_ghost_cells).
+        Used in serial fallback to locate values in the shared global field.
         Shape ``(n_ghost_cells,)``.
     """
 
@@ -72,11 +78,17 @@ class ProcessorPatch:
     neighbour_rank: int
     local_ghost_cells: torch.Tensor
     remote_cells: torch.Tensor
+    remote_global_ids: torch.Tensor = None  # type: ignore[assignment]
 
     @property
     def n_ghost_cells(self) -> int:
-        """Number of ghost cells in this patch."""
+        """Number of ghost cells in this patch (receive direction)."""
         return self.local_ghost_cells.shape[0]
+
+    @property
+    def n_send_cells(self) -> int:
+        """Number of owned boundary cells to send."""
+        return self.remote_cells.shape[0]
 
 
 # ---------------------------------------------------------------------------
@@ -130,12 +142,13 @@ class HaloExchange:
         self.send_buffers: dict[int, torch.Tensor] = {}
         self.recv_buffers: dict[int, torch.Tensor] = {}
         for patch in patches:
-            n = patch.n_ghost_cells
+            n_send = patch.remote_cells.shape[0]  # owned boundary cells to send
+            n_recv = patch.local_ghost_cells.shape[0]  # ghost cells to receive
             self.send_buffers[patch.neighbour_rank] = torch.zeros(
-                n, device=self._device, dtype=self._dtype
+                n_send, device=self._device, dtype=self._dtype
             )
             self.recv_buffers[patch.neighbour_rank] = torch.zeros(
-                n, device=self._device, dtype=self._dtype
+                n_recv, device=self._device, dtype=self._dtype
             )
 
     # ------------------------------------------------------------------
@@ -166,16 +179,27 @@ class HaloExchange:
     # Halo exchange
     # ------------------------------------------------------------------
 
-    def exchange(self, field_values: torch.Tensor) -> torch.Tensor:
+    def exchange(
+        self,
+        field_values: torch.Tensor,
+        all_fields: dict[int, torch.Tensor] | None = None,
+    ) -> torch.Tensor:
         """Perform halo exchange on field values.
 
-        Packs boundary values from *field_values* at owned cell positions
-        into send buffers, communicates with neighbours, and writes received
-        values into ghost cell positions.
+        Packs values from owned boundary cells into send buffers,
+        communicates with neighbours, and writes received values into
+        ghost cell positions.
+
+        In ProcessorPatch:
+        - ``remote_cells``: our owned boundary cells (for SENDING)
+        - ``local_ghost_cells``: ghost cells in our local numbering (for RECEIVING)
 
         Args:
             field_values: ``(n_local_cells,)`` or ``(n_local_cells, ...)`` tensor
                 containing both owned and ghost cell values.
+            all_fields: Dict mapping processor rank → field tensor.
+                Used in serial fallback to access other processors' fields.
+                If ``None``, falls back to self-referential copy.
 
         Returns:
             The same tensor with ghost cell values updated.
@@ -183,22 +207,17 @@ class HaloExchange:
         if not self._patches:
             return field_values
 
-        # Pack send buffers: extract values at positions that the neighbour needs
+        # Pack send buffers: extract values from owned boundary cells
         for patch in self._patches:
-            # The neighbour needs values of cells that are ghost on their side
-            # = owned cells on our side that correspond to their ghost cells
-            # remote_cells gives the neighbour's local indices; we need our
-            # local owned cells that back those ghost cells.
-            # For the send direction: we send values of our owned cells
-            # that the neighbour needs (our cells that are its ghosts).
-            send_vals = field_values[patch.local_ghost_cells].clone()
+            # remote_cells = our owned boundary cells that the neighbour needs
+            send_vals = field_values[patch.remote_cells].clone()
             self.send_buffers[patch.neighbour_rank] = send_vals
 
         # Communicate
         if self._comm is not None and _MPI_AVAILABLE:
             self._exchange_mpi()
         else:
-            self._exchange_serial(field_values)
+            self._exchange_serial(field_values, all_fields)
 
         # Unpack receive buffers into ghost cell positions
         for patch in self._patches:
@@ -236,17 +255,38 @@ class HaloExchange:
         # Wait for all communications to complete
         _MPI.Request.Waitall(requests)  # type: ignore[union-attr]
 
-    def _exchange_serial(self, field_values: torch.Tensor) -> None:
-        """Serial fallback: copy send buffer to receive buffer (self-loopback).
+    def _exchange_serial(
+        self,
+        field_values: torch.Tensor,
+        all_fields: dict[int, torch.Tensor] | None = None,
+    ) -> None:
+        """Serial fallback: copy values from neighbour processors' fields.
 
-        In serial mode there is only one rank, so ghost cells are actually
-        owned cells in the same mesh.  We simply copy the values back.
+        In serial mode (single process, decomposed mesh for testing),
+        each processor has its own field array.  When ``all_fields`` is
+        provided, we can access the neighbour's owned cells directly.
+
+        Args:
+            field_values: This processor's field (for self-referential fallback).
+            all_fields: Dict mapping processor rank → field tensor.
         """
         for patch in self._patches:
-            # In serial mode, the ghost cell values are already in field_values
-            self.recv_buffers[patch.neighbour_rank] = (
-                self.send_buffers[patch.neighbour_rank].clone()
-            )
+            nbr_rank = patch.neighbour_rank
+
+            if all_fields is not None and nbr_rank in all_fields:
+                # Serial mode with shared fields: read from neighbour's field
+                # The neighbour's owned cells are at positions remote_cells
+                # in the neighbour's field (which is all_fields[nbr_rank])
+                nbr_field = all_fields[nbr_rank]
+                if patch.remote_cells.numel() > 0:
+                    self.recv_buffers[nbr_rank] = nbr_field[patch.remote_cells].clone()
+                else:
+                    self.recv_buffers[nbr_rank] = self.send_buffers[nbr_rank].clone()
+            elif patch.remote_cells.numel() > 0 and patch.local_ghost_cells.numel() > 0:
+                # Fallback: copy from own field (self-referential)
+                self.recv_buffers[nbr_rank] = field_values[patch.remote_cells].clone()
+            else:
+                self.recv_buffers[nbr_rank] = self.send_buffers[nbr_rank].clone()
 
     # ------------------------------------------------------------------
     # Vector field exchange
