@@ -211,8 +211,12 @@ class SIMPLESolver(CoupledSolverBase):
             # ============================================
             A_p_eff = A_p.clone()  # Will be rAtU if SIMPLEC, else A_p
             if config.consistent:
-                # Compute H1 = sum of off-diagonal coefficients / cell volume
-                # NOTE: H1 is the SUM (negative), not sum of ABS
+                # SIMPLEC (Van Doormaal & Raithby, 1984):
+                # Uses rAtU = 1/(A_p - H1) instead of rAU = 1/A_p.
+                # In per-unit-volume form:
+                #   H1 = sum of off-diagonal coefficients per cell
+                #   A_p_eff = |A_p - H1|
+                # The downstream code computes inv_A_p = 1/A_p_eff = rAtU.
                 n_cells = mesh.n_cells
                 n_internal = mesh.n_internal_faces
                 int_owner = mesh.owner[:n_internal]
@@ -221,19 +225,11 @@ class SIMPLESolver(CoupledSolverBase):
                 H1 = torch.zeros(n_cells, dtype=dtype, device=device)
                 H1 = H1 + scatter_add(mat_lower, int_owner, n_cells)
                 H1 = H1 + scatter_add(mat_upper, int_neigh, n_cells)
-                H1 = H1 / mesh.cell_volumes.clamp(min=1e-30)
 
-                # rAtU = 1/(A_p - H1)
-                # H1 is sum of negative off-diags, so A_p - H1 = A_p + |H1|
-                # This makes rAtU SMALLER than rAU, which is more accurate
-                # and allows using alpha_p = 1.0 (SIMPLEC's key advantage).
-                rAU = 1.0 / A_p.abs().clamp(min=1e-30)
-                rAtU = 1.0 / (A_p - H1).abs().clamp(min=1e-30)
-
-                # SIMPLEC: just replace rAU with rAtU for pressure equation.
-                # No extra modifications to phiHbyA or HbyA needed —
-                # the pressure equation assembles with rAtU directly.
-                A_p_eff = rAtU
+                # rAtU = 1/(A_p - H1), stored as A_p_eff = A_p - H1
+                # Since H1 < 0 for diffusion, A_p - H1 = A_p + |H1| > A_p
+                # so rAtU < rAU, giving smaller but more accurate corrections.
+                A_p_eff = (A_p - H1).abs().clamp(min=1e-30)
 
             # ============================================
             # Step 4-5: Assemble and solve pressure equation
@@ -259,10 +255,11 @@ class SIMPLESolver(CoupledSolverBase):
             phi = correct_face_flux(phiHbyA, p_prime, A_p_eff, mesh, mesh.face_weights)
 
             # Under-relax pressure correction
-            # SIMPLEC uses alpha_p = 1.0 because rAtU already provides
-            # more accurate corrections (Van Doormaal & Raithby, 1984).
+            # SIMPLEC uses alpha_p = 1.0 by default because rAtU already
+            # provides more accurate corrections (Van Doormaal & Raithby, 1984).
+            # But for stability, users can override via config.relaxation_factor_p.
             if config.consistent:
-                alpha_p = 1.0
+                alpha_p = config.relaxation_factor_p  # Default 1.0 for SIMPLEC
             else:
                 alpha_p = config.relaxation_factor_p
             p_prime = alpha_p * p_prime

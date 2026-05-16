@@ -86,15 +86,15 @@ Phase 7: 完善后处理和工具
 | **T0.1.8** | **验证案例面法线修正** | 无 | 🔴 CRITICAL | ✅ 完成 | 面法线方向正确 |
 | **T0.1.9** | **移除压力方程边界对角项** | T0.1.1 | 🔴 CRITICAL | ✅ 完成 | 零梯度 BC 不贡献矩阵 |
 | **T0.2** | **验证 Ghia 基准案例** | T0.1 | 🔴 CRITICAL | ⚠️ IN PROGRESS | u ≈ -0.20581 在 y=0.5 |
-| T0.2.1 | 运行 lid_driven_cavity.py 验证 | T0.1 | 🔴 | ⚠️ IN PROGRESS | L2 误差 < 5% |
+| T0.2.1 | 运行 lid_driven_cavity.py 验证 | T0.1 | 🔴 | ⚠️ IN PROGRESS | L2 误差 < 5%（当前 15%，continuity 卡在 ~1e-4） |
 | T0.2.2 | 对比 Ghia 数据绘图 | T0.2.1 | 🔴 | ❌ 待做 | 速度剖面匹配 |
-| **T0.3** | **完善 SIMPLEC 实现** | T0.1 | 🟡 HIGH | ❌ 待做 | SIMPLEC 收敛快于 SIMPLE |
-| T0.3.1 | 测试 SIMPLEC 在盖驱动方腔的表现 | T0.1 | 🟡 | ❌ | 收敛迭代数减少 |
-| **T0.4** | **添加压力方程单元测试** | T0.1 | 🟡 HIGH | ❌ 待做 | 10+ 测试用例通过 |
-| T0.4.1 | 测试 assemble_pressure_equation() | 无 | 🟡 | ❌ | 矩阵对称性、源项正确 |
-| T0.4.2 | 测试 solve_pressure_equation() | T0.4.1 | 🟡 | ❌ | 解满足方程 |
-| T0.4.3 | 测试 correct_velocity() | T0.4.2 | 🟡 | ❌ | 散度为零 |
-| T0.4.4 | 测试 correct_face_flux() | T0.4.2 | 🟡 | ❌ | 通量守恒 |
+| **T0.3** | **完善 SIMPLEC 实现** | T0.1 | 🟡 HIGH | ⚠️ 部分完成 | SIMPLEC 收敛快于 SIMPLE |
+| T0.3.1 | 测试 SIMPLEC 在盖驱动方腔的表现 | T0.1 | 🟡 | ⚠️ 完成 | 326 次 vs 500+ 次（α_p=0.5, 32×32） |
+| **T0.4** | **添加压力方程单元测试** | T0.1 | 🟡 HIGH | ✅ 完成 | 38+ 测试用例通过 |
+| T0.4.1 | 测试 assemble_pressure_equation() | 无 | 🟡 | ✅ 完成 | 矩阵对称性、源项正确（26 测试） |
+| T0.4.2 | 测试 solve_pressure_equation() | T0.4.1 | 🟡 | ✅ 完成 | 解满足方程 |
+| T0.4.3 | 测试 correct_velocity() | T0.4.2 | 🟡 | ✅ 完成 | 散度为零 |
+| T0.4.4 | 测试 correct_face_flux() | T0.4.2 | 🟡 | ✅ 完成 | 通量守恒 |
 
 ---
 
