@@ -28,6 +28,8 @@ from pyfoam.applications.rho_pimple_foam import RhoPimpleFoam
 from pyfoam.applications.rho_central_foam import RhoCentralFoam
 from pyfoam.applications.inter_foam import InterFoam
 from pyfoam.applications.porous_simple_foam import PorousSimpleFoam
+from pyfoam.applications.laplacian_foam import LaplacianFoam
+from pyfoam.applications.cht_multi_region_foam import CHTMultiRegionFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -44,6 +46,8 @@ __all__ = [
     "RhoCentralFoam",
     "InterFoam",
     "PorousSimpleFoam",
+    "LaplacianFoam",
+    "CHTMultiRegionFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]

@@ -100,6 +100,60 @@ class _FvmNamespace:
     """Implicit finite volume operators."""
 
     @staticmethod
+    def ddt(
+        coeff: float,
+        phi: Any,
+        dt: float,
+        *,
+        mesh: Any = None,
+    ) -> FvMatrix:
+        """Discretise the time derivative operator ∂φ/∂t (implicit Euler).
+
+        Returns an FvMatrix where:
+        - diagonal: coeff * V / dt
+        - source: coeff * V * phi_old / dt
+
+        Args:
+            coeff: Coefficient (e.g. ρ or 1).
+            phi: Current field values ``(n_cells,)`` or ``(n_cells, 3)``.
+            dt: Time step size.
+            mesh: The ``FvMesh``.
+
+        Returns:
+            :class:`FvMatrix` with time derivative coefficients.
+        """
+        if hasattr(phi, "mesh"):
+            mesh = phi.mesh
+            phi_data = phi.internal_field
+        elif mesh is not None:
+            phi_data = phi if isinstance(phi, torch.Tensor) else torch.tensor(phi)
+        else:
+            raise ValueError("mesh is required when phi is not a GeometricField")
+
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        cell_volumes = mesh.cell_volumes
+
+        phi_data = phi_data.to(device=device, dtype=dtype)
+
+        # Create FvMatrix with zero off-diagonals (no face contributions)
+        mat = _make_fvmatrix(mesh)
+
+        # Time derivative: coeff * V / dt on diagonal
+        diag = coeff * cell_volumes / dt
+        mat.diag = diag
+
+        # Source: coeff * V * phi_old / dt
+        if phi_data.dim() == 1:
+            mat.source = coeff * cell_volumes * phi_data / dt
+        else:
+            # For vector fields, sum over components
+            mat.source = coeff * cell_volumes * phi_data.sum(dim=-1) / dt
+
+        return mat
+
+    @staticmethod
     def grad(
         phi: Any,
         scheme: str = "Gauss linear",
