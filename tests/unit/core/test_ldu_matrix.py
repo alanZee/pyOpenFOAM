@@ -286,6 +286,174 @@ class TestLduMatrixSparse:
 
 
 # ---------------------------------------------------------------------------
+# Optimised sparse operations (Phase 13)
+# ---------------------------------------------------------------------------
+
+
+class TestLduMatrixSparseOptimised:
+    """Tests for GPU-optimised sparse matrix operations."""
+
+    def test_to_sparse_coo_matches_original(self, chain_mesh):
+        """Optimised to_sparse_coo should produce same result."""
+        n_cells, owner, neighbour = chain_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([4.0, 6.0, 4.0])
+        mat.lower = torch.tensor([-1.0, -1.0])
+        mat.upper = torch.tensor([-2.0, -2.0])
+
+        coo = mat.to_sparse_coo()
+        dense = coo.to_dense()
+
+        # Verify specific entries
+        assert torch.allclose(dense[0, 0], torch.tensor(4.0, dtype=CFD_DTYPE))
+        assert torch.allclose(dense[1, 1], torch.tensor(6.0, dtype=CFD_DTYPE))
+        assert torch.allclose(dense[0, 1], torch.tensor(-1.0, dtype=CFD_DTYPE))
+        assert torch.allclose(dense[1, 0], torch.tensor(-2.0, dtype=CFD_DTYPE))
+
+    def test_to_sparse_csr_cached(self, two_cell_mesh):
+        """Cached CSR should match non-cached."""
+        n_cells, owner, neighbour = two_cell_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([2.0, 3.0])
+        mat.lower = torch.tensor([-1.0])
+        mat.upper = torch.tensor([-2.0])
+
+        csr1 = mat.to_sparse_csr_cached()
+        csr2 = mat.to_sparse_csr_cached()
+        # Should be the same cached object
+        assert csr1 is csr2
+
+    def test_cache_invalidation_on_diag_set(self, two_cell_mesh):
+        """Setting diag should invalidate cache."""
+        n_cells, owner, neighbour = two_cell_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([2.0, 3.0])
+        mat.lower = torch.tensor([-1.0])
+        mat.upper = torch.tensor([-2.0])
+
+        csr1 = mat.to_sparse_csr_cached()
+        mat.diag = torch.tensor([5.0, 6.0])  # triggers invalidation
+        csr2 = mat.to_sparse_csr_cached()
+        # Should be different objects (cache was invalidated)
+        assert csr1 is not csr2
+
+    def test_cache_invalidation_on_lower_set(self, two_cell_mesh):
+        """Setting lower should invalidate cache."""
+        n_cells, owner, neighbour = two_cell_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([2.0, 3.0])
+        mat.lower = torch.tensor([-1.0])
+        mat.upper = torch.tensor([-2.0])
+
+        csr1 = mat.to_sparse_csr_cached()
+        mat.lower = torch.tensor([-3.0])
+        csr2 = mat.to_sparse_csr_cached()
+        assert csr1 is not csr2
+
+    def test_cache_invalidation_on_upper_set(self, two_cell_mesh):
+        """Setting upper should invalidate cache."""
+        n_cells, owner, neighbour = two_cell_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([2.0, 3.0])
+        mat.lower = torch.tensor([-1.0])
+        mat.upper = torch.tensor([-2.0])
+
+        csr1 = mat.to_sparse_csr_cached()
+        mat.upper = torch.tensor([-4.0])
+        csr2 = mat.to_sparse_csr_cached()
+        assert csr1 is not csr2
+
+    def test_cache_invalidation_on_add_to_diag(self, two_cell_mesh):
+        """add_to_diag should invalidate cache."""
+        n_cells, owner, neighbour = two_cell_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([2.0, 3.0])
+        mat.lower = torch.tensor([-1.0])
+        mat.upper = torch.tensor([-2.0])
+
+        csr1 = mat.to_sparse_csr_cached()
+        mat.add_to_diag(torch.tensor([1.0, 1.0]))
+        csr2 = mat.to_sparse_csr_cached()
+        assert csr1 is not csr2
+
+    def test_invalidate_cache_explicit(self, two_cell_mesh):
+        """Explicit invalidate_cache should clear the cache."""
+        n_cells, owner, neighbour = two_cell_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([2.0, 3.0])
+        mat.lower = torch.tensor([-1.0])
+        mat.upper = torch.tensor([-2.0])
+
+        mat.to_sparse_csr_cached()
+        mat.invalidate_cache()
+        assert "csr" not in mat._csr_cache
+
+    def test_ax_sparse_matches_ax(self, chain_mesh):
+        """Ax_sparse should produce identical results to Ax."""
+        n_cells, owner, neighbour = chain_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([4.0, 6.0, 4.0])
+        mat.lower = torch.tensor([-1.0, -1.0])
+        mat.upper = torch.tensor([-1.0, -1.0])
+
+        x = torch.tensor([1.0, 2.0, 3.0], dtype=CFD_DTYPE)
+        y_ldu = mat.Ax(x)
+        y_sparse = mat.Ax_sparse(x)
+
+        assert torch.allclose(y_ldu, y_sparse, atol=1e-12)
+
+    def test_ax_sparse_asymmetric(self, two_cell_mesh):
+        """Ax_sparse with asymmetric matrix."""
+        n_cells, owner, neighbour = two_cell_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([4.0, 4.0])
+        mat.lower = torch.tensor([-1.0])
+        mat.upper = torch.tensor([-2.0])
+
+        x = torch.tensor([1.0, 3.0], dtype=CFD_DTYPE)
+        y_ldu = mat.Ax(x)
+        y_sparse = mat.Ax_sparse(x)
+
+        assert torch.allclose(y_ldu, y_sparse, atol=1e-12)
+
+    def test_ax_batched(self, chain_mesh):
+        """Ax_batched should handle multiple RHS correctly."""
+        n_cells, owner, neighbour = chain_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([4.0, 6.0, 4.0])
+        mat.lower = torch.tensor([-1.0, -1.0])
+        mat.upper = torch.tensor([-1.0, -1.0])
+
+        # 3 cells, 2 RHS vectors
+        x = torch.tensor([
+            [1.0, 10.0],
+            [2.0, 20.0],
+            [3.0, 30.0],
+        ], dtype=CFD_DTYPE)
+        y_batched = mat.Ax_batched(x)
+
+        # Check each column matches single Ax
+        y0 = mat.Ax(x[:, 0])
+        y1 = mat.Ax(x[:, 1])
+
+        assert torch.allclose(y_batched[:, 0], y0, atol=1e-12)
+        assert torch.allclose(y_batched[:, 1], y1, atol=1e-12)
+
+    def test_ax_sparse_zero_off_diagonal(self, two_cell_mesh):
+        """Ax_sparse with only diagonal entries."""
+        n_cells, owner, neighbour = two_cell_mesh
+        mat = LduMatrix(n_cells, owner, neighbour)
+        mat.diag = torch.tensor([3.0, 5.0])
+        mat.lower = torch.tensor([0.0])
+        mat.upper = torch.tensor([0.0])
+
+        x = torch.tensor([2.0, 4.0], dtype=CFD_DTYPE)
+        y = mat.Ax_sparse(x)
+
+        assert torch.allclose(y, torch.tensor([6.0, 20.0], dtype=CFD_DTYPE))
+
+
+# ---------------------------------------------------------------------------
 # Integration: realistic FVM diffusion matrix
 # ---------------------------------------------------------------------------
 

@@ -58,7 +58,7 @@ def main() -> None:
         "--only",
         type=str,
         nargs="+",
-        choices=["linear", "gpu", "memory", "plots"],
+        choices=["linear", "gpu", "memory", "sparse", "simple", "comparison", "plots"],
         default=None,
         help="Run only specified benchmarks",
     )
@@ -66,7 +66,7 @@ def main() -> None:
         "--skip",
         type=str,
         nargs="+",
-        choices=["linear", "gpu", "memory", "plots"],
+        choices=["linear", "gpu", "memory", "sparse", "simple", "comparison", "plots"],
         default=None,
         help="Skip specified benchmarks",
     )
@@ -86,7 +86,7 @@ def main() -> None:
     args = parser.parse_args()
 
     # Determine which benchmarks to run
-    all_benchmarks = {"linear", "gpu", "memory", "plots"}
+    all_benchmarks = {"linear", "gpu", "memory", "sparse", "simple", "comparison", "plots"}
 
     if args.only:
         to_run = set(args.only)
@@ -144,6 +144,29 @@ def main() -> None:
         run_memory_scaling_benchmarks(
             mesh_sizes=args.mesh_sizes,
             device=device,
+            output_dir=output_dir,
+        )
+
+    if "sparse" in to_run:
+        from benchmarks.sparse_ops_benchmark import run_sparse_ops_benchmarks
+        run_sparse_ops_benchmarks(
+            mesh_sizes=args.mesh_sizes,
+            device=device,
+            output_dir=output_dir,
+        )
+
+    if "simple" in to_run:
+        from benchmarks.simple_iteration_benchmark import run_simple_iteration_benchmarks
+        run_simple_iteration_benchmarks(
+            mesh_sizes=args.mesh_sizes,
+            device=device,
+            output_dir=output_dir,
+        )
+
+    if "comparison" in to_run:
+        from benchmarks.openfoam_comparison import generate_comparison_report
+        generate_comparison_report(
+            results_dir=output_dir,
             output_dir=output_dir,
         )
 

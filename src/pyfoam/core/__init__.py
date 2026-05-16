@@ -38,7 +38,15 @@ from pyfoam.core.fv_matrix import FvMatrix, LinearSolver
 from pyfoam.core.sparse_ops import (
     extract_diagonal,
     ldu_to_coo_indices,
+    ldu_matvec_sparse,
     csr_matvec,
+)
+from pyfoam.core.multi_gpu import (
+    MultiGPUManager,
+    MeshPartition,
+    partition_mesh,
+    GpuCommunicator,
+    MultiGPUMatrix,
 )
 
 __all__ = [
@@ -76,5 +84,12 @@ __all__ = [
     # sparse_ops
     "extract_diagonal",
     "ldu_to_coo_indices",
+    "ldu_matvec_sparse",
     "csr_matvec",
+    # multi_gpu
+    "MultiGPUManager",
+    "MeshPartition",
+    "partition_mesh",
+    "GpuCommunicator",
+    "MultiGPUMatrix",
 ]

@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import torch
 
-from pyfoam.core.backend import scatter_add, gather
+from pyfoam.core.backend import scatter_add, gather, sparse_mm
 from pyfoam.core.device import get_device, get_default_dtype
 from pyfoam.core.dtype import assert_floating, INDEX_DTYPE
 
@@ -98,6 +98,9 @@ class LduMatrix:
             self._n_internal_faces, device=self._device, dtype=self._dtype
         )
 
+        # Cache for CSR sparse matrix (avoids repeated COO→CSR conversion)
+        self._csr_cache: dict = {}
+
     # ------------------------------------------------------------------
     # Properties
     # ------------------------------------------------------------------
@@ -140,6 +143,7 @@ class LduMatrix:
     @diag.setter
     def diag(self, value: torch.Tensor) -> None:
         self._diag = value.to(device=self._device, dtype=self._dtype)
+        self.invalidate_cache()
 
     @property
     def lower(self) -> torch.Tensor:
@@ -149,6 +153,7 @@ class LduMatrix:
     @lower.setter
     def lower(self, value: torch.Tensor) -> None:
         self._lower = value.to(device=self._device, dtype=self._dtype)
+        self.invalidate_cache()
 
     @property
     def upper(self) -> torch.Tensor:
@@ -158,6 +163,7 @@ class LduMatrix:
     @upper.setter
     def upper(self, value: torch.Tensor) -> None:
         self._upper = value.to(device=self._device, dtype=self._dtype)
+        self.invalidate_cache()
 
     # ------------------------------------------------------------------
     # Matrix-vector product
@@ -226,6 +232,7 @@ class LduMatrix:
             self._diag = self._diag + values.to(
                 device=self._device, dtype=self._dtype
             )
+        self.invalidate_cache()
 
     # ------------------------------------------------------------------
     # COO / CSR conversion for solver interface
@@ -234,34 +241,29 @@ class LduMatrix:
     def to_sparse_coo(self) -> torch.Tensor:
         """Convert LDU matrix to COO sparse tensor.
 
+        Uses :func:`~pyfoam.core.sparse_ops.ldu_to_coo_indices` for
+        efficient index construction (avoids building intermediate dense
+        tensors for the index arrays).
+
         Returns:
             Sparse COO tensor of shape ``(n_cells, n_cells)``.
         """
+        from pyfoam.core.sparse_ops import ldu_to_coo_indices
+
         n = self._n_cells
         device = self._device
         dtype = self._dtype
 
-        # Diagonal entries: (i, i)
-        diag_idx = torch.stack([
-            torch.arange(n, device=device, dtype=INDEX_DTYPE),
-            torch.arange(n, device=device, dtype=INDEX_DTYPE),
-        ])
-        diag_val = self._diag
+        diag_idx, lower_idx, upper_idx = ldu_to_coo_indices(
+            self._owner, self._neighbour, n, device=device
+        )
 
         if self._n_internal_faces > 0:
-            # Lower entries: (owner, neighbour) — row=owner, col=neighbour
-            lower_idx = torch.stack([self._owner, self._neighbour])
-            lower_val = self._lower
-
-            # Upper entries: (neighbour, owner) — row=neighbour, col=owner
-            upper_idx = torch.stack([self._neighbour, self._owner])
-            upper_val = self._upper
-
             indices = torch.cat([diag_idx, lower_idx, upper_idx], dim=1)
-            values = torch.cat([diag_val, lower_val, upper_val])
+            values = torch.cat([self._diag, self._lower, self._upper])
         else:
             indices = diag_idx
-            values = diag_val
+            values = self._diag
 
         return torch.sparse_coo_tensor(
             indices, values, (n, n), device=device
@@ -274,6 +276,72 @@ class LduMatrix:
             Sparse CSR tensor of shape ``(n_cells, n_cells)``.
         """
         return self.to_sparse_coo().to_sparse_csr()
+
+    def to_sparse_csr_cached(self) -> torch.Tensor:
+        """Convert LDU matrix to CSR sparse tensor with caching.
+
+        The CSR matrix is cached so repeated calls (common in iterative
+        solvers) skip the COO→CSR conversion.  The cache is invalidated
+        when coefficient arrays are modified (via property setters).
+
+        Returns:
+            Sparse CSR tensor of shape ``(n_cells, n_cells)``.
+        """
+        if "csr" in self._csr_cache:
+            cached = self._csr_cache["csr"]
+            if cached.device == self._device:
+                return cached
+
+        csr = self.to_sparse_csr()
+        self._csr_cache["csr"] = csr
+        return csr
+
+    def invalidate_cache(self) -> None:
+        """Invalidate the cached sparse matrix.
+
+        Call this after modifying ``diag``, ``lower``, or ``upper`` via
+        in-place operations (e.g., ``mat.diag += 1``).  Property setters
+        automatically invalidate the cache.
+        """
+        self._csr_cache.clear()
+
+    # ------------------------------------------------------------------
+    # Sparse matrix-vector product (GPU-optimised)
+    # ------------------------------------------------------------------
+
+    def Ax_sparse(self, x: torch.Tensor) -> torch.Tensor:
+        """Compute y = A · x using the cached CSR sparse matrix.
+
+        This is faster than :meth:`Ax` for large matrices on GPU because
+        ``torch.sparse.mm`` is highly optimised for CSR format.  The CSR
+        conversion is done once and cached.
+
+        Args:
+            x: ``(n_cells,)`` or ``(n_cells, k)`` input vector(s).
+
+        Returns:
+            ``(n_cells,)`` or ``(n_cells, k)`` result.
+        """
+        assert_floating(x, "x")
+        x = x.to(device=self._device, dtype=self._dtype)
+
+        csr = self.to_sparse_csr_cached()
+        return sparse_mm(csr, x)
+
+    def Ax_batched(self, x: torch.Tensor) -> torch.Tensor:
+        """Compute y = A · x for multiple right-hand sides.
+
+        Equivalent to :meth:`Ax_sparse` but explicitly documented for the
+        batched (matrix-matrix) case.  ``x`` can be ``(n_cells, k)`` where
+        *k* is the number of RHS vectors.
+
+        Args:
+            x: ``(n_cells, k)`` input matrix.
+
+        Returns:
+            ``(n_cells, k)`` result matrix.
+        """
+        return self.Ax_sparse(x)
 
     # ------------------------------------------------------------------
     # Representation

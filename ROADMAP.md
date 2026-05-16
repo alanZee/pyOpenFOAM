@@ -47,10 +47,10 @@
 - [ ] Validate against Ghia et al. (1982) benchmark data
 
 ### 3. Performance Optimization
-- [ ] Profile GPU memory usage for large meshes
-- [ ] Optimize sparse matrix operations
-- [ ] Add mesh partitioning for multi-GPU
-- [ ] Benchmark against OpenFOAM performance
+- [x] Profile GPU memory usage for large meshes
+- [x] Optimize sparse matrix operations (CSR caching, batched matvec, vectorised extract_diagonal)
+- [x] Add mesh partitioning for multi-GPU (domain decomposition framework)
+- [x] Benchmark suite (sparse ops, SIMPLE iteration, OpenFOAM comparison report)
 
 ---
 
