@@ -6,7 +6,8 @@ Provides:
 - :class:`BoundaryCondition` — abstract base class with RTS registry
 - :class:`BoundaryField` — collection of BCs for a field
 - Concrete BCs: fixedValue, zeroGradient, noSlip, fixedGradient,
-  symmetryPlane, cyclic, nutkWallFunction, kqRWallFunction, inletOutlet,
+  symmetryPlane, cyclic, nutkWallFunction, nutLowReWallFunction,
+  kqRWallFunction, epsilonWallFunction, omegaWallFunction, inletOutlet,
   alphaContactAngle, constantAlphaContactAngle
 - Velocity BCs: flowRateInletVelocity, pressureInletOutletVelocity,
   rotatingWallVelocity
@@ -28,7 +29,13 @@ from pyfoam.boundary.no_slip import NoSlipBC
 from pyfoam.boundary.fixed_gradient import FixedGradientBC
 from pyfoam.boundary.symmetry import SymmetryBC
 from pyfoam.boundary.cyclic import CyclicBC
-from pyfoam.boundary.wall_function import KqRWallFunctionBC, NutkWallFunctionBC
+from pyfoam.boundary.wall_function import (
+    KqRWallFunctionBC,
+    NutkWallFunctionBC,
+    NutLowReWallFunctionBC,
+    EpsilonWallFunctionBC,
+    OmegaWallFunctionBC,
+)
 from pyfoam.boundary.inlet_outlet import InletOutletBC
 from pyfoam.boundary.alpha_contact_angle import AlphaContactAngleBC
 
@@ -71,7 +78,10 @@ __all__ = [
     "SymmetryBC",
     "CyclicBC",
     "NutkWallFunctionBC",
+    "NutLowReWallFunctionBC",
     "KqRWallFunctionBC",
+    "EpsilonWallFunctionBC",
+    "OmegaWallFunctionBC",
     "InletOutletBC",
     "AlphaContactAngleBC",
     # Phase 9: Velocity BCs

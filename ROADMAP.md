@@ -12,16 +12,18 @@
 - ✅ Pressure-velocity coupling (SIMPLE, PISO, PIMPLE)
 - ✅ Turbulence models (k-ε, k-ω SST, S-A, Smagorinsky, WALE)
 - ✅ Thermophysical models (perfect gas, Sutherland, JANAF, constant Cp)
-- ✅ Multiphase (VOF)
+- ✅ Multiphase (VOF with MULES, interFoam, multiphaseInterFoam, compressibleInterFoam, twoPhaseEulerFoam, multiphaseEulerFoam, cavitatingFoam)
 - ✅ MPI parallel support
 - ✅ GPU acceleration via PyTorch tensors
 - ✅ Incompressible solvers: simpleFoam, icoFoam, pisoFoam, pimpleFoam, SRFSimpleFoam, porousSimpleFoam, boundaryFoam
 - ✅ Compressible solvers: rhoSimpleFoam, rhoPimpleFoam, sonicFoam, rhoCentralFoam, buoyantSimpleFoam, buoyantPimpleFoam, buoyantBoussinesqSimpleFoam
+- ✅ Thermal solvers: laplacianFoam, chtMultiRegionFoam
 
 ### Current Capabilities
 - **GPU Acceleration**: All field operations use PyTorch tensors on CUDA/MPS
 - **OpenFOAM Compatibility**: Read/write existing OpenFOAM cases
 - **Python Integration**: Works with NumPy, SciPy, PyTorch ecosystem
+- **Thermal Solvers**: laplacianFoam (diffusion), chtMultiRegionFoam (conjugate heat transfer)
 
 ### Current Limitations
 - ❌ **Not end-to-end differentiable**: Discretization operators don't support `torch.autograd`

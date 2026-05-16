@@ -15,6 +15,9 @@ The transport equation with interface compression:
 
 where U_r is a compression velocity that sharpens the interface.
 
+Includes MULES (Multidimensional Universal Limiter with Explicit
+Solution) limiting to ensure α ∈ [0, 1] while preserving conservation.
+
 Usage::
 
     from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -82,6 +85,8 @@ class VOFAdvection:
         C_alpha: float = 1.0,
         alpha_min: float = 0.0,
         alpha_max: float = 1.0,
+        use_mules: bool = True,
+        mules_iterations: int = 3,
     ) -> None:
         self._mesh = mesh
         self._device = get_device()
@@ -93,6 +98,11 @@ class VOFAdvection:
         self._C_alpha = C_alpha
         self._alpha_min = alpha_min
         self._alpha_max = alpha_max
+        self._use_mules = use_mules
+        self._mules_iterations = mules_iterations
+
+        # Lazy-initialise MULES limiter
+        self._mules = None
 
     @property
     def alpha(self) -> torch.Tensor:
@@ -124,7 +134,8 @@ class VOFAdvection:
     def advance(self, delta_t: float) -> torch.Tensor:
         """Advance volume fraction by one time step.
 
-        Uses a semi-implicit Euler scheme with interface compression.
+        Uses a semi-implicit Euler scheme with interface compression
+        and optional MULES limiting for boundedness.
 
         Args:
             delta_t: Time step size (s).
@@ -135,7 +146,6 @@ class VOFAdvection:
         mesh = self._mesh
         alpha = self._alpha
         phi = self._phi
-        U = self._U
         C_alpha = self._C_alpha
 
         n_cells = mesh.n_cells
@@ -157,44 +167,64 @@ class VOFAdvection:
         alpha_face = torch.where(is_positive, alpha_P, alpha_N)
 
         # ----------------------------------------------------------
-        # Step 2: Compute compression velocity
+        # Step 2: Compute compression flux (OpenFOAM-style)
         # ----------------------------------------------------------
-        # U_r = C_alpha * |phi| / |S_f| * n_f
-        # where n_f is the face normal (approximated by face_areas)
-        face_areas = mesh.face_areas[:n_internal]
-        S_mag = face_areas.norm(dim=1).clamp(min=1e-30)
-
-        # Compression flux: C_alpha * |phi| * (alpha_P - alpha_N)
-        # This drives alpha toward 0 or 1 at the interface
+        # The compression velocity is directed from the cell with
+        # lower alpha to higher alpha, i.e. normal to the interface.
+        # phi_c = C_alpha * max(|phi|) * (alpha_P - alpha_N)
+        # This is consistent with OpenFOAM's interfaceCompression scheme
+        # where the compression flux is proportional to the alpha
+        # difference and the maximum face flux magnitude.
+        phi_max = flux.abs().max().clamp(min=1e-30)
         delta_alpha = alpha_P - alpha_N
-        compression_flux = C_alpha * flux.abs() * delta_alpha
+        compression_flux = C_alpha * phi_max * delta_alpha
 
         # ----------------------------------------------------------
-        # Step 3: Compute div(alpha * phi + compression)
+        # Step 3: Compute total alpha face flux
         # ----------------------------------------------------------
-        # Total face flux for alpha: phi * alpha_face + compression
         alpha_flux = flux * alpha_face + compression_flux
 
-        # Divergence: sum of face fluxes per cell
-        div_alpha = torch.zeros(n_cells, dtype=self._dtype, device=self._device)
-        div_alpha = div_alpha + scatter_add(alpha_flux, int_owner, n_cells)
-        div_alpha = div_alpha + scatter_add(-alpha_flux, int_neigh, n_cells)
+        # ----------------------------------------------------------
+        # Step 4: Apply MULES limiting (if enabled)
+        # ----------------------------------------------------------
+        if self._use_mules:
+            if self._mules is None:
+                from pyfoam.multiphase.mules import MULESLimiter
+                self._mules = MULESLimiter(
+                    mesh, n_iterations=self._mules_iterations
+                )
 
-        # Boundary faces
-        if mesh.n_faces > n_internal:
-            bnd_flux = phi[n_internal:] * gather(alpha, owner[n_internal:])
-            div_alpha = div_alpha + scatter_add(bnd_flux, owner[n_internal:], n_cells)
+            alpha_new = self._mules.limit(
+                alpha, phi, alpha_flux, delta_t,
+                alpha_min=self._alpha_min,
+                alpha_max=self._alpha_max,
+            )
+        else:
+            # No MULES: direct forward Euler + clamp
+            div_alpha = torch.zeros(
+                n_cells, dtype=self._dtype, device=self._device
+            )
+            div_alpha = div_alpha + scatter_add(
+                alpha_flux, int_owner, n_cells
+            )
+            div_alpha = div_alpha + scatter_add(
+                -alpha_flux, int_neigh, n_cells
+            )
 
-        # ----------------------------------------------------------
-        # Step 4: Forward Euler time integration
-        # ----------------------------------------------------------
-        V = cell_volumes.clamp(min=1e-30)
-        alpha_new = alpha - delta_t * div_alpha / V
+            # Boundary faces
+            if mesh.n_faces > n_internal:
+                bnd_flux = phi[n_internal:] * gather(
+                    alpha, owner[n_internal:]
+                )
+                div_alpha = div_alpha + scatter_add(
+                    bnd_flux, owner[n_internal:], n_cells
+                )
 
-        # ----------------------------------------------------------
-        # Step 5: Clamp to [alpha_min, alpha_max]
-        # ----------------------------------------------------------
-        alpha_new = alpha_new.clamp(min=self._alpha_min, max=self._alpha_max)
+            V = cell_volumes.clamp(min=1e-30)
+            alpha_new = alpha - delta_t * div_alpha / V
+            alpha_new = alpha_new.clamp(
+                min=self._alpha_min, max=self._alpha_max
+            )
 
         self._alpha = alpha_new
         return alpha_new
