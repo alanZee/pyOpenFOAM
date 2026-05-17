@@ -11,7 +11,7 @@
 [![PyTorch 2.0+](https://img.shields.io/badge/pytorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
 [![Tests](https://img.shields.io/badge/tests-2041+-brightgreen.svg)](#testing)
 
-[English](#overview) | [中文](#概述)
+[English](#overview) | [中文](README_zh.md)
 
 </div>
 
