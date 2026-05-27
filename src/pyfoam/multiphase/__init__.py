@@ -9,6 +9,7 @@ Provides:
 - Interphase models: SchillerNaumannDrag, WenYuDrag, GidaspowDrag,
   TomiyamaLift, VirtualMassForce
 - Cavitation models: SchnerrSauer, Merkle, ZGB
+- Interface reconstruction: PLICReconstruction
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -22,6 +23,11 @@ from pyfoam.multiphase.interphase_models import (
     VirtualMassForce,
 )
 from pyfoam.multiphase.cavitation import SchnerrSauer, Merkle, ZGB
+from pyfoam.multiphase.interface_reconstruction import (
+    InterfaceReconstruction,
+    PLICReconstruction,
+)
+from pyfoam.multiphase.interface_compression import InterfaceCompression
 
 __all__ = [
     "VOFAdvection",
@@ -35,4 +41,7 @@ __all__ = [
     "SchnerrSauer",
     "Merkle",
     "ZGB",
+    "InterfaceReconstruction",
+    "PLICReconstruction",
+    "InterfaceCompression",
 ]
