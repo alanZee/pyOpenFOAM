@@ -6,7 +6,10 @@ Provides:
 Linear solvers:
 - **PCG**: Preconditioned Conjugate Gradient (symmetric positive-definite)
 - **PBiCGSTAB**: Preconditioned Bi-Conjugate Gradient Stabilised (asymmetric)
+- **PBiCG**: Preconditioned Bi-Conjugate Gradient (asymmetric, alternative)
 - **GAMG**: Algebraic Multigrid with aggregation coarsening
+- **SmoothSolver**: Iterative smoother with configurable smoother (GaussSeidel, DIC, DILU)
+- **Diagonal**: Diagonal solver for explicit systems
 
 Preconditioners:
 - **DIC**: Diagonal Incomplete Cholesky (for symmetric matrices)
@@ -48,6 +51,9 @@ from pyfoam.solvers.linear_solver import (
 )
 from pyfoam.solvers.pcg import PCGSolver
 from pyfoam.solvers.pbicgstab import PBiCGSTABSolver
+from pyfoam.solvers.pbicg import PBiCGSolver
+from pyfoam.solvers.smooth_solver import SmoothSolver
+from pyfoam.solvers.diagonal import DiagonalSolver
 from pyfoam.solvers.gamg import GAMGSolver
 from pyfoam.solvers.preconditioners import (
     DICPreconditioner,
@@ -80,6 +86,9 @@ __all__ = [
     "LinearSolverBase",
     "PCGSolver",
     "PBiCGSTABSolver",
+    "PBiCGSolver",
+    "SmoothSolver",
+    "DiagonalSolver",
     "GAMGSolver",
     # Preconditioners
     "Preconditioner",

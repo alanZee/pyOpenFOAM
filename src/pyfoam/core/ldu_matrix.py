@@ -216,9 +216,46 @@ class LduMatrix:
 
         return y
 
-    # ------------------------------------------------------------------
-    # Diagonal manipulation
-    # ------------------------------------------------------------------
+    def Ax_T(self, x: torch.Tensor) -> torch.Tensor:
+        """Compute the transpose matrix-vector product y = A^T · x.
+
+        In LDU format, the transpose swaps the roles of lower and upper:
+        - Diagonal: same as Ax
+        - lower[f] = A[P,N]: in A^T this is A^T[N,P], contributes to row N
+        - upper[f] = A[N,P]: in A^T this is A^T[P,N], contributes to row P
+
+        Args:
+            x: ``(n_cells,)`` input vector.
+
+        Returns:
+            ``(n_cells,)`` result vector y = A^T · x.
+        """
+        assert_floating(x, "x")
+        if x.shape[0] != self._n_cells:
+            raise ValueError(
+                f"x has {x.shape[0]} elements, expected {self._n_cells}"
+            )
+
+        x = x.to(device=self._device, dtype=self._dtype)
+
+        # 1. Diagonal contribution (same as Ax)
+        y = self._diag * x
+
+        # 2. Off-diagonal contributions (swapped lower/upper)
+        if self._n_internal_faces > 0:
+            x_owner = gather(x, self._owner)
+            x_neigh = gather(x, self._neighbour)
+
+            # lower[f] = A[P,N] -> A^T[N,P], contributes to row N
+            y = y + scatter_add(
+                self._lower * x_owner, self._neighbour, self._n_cells
+            )
+            # upper[f] = A[N,P] -> A^T[P,N], contributes to row P
+            y = y + scatter_add(
+                self._upper * x_neigh, self._owner, self._n_cells
+            )
+
+        return y
 
     def add_to_diag(self, values: torch.Tensor) -> None:
         """Add values to the diagonal coefficients.

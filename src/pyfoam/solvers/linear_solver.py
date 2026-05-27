@@ -10,7 +10,10 @@ Provides:
 Solver names (case-insensitive):
 - ``"PCG"`` — Preconditioned Conjugate Gradient (symmetric)
 - ``"PBiCGStab"`` / ``"PBiCGSTAB"`` — Preconditioned BiCG Stabilised (asymmetric)
+- ``"PBiCG"`` — Preconditioned Bi-Conjugate Gradient (asymmetric)
 - ``"GAMG"`` — Algebraic Multigrid
+- ``"smoothSolver"`` — Iterative smoother (GaussSeidel, DIC, DILU)
+- ``"diagonal"`` — Diagonal solver for explicit systems
 
 All tensors respect the global device/dtype configuration from
 :mod:`pyfoam.core.device`.
@@ -206,16 +209,26 @@ def create_solver(
     if not _SOLVER_REGISTRY:
         from pyfoam.solvers.pcg import PCGSolver
         from pyfoam.solvers.pbicgstab import PBiCGSTABSolver
+        from pyfoam.solvers.pbicg import PBiCGSolver
+        from pyfoam.solvers.smooth_solver import SmoothSolver
+        from pyfoam.solvers.diagonal import DiagonalSolver
         from pyfoam.solvers.gamg import GAMGSolver
 
         _register_solver("PCG", PCGSolver)
         _register_solver("PBICGSTAB", PBiCGSTABSolver)
+        _register_solver("PBICG", PBiCGSolver)
+        _register_solver("SMOOTHSOLVER", SmoothSolver)
+        _register_solver("DIAGONAL", DiagonalSolver)
         _register_solver("GAMG", GAMGSolver)
 
     key = name.upper().replace("-", "").replace("_", "")
-    # Normalise PBiCGStab variants
-    if key in ("PBICGSTAB", "PBICGStab".upper()):
+    # Normalise common aliases
+    if key == "PBICGSTAB":
         key = "PBICGSTAB"
+    if key == "SMOOTHSOLVER":
+        key = "SMOOTHSOLVER"
+    if key == "DIAGONAL":
+        key = "DIAGONAL"
 
     if key not in _SOLVER_REGISTRY:
         available = ", ".join(sorted(_SOLVER_REGISTRY.keys()))
@@ -247,6 +260,11 @@ def solver_from_dict(
         relTol          0.01;
         maxIter         1000;
 
+    For smoothSolver, also supports::
+
+        smoother        GaussSeidel;  // or DIC, DILU
+        nSweeps         2;
+
     Args:
         solver_name: Solver algorithm name (e.g., ``"PCG"``).
         solver_dict: Dictionary of solver parameters.
@@ -254,9 +272,24 @@ def solver_from_dict(
     Returns:
         Configured solver instance.
     """
+    extra_kwargs: dict[str, Any] = {}
+
+    # SmoothSolver-specific parameters
+    key = solver_name.upper().replace("-", "").replace("_", "")
+    if key == "SMOOTHSOLVER":
+        if "smoother" in solver_dict:
+            extra_kwargs["smoother"] = solver_dict["smoother"]
+        if "nSweeps" in solver_dict:
+            extra_kwargs["n_sweeps"] = int(solver_dict["nSweeps"])
+
+    # Preconditioner parameter (for PCG, PBiCGSTAB, PBiCG)
+    if "preconditioner" in solver_dict:
+        extra_kwargs["preconditioner"] = solver_dict["preconditioner"]
+
     return create_solver(
         solver_name,
         tolerance=float(solver_dict.get("tolerance", 1e-6)),
         rel_tol=float(solver_dict.get("relTol", 0.01)),
         max_iter=int(solver_dict.get("maxIter", 1000)),
+        **extra_kwargs,
     )
