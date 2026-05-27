@@ -7,7 +7,7 @@ preconditioners for LDU-format matrices, following OpenFOAM's approach.
 - **DIC**: For symmetric positive-definite matrices (used with PCG).
   Approximates A ≈ (D+L) D⁻¹ (D+U) where D is the diagonal and L, U are
   the strictly lower/upper parts.  The preconditioner application M⁻¹r
-  is a forward-solve with (D+L) followed by a diagonal scaling.
+  uses the factored diagonal for fast diagonal-only application.
 
 - **DILU**: For general (possibly asymmetric) matrices (used with PBiCGSTAB).
   Similar to DIC but handles asymmetric off-diagonal entries.
@@ -56,7 +56,7 @@ class DICPreconditioner:
     1. For each cell, compute the factored diagonal by sweeping through
        lower-triangular entries and subtracting the squared off-diagonal
        contribution divided by the neighbour's diagonal.
-    2. Store the reciprocal of the factored diagonal for fast application.
+    2. Store the factored diagonal for fast application.
 
     Parameters
     ----------
@@ -91,7 +91,7 @@ class DICPreconditioner:
         upper = self._matrix.upper
 
         if self._matrix.n_internal_faces == 0:
-            return diag.reciprocal().clamp(min=1e-30, max=1e30)
+            return diag.abs().clamp(min=1e-30)
 
         # Build adjacency: for each cell, list of (neighbour_cell, coefficient)
         # where neighbour_cell < cell (i.e., lower-triangular entries)
@@ -113,15 +113,17 @@ class DICPreconditioner:
                 if abs(d_j) > 1e-30:
                     diag[i] = diag[i] - (a_ij * a_ij) / d_j
 
-        # Clamp to avoid division by zero, then take reciprocal
+        # Clamp to avoid division by zero
         diag = diag.abs().clamp(min=1e-30)
-        return diag.reciprocal()
+        return diag
 
     def apply(self, r: torch.Tensor) -> torch.Tensor:
-        """Apply the DIC preconditioner: z = M⁻¹ · r.
+        """Apply the DIC preconditioner: z = D_factored⁻¹ · r.
 
-        This is a simplified diagonal preconditioner that uses the
-        factored diagonal as a Jacobi-like preconditioner.
+        Uses the factored diagonal as a Jacobi-like preconditioner.
+        This is a fast diagonal-only application suitable for Krylov
+        solvers (PCG, PBiCGSTAB) where the preconditioner is applied
+        once per iteration.
 
         Args:
             r: ``(n_cells,)`` residual vector.
@@ -131,7 +133,57 @@ class DICPreconditioner:
         """
         assert_floating(r, "r")
         r = r.to(device=self._device, dtype=self._dtype)
-        return self._precond_diag * r
+        return r / self._precond_diag
+
+    def apply_full(self, r: torch.Tensor) -> torch.Tensor:
+        """Apply the full DIC solve: z = M⁻¹ · r with forward+backward sweeps.
+
+        Implements the complete incomplete Cholesky solve of M z = r
+        where M = (D+L) D⁻¹ (D+U):
+
+        1. Forward sweep: solve (D+L) y = r
+        2. Diagonal scaling: w = D⁻¹ y
+        3. Backward sweep: solve (D+U) z = w
+
+        This provides better smoothing than the diagonal-only apply()
+        but is more expensive.  Used by SmoothSolver as a smoother.
+
+        Args:
+            r: ``(n_cells,)`` residual vector.
+
+        Returns:
+            ``(n_cells,)`` preconditioned vector.
+        """
+        assert_floating(r, "r")
+        r = r.to(device=self._device, dtype=self._dtype)
+        owner = self._matrix.owner
+        neighbour = self._matrix.neighbour
+        upper = self._matrix.upper
+
+        result = r.clone()
+
+        # Forward sweep: (D + L) y = r
+        for f in range(self._matrix.n_internal_faces):
+            p = int(owner[f])
+            n = int(neighbour[f])
+            if p < n:
+                d_p = float(self._precond_diag[p])
+                if abs(d_p) > 1e-30:
+                    result[n] = result[n] - upper[f] * result[p] / d_p
+
+        # Diagonal scaling: w = D⁻¹ y
+        result = result / self._precond_diag
+
+        # Backward sweep: (D + U) z = w
+        for f in range(self._matrix.n_internal_faces - 1, -1, -1):
+            p = int(owner[f])
+            n = int(neighbour[f])
+            if p < n:
+                d_n = float(self._precond_diag[n])
+                if abs(d_n) > 1e-30:
+                    result[p] = result[p] - upper[f] * result[n] / d_n
+
+        return result
 
 
 class DILUPreconditioner:
@@ -144,7 +196,7 @@ class DILUPreconditioner:
     The construction follows OpenFOAM's DILU approach:
     1. Compute the factored diagonal by sweeping through all off-diagonal
        entries and subtracting the product of lower and upper contributions.
-    2. Store the reciprocal of the factored diagonal for fast application.
+    2. Store the factored diagonal for fast application.
 
     Parameters
     ----------
@@ -181,7 +233,7 @@ class DILUPreconditioner:
         neighbour = self._matrix.neighbour
 
         if self._matrix.n_internal_faces == 0:
-            return diag.reciprocal().clamp(min=1e-30, max=1e30)
+            return diag.abs().clamp(min=1e-30)
 
         # Single pass: update both owner and neighbour using current values
         for f in range(self._matrix.n_internal_faces):
@@ -200,15 +252,15 @@ class DILUPreconditioner:
             if abs(d_p) > 1e-30:
                 diag[n] = diag[n] - (upper_f * lower_f) / d_p
 
-        # Clamp to avoid division by zero, then take reciprocal
+        # Clamp to avoid division by zero
         diag = diag.abs().clamp(min=1e-30)
-        return diag.reciprocal()
+        return diag
 
     def apply(self, r: torch.Tensor) -> torch.Tensor:
-        """Apply the DILU preconditioner: z = M⁻¹ · r.
+        """Apply the DILU preconditioner: z = D_factored⁻¹ · r.
 
-        This is a simplified diagonal preconditioner that uses the
-        factored diagonal as a Jacobi-like preconditioner.
+        Uses the factored diagonal as a Jacobi-like preconditioner.
+        Fast diagonal-only application for Krylov solvers.
 
         Args:
             r: ``(n_cells,)`` residual vector.
@@ -218,4 +270,53 @@ class DILUPreconditioner:
         """
         assert_floating(r, "r")
         r = r.to(device=self._device, dtype=self._dtype)
-        return self._precond_diag * r
+        return r / self._precond_diag
+
+    def apply_full(self, r: torch.Tensor) -> torch.Tensor:
+        """Apply the full DILU solve: z = M⁻¹ · r with forward+backward sweeps.
+
+        Implements the complete incomplete LU solve of M z = r
+        where M = (D+L) D⁻¹ (D+U):
+
+        1. Forward sweep: solve (D+L) y = r
+        2. Diagonal scaling: w = D⁻¹ y
+        3. Backward sweep: solve (D+U) z = w
+
+        This provides better smoothing than the diagonal-only apply()
+        but is more expensive.  Used by SmoothSolver as a smoother.
+
+        Args:
+            r: ``(n_cells,)`` residual vector.
+
+        Returns:
+            ``(n_cells,)`` preconditioned vector.
+        """
+        assert_floating(r, "r")
+        r = r.to(device=self._device, dtype=self._dtype)
+        owner = self._matrix.owner
+        neighbour = self._matrix.neighbour
+        lower = self._matrix.lower
+        upper = self._matrix.upper
+
+        result = r.clone()
+
+        # Forward sweep: (D + L) y = r
+        for f in range(self._matrix.n_internal_faces):
+            p = int(owner[f])
+            n = int(neighbour[f])
+            d_p = float(self._precond_diag[p])
+            if abs(d_p) > 1e-30:
+                result[n] = result[n] - upper[f] * result[p] / d_p
+
+        # Diagonal scaling: w = D⁻¹ y
+        result = result / self._precond_diag
+
+        # Backward sweep: (D + U) z = w
+        for f in range(self._matrix.n_internal_faces - 1, -1, -1):
+            p = int(owner[f])
+            n = int(neighbour[f])
+            d_n = float(self._precond_diag[n])
+            if abs(d_n) > 1e-30:
+                result[p] = result[p] - lower[f] * result[n] / d_n
+
+        return result
