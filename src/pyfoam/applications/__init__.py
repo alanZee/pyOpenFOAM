@@ -40,6 +40,7 @@ Available solvers:
 - :class:`ElectrostaticFoam` — Electrostatics solver (Laplace/Poisson for V)
 - :class:`MagneticFoam` — Magnetostatics solver (vector Poisson for A)
 - :class:`MhdFoam` — Magnetohydrodynamics solver (coupled NS + induction)
+- :class:`FluidFoam` — Unified compressible solver with full energy equation (PIMPLE)
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -80,6 +81,7 @@ from pyfoam.applications.incompressible_drift_flux_foam import IncompressibleDri
 from pyfoam.applications.electrostatic_foam import ElectrostaticFoam
 from pyfoam.applications.magnetic_foam import MagneticFoam
 from pyfoam.applications.mhd_foam import MhdFoam
+from pyfoam.applications.fluid_foam import FluidFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -123,6 +125,7 @@ __all__ = [
     "ElectrostaticFoam",
     "MagneticFoam",
     "MhdFoam",
+    "FluidFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
