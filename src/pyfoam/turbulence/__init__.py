@@ -102,6 +102,17 @@ from pyfoam.turbulence.wall_functions import (
 # RAS wrapper
 from pyfoam.turbulence.ras_model import RASModel, RASConfig
 
+# Laminar models
+from pyfoam.turbulence.laminar_models import (
+    StokesModel,
+    GeneralizedNewtonianModel,
+    PowerLawViscosity,
+    BirdCarreauViscosity,
+    CrossViscosity,
+    CassonViscosity,
+    HerschelBulkleyViscosity,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -160,4 +171,12 @@ __all__ = [
     # RAS wrapper
     "RASModel",
     "RASConfig",
+    # Laminar models
+    "StokesModel",
+    "GeneralizedNewtonianModel",
+    "PowerLawViscosity",
+    "BirdCarreauViscosity",
+    "CrossViscosity",
+    "CassonViscosity",
+    "HerschelBulkleyViscosity",
 ]
