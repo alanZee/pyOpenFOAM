@@ -38,6 +38,8 @@ Provides:
 - turbulentIntensityKE: turbulent intensity-based kinetic energy inlet
 - fixedTurbulentKE: fixed turbulent kinetic energy
 - antalWallLubrication: Antal distance-dependent wall lubrication force
+- fixedFluxPressure2: Enhanced fixed flux pressure with buoyancy correction
+- inletOutlet3: Enhanced inlet/outlet with turbulence-aware treatment
 """
 
 # Import base and collection first
@@ -182,6 +184,10 @@ from pyfoam.boundary.turbulent_kinetic_energy_bcs import (
 # Phase 5: Enhanced Antal wall lubrication BC
 from pyfoam.boundary.wall_lubrication_2 import AntalWallLubricationBC
 
+# Phase 4-9: Enhanced fixed flux pressure and inlet/outlet BCs
+from pyfoam.boundary.fixed_flux_pressure_2 import FixedFluxPressure2BC
+from pyfoam.boundary.inlet_outlet_3 import InletOutlet3BC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -286,4 +292,7 @@ __all__ = [
     "FixedTurbulentKEBC",
     # Phase 5: Enhanced Antal wall lubrication BC
     "AntalWallLubricationBC",
+    # Phase 4-9: Enhanced fixed flux pressure and inlet/outlet BCs
+    "FixedFluxPressure2BC",
+    "InletOutlet3BC",
 ]
