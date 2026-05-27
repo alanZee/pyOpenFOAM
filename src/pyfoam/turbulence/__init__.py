@@ -39,6 +39,11 @@ Provides:
 - :class:`OmegaWallFunctionBC` — ω wall function
 - :class:`KqRWallFunctionBC` — k wall function
 
+**LES Delta Models:**
+- :class:`CubeRootVolDelta` — cube root of cell volume (standard)
+- :class:`MaxDeltaXYZ` — maximum direction cell size
+- :class:`VanDriestDelta` — cube root volume with Van Driest wall damping
+
 **Viscoelastic Models:**
 - :class:`MaxwellModel` — upper-convected Maxwell viscoelastic model
 - :class:`GiesekusModel` — Giesekus viscoelastic model
@@ -127,6 +132,14 @@ from pyfoam.turbulence.viscoelastic import (
     ViscoelasticConstants,
 )
 
+# LES delta models
+from pyfoam.turbulence.les_deltas import (
+    LESDelta,
+    CubeRootVolDelta,
+    MaxDeltaXYZ,
+    VanDriestDelta,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -199,4 +212,9 @@ __all__ = [
     "GiesekusModel",
     "PTTModel",
     "ViscoelasticConstants",
+    # LES delta models
+    "LESDelta",
+    "CubeRootVolDelta",
+    "MaxDeltaXYZ",
+    "VanDriestDelta",
 ]
