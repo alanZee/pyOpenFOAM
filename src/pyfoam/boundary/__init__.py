@@ -21,6 +21,9 @@ Provides:
 - Turbulent inlet: turbulentInlet
 - Matched flow rate: matchedFlowRateOutlet
 - Fixed shear stress: fixedShearStress
+- fixedNormal: fixes normal component of vector field
+- slip: free-slip wall (removes normal, preserves tangential)
+- pressureInletOutlet: pressure-based inlet/outlet
 """
 
 # Import base and collection first
@@ -94,6 +97,11 @@ from pyfoam.boundary.wedge import WedgeBC
 from pyfoam.boundary.generic import GenericBC
 from pyfoam.boundary.calculated import CalculatedBC
 
+# Phase 5: fixedNormal / slip / pressureInletOutlet BCs
+from pyfoam.boundary.fixed_normal import FixedNormalBC
+from pyfoam.boundary.slip import SlipBC
+from pyfoam.boundary.inlet_outlet_2 import PressureInletOutletBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -146,4 +154,8 @@ __all__ = [
     "WedgeBC",
     "GenericBC",
     "CalculatedBC",
+    # Phase 5: fixedNormal / slip / pressureInletOutlet BCs
+    "FixedNormalBC",
+    "SlipBC",
+    "PressureInletOutletBC",
 ]
