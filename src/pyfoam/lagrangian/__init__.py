@@ -8,6 +8,7 @@ Provides:
 - :class:`KinematicCloud` — tracking with drag, gravity, wall bounce
 - Force models: :class:`GravityForce`, :class:`DragForce`, :class:`LiftForce`
 - Injectors:    :class:`PointInjector`, :class:`ConeInjector`
+- Dispersion:   :class:`NoDispersion`, :class:`GradientDispersion`
 """
 
 from pyfoam.lagrangian.particle import Particle
@@ -23,6 +24,11 @@ from pyfoam.lagrangian.injection import (
     PointInjector,
     ConeInjector,
 )
+from pyfoam.lagrangian.dispersion import (
+    DispersionModel,
+    NoDispersion,
+    GradientDispersion,
+)
 
 __all__ = [
     "Particle",
@@ -35,4 +41,7 @@ __all__ = [
     "Injector",
     "PointInjector",
     "ConeInjector",
+    "DispersionModel",
+    "NoDispersion",
+    "GradientDispersion",
 ]
