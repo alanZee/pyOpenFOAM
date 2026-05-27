@@ -1,6 +1,7 @@
 """pyfoam.tools — Mesh quality checking, field initialisation, and utility tools."""
 from pyfoam.tools.box_turb import box_turb
 from pyfoam.tools.check_mesh import CheckMeshResult, check_mesh
+from pyfoam.tools.check_mesh_2 import CellQuality, QualityReport, check_mesh_quality
 from pyfoam.tools.foam_dictionary import foam_dictionary
 from pyfoam.tools.foam_info import foam_info
 from pyfoam.tools.foam_list_times import foam_list_times
@@ -20,7 +21,8 @@ from pyfoam.tools.set_fields import BoxRegion, CylinderRegion, set_fields
 from pyfoam.tools.split_mesh_regions import split_mesh_regions
 from pyfoam.tools.transform_points import transform_points
 __all__ = [
-    "box_turb", "CheckMeshResult", "check_mesh", "BoxRegion", "CylinderRegion", "set_fields",
+    "box_turb", "CheckMeshResult", "check_mesh", "CellQuality", "QualityReport", "check_mesh_quality",
+    "BoxRegion", "CylinderRegion", "set_fields",
     "foam_dictionary", "foam_info", "foam_list_times", "foam_to_ensight", "foam_to_fluent",
     "foam_to_gmsh", "foam_to_gmv", "foam_to_star",
     "foam_to_tecplot", "foam_to_vtk", "foam_to_plot3d", "map_fields",
