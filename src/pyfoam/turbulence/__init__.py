@@ -71,6 +71,7 @@ from pyfoam.turbulence.launder_sharma_ke import LaunderSharmaKEModel, LaunderSha
 from pyfoam.turbulence.v2f import V2FModel, V2FConstants
 from pyfoam.turbulence.rng_k_epsilon import RNGkEpsilonModel, RNGkEpsilonConstants
 from pyfoam.turbulence.lrr import LRRModel, LRRConstants
+from pyfoam.turbulence.ssg import SSGModel, SSGConstants
 
 # LES models
 from pyfoam.turbulence.smagorinsky import SmagorinskyModel
@@ -114,6 +115,7 @@ __all__ = [
     "V2FModel",
     "RNGkEpsilonModel",
     "LRRModel",
+    "SSGModel",
     # LES Models
     "SmagorinskyModel",
     "WALEModel",
@@ -137,6 +139,7 @@ __all__ = [
     "V2FConstants",
     "RNGkEpsilonConstants",
     "LRRConstants",
+    "SSGConstants",
     "KEqnConstants",
     "DeardorffDiffStressConstants",
     "KOmegaSSTDESConstants",
