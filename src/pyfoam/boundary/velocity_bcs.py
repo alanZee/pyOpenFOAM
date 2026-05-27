@@ -287,7 +287,7 @@ class RotatingWallVelocityBC(BoundaryCondition):
 
     def _cross_product(self, a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
         """Compute cross product of two vectors."""
-        return torch.cross(a, b)
+        return torch.cross(a, b, dim=-1)
 
     def apply(self, field: torch.Tensor, patch_idx: int | None = None) -> torch.Tensor:
         """Set boundary-face velocity for rotating wall.
