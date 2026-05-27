@@ -16,6 +16,9 @@ Provides:
 - Turbulence BCs: turbulentIntensityKineticEnergyInlet,
   turbulentMixingLengthDissipationRateInlet,
   turbulentMixingLengthFrequencyInlet
+- Energy BCs: fixedEnergy, gradientEnergy, mixedEnergy
+- Buoyancy BCs: buoyantPressure
+- Turbulent inlet: turbulentInlet
 """
 
 # Import base and collection first
@@ -71,6 +74,15 @@ from pyfoam.boundary.advective import AdvectiveBC
 from pyfoam.boundary.uniform_fixed_value import UniformFixedValueBC
 from pyfoam.boundary.surface_normal_fixed_value import SurfaceNormalFixedValueBC
 
+# Phase 11: Energy / buoyancy / turbulent inlet BCs
+from pyfoam.boundary.energy_bcs import (
+    FixedEnergyBC,
+    GradientEnergyBC,
+    MixedEnergyBC,
+)
+from pyfoam.boundary.buoyant_pressure import BuoyantPressureBC
+from pyfoam.boundary.turbulent_inlet import TurbulentInletBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -110,4 +122,10 @@ __all__ = [
     "AdvectiveBC",
     "UniformFixedValueBC",
     "SurfaceNormalFixedValueBC",
+    # Phase 11: Energy / buoyancy / turbulent inlet BCs
+    "FixedEnergyBC",
+    "GradientEnergyBC",
+    "MixedEnergyBC",
+    "BuoyantPressureBC",
+    "TurbulentInletBC",
 ]
