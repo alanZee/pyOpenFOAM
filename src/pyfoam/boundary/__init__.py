@@ -29,6 +29,8 @@ Provides:
 - timeVarying: time-varying table-interpolated value BC
 - coded: user-defined Python function BC
 - gradientEnergy: gradient-based energy BC (in gradient_energy module)
+- oscillatingVelocity: oscillating velocity inlet (sinusoidal)
+- turbulentMixingLength: general-purpose mixing length turbulence BC
 """
 
 # Import base and collection first
@@ -144,6 +146,10 @@ from pyfoam.boundary.mapped_wall import MappedWallBC
 # Phase 5: Enhanced rotating wall BC
 from pyfoam.boundary.rotating_wall import RotatingWallVelocity2BC
 
+# Phase 5 continued: Oscillating velocity / turbulent mixing length BCs
+from pyfoam.boundary.oscillating_velocity import OscillatingVelocityBC
+from pyfoam.boundary.turbulent_mixing_length import TurbulentMixingLengthBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -228,4 +234,7 @@ __all__ = [
     "MappedWallBC",
     # Phase 5: Enhanced rotating wall BC
     "RotatingWallVelocity2BC",
+    # Phase 5 continued: Oscillating velocity / turbulent mixing length BCs
+    "OscillatingVelocityBC",
+    "TurbulentMixingLengthBC",
 ]
