@@ -119,6 +119,11 @@ from pyfoam.boundary.gradient_energy import GradientEnergyBC
 from pyfoam.boundary.symmetry_plane import SymmetryPlaneBC
 from pyfoam.boundary.processor import ProcessorBC
 
+# Phase 19: FixedValue2 / ZeroGradient2 / CyclicAMI BCs
+from pyfoam.boundary.fixed_value_2 import FixedValue2BC
+from pyfoam.boundary.zero_gradient_2 import ZeroGradient2BC
+from pyfoam.boundary.cyclic_ami import CyclicAMI
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -186,4 +191,8 @@ __all__ = [
     # Phase 18: Symmetry plane / processor BCs
     "SymmetryPlaneBC",
     "ProcessorBC",
+    # Phase 19: FixedValue2 / ZeroGradient2 / CyclicAMI BCs
+    "FixedValue2BC",
+    "ZeroGradient2BC",
+    "CyclicAMI",
 ]
