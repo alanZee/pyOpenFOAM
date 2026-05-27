@@ -39,6 +39,11 @@ Provides:
 - :class:`OmegaWallFunctionBC` — ω wall function
 - :class:`KqRWallFunctionBC` — k wall function
 
+**Viscoelastic Models:**
+- :class:`MaxwellModel` — upper-convected Maxwell viscoelastic model
+- :class:`GiesekusModel` — Giesekus viscoelastic model
+- :class:`PTTModel` — Phan-Thien-Tanner viscoelastic model
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -113,6 +118,15 @@ from pyfoam.turbulence.laminar_models import (
     HerschelBulkleyViscosity,
 )
 
+# Viscoelastic models
+from pyfoam.turbulence.viscoelastic import (
+    ViscoelasticModel,
+    MaxwellModel,
+    GiesekusModel,
+    PTTModel,
+    ViscoelasticConstants,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -179,4 +193,10 @@ __all__ = [
     "CrossViscosity",
     "CassonViscosity",
     "HerschelBulkleyViscosity",
+    # Viscoelastic models
+    "ViscoelasticModel",
+    "MaxwellModel",
+    "GiesekusModel",
+    "PTTModel",
+    "ViscoelasticConstants",
 ]
