@@ -501,14 +501,16 @@ class RhoCentralFoam(SolverBase):
 
         # ---- Fluxes ----
         # Physical flux: F = [ρu_n, ρu_n*U + p*n, (ρE + p)*u_n]
-        # Left flux
-        F_rho_L = rho_L * u_n_L
-        F_rhoU_L = rho_L * u_n_L.unsqueeze(-1) * U_L + p_L.unsqueeze(-1) * face_normal
+        # Left flux (compute ρ·u_n first to avoid 1D/2D broadcasting issue)
+        rho_u_n_L = rho_L * u_n_L
+        F_rho_L = rho_u_n_L
+        F_rhoU_L = rho_u_n_L.unsqueeze(-1) * U_L + p_L.unsqueeze(-1) * face_normal
         F_rhoE_L = (rhoE_L + p_L) * u_n_L
 
         # Right flux
-        F_rho_R = rho_R * u_n_R
-        F_rhoU_R = rho_R * u_n_R.unsqueeze(-1) * U_R + p_R.unsqueeze(-1) * face_normal
+        rho_u_n_R = rho_R * u_n_R
+        F_rho_R = rho_u_n_R
+        F_rhoU_R = rho_u_n_R.unsqueeze(-1) * U_R + p_R.unsqueeze(-1) * face_normal
         F_rhoE_R = (rhoE_R + p_R) * u_n_R
 
         # Central-upwind flux (multiplied by face area)
@@ -551,13 +553,13 @@ class RhoCentralFoam(SolverBase):
         # Compute cell gradients using Gauss theorem
         grad_q = self._compute_scalar_gradient(q)
 
-        # Gradient at face owner/neighbour
-        grad_P = gather(grad_q, owner)  # (n_internal, 3)
-        grad_N = gather(grad_q, neighbour)
+        # Gradient at face owner/neighbour (direct index for 2D grad)
+        grad_P = grad_q[owner]  # (n_internal, 3)
+        grad_N = grad_q[neighbour]
 
         # Distance vectors from cell centre to face centre
-        cc_P = gather(mesh.cell_centres, owner)
-        cc_N = gather(mesh.cell_centres, neighbour)
+        cc_P = mesh.cell_centres[owner]
+        cc_N = mesh.cell_centres[neighbour]
         fc = mesh.face_centres[:mesh.n_internal_faces]
 
         d_P = fc - cc_P  # (n_internal, 3)
@@ -601,8 +603,8 @@ class RhoCentralFoam(SolverBase):
         device = get_device()
         dtype = get_default_dtype()
 
-        q_P = gather(q, owner)  # (n_internal, 3)
-        q_N = gather(q, neighbour)
+        q_P = q[owner]  # (n_internal, 3)
+        q_N = q[neighbour]
 
         if mesh.n_cells <= 2:
             return q_P, q_N
@@ -610,11 +612,11 @@ class RhoCentralFoam(SolverBase):
         # Compute gradient for each component
         grad_q = self._compute_vector_gradient(q)  # (n_cells, 3, 3)
 
-        grad_P = gather(grad_q, owner)  # (n_internal, 3, 3)
-        grad_N = gather(grad_q, neighbour)
+        grad_P = grad_q[owner]  # (n_internal, 3, 3)
+        grad_N = grad_q[neighbour]
 
-        cc_P = gather(mesh.cell_centres, owner)
-        cc_N = gather(mesh.cell_centres, neighbour)
+        cc_P = mesh.cell_centres[owner]
+        cc_N = mesh.cell_centres[neighbour]
         fc = mesh.face_centres[:mesh.n_internal_faces]
 
         d_P = fc - cc_P
@@ -750,9 +752,9 @@ class RhoCentralFoam(SolverBase):
         int_neigh = mesh.neighbour
         face_areas = mesh.face_areas[:n_internal]
 
-        # Face stress (linear interpolation)
-        tau_P = gather(tau, int_owner)  # (n_internal, 3, 3)
-        tau_N = gather(tau, int_neigh)
+        # Face stress (linear interpolation; direct index for 3D tensor)
+        tau_P = tau[int_owner]  # (n_internal, 3, 3)
+        tau_N = tau[int_neigh]
         tau_face = 0.5 * (tau_P + tau_N)
 
         # τ · S (stress dotted with face area vector)
@@ -765,7 +767,7 @@ class RhoCentralFoam(SolverBase):
         # Boundary contributions
         if mesh.n_faces > n_internal:
             bnd_owner = mesh.owner[n_internal:]
-            tau_bnd = gather(tau, bnd_owner)
+            tau_bnd = tau[bnd_owner]
             tau_bnd_dot_S = torch.einsum('ijk,ik->ij', tau_bnd, mesh.face_areas[n_internal:])
             visc_rhoU.index_add_(0, bnd_owner, tau_bnd_dot_S)
 
@@ -779,7 +781,7 @@ class RhoCentralFoam(SolverBase):
         kappa_face = 0.5 * (
             gather(kappa, int_owner) + gather(kappa, int_neigh)
         )
-        grad_T_face = 0.5 * (gather(grad_T, int_owner) + gather(grad_T, int_neigh))
+        grad_T_face = 0.5 * (grad_T[int_owner] + grad_T[int_neigh])
         kappa_grad_T = kappa_face.unsqueeze(-1) * grad_T_face
 
         # κ∇T · S
@@ -793,7 +795,7 @@ class RhoCentralFoam(SolverBase):
         if mesh.n_faces > n_internal:
             bnd_owner = mesh.owner[n_internal:]
             kappa_bnd = gather(kappa, bnd_owner)
-            grad_T_bnd = gather(grad_T, bnd_owner)
+            grad_T_bnd = grad_T[bnd_owner]
             kappa_grad_T_bnd = kappa_bnd.unsqueeze(-1) * grad_T_bnd
             kappa_dot_S_bnd = (kappa_grad_T_bnd * mesh.face_areas[n_internal:]).sum(dim=1)
             visc_rhoE = visc_rhoE + scatter_add(kappa_dot_S_bnd, bnd_owner, n_cells)
