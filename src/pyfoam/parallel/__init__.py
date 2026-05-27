@@ -4,6 +4,9 @@ pyfoam.parallel — Domain decomposition and parallel solving via MPI.
 Provides:
 
 - :class:`Decomposition` — split a mesh into subdomains (geometric or Scotch)
+- :class:`DecompositionStrategy` — RTS-enabled decomposition strategy base
+- :class:`SimpleDecomposition` — simple geometric decomposition
+- :class:`ScotchDecomposition` — Scotch graph-based decomposition
 - :class:`SubDomain` — a subregion of the global mesh with ghost cell mapping
 - :class:`ProcessorPatch` — describes ghost cells on a processor boundary
 - :class:`HaloExchange` — inter-processor ghost cell communication
@@ -16,6 +19,11 @@ MPI is optional — all operations have serial fallbacks for testing.
 """
 
 from pyfoam.parallel.decomposition import Decomposition, SubDomain
+from pyfoam.parallel.decomposition_2 import (
+    DecompositionStrategy,
+    SimpleDecomposition,
+    ScotchDecomposition,
+)
 from pyfoam.parallel.processor_patch import ProcessorPatch, HaloExchange
 from pyfoam.parallel.parallel_field import ParallelField
 from pyfoam.parallel.parallel_io import ParallelReader, ParallelWriter
@@ -25,6 +33,10 @@ __all__ = [
     # Decomposition
     "Decomposition",
     "SubDomain",
+    # Decomposition strategies
+    "DecompositionStrategy",
+    "SimpleDecomposition",
+    "ScotchDecomposition",
     # Processor patches
     "ProcessorPatch",
     "HaloExchange",
