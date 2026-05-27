@@ -10,6 +10,7 @@ from pyfoam.tools.foam_to_gmsh import foam_to_gmsh
 from pyfoam.tools.foam_to_gmv import foam_to_gmv
 from pyfoam.tools.foam_to_tecplot import foam_to_tecplot
 from pyfoam.tools.foam_to_vtk import foam_to_vtk
+from pyfoam.tools.foam_to_plot3d import foam_to_plot3d
 from pyfoam.tools.map_fields import map_fields
 from pyfoam.tools.merge_meshes import merge_meshes
 from pyfoam.tools.refine_mesh import refine_mesh
@@ -21,7 +22,7 @@ __all__ = [
     "box_turb", "CheckMeshResult", "check_mesh", "BoxRegion", "CylinderRegion", "set_fields",
     "foam_dictionary", "foam_info", "foam_list_times", "foam_to_ensight", "foam_to_fluent",
     "foam_to_gmsh", "foam_to_gmv",
-    "foam_to_tecplot", "foam_to_vtk", "map_fields",
+    "foam_to_tecplot", "foam_to_vtk", "foam_to_plot3d", "map_fields",
     "merge_meshes", "refine_mesh",
     "RenumberResult", "renumber_mesh", "split_mesh_regions", "transform_points",
 ]
