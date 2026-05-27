@@ -31,6 +31,8 @@ Provides:
 - gradientEnergy: gradient-based energy BC (in gradient_energy module)
 - oscillatingVelocity: oscillating velocity inlet (sinusoidal)
 - turbulentMixingLength: general-purpose mixing length turbulence BC
+- wallLubrication: wall lubrication force for multiphase Euler-Euler
+- dragCoefficient: drag coefficient BC for particle-laden flows
 """
 
 # Import base and collection first
@@ -150,6 +152,14 @@ from pyfoam.boundary.rotating_wall import RotatingWallVelocity2BC
 from pyfoam.boundary.oscillating_velocity import OscillatingVelocityBC
 from pyfoam.boundary.turbulent_mixing_length import TurbulentMixingLengthBC
 
+# Multiphase wall lubrication / drag coefficient BCs
+from pyfoam.boundary.wall_lubrication import WallLubricationBC
+from pyfoam.boundary.drag_coefficient import DragCoefficientBC
+
+# Phase 4-9: Enhanced contact angle and wall function BCs
+from pyfoam.boundary.alpha_contact_angle_2 import AlphaContactAngle2BC
+from pyfoam.boundary.wall_function_2 import EnhancedWallFunctionBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -237,4 +247,10 @@ __all__ = [
     # Phase 5 continued: Oscillating velocity / turbulent mixing length BCs
     "OscillatingVelocityBC",
     "TurbulentMixingLengthBC",
+    # Multiphase wall lubrication / drag coefficient BCs
+    "WallLubricationBC",
+    "DragCoefficientBC",
+    # Phase 4-9: Enhanced contact angle and wall function BCs
+    "AlphaContactAngle2BC",
+    "EnhancedWallFunctionBC",
 ]

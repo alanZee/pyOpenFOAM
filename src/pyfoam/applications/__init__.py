@@ -48,6 +48,8 @@ Available solvers:
 - :class:`AdjointFoam` — Continuous adjoint shape optimization solver
 - :class:`FinancialFoam` — Black-Scholes equation for option pricing
 - :class:`MdFoam` — Lennard-Jones molecular dynamics (Velocity Verlet)
+- :class:`ReactingFoamEnhanced` — Enhanced reacting flow with detailed kinetics
+- :class:`SprayFoam` — Lagrangian spray solver with two-way Euler-Lagrange coupling
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -96,6 +98,8 @@ from pyfoam.applications.cht_multi_region_enhanced_foam import CHTMultiRegionEnh
 from pyfoam.applications.adjoint_foam import AdjointFoam
 from pyfoam.applications.financial_foam import FinancialFoam
 from pyfoam.applications.md_foam import MdFoam
+from pyfoam.applications.reacting_foam_enhanced import ReactingFoamEnhanced
+from pyfoam.applications.spray_foam import SprayFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -147,6 +151,8 @@ __all__ = [
     "AdjointFoam",
     "FinancialFoam",
     "MdFoam",
+    "ReactingFoamEnhanced",
+    "SprayFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
