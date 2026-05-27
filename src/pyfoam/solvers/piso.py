@@ -68,11 +68,14 @@ class PISOConfig(CoupledSolverConfig):
     ----------
     n_correctors : int
         Number of pressure correction steps per time step (default 2).
+    nu : float
+        Kinematic viscosity (default 1.0).
     """
 
     def __init__(
         self,
         n_correctors: int = 2,
+        nu: float = 1.0,
         **kwargs,
     ) -> None:
         # PISO does not use under-relaxation by default
@@ -80,6 +83,7 @@ class PISOConfig(CoupledSolverConfig):
         kwargs.setdefault("relaxation_factor_p", 1.0)
         super().__init__(**kwargs)
         self.n_correctors = n_correctors
+        self.nu = nu
 
 
 class PISOSolver(CoupledSolverBase):
@@ -266,7 +270,7 @@ class PISOSolver(CoupledSolverBase):
         int_neigh = neighbour
 
         # Diffusion coefficient
-        nu = 1.0
+        nu = self._piso_config.nu
         S_mag = face_areas[:n_internal].norm(dim=1)
         delta_f = delta_coeffs[:n_internal]
         diff_coeff = nu * S_mag * delta_f
@@ -414,7 +418,7 @@ class PISOSolver(CoupledSolverBase):
         int_neigh = neighbour
 
         # Diffusion
-        nu = 1.0
+        nu = self._piso_config.nu
         S_mag = face_areas[:n_internal].norm(dim=1)
         delta_f = delta_coeffs[:n_internal]
         diff_coeff = nu * S_mag * delta_f

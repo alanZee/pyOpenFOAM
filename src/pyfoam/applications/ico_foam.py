@@ -204,6 +204,7 @@ class IcoFoam(SolverBase):
         """Build a PISOSolver with settings from fvSolution."""
         config = PISOConfig(
             n_correctors=self.n_piso_correctors,
+            nu=self.nu,
             p_solver=self.p_solver,
             U_solver=self.U_solver,
             p_tolerance=self.p_tolerance,
