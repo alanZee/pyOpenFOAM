@@ -10,6 +10,10 @@ Provides:
 - Injectors:    :class:`PointInjector`, :class:`ConeInjector`
 - Dispersion:   :class:`NoDispersion`, :class:`GradientDispersion`
 - Collision:    :class:`NoCollision`, :class:`PairCollision`
+- Evaporation:  :class:`NoEvaporation`, :class:`RanzMarshallEvaporation`
+- Oxidation:    :class:`NoOxidation`, :class:`FieldOxidation`
+- Breakup:      :class:`NoBreakup`, :class:`ReitzDiwakar`
+- Wall interaction: :class:`ElasticBounce`, :class:`Stick`
 """
 
 from pyfoam.lagrangian.particle import Particle
@@ -35,6 +39,26 @@ from pyfoam.lagrangian.collision import (
     NoCollision,
     PairCollision,
 )
+from pyfoam.lagrangian.evaporation import (
+    EvaporationModel,
+    NoEvaporation,
+    RanzMarshallEvaporation,
+)
+from pyfoam.lagrangian.oxidation import (
+    OxidationModel,
+    NoOxidation,
+    FieldOxidation,
+)
+from pyfoam.lagrangian.breakup import (
+    BreakupModel,
+    NoBreakup,
+    ReitzDiwakar,
+)
+from pyfoam.lagrangian.wall_interaction import (
+    WallInteractionModel,
+    ElasticBounce,
+    Stick,
+)
 
 __all__ = [
     "Particle",
@@ -53,4 +77,16 @@ __all__ = [
     "CollisionModel",
     "NoCollision",
     "PairCollision",
+    "EvaporationModel",
+    "NoEvaporation",
+    "RanzMarshallEvaporation",
+    "OxidationModel",
+    "NoOxidation",
+    "FieldOxidation",
+    "BreakupModel",
+    "NoBreakup",
+    "ReitzDiwakar",
+    "WallInteractionModel",
+    "ElasticBounce",
+    "Stick",
 ]
