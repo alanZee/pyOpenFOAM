@@ -141,6 +141,9 @@ from pyfoam.boundary.porous_medium import PorousMediumBC
 # Phase 5: Mapped wall CHT BC
 from pyfoam.boundary.mapped_wall import MappedWallBC
 
+# Phase 5: Enhanced rotating wall BC
+from pyfoam.boundary.rotating_wall import RotatingWallVelocity2BC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -223,4 +226,6 @@ __all__ = [
     "PorousMediumBC",
     # Phase 5: Mapped wall CHT BC
     "MappedWallBC",
+    # Phase 5: Enhanced rotating wall BC
+    "RotatingWallVelocity2BC",
 ]
