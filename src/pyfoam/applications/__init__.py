@@ -35,6 +35,8 @@ Available solvers:
 - :class:`ChemFoam` — 0D chemistry solver (Arrhenius kinetics, forward Euler)
 - :class:`IncompressibleVoFFoam` — Modern VOF two-phase incompressible (PIMPLE + MULES)
 - :class:`IsothermalFluidFoam` — Transient compressible isothermal (PIMPLE algorithm)
+- :class:`CompressibleVoFFoam` — Compressible two-phase VOF (modern interface, PIMPLE + energy)
+- :class:`IncompressibleDriftFluxFoam` — Incompressible drift-flux with algebraic slip model
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -70,6 +72,8 @@ from pyfoam.applications.rho_porous_simple_foam import RhoPorousSimpleFoam
 from pyfoam.applications.chem_foam import ChemFoam
 from pyfoam.applications.isothermal_fluid_foam import IsothermalFluidFoam
 from pyfoam.applications.incompressible_vof_foam import IncompressibleVoFFoam
+from pyfoam.applications.compressible_vof_foam import CompressibleVoFFoam
+from pyfoam.applications.incompressible_drift_flux_foam import IncompressibleDriftFluxFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -108,6 +112,8 @@ __all__ = [
     "ChemFoam",
     "IsothermalFluidFoam",
     "IncompressibleVoFFoam",
+    "CompressibleVoFFoam",
+    "IncompressibleDriftFluxFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
