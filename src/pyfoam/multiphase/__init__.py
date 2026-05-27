@@ -10,6 +10,8 @@ Provides:
   TomiyamaLift, VirtualMassForce
 - Cavitation models: SchnerrSauer, Merkle, ZGB
 - Interface reconstruction: PLICReconstruction
+- :class:`PopulationBalanceModel` — Population balance equation solver
+  (method of classes, droplet/bubble size distribution tracking)
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -29,6 +31,15 @@ from pyfoam.multiphase.interface_reconstruction import (
 )
 from pyfoam.multiphase.interface_compression import InterfaceCompression
 from pyfoam.multiphase.surface_tension_2 import CSFSurfaceTension
+from pyfoam.multiphase.population_balance import (
+    PopulationBalanceModel,
+    PBEBin,
+    ConstantCoalescence,
+    ShearCoalescence,
+    ConstantBreakup,
+    WeberBreakup,
+    ShearBreakup,
+)
 
 __all__ = [
     "VOFAdvection",
@@ -46,4 +57,11 @@ __all__ = [
     "PLICReconstruction",
     "InterfaceCompression",
     "CSFSurfaceTension",
+    "PopulationBalanceModel",
+    "PBEBin",
+    "ConstantCoalescence",
+    "ShearCoalescence",
+    "ConstantBreakup",
+    "WeberBreakup",
+    "ShearBreakup",
 ]
