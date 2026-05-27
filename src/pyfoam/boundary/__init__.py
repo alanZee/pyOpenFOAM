@@ -89,6 +89,11 @@ from pyfoam.boundary.turbulent_inlet import TurbulentInletBC
 from pyfoam.boundary.matched_flow_rate import MatchedFlowRateOutletBC
 from pyfoam.boundary.fixed_shear_stress import FixedShearStressBC
 
+# Phase 15: Wedge / generic / calculated BCs
+from pyfoam.boundary.wedge import WedgeBC
+from pyfoam.boundary.generic import GenericBC
+from pyfoam.boundary.calculated import CalculatedBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -137,4 +142,8 @@ __all__ = [
     # Phase 14: Matched flow rate / fixed shear stress BCs
     "MatchedFlowRateOutletBC",
     "FixedShearStressBC",
+    # Phase 15: Wedge / generic / calculated BCs
+    "WedgeBC",
+    "GenericBC",
+    "CalculatedBC",
 ]
