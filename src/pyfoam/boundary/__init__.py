@@ -24,6 +24,9 @@ Provides:
 - fixedNormal: fixes normal component of vector field
 - slip: free-slip wall (removes normal, preserves tangential)
 - pressureInletOutlet: pressure-based inlet/outlet
+- timeVarying: time-varying table-interpolated value BC
+- coded: user-defined Python function BC
+- gradientEnergy: gradient-based energy BC (in gradient_energy module)
 """
 
 # Import base and collection first
@@ -107,6 +110,11 @@ from pyfoam.boundary.nonuniform import NonUniformBC
 from pyfoam.boundary.uniform import UniformBC
 from pyfoam.boundary.mapped import MappedBC
 
+# Phase 17: Time-varying / coded / gradient-energy BCs
+from pyfoam.boundary.time_varying import TimeVaryingBC
+from pyfoam.boundary.coded import CodedBC
+from pyfoam.boundary.gradient_energy import GradientEnergyBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -167,4 +175,8 @@ __all__ = [
     "NonUniformBC",
     "UniformBC",
     "MappedBC",
+    # Phase 17: Time-varying / coded / gradient-energy BCs
+    "TimeVaryingBC",
+    "CodedBC",
+    "GradientEnergyBC",
 ]
