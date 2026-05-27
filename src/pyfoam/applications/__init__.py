@@ -44,6 +44,7 @@ Available solvers:
 - :class:`MulticomponentFluidFoam` — Multi-species compressible PIMPLE solver
 - :class:`PDRFoam` — Premixed combustion solver with b-Xi model (PIMPLE)
 - :class:`DsmcFoam` — Direct Simulation Monte Carlo for rarefied gas dynamics
+- :class:`CHTMultiRegionEnhancedFoam` — Enhanced conjugate heat transfer multi-region
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -88,6 +89,7 @@ from pyfoam.applications.fluid_foam import FluidFoam
 from pyfoam.applications.multicomponent_fluid_foam import MulticomponentFluidFoam
 from pyfoam.applications.pdr_foam import PDRFoam
 from pyfoam.applications.dsmc_foam import DsmcFoam
+from pyfoam.applications.cht_multi_region_enhanced_foam import CHTMultiRegionEnhancedFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -135,6 +137,7 @@ __all__ = [
     "MulticomponentFluidFoam",
     "PDRFoam",
     "DsmcFoam",
+    "CHTMultiRegionEnhancedFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
