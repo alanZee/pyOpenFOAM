@@ -30,6 +30,12 @@ MUSCLInterpolation
     TVD scheme with minmod limiter for monotonicity.
 CentralInterpolation
     Central difference (explicit alias for linear interpolation).
+SFCDInterpolation
+    Self-Filtered Central Difference: linear clipped to cell min/max.
+CubicInterpolation
+    Fourth-order cubic with gradient-based correction.
+LinearFitInterpolation
+    Weighted least-squares linear fit reconstruction.
 
 Time derivative (ddt) schemes
 -----------------------------
@@ -83,6 +89,9 @@ from pyfoam.discretisation.schemes.gamma import GammaInterpolation
 from pyfoam.discretisation.schemes.interface_compression import InterfaceCompressionInterpolation
 from pyfoam.discretisation.schemes.muscl import MUSCLInterpolation
 from pyfoam.discretisation.schemes.central import CentralInterpolation
+from pyfoam.discretisation.schemes.sfcd import SFCDInterpolation
+from pyfoam.discretisation.schemes.cubic import CubicInterpolation
+from pyfoam.discretisation.schemes.linear_fit import LinearFitInterpolation
 from pyfoam.discretisation.ddt import (
     DdtScheme,
     EulerDdt,
@@ -124,6 +133,9 @@ __all__ = [
     "InterfaceCompressionInterpolation",
     "MUSCLInterpolation",
     "CentralInterpolation",
+    "SFCDInterpolation",
+    "CubicInterpolation",
+    "LinearFitInterpolation",
     # Time derivative (ddt) schemes
     "DdtScheme",
     "EulerDdt",
