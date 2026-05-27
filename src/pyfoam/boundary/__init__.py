@@ -35,6 +35,9 @@ Provides:
 - dragCoefficient: drag coefficient BC for particle-laden flows
 - scaledVelocityInlet: scaled velocity inlet from reference patch
 - movingWall: moving wall with translation + rotation
+- turbulentIntensityKE: turbulent intensity-based kinetic energy inlet
+- fixedTurbulentKE: fixed turbulent kinetic energy
+- antalWallLubrication: Antal distance-dependent wall lubrication force
 """
 
 # Import base and collection first
@@ -170,6 +173,15 @@ from pyfoam.boundary.mapped_pressure_inlet import MappedPressureInletBC
 from pyfoam.boundary.scaled_velocity_inlet import ScaledVelocityInletBC
 from pyfoam.boundary.moving_wall import MovingWallBC
 
+# Phase 5: Turbulent kinetic energy BCs
+from pyfoam.boundary.turbulent_kinetic_energy_bcs import (
+    TurbulentIntensityKEBC,
+    FixedTurbulentKEBC,
+)
+
+# Phase 5: Enhanced Antal wall lubrication BC
+from pyfoam.boundary.wall_lubrication_2 import AntalWallLubricationBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -269,4 +281,9 @@ __all__ = [
     # Phase 5-7: Scaled velocity inlet / moving wall BCs
     "ScaledVelocityInletBC",
     "MovingWallBC",
+    # Phase 5: Turbulent kinetic energy BCs
+    "TurbulentIntensityKEBC",
+    "FixedTurbulentKEBC",
+    # Phase 5: Enhanced Antal wall lubrication BC
+    "AntalWallLubricationBC",
 ]
