@@ -19,6 +19,16 @@ Available solvers:
 - :class:`TwoPhaseEulerFoam` — Two-fluid Euler-Euler
 - :class:`MultiphaseEulerFoam` — N-phase Euler-Euler
 - :class:`CavitatingFoam` — Cavitation solver (Schnerr-Sauer)
+- :class:`PisoFoam` — Transient incompressible laminar (PISO algorithm)
+- :class:`PotentialFoam` — Potential flow initialisation
+- :class:`ScalarTransportFoam` — Passive scalar transport
+- :class:`LaplacianFoam` — Steady-state diffusion (Laplacian equation)
+- :class:`SonicFoam` — Transient compressible (sonic)
+- :class:`SrfSimpleFoam` — Steady-state single rotating frame incompressible
+- :class:`BuoyantPimpleFoam` — Transient buoyant compressible (PIMPLE algorithm)
+- :class:`CHTMultiRegionFoam` — Conjugate heat transfer multi-region
+- :class:`ReactingFoam` — Reactive flow solver
+- :class:`SolidDisplacementFoam` — Solid mechanics displacement solver
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -38,6 +48,16 @@ from pyfoam.applications.compressible_inter_foam import CompressibleInterFoam
 from pyfoam.applications.two_phase_euler_foam import TwoPhaseEulerFoam
 from pyfoam.applications.multiphase_euler_foam import MultiphaseEulerFoam
 from pyfoam.applications.cavitating_foam import CavitatingFoam
+from pyfoam.applications.piso_foam import PisoFoam
+from pyfoam.applications.potential_foam import PotentialFoam
+from pyfoam.applications.scalar_transport_foam import ScalarTransportFoam
+from pyfoam.applications.laplacian_foam import LaplacianFoam
+from pyfoam.applications.sonic_foam import SonicFoam
+from pyfoam.applications.srf_simple_foam import SrfSimpleFoam
+from pyfoam.applications.buoyant_pimple_foam import BuoyantPimpleFoam
+from pyfoam.applications.cht_multi_region_foam import CHTMultiRegionFoam
+from pyfoam.applications.reacting_foam import ReactingFoam
+from pyfoam.applications.solid_displacement_foam import SolidDisplacementFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -59,6 +79,16 @@ __all__ = [
     "TwoPhaseEulerFoam",
     "MultiphaseEulerFoam",
     "CavitatingFoam",
+    "PisoFoam",
+    "PotentialFoam",
+    "ScalarTransportFoam",
+    "LaplacianFoam",
+    "SonicFoam",
+    "SrfSimpleFoam",
+    "BuoyantPimpleFoam",
+    "CHTMultiRegionFoam",
+    "ReactingFoam",
+    "SolidDisplacementFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
