@@ -134,6 +134,10 @@ from pyfoam.boundary.mass_flow_rate import MassFlowRateBC
 from pyfoam.boundary.hydrostatic_pressure import HydrostaticPressureBC
 from pyfoam.boundary.outlet_inlet import OutletInletBC
 
+# Phase 5 continued: Fan / porous medium BCs
+from pyfoam.boundary.fan import FanBC
+from pyfoam.boundary.porous_medium import PorousMediumBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -211,4 +215,7 @@ __all__ = [
     # Hydrostatic pressure / outlet-inlet BCs
     "HydrostaticPressureBC",
     "OutletInletBC",
+    # Phase 5 continued: Fan / porous medium BCs
+    "FanBC",
+    "PorousMediumBC",
 ]
