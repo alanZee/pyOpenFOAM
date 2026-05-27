@@ -43,6 +43,15 @@ GaussLinearGrad
 LeastSquaresGrad
     Least-squares gradient reconstruction.
 
+Surface-normal gradient schemes
+-------------------------------
+UncorrectedSnGrad
+    Simple (φ_N − φ_P)·δ — exact for orthogonal meshes.
+CorrectedSnGrad
+    Full non-orthogonal correction using cell gradient.
+LimitedSnGrad
+    Limited non-orthogonal correction with coefficient.
+
 Weight utilities
 ----------------
 compute_centre_weights
@@ -82,6 +91,13 @@ from pyfoam.discretisation.grad import (
     LeastSquaresGrad,
     resolve_grad_scheme,
 )
+from pyfoam.discretisation.sn_grad import (
+    SnGradScheme,
+    UncorrectedSnGrad,
+    CorrectedSnGrad,
+    LimitedSnGrad,
+    sn_grad_from_name,
+)
 
 __all__ = [
     # Weights
@@ -112,4 +128,10 @@ __all__ = [
     "GaussLinearGrad",
     "LeastSquaresGrad",
     "resolve_grad_scheme",
+    # Surface-normal gradient schemes
+    "SnGradScheme",
+    "UncorrectedSnGrad",
+    "CorrectedSnGrad",
+    "LimitedSnGrad",
+    "sn_grad_from_name",
 ]
