@@ -582,6 +582,201 @@ class _FvcNamespace:
         V = cell_volumes.clamp(min=1e-30)
         return lap / V
 
+    @staticmethod
+    def div(
+        U_or_phi: Any,
+        U: Any = None,
+        scheme: str = "Gauss linear",
+        *,
+        mesh: Any = None,
+    ) -> torch.Tensor:
+        """Explicit divergence operator.
+
+        Overloaded:
+        - ``fvc.div(phi, U)`` — divergence of flux-weighted field ∇·(φU)
+        - ``fvc.div(U, mesh=mesh)`` — divergence of vector field ∇·U
+
+        When called with a single positional argument (vector field),
+        computes ∇·U = Σ_i ∂U_i/∂x_i using the Gauss theorem.
+
+        Returns:
+            ``(n_cells,)`` tensor — the divergence at each cell.
+        """
+        # Distinguish the two call signatures
+        if U is None:
+            # Single argument: div of vector field
+            return _FvcNamespace._div_vector(U_or_phi, scheme=scheme, mesh=mesh)
+        else:
+            # Two arguments: div of flux-weighted field (original API)
+            return _FvcNamespace._div_flux(U_or_phi, U, scheme=scheme, mesh=mesh)
+
+    @staticmethod
+    def _div_flux(
+        phi: Any,
+        U: Any,
+        scheme: str = "Gauss linear",
+        *,
+        mesh: Any = None,
+    ) -> torch.Tensor:
+        """Original div(phi, U) implementation."""
+        if hasattr(U, "mesh"):
+            mesh = U.mesh
+            U_data = U.internal_field
+        elif mesh is not None:
+            U_data = U if isinstance(U, torch.Tensor) else torch.tensor(U)
+        else:
+            raise ValueError("mesh is required when U is not a GeometricField")
+
+        if hasattr(phi, "internal_field"):
+            phi_face = phi.internal_field
+        else:
+            phi_face = phi if isinstance(phi, torch.Tensor) else torch.tensor(phi)
+
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        cell_volumes = mesh.cell_volumes
+
+        U_data = U_data.to(device=device, dtype=dtype)
+        phi_face = phi_face.to(device=device, dtype=dtype)
+
+        interp = _resolve_scheme(scheme, mesh=mesh)
+        U_face = interp.interpolate(U_data, phi_face)
+
+        flux = phi_face[:n_internal] * U_face[:n_internal]
+
+        div_phi = torch.zeros(n_cells, dtype=dtype, device=device)
+        div_phi = div_phi + scatter_add(flux, mesh.owner[:n_internal], n_cells)
+        div_phi = div_phi + scatter_add(-flux, mesh.neighbour, n_cells)
+
+        if mesh.n_faces > n_internal:
+            bnd_flux = phi_face[n_internal:] * U_face[n_internal:]
+            div_phi = div_phi + scatter_add(bnd_flux, mesh.owner[n_internal:], n_cells)
+
+        V = cell_volumes.clamp(min=1e-30)
+        return div_phi / V
+
+    @staticmethod
+    def _div_vector(
+        U: Any,
+        scheme: str = "Gauss linear",
+        *,
+        mesh: Any = None,
+    ) -> torch.Tensor:
+        """Divergence of a vector field: ∇·U.
+
+        Uses the Gauss theorem: ∇·U ≈ (1/V) Σ_f (U_f · S_f).
+
+        Returns:
+            ``(n_cells,)`` tensor.
+        """
+        if hasattr(U, "mesh"):
+            mesh = U.mesh
+            U_data = U.internal_field
+        elif mesh is not None:
+            U_data = U if isinstance(U, torch.Tensor) else torch.tensor(U)
+        else:
+            raise ValueError("mesh is required when U is a raw tensor")
+
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+        face_areas = mesh.face_areas
+        cell_volumes = mesh.cell_volumes
+
+        U_data = U_data.to(device=device, dtype=dtype)
+
+        # Interpolate each component to faces (linear)
+        interp = _resolve_scheme(scheme, mesh=mesh)
+
+        div_U = torch.zeros(n_cells, dtype=dtype, device=device)
+
+        for comp in range(U_data.shape[1] if U_data.dim() > 1 else 1):
+            if U_data.dim() > 1:
+                u_comp = U_data[:, comp]
+            else:
+                u_comp = U_data
+
+            u_face = interp.interpolate(u_comp)
+            # Flux: u_face * S_face_component
+            if face_areas.dim() > 1:
+                flux = u_face * face_areas[:, comp] if U_data.dim() > 1 else (
+                    u_face * face_areas[:, 0]  # scalar: use x-component of area
+                )
+            else:
+                flux = u_face * face_areas
+
+            div_U = div_U + scatter_add(
+                flux[:n_internal], mesh.owner[:n_internal], n_cells
+            )
+            div_U = div_U + scatter_add(
+                -flux[:n_internal], mesh.neighbour, n_cells
+            )
+            if n_faces > n_internal:
+                div_U = div_U + scatter_add(
+                    flux[n_internal:], mesh.owner[n_internal:], n_cells
+                )
+
+        V = cell_volumes.clamp(min=1e-30)
+        return div_U / V
+
+    @staticmethod
+    def curl(
+        U: Any,
+        scheme: str = "Gauss linear",
+        *,
+        mesh: Any = None,
+    ) -> torch.Tensor:
+        """Explicit curl of a vector field: ∇ × U.
+
+        Uses the Gauss theorem: (∇ × U)_i ≈ (1/V) Σ_f (S_f × U_f)_i.
+
+        Returns:
+            ``(n_cells, 3)`` tensor — the curl vector at each cell.
+        """
+        if hasattr(U, "mesh"):
+            mesh = U.mesh
+            U_data = U.internal_field
+        elif mesh is not None:
+            U_data = U if isinstance(U, torch.Tensor) else torch.tensor(U)
+        else:
+            raise ValueError("mesh is required when U is a raw tensor")
+
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+        face_areas = mesh.face_areas
+        cell_volumes = mesh.cell_volumes
+
+        U_data = U_data.to(device=device, dtype=dtype)
+
+        # Interpolate each component to faces
+        interp = _resolve_scheme(scheme, mesh=mesh)
+
+        # Interpolate vector to faces: (n_faces, 3)
+        U_face = torch.zeros(n_faces, 3, dtype=dtype, device=device)
+        for comp in range(3):
+            U_face[:, comp] = interp.interpolate(U_data[:, comp])
+
+        # Compute S_f × U_f for each face
+        # face_areas: (n_faces, 3), U_face: (n_faces, 3)
+        cross_face = torch.cross(face_areas, U_face, dim=1)  # (n_faces, 3)
+
+        # Accumulate: owner gets +S×U, neighbour gets -S×U
+        curl_U = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        curl_U.index_add_(0, mesh.owner[:n_internal], cross_face[:n_internal])
+        curl_U.index_add_(0, mesh.neighbour, -cross_face[:n_internal])
+        if n_faces > n_internal:
+            curl_U.index_add_(0, mesh.owner[n_internal:], cross_face[n_internal:])
+
+        V = cell_volumes.unsqueeze(-1).clamp(min=1e-30)
+        return curl_U / V
+
 
 # ---------------------------------------------------------------------------
 # Public API

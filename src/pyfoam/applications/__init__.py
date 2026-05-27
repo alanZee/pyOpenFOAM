@@ -37,6 +37,9 @@ Available solvers:
 - :class:`IsothermalFluidFoam` — Transient compressible isothermal (PIMPLE algorithm)
 - :class:`CompressibleVoFFoam` — Compressible two-phase VOF (modern interface, PIMPLE + energy)
 - :class:`IncompressibleDriftFluxFoam` — Incompressible drift-flux with algebraic slip model
+- :class:`ElectrostaticFoam` — Electrostatics solver (Laplace/Poisson for V)
+- :class:`MagneticFoam` — Magnetostatics solver (vector Poisson for A)
+- :class:`MhdFoam` — Magnetohydrodynamics solver (coupled NS + induction)
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -74,6 +77,9 @@ from pyfoam.applications.isothermal_fluid_foam import IsothermalFluidFoam
 from pyfoam.applications.incompressible_vof_foam import IncompressibleVoFFoam
 from pyfoam.applications.compressible_vof_foam import CompressibleVoFFoam
 from pyfoam.applications.incompressible_drift_flux_foam import IncompressibleDriftFluxFoam
+from pyfoam.applications.electrostatic_foam import ElectrostaticFoam
+from pyfoam.applications.magnetic_foam import MagneticFoam
+from pyfoam.applications.mhd_foam import MhdFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -114,6 +120,9 @@ __all__ = [
     "IncompressibleVoFFoam",
     "CompressibleVoFFoam",
     "IncompressibleDriftFluxFoam",
+    "ElectrostaticFoam",
+    "MagneticFoam",
+    "MhdFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
