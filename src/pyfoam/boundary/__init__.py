@@ -130,6 +130,10 @@ from pyfoam.boundary.cyclic_ami import CyclicAMI
 from pyfoam.boundary.volume_flow_rate import VolumeFlowRateBC
 from pyfoam.boundary.mass_flow_rate import MassFlowRateBC
 
+# Hydrostatic pressure / outlet-inlet BCs
+from pyfoam.boundary.hydrostatic_pressure import HydrostaticPressureBC
+from pyfoam.boundary.outlet_inlet import OutletInletBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -204,4 +208,7 @@ __all__ = [
     # Phase 5 continued: Volume / mass flow rate BCs
     "VolumeFlowRateBC",
     "MassFlowRateBC",
+    # Hydrostatic pressure / outlet-inlet BCs
+    "HydrostaticPressureBC",
+    "OutletInletBC",
 ]
