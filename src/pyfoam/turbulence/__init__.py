@@ -8,6 +8,7 @@ Provides:
 - :class:`RealizableKEpsilonModel` — realizable k-ε model
 - :class:`KOmegaSSTModel` — k-ω SST model (Menter 1994)
 - :class:`KOmegaModel` — standard k-ω model (Wilcox 2006)
+- :class:`KOmega2006Model` — k-ω model with cross-diffusion and low-Re correction (Wilcox 2006)
 - :class:`SpalartAllmarasModel` — S-A one-equation model
 - :class:`LaunderSharmaKEModel` — low-Re k-ε model
 - :class:`V2FModel` — v²-f model (Durbin 1995)
@@ -19,10 +20,13 @@ Provides:
 - :class:`DynamicSmagorinskyModel` — dynamic Smagorinsky model
 - :class:`DynamicLagrangianModel` — Lagrangian dynamic model
 - :class:`KEqnModel` — one-equation k SGS model
+- :class:`DeardorffDiffStressModel` — Deardorff diffusion stress SGS model
 
 **DES Models:**
 - :class:`KOmegaSSTDESModel` — k-ω SST DES model
 - :class:`SpalartAllmarasDDESModel` — SA DDES model
+- :class:`SpalartAllmarasDESModel` — SA DES model
+- :class:`SpalartAllmarasIDDESModel` — SA IDDES model
 
 **Wall Functions:**
 - :class:`NutkWallFunctionBC` — k-based wall function for ν_t
@@ -57,6 +61,7 @@ from pyfoam.turbulence.turbulence_model import TurbulenceModel
 from pyfoam.turbulence.k_epsilon import KEpsilonModel, RealizableKEpsilonModel, KEpsilonConstants
 from pyfoam.turbulence.k_omega_sst import KOmegaSSTModel, KOmegaSSTConstants
 from pyfoam.turbulence.k_omega import KOmegaModel, KOmegaConstants
+from pyfoam.turbulence.k_omega_2006 import KOmega2006Model, KOmega2006Constants
 from pyfoam.turbulence.spalart_allmaras import SpalartAllmarasModel, SpalartAllmarasConstants
 from pyfoam.turbulence.launder_sharma_ke import LaunderSharmaKEModel, LaunderSharmaKEConstants
 from pyfoam.turbulence.v2f import V2FModel, V2FConstants
@@ -68,10 +73,13 @@ from pyfoam.turbulence.wale import WALEModel
 from pyfoam.turbulence.dynamic_smagorinsky import DynamicSmagorinskyModel
 from pyfoam.turbulence.dynamic_lagrangian import DynamicLagrangianModel
 from pyfoam.turbulence.k_eqn import KEqnModel, KEqnConstants
+from pyfoam.turbulence.deardorff_diff_stress import DeardorffDiffStressModel, DeardorffDiffStressConstants
 
 # DES models (each import triggers @TurbulenceModel.register)
 from pyfoam.turbulence.k_omega_sst_des import KOmegaSSTDESModel, KOmegaSSTDESConstants
 from pyfoam.turbulence.sa_ddes import SpalartAllmarasDDESModel, SpalartAllmarasDDESConstants
+from pyfoam.turbulence.sa_des import SpalartAllmarasDESModel, SpalartAllmarasDESConstants
+from pyfoam.turbulence.sa_iddes import SpalartAllmarasIDDESModel, SpalartAllmarasIDDESConstants
 
 # Wall functions
 from pyfoam.turbulence.wall_functions import (
@@ -94,6 +102,7 @@ __all__ = [
     "RealizableKEpsilonModel",
     "KOmegaSSTModel",
     "KOmegaModel",
+    "KOmega2006Model",
     "SpalartAllmarasModel",
     "LaunderSharmaKEModel",
     "V2FModel",
@@ -104,20 +113,27 @@ __all__ = [
     "DynamicSmagorinskyModel",
     "DynamicLagrangianModel",
     "KEqnModel",
+    "DeardorffDiffStressModel",
     # DES Models
     "KOmegaSSTDESModel",
     "SpalartAllmarasDDESModel",
+    "SpalartAllmarasDESModel",
+    "SpalartAllmarasIDDESModel",
     # Constants
     "KEpsilonConstants",
     "KOmegaSSTConstants",
     "KOmegaConstants",
+    "KOmega2006Constants",
     "SpalartAllmarasConstants",
     "LaunderSharmaKEConstants",
     "V2FConstants",
     "RNGkEpsilonConstants",
     "KEqnConstants",
+    "DeardorffDiffStressConstants",
     "KOmegaSSTDESConstants",
     "SpalartAllmarasDDESConstants",
+    "SpalartAllmarasDESConstants",
+    "SpalartAllmarasIDDESConstants",
     # Wall functions
     "compute_nut_wall",
     "compute_nut_low_re_wall",
