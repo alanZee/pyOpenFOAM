@@ -26,6 +26,8 @@ GammaInterpolation
     Peclet-number-based blending of upwind and linear.
 InterfaceCompressionInterpolation
     VOF compressive scheme for interface sharpening.
+MUSCLInterpolation
+    TVD scheme with minmod limiter for monotonicity.
 
 Time derivative (ddt) schemes
 -----------------------------
@@ -77,6 +79,7 @@ from pyfoam.discretisation.schemes.lust import LUSTInterpolation
 from pyfoam.discretisation.schemes.van_leer import VanLeerInterpolation
 from pyfoam.discretisation.schemes.gamma import GammaInterpolation
 from pyfoam.discretisation.schemes.interface_compression import InterfaceCompressionInterpolation
+from pyfoam.discretisation.schemes.muscl import MUSCLInterpolation
 from pyfoam.discretisation.ddt import (
     DdtScheme,
     EulerDdt,
@@ -116,6 +119,7 @@ __all__ = [
     "VanLeerInterpolation",
     "GammaInterpolation",
     "InterfaceCompressionInterpolation",
+    "MUSCLInterpolation",
     # Time derivative (ddt) schemes
     "DdtScheme",
     "EulerDdt",

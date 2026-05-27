@@ -3,7 +3,7 @@ pyfoam.discretisation.schemes — Concrete interpolation schemes.
 
 Contains interpolation schemes that operate as GPU tensor gather/scatter
 operations: upwind, linear-upwind, QUICK, harmonic, midPoint, LUST,
-vanLeer, gamma, and interfaceCompression.
+vanLeer, gamma, interfaceCompression, MUSCL, and central.
 """
 
 from pyfoam.discretisation.schemes.upwind import UpwindInterpolation
@@ -15,6 +15,7 @@ from pyfoam.discretisation.schemes.lust import LUSTInterpolation
 from pyfoam.discretisation.schemes.van_leer import VanLeerInterpolation
 from pyfoam.discretisation.schemes.gamma import GammaInterpolation
 from pyfoam.discretisation.schemes.interface_compression import InterfaceCompressionInterpolation
+from pyfoam.discretisation.schemes.muscl import MUSCLInterpolation
 
 __all__ = [
     "UpwindInterpolation",
@@ -26,4 +27,5 @@ __all__ = [
     "VanLeerInterpolation",
     "GammaInterpolation",
     "InterfaceCompressionInterpolation",
+    "MUSCLInterpolation",
 ]
