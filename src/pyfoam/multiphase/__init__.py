@@ -9,6 +9,7 @@ Provides:
 - Interphase models: SchillerNaumannDrag, WenYuDrag, GidaspowDrag,
   TomiyamaLift, VirtualMassForce
 - Cavitation models: SchnerrSauer, Merkle, ZGB
+- Enhanced cavitation models: ZGBModel, MerkleModel (with convergence enhancements)
 - Interface reconstruction: PLICReconstruction
 - :class:`PopulationBalanceModel` — Population balance equation solver
   (method of classes, droplet/bubble size distribution tracking)
@@ -40,6 +41,7 @@ from pyfoam.multiphase.population_balance import (
     WeberBreakup,
     ShearBreakup,
 )
+from pyfoam.multiphase.cavitation_models_enhanced import ZGBModel, MerkleModel
 
 __all__ = [
     "VOFAdvection",
@@ -64,4 +66,7 @@ __all__ = [
     "ConstantBreakup",
     "WeberBreakup",
     "ShearBreakup",
+    # Enhanced cavitation models
+    "ZGBModel",
+    "MerkleModel",
 ]
