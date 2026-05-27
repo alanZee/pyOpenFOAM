@@ -25,6 +25,12 @@ from pyfoam.discretisation.interpolation import InterpolationScheme, LinearInter
 from pyfoam.discretisation.schemes.upwind import UpwindInterpolation
 from pyfoam.discretisation.schemes.linear_upwind import LinearUpwindInterpolation
 from pyfoam.discretisation.schemes.limited_linear import LimitedLinearInterpolation
+from pyfoam.discretisation.schemes.harmonic import HarmonicInterpolation
+from pyfoam.discretisation.schemes.mid_point import MidPointInterpolation
+from pyfoam.discretisation.schemes.lust import LUSTInterpolation
+from pyfoam.discretisation.schemes.van_leer import VanLeerInterpolation
+from pyfoam.discretisation.schemes.gamma import GammaInterpolation
+from pyfoam.discretisation.schemes.interface_compression import InterfaceCompressionInterpolation
 from pyfoam.discretisation.weights import compute_centre_weights
 
 __all__ = ["fvm", "fvc"]
@@ -39,6 +45,12 @@ _SCHEME_REGISTRY: dict[str, type[InterpolationScheme]] = {
     "upwind": UpwindInterpolation,
     "linearUpwind": LinearUpwindInterpolation,
     "limitedLinear": LimitedLinearInterpolation,
+    "harmonic": HarmonicInterpolation,
+    "midPoint": MidPointInterpolation,
+    "LUST": LUSTInterpolation,
+    "vanLeer": VanLeerInterpolation,
+    "gamma": GammaInterpolation,
+    "interfaceCompression": InterfaceCompressionInterpolation,
 }
 
 
@@ -72,6 +84,9 @@ def _resolve_scheme(
     if name == "limitedLinear":
         limiter = kwargs.get("limiter", "vanLeer")
         return scheme_cls(mesh, limiter=limiter)
+    elif name == "interfaceCompression":
+        beta = kwargs.get("beta", 1.0)
+        return scheme_cls(mesh, beta=beta)
     else:
         return scheme_cls(mesh)
 
