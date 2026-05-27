@@ -9,6 +9,7 @@ Provides:
 - Force models: :class:`GravityForce`, :class:`DragForce`, :class:`LiftForce`
 - Injectors:    :class:`PointInjector`, :class:`ConeInjector`
 - Dispersion:   :class:`NoDispersion`, :class:`GradientDispersion`
+- Collision:    :class:`NoCollision`, :class:`PairCollision`
 """
 
 from pyfoam.lagrangian.particle import Particle
@@ -29,6 +30,11 @@ from pyfoam.lagrangian.dispersion import (
     NoDispersion,
     GradientDispersion,
 )
+from pyfoam.lagrangian.collision import (
+    CollisionModel,
+    NoCollision,
+    PairCollision,
+)
 
 __all__ = [
     "Particle",
@@ -44,4 +50,7 @@ __all__ = [
     "DispersionModel",
     "NoDispersion",
     "GradientDispersion",
+    "CollisionModel",
+    "NoCollision",
+    "PairCollision",
 ]
