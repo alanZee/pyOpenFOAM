@@ -54,9 +54,10 @@ def _make_isothermal_case(
     n_points = len(points)
     faces, owner, neighbour = [], [], []
 
-    # 内部面
+    # 内部面（位于 cell i 和 cell i+1 之间的分界面，法向量由 owner 指向 neighbour）
     for i in range(n_cells - 1):
-        faces.append((4, i * 4, i * 4 + 1, i * 4 + 2, i * 4 + 3))
+        base = (i + 1) * 4
+        faces.append((4, base, base + 3, base + 2, base + 1))
         owner.append(i)
         neighbour.append(i + 1)
     n_internal = len(neighbour)
