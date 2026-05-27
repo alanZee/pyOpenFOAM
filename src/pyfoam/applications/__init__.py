@@ -32,6 +32,9 @@ Available solvers:
 - :class:`IncompressibleFluidFoam` — Unified incompressible solver (SIMPLE/PISO/PIMPLE auto-detection)
 - :class:`ShallowWaterFoam` — 2D shallow water equations (Coriolis + bottom friction)
 - :class:`RhoPorousSimpleFoam` — Steady-state compressible with porous media (SIMPLE algorithm)
+- :class:`ChemFoam` — 0D chemistry solver (Arrhenius kinetics, forward Euler)
+- :class:`IncompressibleVoFFoam` — Modern VOF two-phase incompressible (PIMPLE + MULES)
+- :class:`IsothermalFluidFoam` — Transient compressible isothermal (PIMPLE algorithm)
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -64,6 +67,9 @@ from pyfoam.applications.solid_displacement_foam import SolidDisplacementFoam
 from pyfoam.applications.incompressible_fluid_foam import IncompressibleFluidFoam, Algorithm
 from pyfoam.applications.shallow_water_foam import ShallowWaterFoam
 from pyfoam.applications.rho_porous_simple_foam import RhoPorousSimpleFoam
+from pyfoam.applications.chem_foam import ChemFoam
+from pyfoam.applications.isothermal_fluid_foam import IsothermalFluidFoam
+from pyfoam.applications.incompressible_vof_foam import IncompressibleVoFFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -99,6 +105,9 @@ __all__ = [
     "Algorithm",
     "ShallowWaterFoam",
     "RhoPorousSimpleFoam",
+    "ChemFoam",
+    "IsothermalFluidFoam",
+    "IncompressibleVoFFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
