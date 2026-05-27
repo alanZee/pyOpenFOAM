@@ -32,6 +32,13 @@ import torch
 from pyfoam.core.backend import scatter_add, gather
 from pyfoam.core.device import get_device, get_default_dtype
 from pyfoam.solvers.coupled_solver import ConvergenceData
+from pyfoam.solvers.pressure_equation import (
+    assemble_pressure_equation,
+    solve_pressure_equation,
+    correct_velocity,
+    correct_face_flux,
+)
+from pyfoam.solvers.linear_solver import create_solver
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
 from pyfoam.multiphase.surface_tension import SurfaceTensionModel
 
@@ -235,9 +242,38 @@ class CompressibleInterFoam(SolverBase):
             A_p = torch.ones(mesh.n_cells, dtype=dtype, device=device)
             H = torch.zeros(mesh.n_cells, 3, dtype=dtype, device=device)
 
-            # PISO corrections (simplified)
+            # PISO pressure-velocity coupling
+            n_internal = mesh.n_internal_faces
+            int_owner = mesh.owner[:n_internal]
+            int_neigh = mesh.neighbour
+            w = mesh.face_weights[:n_internal]
+
             for corr in range(self.n_correctors):
-                pass  # Simplified pressure-velocity coupling
+                # HbyA ≈ U (simplified: no momentum source assembly)
+                HbyA = U
+
+                # Face flux from HbyA interpolation
+                HbyA_face = (
+                    w.unsqueeze(-1) * HbyA[int_owner]
+                    + (1.0 - w).unsqueeze(-1) * HbyA[int_neigh]
+                )
+                phiHbyA = (HbyA_face * mesh.face_areas[:n_internal]).sum(dim=1)
+
+                # Assemble and solve pressure equation
+                phi_full = torch.zeros(mesh.n_faces, dtype=dtype, device=device)
+                phi_full[:n_internal] = phiHbyA
+                p_solver = create_solver(
+                    "PCG", tolerance=self.p_tolerance, max_iter=self.p_max_iter,
+                )
+                p_eqn = assemble_pressure_equation(phi_full, A_p, mesh)
+                p, _, _ = solve_pressure_equation(
+                    p_eqn, p, p_solver,
+                    tolerance=self.p_tolerance, max_iter=self.p_max_iter,
+                )
+
+                # Correct velocity and face flux
+                U = correct_velocity(U, HbyA, p, A_p, mesh)
+                phi = correct_face_flux(phi_full, p, A_p, mesh)
 
             # Update temperature from energy (simplified: T = p / (rho * Cv))
             Cv_mix = alpha * self.Cv2 + (1.0 - alpha) * self.Cv1
