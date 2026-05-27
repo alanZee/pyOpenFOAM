@@ -7,12 +7,14 @@ Provides:
 - :class:`KEpsilonModel` — standard k-ε model
 - :class:`RealizableKEpsilonModel` — realizable k-ε model
 - :class:`KOmegaSSTModel` — k-ω SST model (Menter 1994)
+- :class:`KOmegaSSTLMModel` — k-ω SST Langtry-Menter transition model
 - :class:`KOmegaModel` — standard k-ω model (Wilcox 2006)
 - :class:`KOmega2006Model` — k-ω model with cross-diffusion and low-Re correction (Wilcox 2006)
 - :class:`SpalartAllmarasModel` — S-A one-equation model
 - :class:`LaunderSharmaKEModel` — low-Re k-ε model
 - :class:`V2FModel` — v²-f model (Durbin 1995)
 - :class:`RNGkEpsilonModel` — RNG k-ε model
+- :class:`SSGModel` — SSG Reynolds stress model (Speziale-Sarkar-Gatski 1991)
 
 **LES Models:**
 - :class:`SmagorinskyModel` — Smagorinsky SGS model
@@ -60,12 +62,14 @@ from pyfoam.turbulence.turbulence_model import TurbulenceModel
 # RANS models (each import triggers @TurbulenceModel.register)
 from pyfoam.turbulence.k_epsilon import KEpsilonModel, RealizableKEpsilonModel, KEpsilonConstants
 from pyfoam.turbulence.k_omega_sst import KOmegaSSTModel, KOmegaSSTConstants
+from pyfoam.turbulence.k_omega_sst_lm import KOmegaSSTLMModel, KOmegaSSTLMConstants
 from pyfoam.turbulence.k_omega import KOmegaModel, KOmegaConstants
 from pyfoam.turbulence.k_omega_2006 import KOmega2006Model, KOmega2006Constants
 from pyfoam.turbulence.spalart_allmaras import SpalartAllmarasModel, SpalartAllmarasConstants
 from pyfoam.turbulence.launder_sharma_ke import LaunderSharmaKEModel, LaunderSharmaKEConstants
 from pyfoam.turbulence.v2f import V2FModel, V2FConstants
 from pyfoam.turbulence.rng_k_epsilon import RNGkEpsilonModel, RNGkEpsilonConstants
+from pyfoam.turbulence.lrr import LRRModel, LRRConstants
 
 # LES models
 from pyfoam.turbulence.smagorinsky import SmagorinskyModel
@@ -101,6 +105,7 @@ __all__ = [
     "KEpsilonModel",
     "RealizableKEpsilonModel",
     "KOmegaSSTModel",
+    "KOmegaSSTLMModel",
     "KOmegaModel",
     "KOmega2006Model",
     "SpalartAllmarasModel",
@@ -122,6 +127,7 @@ __all__ = [
     # Constants
     "KEpsilonConstants",
     "KOmegaSSTConstants",
+    "KOmegaSSTLMConstants",
     "KOmegaConstants",
     "KOmega2006Constants",
     "SpalartAllmarasConstants",
