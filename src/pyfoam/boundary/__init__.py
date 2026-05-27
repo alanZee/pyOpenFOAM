@@ -24,6 +24,8 @@ Provides:
 - fixedNormal: fixes normal component of vector field
 - slip: free-slip wall (removes normal, preserves tangential)
 - pressureInletOutlet: pressure-based inlet/outlet
+- volumeFlowRate: volume-flow-rate based velocity BC
+- massFlowRate: mass-flow-rate based velocity BC
 - timeVarying: time-varying table-interpolated value BC
 - coded: user-defined Python function BC
 - gradientEnergy: gradient-based energy BC (in gradient_energy module)
@@ -124,6 +126,10 @@ from pyfoam.boundary.fixed_value_2 import FixedValue2BC
 from pyfoam.boundary.zero_gradient_2 import ZeroGradient2BC
 from pyfoam.boundary.cyclic_ami import CyclicAMI
 
+# Phase 5 continued: Volume / mass flow rate BCs
+from pyfoam.boundary.volume_flow_rate import VolumeFlowRateBC
+from pyfoam.boundary.mass_flow_rate import MassFlowRateBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -195,4 +201,7 @@ __all__ = [
     "FixedValue2BC",
     "ZeroGradient2BC",
     "CyclicAMI",
+    # Phase 5 continued: Volume / mass flow rate BCs
+    "VolumeFlowRateBC",
+    "MassFlowRateBC",
 ]
