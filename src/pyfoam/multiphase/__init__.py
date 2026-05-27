@@ -28,6 +28,7 @@ from pyfoam.multiphase.interface_reconstruction import (
     PLICReconstruction,
 )
 from pyfoam.multiphase.interface_compression import InterfaceCompression
+from pyfoam.multiphase.surface_tension_2 import CSFSurfaceTension
 
 __all__ = [
     "VOFAdvection",
@@ -44,4 +45,5 @@ __all__ = [
     "InterfaceReconstruction",
     "PLICReconstruction",
     "InterfaceCompression",
+    "CSFSurfaceTension",
 ]
