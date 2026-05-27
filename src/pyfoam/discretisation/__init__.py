@@ -36,6 +36,13 @@ SteadyStateDdt
 CrankNicolsonDdt
     Second-order Crank-Nicolson with blending coefficient.
 
+Gradient schemes
+----------------
+GaussLinearGrad
+    Gauss theorem with linear face interpolation (default).
+LeastSquaresGrad
+    Least-squares gradient reconstruction.
+
 Weight utilities
 ----------------
 compute_centre_weights
@@ -69,12 +76,18 @@ from pyfoam.discretisation.ddt import (
     DDT_REGISTRY,
     create_ddt_scheme,
 )
+from pyfoam.discretisation.grad import (
+    GradScheme,
+    GaussLinearGrad,
+    LeastSquaresGrad,
+    resolve_grad_scheme,
+)
 
 __all__ = [
     # Weights
     "compute_centre_weights",
     "compute_upwind_weights",
-    # Base
+    # Interpolation base
     "InterpolationScheme",
     # Interpolation schemes
     "LinearInterpolation",
@@ -94,4 +107,9 @@ __all__ = [
     "CrankNicolsonDdt",
     "DDT_REGISTRY",
     "create_ddt_scheme",
+    # Gradient schemes
+    "GradScheme",
+    "GaussLinearGrad",
+    "LeastSquaresGrad",
+    "resolve_grad_scheme",
 ]
