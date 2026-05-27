@@ -14,6 +14,27 @@ LinearUpwindInterpolation
     Second-order upwind-biased interpolation.
 QuickInterpolation
     Third-order QUICK scheme with deferred correction.
+HarmonicInterpolation
+    Harmonic mean interpolation for diffusivity fields.
+MidPointInterpolation
+    Unweighted arithmetic average (weight = 0.5).
+LUSTInterpolation
+    LUST blend: 0.75 * linear + 0.25 * linearUpwind.
+VanLeerInterpolation
+    TVD scheme with van Leer flux limiter.
+GammaInterpolation
+    Peclet-number-based blending of upwind and linear.
+InterfaceCompressionInterpolation
+    VOF compressive scheme for interface sharpening.
+
+Time derivative (ddt) schemes
+-----------------------------
+EulerDdt
+    First-order implicit Euler (backward Euler).
+SteadyStateDdt
+    Zero time derivative for steady-state solvers.
+CrankNicolsonDdt
+    Second-order Crank-Nicolson with blending coefficient.
 
 Weight utilities
 ----------------
@@ -34,6 +55,20 @@ from pyfoam.discretisation.interpolation import (
 from pyfoam.discretisation.schemes.upwind import UpwindInterpolation
 from pyfoam.discretisation.schemes.linear_upwind import LinearUpwindInterpolation
 from pyfoam.discretisation.schemes.quick import QuickInterpolation
+from pyfoam.discretisation.schemes.harmonic import HarmonicInterpolation
+from pyfoam.discretisation.schemes.mid_point import MidPointInterpolation
+from pyfoam.discretisation.schemes.lust import LUSTInterpolation
+from pyfoam.discretisation.schemes.van_leer import VanLeerInterpolation
+from pyfoam.discretisation.schemes.gamma import GammaInterpolation
+from pyfoam.discretisation.schemes.interface_compression import InterfaceCompressionInterpolation
+from pyfoam.discretisation.ddt import (
+    DdtScheme,
+    EulerDdt,
+    SteadyStateDdt,
+    CrankNicolsonDdt,
+    DDT_REGISTRY,
+    create_ddt_scheme,
+)
 
 __all__ = [
     # Weights
@@ -41,9 +76,22 @@ __all__ = [
     "compute_upwind_weights",
     # Base
     "InterpolationScheme",
-    # Schemes
+    # Interpolation schemes
     "LinearInterpolation",
     "UpwindInterpolation",
     "LinearUpwindInterpolation",
     "QuickInterpolation",
+    "HarmonicInterpolation",
+    "MidPointInterpolation",
+    "LUSTInterpolation",
+    "VanLeerInterpolation",
+    "GammaInterpolation",
+    "InterfaceCompressionInterpolation",
+    # Time derivative (ddt) schemes
+    "DdtScheme",
+    "EulerDdt",
+    "SteadyStateDdt",
+    "CrankNicolsonDdt",
+    "DDT_REGISTRY",
+    "create_ddt_scheme",
 ]
