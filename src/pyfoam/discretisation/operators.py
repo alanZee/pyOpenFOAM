@@ -32,6 +32,7 @@ from pyfoam.discretisation.schemes.van_leer import VanLeerInterpolation
 from pyfoam.discretisation.schemes.gamma import GammaInterpolation
 from pyfoam.discretisation.schemes.interface_compression import InterfaceCompressionInterpolation
 from pyfoam.discretisation.schemes.muscl import MUSCLInterpolation
+from pyfoam.discretisation.schemes.central import CentralInterpolation
 from pyfoam.discretisation.weights import compute_centre_weights
 
 __all__ = ["fvm", "fvc"]
@@ -53,6 +54,7 @@ _SCHEME_REGISTRY: dict[str, type[InterpolationScheme]] = {
     "gamma": GammaInterpolation,
     "interfaceCompression": InterfaceCompressionInterpolation,
     "MUSCL": MUSCLInterpolation,
+    "central": CentralInterpolation,
 }
 
 

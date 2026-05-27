@@ -16,6 +16,7 @@ from pyfoam.discretisation.schemes.van_leer import VanLeerInterpolation
 from pyfoam.discretisation.schemes.gamma import GammaInterpolation
 from pyfoam.discretisation.schemes.interface_compression import InterfaceCompressionInterpolation
 from pyfoam.discretisation.schemes.muscl import MUSCLInterpolation
+from pyfoam.discretisation.schemes.central import CentralInterpolation
 
 __all__ = [
     "UpwindInterpolation",
@@ -28,4 +29,5 @@ __all__ = [
     "GammaInterpolation",
     "InterfaceCompressionInterpolation",
     "MUSCLInterpolation",
+    "CentralInterpolation",
 ]

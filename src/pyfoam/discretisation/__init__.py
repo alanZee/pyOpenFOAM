@@ -28,6 +28,8 @@ InterfaceCompressionInterpolation
     VOF compressive scheme for interface sharpening.
 MUSCLInterpolation
     TVD scheme with minmod limiter for monotonicity.
+CentralInterpolation
+    Central difference (explicit alias for linear interpolation).
 
 Time derivative (ddt) schemes
 -----------------------------
@@ -80,6 +82,7 @@ from pyfoam.discretisation.schemes.van_leer import VanLeerInterpolation
 from pyfoam.discretisation.schemes.gamma import GammaInterpolation
 from pyfoam.discretisation.schemes.interface_compression import InterfaceCompressionInterpolation
 from pyfoam.discretisation.schemes.muscl import MUSCLInterpolation
+from pyfoam.discretisation.schemes.central import CentralInterpolation
 from pyfoam.discretisation.ddt import (
     DdtScheme,
     EulerDdt,
@@ -120,6 +123,7 @@ __all__ = [
     "GammaInterpolation",
     "InterfaceCompressionInterpolation",
     "MUSCLInterpolation",
+    "CentralInterpolation",
     # Time derivative (ddt) schemes
     "DdtScheme",
     "EulerDdt",
