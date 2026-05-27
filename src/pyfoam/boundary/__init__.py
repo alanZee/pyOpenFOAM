@@ -102,6 +102,9 @@ from pyfoam.boundary.fixed_normal import FixedNormalBC
 from pyfoam.boundary.slip import SlipBC
 from pyfoam.boundary.inlet_outlet_2 import PressureInletOutletBC
 
+# Phase 16: Non-uniform / uniform / mapped BCs
+from pyfoam.boundary.nonuniform import NonUniformBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -158,4 +161,6 @@ __all__ = [
     "FixedNormalBC",
     "SlipBC",
     "PressureInletOutletBC",
+    # Phase 16: Non-uniform / uniform / mapped BCs
+    "NonUniformBC",
 ]
