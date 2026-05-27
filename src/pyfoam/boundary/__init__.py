@@ -160,6 +160,10 @@ from pyfoam.boundary.drag_coefficient import DragCoefficientBC
 from pyfoam.boundary.alpha_contact_angle_2 import AlphaContactAngle2BC
 from pyfoam.boundary.wall_function_2 import EnhancedWallFunctionBC
 
+# Phase 5-8: Non-conformal couple / mapped pressure inlet BCs
+from pyfoam.boundary.non_conformal_couple import NonConformalCoupleBC
+from pyfoam.boundary.mapped_pressure_inlet import MappedPressureInletBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -253,4 +257,7 @@ __all__ = [
     # Phase 4-9: Enhanced contact angle and wall function BCs
     "AlphaContactAngle2BC",
     "EnhancedWallFunctionBC",
+    # Phase 5-8: Non-conformal couple / mapped pressure inlet BCs
+    "NonConformalCoupleBC",
+    "MappedPressureInletBC",
 ]
