@@ -138,6 +138,9 @@ from pyfoam.boundary.outlet_inlet import OutletInletBC
 from pyfoam.boundary.fan import FanBC
 from pyfoam.boundary.porous_medium import PorousMediumBC
 
+# Phase 5: Mapped wall CHT BC
+from pyfoam.boundary.mapped_wall import MappedWallBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -218,4 +221,6 @@ __all__ = [
     # Phase 5 continued: Fan / porous medium BCs
     "FanBC",
     "PorousMediumBC",
+    # Phase 5: Mapped wall CHT BC
+    "MappedWallBC",
 ]
