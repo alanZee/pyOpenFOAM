@@ -19,6 +19,8 @@ Provides:
 - Energy BCs: fixedEnergy, gradientEnergy, mixedEnergy
 - Buoyancy BCs: buoyantPressure
 - Turbulent inlet: turbulentInlet
+- Matched flow rate: matchedFlowRateOutlet
+- Fixed shear stress: fixedShearStress
 """
 
 # Import base and collection first
@@ -83,6 +85,10 @@ from pyfoam.boundary.energy_bcs import (
 from pyfoam.boundary.buoyant_pressure import BuoyantPressureBC
 from pyfoam.boundary.turbulent_inlet import TurbulentInletBC
 
+# Phase 14: Matched flow rate / fixed shear stress BCs
+from pyfoam.boundary.matched_flow_rate import MatchedFlowRateOutletBC
+from pyfoam.boundary.fixed_shear_stress import FixedShearStressBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -128,4 +134,7 @@ __all__ = [
     "MixedEnergyBC",
     "BuoyantPressureBC",
     "TurbulentInletBC",
+    # Phase 14: Matched flow rate / fixed shear stress BCs
+    "MatchedFlowRateOutletBC",
+    "FixedShearStressBC",
 ]
