@@ -46,6 +46,8 @@ Available solvers:
 - :class:`DsmcFoam` — Direct Simulation Monte Carlo for rarefied gas dynamics
 - :class:`CHTMultiRegionEnhancedFoam` — Enhanced conjugate heat transfer multi-region
 - :class:`AdjointFoam` — Continuous adjoint shape optimization solver
+- :class:`FinancialFoam` — Black-Scholes equation for option pricing
+- :class:`MdFoam` — Lennard-Jones molecular dynamics (Velocity Verlet)
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -92,6 +94,8 @@ from pyfoam.applications.pdr_foam import PDRFoam
 from pyfoam.applications.dsmc_foam import DsmcFoam
 from pyfoam.applications.cht_multi_region_enhanced_foam import CHTMultiRegionEnhancedFoam
 from pyfoam.applications.adjoint_foam import AdjointFoam
+from pyfoam.applications.financial_foam import FinancialFoam
+from pyfoam.applications.md_foam import MdFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -141,6 +145,8 @@ __all__ = [
     "DsmcFoam",
     "CHTMultiRegionEnhancedFoam",
     "AdjointFoam",
+    "FinancialFoam",
+    "MdFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
