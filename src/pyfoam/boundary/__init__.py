@@ -6,7 +6,7 @@ Provides:
 - :class:`BoundaryCondition` — abstract base class with RTS registry
 - :class:`BoundaryField` — collection of BCs for a field
 - Concrete BCs: fixedValue, zeroGradient, noSlip, fixedGradient,
-  symmetryPlane, cyclic, nutkWallFunction, nutLowReWallFunction,
+  symmetry, symmetryPlane, cyclic, nutkWallFunction, nutLowReWallFunction,
   kqRWallFunction, epsilonWallFunction, omegaWallFunction, inletOutlet,
   alphaContactAngle, constantAlphaContactAngle
 - Velocity BCs: flowRateInletVelocity, pressureInletOutletVelocity,
@@ -115,6 +115,10 @@ from pyfoam.boundary.time_varying import TimeVaryingBC
 from pyfoam.boundary.coded import CodedBC
 from pyfoam.boundary.gradient_energy import GradientEnergyBC
 
+# Phase 18: Symmetry plane / processor BCs
+from pyfoam.boundary.symmetry_plane import SymmetryPlaneBC
+from pyfoam.boundary.processor import ProcessorBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -179,4 +183,7 @@ __all__ = [
     "TimeVaryingBC",
     "CodedBC",
     "GradientEnergyBC",
+    # Phase 18: Symmetry plane / processor BCs
+    "SymmetryPlaneBC",
+    "ProcessorBC",
 ]
