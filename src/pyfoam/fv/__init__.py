@@ -19,6 +19,8 @@ Provides:
 - :class:`HeatSource` — volumetric heat source in energy equation
 - :class:`PorosityForce` — Darcy-Forchheimer porosity resistance
 - :class:`CodedFvModel` — user-defined Python function as source
+- :class:`ActuationDiskModel` — actuation disk thrust source for wind turbines
+- :class:`HeatExchangerModel` — temperature-dependent heat exchanger source
 
 Usage::
 
@@ -53,6 +55,9 @@ from pyfoam.fv.fv_models import (
     create_fv_model,
 )
 
+from pyfoam.fv.actuation_disk import ActuationDiskModel
+from pyfoam.fv.heat_exchanger import HeatExchangerModel
+
 __all__ = [
     # fvConstraints
     "FvConstraint",
@@ -68,5 +73,7 @@ __all__ = [
     "HeatSource",
     "PorosityForce",
     "CodedFvModel",
+    "ActuationDiskModel",
+    "HeatExchangerModel",
     "create_fv_model",
 ]
