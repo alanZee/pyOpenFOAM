@@ -115,10 +115,13 @@ def _sub_cell_idx(mesh, ci, sf_list, pm, rx, ry, rz, cell_base, normal_dir=-1):
         elif fi2 < mesh.n_internal_faces and int(mesh.neighbour[fi2].item()) == ci: s.update(mesh.faces[fi2].tolist())
     cpt = mesh.points[list(s)]; mid = 0.5 * (cpt.min(dim=0).values + cpt.max(dim=0).values)
     ap = pm.pts(); res = []
+    # Only skip normal direction if it is NOT a refinement direction
+    is_refined = {0: rx, 1: ry, 2: rz}
+    skip_nd = normal_dir >= 0 and not is_refined.get(normal_dir, False)
     for sf in sf_list:
         sfc = ap[sf].mean(dim=0); bits = [0, 0, 0]
         for do, c in [(rx, 0), (ry, 1), (rz, 2)]:
-            if do and c != normal_dir and sfc[c] > mid[c]: bits[c] = 1
+            if do and (not skip_nd or c != normal_dir) and sfc[c] > mid[c]: bits[c] = 1
         res.append(cell_base[ci] + _b2i(bits, rx, ry, rz))
     return res
 
