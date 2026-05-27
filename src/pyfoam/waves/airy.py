@@ -7,10 +7,10 @@ Implements the first-order (Airy) wave solution:
     eta = A * cos(k*x - omega*t)
 
 - Horizontal velocity (u):
-    u = A * omega * cosh(k*(z+d)) / sinh(k*d) * cos(k*x - omega*t)
+    u = A * omega * cosh(k*z) / sinh(k*d) * cos(k*x - omega*t)
 
 - Vertical velocity (w):
-    w = A * omega * sinh(k*(z+d)) / sinh(k*d) * sin(k*x - omega*t)
+    w = A * omega * sinh(k*z) / sinh(k*d) * sin(k*x - omega*t)
 
 where:
     A = wave amplitude
@@ -78,8 +78,8 @@ class AiryWave(WaveModel):
     ) -> tuple[torch.Tensor, torch.Tensor]:
         """Compute Airy wave velocity field.
 
-        u(x, t, z) = A * omega * cosh(k*(z+d)) / sinh(k*d) * cos(k*x - omega*t)
-        w(x, t, z) = A * omega * sinh(k*(z+d)) / sinh(k*d) * sin(k*x - omega*t)
+        u(x, t, z) = A * omega * cosh(k*z) / sinh(k*d) * cos(k*x - omega*t)
+        w(x, t, z) = A * omega * sinh(k*z) / sinh(k*d) * sin(k*x - omega*t)
 
         Args:
             x: Horizontal positions (m).
@@ -96,13 +96,13 @@ class AiryWave(WaveModel):
 
         sinh_kd = math.sinh(k * d)
         # z 从海底向上测量（z=0 海底，z=d 静水面）
-        # 需要转换为标准坐标 z_std = z - d
-        cosh_kzd = torch.cosh(k * (z - d))
-        sinh_kzd = torch.sinh(k * (z - d))
+        # 标准坐标 z_std = z - d，代入 cosh(k*(z_std+d)) = cosh(k*z)
+        cosh_kz = torch.cosh(k * z)
+        sinh_kz = torch.sinh(k * z)
 
         coeff = self._amplitude * omega / sinh_kd
 
-        u = coeff * cosh_kzd * torch.cos(phase)
-        w = coeff * sinh_kzd * torch.sin(phase)
+        u = coeff * cosh_kz * torch.cos(phase)
+        w = coeff * sinh_kz * torch.sin(phase)
 
         return u, w

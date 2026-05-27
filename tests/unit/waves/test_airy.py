@@ -135,26 +135,30 @@ class TestAiryVelocity:
         assert u.shape == (20,)
         assert w.shape == (20,)
 
-    def test_horizontal_velocity_max_at_seabed(self, deep_wave):
-        """深水中 u 在海底 (z=0) 最大，向水面衰减。"""
+    def test_velocity_decreases_with_depth(self, deep_wave):
+        """深水中速度幅值随深度递减：海底 u 小于水面 u。"""
         x = torch.tensor([0.0])
         z_bed = torch.tensor([0.0])
         z_surface = torch.tensor([deep_wave.depth])
 
         u_bed, _ = deep_wave.velocity(x, t=0.0, z=z_bed)
         u_surf, _ = deep_wave.velocity(x, t=0.0, z=z_surface)
-        assert abs(u_bed.item()) >= abs(u_surf.item())
+        # cosh(k*z) 在 z=d 处最大，z=0 处最小，所以 u_bed <= u_surf
+        assert abs(u_bed.item()) <= abs(u_surf.item()) + 1e-10
 
     def test_velocity_at_seabed(self, deep_wave):
-        """海底 z=0 处：w=0（不可穿透），u=A*omega（深水）。"""
+        """海底 z=0 处：w=0（不可穿透），u=A*omega/sinh(kd)（指数衰减）。"""
         x = torch.tensor([0.0])
         z_bed = torch.tensor([0.0])
         u, w = deep_wave.velocity(x, t=0.0, z=z_bed)
         # 海底不可穿透条件：w(z=0) = 0
         assert abs(w.item()) < 1e-10
-        # 深水：cosh(k*d)/sinh(k*d) ≈ 1，所以 u ≈ A*omega
-        expected_u = deep_wave.amplitude * deep_wave.angular_frequency
-        assert abs(u.item() - expected_u) / expected_u < 1e-5
+        # u(z=0) = A*omega*cosh(0)/sinh(kd) = A*omega/sinh(kd)
+        k = deep_wave.wavenumber
+        omega = deep_wave.angular_frequency
+        d = deep_wave.depth
+        expected_u = deep_wave.amplitude * omega / math.sinh(k * d)
+        assert abs(u.item() - expected_u) / abs(expected_u) < 1e-6
 
     def test_divergence_free(self, deep_wave):
         """速度场应近似满足连续性：du/dx + dw/dz ≈ 0。"""
