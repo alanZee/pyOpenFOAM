@@ -36,6 +36,7 @@ EXPECTED_SOLVERS = [
     "RhoPorousSimpleFoam",
     "ChemFoam",
     "IsothermalFluidFoam",
+    "IncompressibleVoFFoam",
 ]
 
 # 额外导出的枚举/工具
