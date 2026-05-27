@@ -33,6 +33,8 @@ Provides:
 - turbulentMixingLength: general-purpose mixing length turbulence BC
 - wallLubrication: wall lubrication force for multiphase Euler-Euler
 - dragCoefficient: drag coefficient BC for particle-laden flows
+- scaledVelocityInlet: scaled velocity inlet from reference patch
+- movingWall: moving wall with translation + rotation
 """
 
 # Import base and collection first
@@ -164,6 +166,10 @@ from pyfoam.boundary.wall_function_2 import EnhancedWallFunctionBC
 from pyfoam.boundary.non_conformal_couple import NonConformalCoupleBC
 from pyfoam.boundary.mapped_pressure_inlet import MappedPressureInletBC
 
+# Phase 5-7: Scaled velocity inlet / moving wall BCs
+from pyfoam.boundary.scaled_velocity_inlet import ScaledVelocityInletBC
+from pyfoam.boundary.moving_wall import MovingWallBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -260,4 +266,7 @@ __all__ = [
     # Phase 5-8: Non-conformal couple / mapped pressure inlet BCs
     "NonConformalCoupleBC",
     "MappedPressureInletBC",
+    # Phase 5-7: Scaled velocity inlet / moving wall BCs
+    "ScaledVelocityInletBC",
+    "MovingWallBC",
 ]
