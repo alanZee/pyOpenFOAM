@@ -1,9 +1,9 @@
-"""验证 applications 包导出全部 25 个求解器。"""
+"""验证 applications 包导出全部求解器。"""
 
 import pyfoam.applications as app
 
 
-# 预期的 25 个求解器类名（不含工具类 SolverBase / TimeLoop / ConvergenceMonitor）
+# 预期的求解器类名（不含工具类 SolverBase / TimeLoop / ConvergenceMonitor）
 EXPECTED_SOLVERS = [
     "BoundaryFoam",
     "IcoFoam",
@@ -31,7 +31,13 @@ EXPECTED_SOLVERS = [
     "CHTMultiRegionFoam",
     "ReactingFoam",
     "SolidDisplacementFoam",
+    "IncompressibleFluidFoam",
+    "ShallowWaterFoam",
+    "RhoPorousSimpleFoam",
 ]
+
+# 额外导出的枚举/工具
+EXTRA_EXPORTS = ["Algorithm"]
 
 # 工具类
 UTILITY_EXPORTS = ["SolverBase", "TimeLoop", "ConvergenceMonitor"]
@@ -58,5 +64,6 @@ def test_utility_exports():
 
 
 def test_total_export_count():
-    """__all__ 总条目数 = 26 求解器 + 3 工具类 = 29。"""
-    assert len(app.__all__) == 29
+    """__all__ 总条目数 = 求解器 + 工具类 + 额外导出。"""
+    expected = len(EXPECTED_SOLVERS) + len(UTILITY_EXPORTS) + len(EXTRA_EXPORTS)
+    assert len(app.__all__) == expected
