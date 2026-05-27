@@ -65,6 +65,12 @@ from pyfoam.boundary.turbulence_bcs import (
 # VOF BCs
 from pyfoam.boundary.vof_bcs import ConstantAlphaContactAngleBC
 
+# Phase 10: Additional critical BCs
+from pyfoam.boundary.empty import EmptyBC
+from pyfoam.boundary.advective import AdvectiveBC
+from pyfoam.boundary.uniform_fixed_value import UniformFixedValueBC
+from pyfoam.boundary.surface_normal_fixed_value import SurfaceNormalFixedValueBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -99,4 +105,9 @@ __all__ = [
     "TurbulentMixingLengthFrequencyInletBC",
     # Phase 9: VOF BCs
     "ConstantAlphaContactAngleBC",
+    # Phase 10: Additional critical BCs
+    "EmptyBC",
+    "AdvectiveBC",
+    "UniformFixedValueBC",
+    "SurfaceNormalFixedValueBC",
 ]
