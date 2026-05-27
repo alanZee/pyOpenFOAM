@@ -25,8 +25,9 @@ Provides:
 - :class:`KEqnModel` — one-equation k SGS model
 - :class:`DeardorffDiffStressModel` — Deardorff diffusion stress SGS model
 
-**DES Models:**
+**DES/SAS Models:**
 - :class:`KOmegaSSTDESModel` — k-ω SST DES model
+- :class:`KOmegaSSTSASModel` — k-ω SST SAS model
 - :class:`SpalartAllmarasDDESModel` — SA DDES model
 - :class:`SpalartAllmarasDESModel` — SA DES model
 - :class:`SpalartAllmarasIDDESModel` — SA IDDES model
@@ -83,6 +84,7 @@ from pyfoam.turbulence.deardorff_diff_stress import DeardorffDiffStressModel, De
 
 # DES models (each import triggers @TurbulenceModel.register)
 from pyfoam.turbulence.k_omega_sst_des import KOmegaSSTDESModel, KOmegaSSTDESConstants
+from pyfoam.turbulence.k_omega_sst_sas import KOmegaSSTSASModel, KOmegaSSTSASConstants
 from pyfoam.turbulence.sa_ddes import SpalartAllmarasDDESModel, SpalartAllmarasDDESConstants
 from pyfoam.turbulence.sa_des import SpalartAllmarasDESModel, SpalartAllmarasDESConstants
 from pyfoam.turbulence.sa_iddes import SpalartAllmarasIDDESModel, SpalartAllmarasIDDESConstants
@@ -125,6 +127,7 @@ __all__ = [
     "DeardorffDiffStressModel",
     # DES Models
     "KOmegaSSTDESModel",
+    "KOmegaSSTSASModel",
     "SpalartAllmarasDDESModel",
     "SpalartAllmarasDESModel",
     "SpalartAllmarasIDDESModel",
@@ -143,6 +146,7 @@ __all__ = [
     "KEqnConstants",
     "DeardorffDiffStressConstants",
     "KOmegaSSTDESConstants",
+    "KOmegaSSTSASConstants",
     "SpalartAllmarasDDESConstants",
     "SpalartAllmarasDESConstants",
     "SpalartAllmarasIDDESConstants",
