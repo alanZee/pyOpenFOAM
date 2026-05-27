@@ -22,6 +22,10 @@ Provides:
 - :class:`HeRhoThermo` — ρ-based thermo for compressible solvers
 - :func:`create_thermo` — factory for creating thermophysical models
 - :func:`create_air_thermo` — convenience for air at standard conditions
+
+**Thermophysical Transport:**
+- :class:`FourierTransport` — Fourier law: q = -k * grad(T)
+- :class:`FickianTransport` — Fick's law: j = -rho * D * grad(Y)
 """
 
 from pyfoam.thermophysical.equation_of_state import (
@@ -44,6 +48,11 @@ from pyfoam.thermophysical.thermo import (
     create_thermo,
     create_air_thermo,
 )
+from pyfoam.thermophysical.thermophysical_transport import (
+    ThermophysicalTransportModel,
+    FourierTransport,
+    FickianTransport,
+)
 
 __all__ = [
     # Equation of state
@@ -64,4 +73,8 @@ __all__ = [
     "HeRhoThermo",
     "create_thermo",
     "create_air_thermo",
+    # Thermophysical transport
+    "ThermophysicalTransportModel",
+    "FourierTransport",
+    "FickianTransport",
 ]
