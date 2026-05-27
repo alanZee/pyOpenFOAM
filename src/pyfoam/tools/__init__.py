@@ -20,6 +20,7 @@ from pyfoam.tools.renumber_mesh import RenumberResult, renumber_mesh
 from pyfoam.tools.set_fields import BoxRegion, CylinderRegion, set_fields
 from pyfoam.tools.split_mesh_regions import split_mesh_regions
 from pyfoam.tools.transform_points import transform_points
+from pyfoam.tools.foam_to_cgns import foam_to_cgns
 __all__ = [
     "box_turb", "CheckMeshResult", "check_mesh", "CellQuality", "QualityReport", "check_mesh_quality",
     "BoxRegion", "CylinderRegion", "set_fields",
@@ -28,4 +29,5 @@ __all__ = [
     "foam_to_tecplot", "foam_to_vtk", "foam_to_plot3d", "map_fields",
     "merge_meshes", "refine_mesh",
     "RenumberResult", "renumber_mesh", "split_mesh_regions", "transform_points",
+    "foam_to_cgns",
 ]
