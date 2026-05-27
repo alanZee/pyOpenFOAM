@@ -30,6 +30,13 @@ import torch
 from pyfoam.core.backend import scatter_add, gather
 from pyfoam.core.device import get_device, get_default_dtype
 from pyfoam.solvers.coupled_solver import ConvergenceData
+from pyfoam.solvers.pressure_equation import (
+    assemble_pressure_equation,
+    solve_pressure_equation,
+    correct_velocity,
+    correct_face_flux,
+)
+from pyfoam.solvers.linear_solver import create_solver
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
 from pyfoam.multiphase.cavitation import SchnerrSauer
 
@@ -117,7 +124,7 @@ class CavitatingFoam(SolverBase):
         U, _ = self.read_field_tensor("U", 0)
         U = U.to(device=device, dtype=dtype)
 
-        p, _ = self.read_field_tensor("p", 0)
+        p, _ = self.read_field_tensor("p_rgh", 0)
         p = p.to(device=device, dtype=dtype)
 
         alpha, _ = self.read_field_tensor("alpha.vapor", 0)
@@ -128,7 +135,7 @@ class CavitatingFoam(SolverBase):
 
     def _init_field_data(self):
         U_data = self.case.read_field("U", 0)
-        p_data = self.case.read_field("p", 0)
+        p_data = self.case.read_field("p_rgh", 0)
         alpha_data = self.case.read_field("alpha.vapor", 0)
         return U_data, p_data, alpha_data
 
@@ -207,10 +214,41 @@ class CavitatingFoam(SolverBase):
             rho = self._compute_mixture_rho(alpha)
             mu_mix = self._compute_mixture_mu(alpha)
 
-            # Momentum (simplified)
-            # PISO corrections (simplified)
+            # Momentum predictor (simplified, like interFoam)
+            A_p = torch.ones(mesh.n_cells, dtype=dtype, device=device)
+
+            # PISO pressure-velocity coupling
+            n_internal = mesh.n_internal_faces
+            int_owner = mesh.owner[:n_internal]
+            int_neigh = mesh.neighbour
+            w = mesh.face_weights[:n_internal]
+
             for corr in range(self.n_correctors):
-                pass
+                # HbyA ≈ U (simplified: no momentum source assembly)
+                HbyA = U
+
+                # Face flux from HbyA interpolation
+                HbyA_face = (
+                    w.unsqueeze(-1) * HbyA[int_owner]
+                    + (1.0 - w).unsqueeze(-1) * HbyA[int_neigh]
+                )
+                phiHbyA = (HbyA_face * mesh.face_areas[:n_internal]).sum(dim=1)
+
+                # Assemble and solve pressure equation
+                phi_full = torch.zeros(mesh.n_faces, dtype=dtype, device=device)
+                phi_full[:n_internal] = phiHbyA
+                p_solver = create_solver(
+                    "PCG", tolerance=self.p_tolerance, max_iter=self.p_max_iter,
+                )
+                p_eqn = assemble_pressure_equation(phi_full, A_p, mesh)
+                p, _, _ = solve_pressure_equation(
+                    p_eqn, p, p_solver,
+                    tolerance=self.p_tolerance, max_iter=self.p_max_iter,
+                )
+
+                # Correct velocity and face flux
+                U = correct_velocity(U, HbyA, p, A_p, mesh)
+                phi = correct_face_flux(phi_full, p, A_p, mesh)
 
             # Convergence
             U_residual = self._compute_residual(U, U_prev)
@@ -232,5 +270,5 @@ class CavitatingFoam(SolverBase):
     def _write_fields(self, time):
         time_str = f"{time:g}"
         self.write_field("U", self.U, time_str, self._U_data)
-        self.write_field("p", self.p, time_str, self._p_data)
+        self.write_field("p_rgh", self.p, time_str, self._p_data)
         self.write_field("alpha.vapor", self.alpha, time_str, self._alpha_data)
