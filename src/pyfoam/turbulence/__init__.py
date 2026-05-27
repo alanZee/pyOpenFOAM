@@ -14,6 +14,7 @@ Provides:
 - :class:`LaunderSharmaKEModel` — low-Re k-ε model
 - :class:`V2FModel` — v²-f model (Durbin 1995)
 - :class:`RNGkEpsilonModel` — RNG k-ε model
+- :class:`LRRModel` — LRR Reynolds stress model (Launder-Reece-Rodi 1975)
 - :class:`SSGModel` — SSG Reynolds stress model (Speziale-Sarkar-Gatski 1991)
 
 **LES Models:**
@@ -112,6 +113,7 @@ __all__ = [
     "LaunderSharmaKEModel",
     "V2FModel",
     "RNGkEpsilonModel",
+    "LRRModel",
     # LES Models
     "SmagorinskyModel",
     "WALEModel",
@@ -134,6 +136,7 @@ __all__ = [
     "LaunderSharmaKEConstants",
     "V2FConstants",
     "RNGkEpsilonConstants",
+    "LRRConstants",
     "KEqnConstants",
     "DeardorffDiffStressConstants",
     "KOmegaSSTDESConstants",
