@@ -79,8 +79,9 @@ def _process_face(fi, mesh, refined_set, rx, ry, rz, pm, rfaces, cell_base, n_su
     nbr = int(mesh.neighbour[fi].item()) if fi < mesh.n_internal_faces else -1
     own_r = own in refined_set; nbr_r = nbr >= 0 and nbr in refined_set
     pts = mesh.points[fp]; sf_list = split_face(pts, rx, ry, rz, fp, pm)
+    nd = _face_ndir(pts)
     if own_r and nbr_r:
-        owner_indices = _sub_cell_idx(mesh, own, sf_list, pm, rx, ry, rz, cell_base)
+        owner_indices = _sub_cell_idx(mesh, own, sf_list, pm, rx, ry, rz, cell_base, nd)
         ap = pm.pts(); ns = set()
         for fi2 in range(mesh.n_faces):
             if int(mesh.owner[fi2].item()) == nbr: ns.update(mesh.faces[fi2].tolist())
@@ -90,20 +91,24 @@ def _process_face(fi, mesh, refined_set, rx, ry, rz, pm, rfaces, cell_base, n_su
             k = tuple(sorted(sf.tolist())); centre = ap[sf].mean(dim=0)
             nbr_bits = [0, 0, 0]
             for do, c in [(rx, 0), (ry, 1), (rz, 2)]:
-                if do and centre[c] > nmid[c]: nbr_bits[c] = 1
+                if do and c != nd and centre[c] > nmid[c]: nbr_bits[c] = 1
             rfaces[k] = (sf, owner_indices[i], cell_base[nbr] + _b2i(nbr_bits, rx, ry, rz))
     elif own_r:
-        ci_list = _sub_cell_idx(mesh, own, sf_list, pm, rx, ry, rz, cell_base)
+        ci_list = _sub_cell_idx(mesh, own, sf_list, pm, rx, ry, rz, cell_base, nd)
         for i, sf in enumerate(sf_list):
             k = tuple(sorted(sf.tolist()))
             rfaces[k] = (sf, ci_list[i], cell_base[nbr] if nbr >= 0 else -1)
     else:
-        ci_list = _sub_cell_idx(mesh, nbr, sf_list, pm, rx, ry, rz, cell_base)
+        ci_list = _sub_cell_idx(mesh, nbr, sf_list, pm, rx, ry, rz, cell_base, nd)
         for i, sf in enumerate(sf_list):
             k = tuple(sorted(sf.tolist()))
             rfaces[k] = (sf, cell_base[own], ci_list[i])
 
-def _sub_cell_idx(mesh, ci, sf_list, pm, rx, ry, rz, cell_base):
+def _face_ndir(pts):
+    ranges = pts.max(dim=0).values - pts.min(dim=0).values
+    return int(ranges.argmin().item())
+
+def _sub_cell_idx(mesh, ci, sf_list, pm, rx, ry, rz, cell_base, normal_dir=-1):
     s = set()
     for fi2 in range(mesh.n_faces):
         if int(mesh.owner[fi2].item()) == ci: s.update(mesh.faces[fi2].tolist())
@@ -113,7 +118,7 @@ def _sub_cell_idx(mesh, ci, sf_list, pm, rx, ry, rz, cell_base):
     for sf in sf_list:
         sfc = ap[sf].mean(dim=0); bits = [0, 0, 0]
         for do, c in [(rx, 0), (ry, 1), (rz, 2)]:
-            if do and sfc[c] > mid[c]: bits[c] = 1
+            if do and c != normal_dir and sfc[c] > mid[c]: bits[c] = 1
         res.append(cell_base[ci] + _b2i(bits, rx, ry, rz))
     return res
 
@@ -201,5 +206,25 @@ def _assemble(mesh, pm, ufaces, rfaces):
             nn = n_bnd - assigned if i == len(mesh.boundary) - 1 else max(1, round(patch["nFaces"] * n_bnd / total_orig))
             boundary.append({"name": patch["name"], "type": patch["type"], "startFace": start, "nFaces": nn})
             start += nn; assigned += nn
+    # Correct face normals using cell centres
+    n_cells = max(all_o) + 1 if all_o else 0
+    c_sum = torch.zeros((n_cells, 3), dtype=all_pts.dtype)
+    c_cnt = torch.zeros(n_cells, dtype=torch.long)
+    for fi2, face in enumerate(all_f):
+        o2 = all_o[fi2]
+        c_sum[o2] += all_pts[face].sum(dim=0)
+        c_cnt[o2] += face.shape[0]
+    cc = c_sum / c_cnt.unsqueeze(1).clamp(min=1)
+    for _pass in range(2):
+        for i in range(n_int):
+            fv = all_pts[all_f[i]]
+            n = torch.linalg.cross(fv[1] - fv[0], fv[3] - fv[0])
+            d = cc[int_n[i]] - cc[all_o[i]]
+            if (d * n).sum().item() < 0: all_f[i] = torch.flip(all_f[i], dims=[0])
+        for i in range(n_int, n_total):
+            fv = all_pts[all_f[i]]
+            n = torch.linalg.cross(fv[1] - fv[0], fv[3] - fv[0])
+            d = fv.mean(dim=0) - cc[all_o[i]]
+            if (d * n).sum().item() < 0: all_f[i] = torch.flip(all_f[i], dims=[0])
     return FvMesh(points=all_pts, faces=all_f, owner=torch.tensor(all_o, dtype=INDEX_DTYPE),
         neighbour=torch.tensor(int_n, dtype=INDEX_DTYPE), boundary=boundary, validate=False)
