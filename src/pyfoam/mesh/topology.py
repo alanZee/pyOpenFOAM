@@ -67,7 +67,7 @@ def validate_owner_neighbour(
             f"n_internal_faces ({n_internal_faces})"
         )
 
-    if owner.min() < 0 or owner.max() >= n_cells:
+    if n_faces > 0 and (owner.min() < 0 or owner.max() >= n_cells):
         raise ValueError(
             f"owner indices out of range [0, {n_cells}): "
             f"[{owner.min().item()}, {owner.max().item()}]"
