@@ -1,14 +1,17 @@
 """
-symmetryPlane boundary condition.
+symmetry boundary condition.
 
 Enforces that the normal component of a vector (or gradient of a scalar)
-is zero at a symmetry plane.  In OpenFOAM syntax::
+is zero at a symmetry boundary.  In OpenFOAM syntax::
 
-    type   symmetryPlane;
+    type   symmetry;
 
 For scalar fields this is equivalent to zeroGradient.
 For vector fields, the normal component is zeroed and the tangential
 component is unconstrained (like slip).
+
+Note: This is the general symmetry BC.  For planes of symmetry, use
+the ``symmetryPlane`` type instead (see ``symmetry_plane.py``).
 """
 
 from __future__ import annotations
@@ -24,7 +27,7 @@ from .boundary_condition import BoundaryCondition, Patch
 __all__ = ["SymmetryBC"]
 
 
-@BoundaryCondition.register("symmetryPlane")
+@BoundaryCondition.register("symmetry")
 class SymmetryBC(BoundaryCondition):
     """Symmetry-plane boundary condition.
 
