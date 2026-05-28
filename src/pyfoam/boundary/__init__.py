@@ -48,6 +48,8 @@ Provides:
 - subcooling: Subcooling temperature for boiling/condensation models
 - stagnationInlet: Stagnation pressure inlet (Bernoulli velocity)
 - symmetrySlip: Combined symmetry/slip with plane validation
+- adjointInlet: Adjoint velocity inlet for adjoint optimization solvers
+- wallFilm: Wall film boundary for Lagrangian film models
 """
 
 # Import base and collection first
@@ -216,6 +218,10 @@ from pyfoam.boundary.symmetry_slip import SymmetrySlipBC
 from pyfoam.boundary.flow_rate_inlet_2 import FlowRateInlet2BC
 from pyfoam.boundary.wall_heat_flux import WallHeatFluxBC
 
+# Phase 5: Adjoint inlet and wall film BCs
+from pyfoam.boundary.adjoint_inlet import AdjointInletBC
+from pyfoam.boundary.wall_film import WallFilmBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -338,4 +344,7 @@ __all__ = [
     # Phase 5: Enhanced flow rate inlet and wall heat flux BCs
     "FlowRateInlet2BC",
     "WallHeatFluxBC",
+    # Phase 5: Adjoint inlet and wall film BCs
+    "AdjointInletBC",
+    "WallFilmBC",
 ]
