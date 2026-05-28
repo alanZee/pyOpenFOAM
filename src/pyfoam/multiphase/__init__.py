@@ -69,6 +69,11 @@ from pyfoam.multiphase.turbulence_damping import (
     TurbulenceDampingModel,
     InterfaceDamping,
 )
+from pyfoam.multiphase.mass_transfer import (
+    MassTransferModel,
+    LeeMassTransfer,
+    ThermalPhaseChange,
+)
 
 __all__ = [
     "VOFAdvection",
@@ -111,4 +116,8 @@ __all__ = [
     # Turbulence damping models
     "TurbulenceDampingModel",
     "InterfaceDamping",
+    # Mass transfer models
+    "MassTransferModel",
+    "LeeMassTransfer",
+    "ThermalPhaseChange",
 ]
