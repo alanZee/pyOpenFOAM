@@ -58,6 +58,11 @@ Provides:
 - :class:`SGDH` — Simple Gradient Diffusion Hypothesis
 - :class:`GGDH` — Generalized Gradient Diffusion Hypothesis
 
+**Turbulence Time Scale Models:**
+- :class:`TurbulenceTimeScale` — Abstract base for turbulence time scale models
+- :class:`KolmogorovTimeScale` — Kolmogorov micro time scale: tau = sqrt(nu/epsilon)
+- :class:`IntegralTimeScale` — Integral (large-eddy) time scale: tau = k/epsilon
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -185,6 +190,13 @@ from pyfoam.turbulence.scalar_transport import (
     GGDH,
 )
 
+# Turbulence time scale models
+from pyfoam.turbulence.turbulence_time_scale import (
+    TurbulenceTimeScale,
+    KolmogorovTimeScale,
+    IntegralTimeScale,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -283,4 +295,8 @@ __all__ = [
     "ScalarTransportModel",
     "SGDH",
     "GGDH",
+    # Turbulence time scale models
+    "TurbulenceTimeScale",
+    "KolmogorovTimeScale",
+    "IntegralTimeScale",
 ]
