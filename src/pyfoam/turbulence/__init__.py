@@ -73,6 +73,11 @@ Provides:
 - :class:`CompressibleTurbulenceModel` — Abstract base for compressible turbulence models with RTS registry
 - :class:`KOmegaSSTCompressible` — Compressible k-omega SST with density-weighted transport
 
+**Compressible Wall Functions:**
+- :class:`CompressibleWallFunction` — Abstract base for compressible wall functions
+- :class:`CompressibleNutWallFunction` — Compressible nut wall function with Van Driest damping
+- :class:`CompressibleKWallFunction` — Compressible k wall function with local equilibrium and Van Driest correction
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -234,6 +239,13 @@ from pyfoam.turbulence.compressible_turbulence import (
     KOmegaSSTCompressibleConstants,
 )
 
+# Compressible wall functions
+from pyfoam.turbulence.compressible_wall_functions import (
+    CompressibleWallFunction,
+    CompressibleNutWallFunction,
+    CompressibleKWallFunction,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -351,4 +363,8 @@ __all__ = [
     "CompressibleTurbulenceModel",
     "KOmegaSSTCompressible",
     "KOmegaSSTCompressibleConstants",
+    # Compressible wall functions
+    "CompressibleWallFunction",
+    "CompressibleNutWallFunction",
+    "CompressibleKWallFunction",
 ]
