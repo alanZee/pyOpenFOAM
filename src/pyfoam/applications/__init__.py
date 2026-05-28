@@ -52,6 +52,7 @@ Available solvers:
 - :class:`SprayFoam` — Lagrangian spray solver with two-way Euler-Lagrange coupling
 - :class:`CHTSolver` — Simplified conjugate heat transfer solver with iterative coupling
 - :class:`PorousInterFoam` — Porous media two-phase VOF solver (Darcy-Forchheimer)
+- :class:`AdjointShapeFoam` — Enhanced adjoint shape optimization with mesh morphing
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -104,6 +105,7 @@ from pyfoam.applications.reacting_foam_enhanced import ReactingFoamEnhanced
 from pyfoam.applications.spray_foam import SprayFoam
 from pyfoam.applications.cht_solver import CHTSolver, CHTConfig
 from pyfoam.applications.porous_inter_foam import PorousInterFoam
+from pyfoam.applications.adjoint_shape_foam import AdjointShapeFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -160,6 +162,7 @@ __all__ = [
     "CHTSolver",
     "CHTConfig",
     "PorousInterFoam",
+    "AdjointShapeFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
