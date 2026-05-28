@@ -100,6 +100,13 @@ from pyfoam.multiphase.relative_velocity import (
 from pyfoam.multiphase.drag_models import DragModel
 from pyfoam.multiphase.lift_models import LiftModel, SaffmanLift
 
+# Phase 7: Turbulence transfer models
+from pyfoam.multiphase.turbulence_transfer import (
+    TurbulenceTransferModel,
+    ContinuousTurbulenceTransfer,
+    DispersedTurbulenceTransfer,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -157,4 +164,8 @@ __all__ = [
     "DragModel",
     "LiftModel",
     "SaffmanLift",
+    # Phase 7: Turbulence transfer models
+    "TurbulenceTransferModel",
+    "ContinuousTurbulenceTransfer",
+    "DispersedTurbulenceTransfer",
 ]
