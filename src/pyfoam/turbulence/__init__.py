@@ -159,6 +159,13 @@ from pyfoam.turbulence.les_filters import (
     LaplaceFilter,
 )
 
+# Wall distance calculators
+from pyfoam.turbulence.wall_distance import (
+    WallDistanceCalculator,
+    ExactWallDistance,
+    ApproximateWallDistance,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -245,4 +252,8 @@ __all__ = [
     "LESFilter",
     "SimpleFilter",
     "LaplaceFilter",
+    # Wall distance calculators
+    "WallDistanceCalculator",
+    "ExactWallDistance",
+    "ApproximateWallDistance",
 ]
