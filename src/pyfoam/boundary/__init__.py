@@ -42,6 +42,8 @@ Provides:
 - inletOutlet3: Enhanced inlet/outlet with turbulence-aware treatment
 - tomiyamaWallLubrication: Tomiyama Eo-dependent wall lubrication force for bubble flows
 - interfacialMomentum: Interfacial momentum transfer for Euler-Euler multiphase
+- nonLinearRoughness: Non-linear roughness wall function with sand-grain model
+- waveGeneration: Wave generation inlet using Airy wave theory
 """
 
 # Import base and collection first
@@ -194,6 +196,10 @@ from pyfoam.boundary.inlet_outlet_3 import InletOutlet3BC
 from pyfoam.boundary.wall_lubrication_3 import TomiyamaWallLubricationBC
 from pyfoam.boundary.interfacial_momentum import InterfacialMomentumBC
 
+# Phase 5: Non-linear roughness / wave generation BCs
+from pyfoam.boundary.nonlinear_roughness import NonLinearRoughnessBC
+from pyfoam.boundary.wave_generation import WaveGenerationBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -304,4 +310,7 @@ __all__ = [
     # Phase 5-8: Tomiyama wall lubrication and interfacial momentum BCs
     "TomiyamaWallLubricationBC",
     "InterfacialMomentumBC",
+    # Phase 5: Non-linear roughness / wave generation BCs
+    "NonLinearRoughnessBC",
+    "WaveGenerationBC",
 ]
