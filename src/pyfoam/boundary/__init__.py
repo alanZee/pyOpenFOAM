@@ -40,6 +40,8 @@ Provides:
 - antalWallLubrication: Antal distance-dependent wall lubrication force
 - fixedFluxPressure2: Enhanced fixed flux pressure with buoyancy correction
 - inletOutlet3: Enhanced inlet/outlet with turbulence-aware treatment
+- tomiyamaWallLubrication: Tomiyama Eo-dependent wall lubrication force for bubble flows
+- interfacialMomentum: Interfacial momentum transfer for Euler-Euler multiphase
 """
 
 # Import base and collection first
@@ -188,6 +190,10 @@ from pyfoam.boundary.wall_lubrication_2 import AntalWallLubricationBC
 from pyfoam.boundary.fixed_flux_pressure_2 import FixedFluxPressure2BC
 from pyfoam.boundary.inlet_outlet_3 import InletOutlet3BC
 
+# Phase 5-8: Tomiyama wall lubrication and interfacial momentum BCs
+from pyfoam.boundary.wall_lubrication_3 import TomiyamaWallLubricationBC
+from pyfoam.boundary.interfacial_momentum import InterfacialMomentumBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -295,4 +301,7 @@ __all__ = [
     # Phase 4-9: Enhanced fixed flux pressure and inlet/outlet BCs
     "FixedFluxPressure2BC",
     "InletOutlet3BC",
+    # Phase 5-8: Tomiyama wall lubrication and interfacial momentum BCs
+    "TomiyamaWallLubricationBC",
+    "InterfacialMomentumBC",
 ]
