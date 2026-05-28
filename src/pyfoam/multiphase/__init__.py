@@ -19,6 +19,8 @@ Provides:
 - :class:`PhaseChangeModel` — Abstract phase change model with RTS registry
 - :class:`LeeModel` — Lee empirical phase change model
 - :class:`SchnerrSauerEnhanced` — Enhanced Schnerr-Sauer with convergence improvements
+- :class:`TurbulenceDampingModel` — Abstract turbulence damping model with RTS registry
+- :class:`InterfaceDamping` — Damps k and epsilon near free surface
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -63,6 +65,10 @@ from pyfoam.multiphase.phase_change import (
     LeeModel,
     SchnerrSauerEnhanced,
 )
+from pyfoam.multiphase.turbulence_damping import (
+    TurbulenceDampingModel,
+    InterfaceDamping,
+)
 
 __all__ = [
     "VOFAdvection",
@@ -102,4 +108,7 @@ __all__ = [
     "PhaseChangeModel",
     "LeeModel",
     "SchnerrSauerEnhanced",
+    # Turbulence damping models
+    "TurbulenceDampingModel",
+    "InterfaceDamping",
 ]
