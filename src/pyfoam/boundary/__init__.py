@@ -46,6 +46,8 @@ Provides:
 - waveGeneration: Wave generation inlet using Airy wave theory
 - saturatedTemperature: Saturation temperature from pressure (Clausius-Clapeyron)
 - subcooling: Subcooling temperature for boiling/condensation models
+- stagnationInlet: Stagnation pressure inlet (Bernoulli velocity)
+- symmetrySlip: Combined symmetry/slip with plane validation
 """
 
 # Import base and collection first
@@ -206,6 +208,10 @@ from pyfoam.boundary.wave_generation import WaveGenerationBC
 from pyfoam.boundary.saturated_temperature import SaturatedTemperatureBC
 from pyfoam.boundary.subcooling import SubcoolingBC
 
+# Phase 5-7: Stagnation inlet / symmetry-slip BCs
+from pyfoam.boundary.stagnation_inlet import StagnationInletBC
+from pyfoam.boundary.symmetry_slip import SymmetrySlipBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -322,4 +328,7 @@ __all__ = [
     # Phase 5: Saturated temperature / subcooling BCs
     "SaturatedTemperatureBC",
     "SubcoolingBC",
+    # Phase 5-7: Stagnation inlet / symmetry-slip BCs
+    "StagnationInletBC",
+    "SymmetrySlipBC",
 ]
