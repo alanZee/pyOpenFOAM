@@ -166,6 +166,13 @@ from pyfoam.turbulence.wall_distance import (
     ApproximateWallDistance,
 )
 
+# Compressibility corrections
+from pyfoam.turbulence.compressibility_corrections import (
+    CompressibilityCorrection,
+    SarkarModel,
+    ZemanModel,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -256,4 +263,8 @@ __all__ = [
     "WallDistanceCalculator",
     "ExactWallDistance",
     "ApproximateWallDistance",
+    # Compressibility corrections
+    "CompressibilityCorrection",
+    "SarkarModel",
+    "ZemanModel",
 ]
