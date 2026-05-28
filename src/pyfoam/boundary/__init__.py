@@ -44,6 +44,8 @@ Provides:
 - interfacialMomentum: Interfacial momentum transfer for Euler-Euler multiphase
 - nonLinearRoughness: Non-linear roughness wall function with sand-grain model
 - waveGeneration: Wave generation inlet using Airy wave theory
+- saturatedTemperature: Saturation temperature from pressure (Clausius-Clapeyron)
+- subcooling: Subcooling temperature for boiling/condensation models
 """
 
 # Import base and collection first
@@ -200,6 +202,10 @@ from pyfoam.boundary.interfacial_momentum import InterfacialMomentumBC
 from pyfoam.boundary.nonlinear_roughness import NonLinearRoughnessBC
 from pyfoam.boundary.wave_generation import WaveGenerationBC
 
+# Phase 5: Saturated temperature / subcooling BCs
+from pyfoam.boundary.saturated_temperature import SaturatedTemperatureBC
+from pyfoam.boundary.subcooling import SubcoolingBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -313,4 +319,7 @@ __all__ = [
     # Phase 5: Non-linear roughness / wave generation BCs
     "NonLinearRoughnessBC",
     "WaveGenerationBC",
+    # Phase 5: Saturated temperature / subcooling BCs
+    "SaturatedTemperatureBC",
+    "SubcoolingBC",
 ]
