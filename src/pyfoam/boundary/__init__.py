@@ -58,6 +58,8 @@ Provides:
 - outletPhaseMeanVelocity: Outlet phase mean velocity for Euler-Euler multiphase
 - heatExchanger: Multi-zone heat exchanger with effectiveness-NTU model
 - turbulentInlet2: Enhanced turbulent inlet with digital filter method
+- mappedVelocityInternal: Maps velocity from internal field to boundary
+- variableHeight2: Enhanced variable height with momentum-consistent velocity correction
 """
 
 # Import base and collection first
@@ -256,6 +258,10 @@ from pyfoam.boundary.heat_exchanger_bc import HeatExchangerBC
 # Phase 5: Enhanced turbulent inlet BC
 from pyfoam.boundary.turbulent_inlet_2 import TurbulentInlet2BC
 
+# Phase 5: Mapped velocity internal / enhanced variable height BCs
+from pyfoam.boundary.mapped_velocity_internal import MappedVelocityInternalBC
+from pyfoam.boundary.variable_height_2 import VariableHeight2BC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -400,4 +406,7 @@ __all__ = [
     "HeatExchangerBC",
     # Phase 5: Enhanced turbulent inlet BC
     "TurbulentInlet2BC",
+    # Phase 5: Mapped velocity internal / enhanced variable height BCs
+    "MappedVelocityInternalBC",
+    "VariableHeight2BC",
 ]
