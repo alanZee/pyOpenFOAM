@@ -37,6 +37,8 @@ Provides:
 - :class:`WallLubricationModel` — Abstract wall lubrication force model with RTS registry
 - :class:`AntalWallLubrication` — Antal et al. (1991) distance-dependent wall lubrication
 - :class:`TomiyamaWallLubrication` — Tomiyama et al. (1998) Eo-dependent wall lubrication
+- :class:`TurbulenceDamping2Model` — Enhanced turbulence damping with y+ awareness
+- :class:`WolfhardtDamping` — Wolfhardt model for near-wall turbulence damping
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -125,6 +127,12 @@ from pyfoam.multiphase.wall_lubrication_models import (
     TomiyamaWallLubrication,
 )
 
+# Phase 7: Enhanced turbulence damping models
+from pyfoam.multiphase.turbulence_damping_2 import (
+    TurbulenceDamping2Model,
+    WolfhardtDamping,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -193,4 +201,7 @@ __all__ = [
     "WallLubricationModel",
     "AntalWallLubrication",
     "TomiyamaWallLubrication",
+    # Phase 7: Enhanced turbulence damping models
+    "TurbulenceDamping2Model",
+    "WolfhardtDamping",
 ]
