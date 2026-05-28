@@ -53,6 +53,11 @@ Provides:
 - :class:`GiesekusModel` — Giesekus viscoelastic model
 - :class:`PTTModel` — Phan-Thien-Tanner viscoelastic model
 
+**Scalar Transport Models:**
+- :class:`ScalarTransportModel` — Abstract base for turbulent scalar flux models
+- :class:`SGDH` — Simple Gradient Diffusion Hypothesis
+- :class:`GGDH` — Generalized Gradient Diffusion Hypothesis
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -173,6 +178,13 @@ from pyfoam.turbulence.compressibility_corrections import (
     ZemanModel,
 )
 
+# Scalar transport models
+from pyfoam.turbulence.scalar_transport import (
+    ScalarTransportModel,
+    SGDH,
+    GGDH,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -267,4 +279,8 @@ __all__ = [
     "CompressibilityCorrection",
     "SarkarModel",
     "ZemanModel",
+    # Scalar transport models
+    "ScalarTransportModel",
+    "SGDH",
+    "GGDH",
 ]
