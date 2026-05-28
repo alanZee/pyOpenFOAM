@@ -232,6 +232,10 @@ from pyfoam.boundary.convective_heat_transfer import ConvectiveHeatTransferBC
 from pyfoam.boundary.variable_height import VariableHeightBC
 from pyfoam.boundary.mass_outlet import MassOutletBC
 
+# Phase 5: Total enthalpy and translating boundary BCs
+from pyfoam.boundary.total_enthalpy import TotalEnthalpyBC
+from pyfoam.boundary.translating_boundary import TranslatingBoundaryBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -363,4 +367,7 @@ __all__ = [
     # Phase 5-7: Variable height / mass outlet BCs
     "VariableHeightBC",
     "MassOutletBC",
+    # Phase 5: Total enthalpy and translating boundary BCs
+    "TotalEnthalpyBC",
+    "TranslatingBoundaryBC",
 ]
