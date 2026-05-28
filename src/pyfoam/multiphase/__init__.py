@@ -21,6 +21,9 @@ Provides:
 - :class:`SchnerrSauerEnhanced` — Enhanced Schnerr-Sauer with convergence improvements
 - :class:`TurbulenceDampingModel` — Abstract turbulence damping model with RTS registry
 - :class:`InterfaceDamping` — Damps k and epsilon near free surface
+- :class:`InterfacialAreaModel` — Abstract interfacial area density model with RTS registry
+- :class:`ConstantInterfacialArea` — Constant interfacial area density
+- :class:`VariableInterfacialArea` — Alpha-dependent interfacial area density
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -74,6 +77,11 @@ from pyfoam.multiphase.mass_transfer import (
     LeeMassTransfer,
     ThermalPhaseChange,
 )
+from pyfoam.multiphase.interfacial_area import (
+    InterfacialAreaModel,
+    ConstantInterfacialArea,
+    VariableInterfacialArea,
+)
 
 __all__ = [
     "VOFAdvection",
@@ -120,4 +128,8 @@ __all__ = [
     "MassTransferModel",
     "LeeMassTransfer",
     "ThermalPhaseChange",
+    # Interfacial area models
+    "InterfacialAreaModel",
+    "ConstantInterfacialArea",
+    "VariableInterfacialArea",
 ]
