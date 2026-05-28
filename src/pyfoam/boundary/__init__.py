@@ -54,6 +54,8 @@ Provides:
 - convectiveHeatTransfer: Robin BC for conjugate heat transfer
 - generic2: Enhanced generic BC with time-varying coefficients and blending functions
 - pressureNormalInlet: Pressure inlet with normal velocity for compressible flows
+- scaledHeatFlux: Scaled heat flux BC (q = scale * q_ref)
+- outletPhaseMeanVelocity: Outlet phase mean velocity for Euler-Euler multiphase
 """
 
 # Import base and collection first
@@ -242,6 +244,10 @@ from pyfoam.boundary.mass_outlet import MassOutletBC
 from pyfoam.boundary.total_enthalpy import TotalEnthalpyBC
 from pyfoam.boundary.translating_boundary import TranslatingBoundaryBC
 
+# Phase 5: Scaled heat flux and outlet phase mean velocity BCs
+from pyfoam.boundary.scaled_heat_flux import ScaledHeatFluxBC
+from pyfoam.boundary.outlet_phase_mean_velocity import OutletPhaseMeanVelocityBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -379,4 +385,7 @@ __all__ = [
     # Phase 5: Enhanced generic and pressure normal inlet BCs
     "Generic2BC",
     "PressureNormalInletBC",
+    # Phase 5: Scaled heat flux and outlet phase mean velocity BCs
+    "ScaledHeatFluxBC",
+    "OutletPhaseMeanVelocityBC",
 ]
