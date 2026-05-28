@@ -34,6 +34,9 @@ Provides:
 - :class:`GraceRelativeVelocity` — Grace drag correlation for bubbles/particles
 - :class:`TurbulenceInteractionModel` — Abstract interphase turbulence interaction model
 - :class:`StandardInteraction` — Standard interphase turbulence interaction (Lopez de Bertodano)
+- :class:`WallLubricationModel` — Abstract wall lubrication force model with RTS registry
+- :class:`AntalWallLubrication` — Antal et al. (1991) distance-dependent wall lubrication
+- :class:`TomiyamaWallLubrication` — Tomiyama et al. (1998) Eo-dependent wall lubrication
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -115,6 +118,13 @@ from pyfoam.multiphase.turbulence_interaction import (
     StandardInteraction,
 )
 
+# Phase 7: Wall lubrication models
+from pyfoam.multiphase.wall_lubrication_models import (
+    WallLubricationModel,
+    AntalWallLubrication,
+    TomiyamaWallLubrication,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -179,4 +189,8 @@ __all__ = [
     # Phase 7: Turbulence interaction models
     "TurbulenceInteractionModel",
     "StandardInteraction",
+    # Phase 7: Wall lubrication models
+    "WallLubricationModel",
+    "AntalWallLubrication",
+    "TomiyamaWallLubrication",
 ]

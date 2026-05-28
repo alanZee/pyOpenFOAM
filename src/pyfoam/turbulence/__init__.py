@@ -69,6 +69,10 @@ Provides:
 - :class:`BirdCarreauViscosity` (non_linear_viscosity) — Bird-Carreau four-parameter model (RTS-registered)
 - :class:`CrossPowerLawViscosity` — Cross power-law model (RTS-registered)
 
+**Compressible Turbulence Models:**
+- :class:`CompressibleTurbulenceModel` — Abstract base for compressible turbulence models with RTS registry
+- :class:`KOmegaSSTCompressible` — Compressible k-omega SST with density-weighted transport
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -223,6 +227,13 @@ from pyfoam.turbulence.non_linear_viscosity import (
     CrossPowerLawViscosity,
 )
 
+# Compressible turbulence models
+from pyfoam.turbulence.compressible_turbulence import (
+    CompressibleTurbulenceModel,
+    KOmegaSSTCompressible,
+    KOmegaSSTCompressibleConstants,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -336,4 +347,8 @@ __all__ = [
     # Non-linear viscosity models (RTS-registered)
     "NonLinearViscosityModel",
     "CrossPowerLawViscosity",
+    # Compressible turbulence models
+    "CompressibleTurbulenceModel",
+    "KOmegaSSTCompressible",
+    "KOmegaSSTCompressibleConstants",
 ]
