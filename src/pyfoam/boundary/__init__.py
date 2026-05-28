@@ -52,6 +52,8 @@ Provides:
 - wallFilm: Wall film boundary for Lagrangian film models
 - phaseMeanVelocity: Phase-mean velocity for Euler-Euler multiphase models
 - convectiveHeatTransfer: Robin BC for conjugate heat transfer
+- generic2: Enhanced generic BC with time-varying coefficients and blending functions
+- pressureNormalInlet: Pressure inlet with normal velocity for compressible flows
 """
 
 # Import base and collection first
@@ -228,6 +230,10 @@ from pyfoam.boundary.wall_film import WallFilmBC
 from pyfoam.boundary.phase_mean_velocity import PhaseMeanVelocityBC
 from pyfoam.boundary.convective_heat_transfer import ConvectiveHeatTransferBC
 
+# Phase 5: Enhanced generic and pressure normal inlet BCs
+from pyfoam.boundary.generic_2 import Generic2BC
+from pyfoam.boundary.pressure_normal_inlet import PressureNormalInletBC
+
 # Phase 5-7: Variable height / mass outlet BCs
 from pyfoam.boundary.variable_height import VariableHeightBC
 from pyfoam.boundary.mass_outlet import MassOutletBC
@@ -370,4 +376,7 @@ __all__ = [
     # Phase 5: Total enthalpy and translating boundary BCs
     "TotalEnthalpyBC",
     "TranslatingBoundaryBC",
+    # Phase 5: Enhanced generic and pressure normal inlet BCs
+    "Generic2BC",
+    "PressureNormalInletBC",
 ]
