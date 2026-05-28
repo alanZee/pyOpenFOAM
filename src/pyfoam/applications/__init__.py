@@ -57,6 +57,7 @@ Available solvers:
 - :class:`AdjointTurbulenceFoam` — Adjoint turbulence optimisation solver
 - :class:`ReactingMultiphaseFoam` — Reacting multiphase Euler-Euler solver
 - :class:`CombustionFoam` — General combustion solver with multiple reaction mechanisms
+- :class:`HeatTransferFoam` — Enhanced heat transfer solver with radiation, convection, and conduction coupling
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -114,6 +115,7 @@ from pyfoam.applications.diesel_foam import DieselFoam
 from pyfoam.applications.adjoint_turbulence_foam import AdjointTurbulenceFoam
 from pyfoam.applications.reacting_multiphase_foam import ReactingMultiphaseFoam
 from pyfoam.applications.combustion_foam import CombustionFoam
+from pyfoam.applications.heat_transfer_foam import HeatTransferFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -175,6 +177,7 @@ __all__ = [
     "AdjointTurbulenceFoam",
     "ReactingMultiphaseFoam",
     "CombustionFoam",
+    "HeatTransferFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
