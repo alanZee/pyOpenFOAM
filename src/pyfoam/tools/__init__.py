@@ -22,6 +22,7 @@ from pyfoam.tools.set_fields import BoxRegion, CylinderRegion, set_fields
 from pyfoam.tools.split_mesh_regions import split_mesh_regions
 from pyfoam.tools.transform_points import transform_points
 from pyfoam.tools.foam_to_cgns import foam_to_cgns
+from pyfoam.tools.foam_to_openfoam import foam_to_openfoam
 __all__ = [
     "box_turb", "CheckMeshResult", "check_mesh", "CellQuality", "QualityReport", "check_mesh_quality",
     "BoxRegion", "CylinderRegion", "set_fields",
@@ -32,4 +33,5 @@ __all__ = [
     "merge_meshes", "refine_mesh",
     "RenumberResult", "renumber_mesh", "split_mesh_regions", "transform_points",
     "foam_to_cgns",
+    "foam_to_openfoam",
 ]
