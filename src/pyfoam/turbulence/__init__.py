@@ -197,6 +197,13 @@ from pyfoam.turbulence.turbulence_time_scale import (
     IntegralTimeScale,
 )
 
+# Production limiters
+from pyfoam.turbulence.production_limiter import (
+    ProductionLimiter,
+    StandardLimiter,
+    KatoLimiter,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -299,4 +306,8 @@ __all__ = [
     "TurbulenceTimeScale",
     "KolmogorovTimeScale",
     "IntegralTimeScale",
+    # Production limiters
+    "ProductionLimiter",
+    "StandardLimiter",
+    "KatoLimiter",
 ]
