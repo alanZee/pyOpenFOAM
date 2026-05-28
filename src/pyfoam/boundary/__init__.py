@@ -56,6 +56,7 @@ Provides:
 - pressureNormalInlet: Pressure inlet with normal velocity for compressible flows
 - scaledHeatFlux: Scaled heat flux BC (q = scale * q_ref)
 - outletPhaseMeanVelocity: Outlet phase mean velocity for Euler-Euler multiphase
+- heatExchanger: Multi-zone heat exchanger with effectiveness-NTU model
 """
 
 # Import base and collection first
@@ -248,6 +249,9 @@ from pyfoam.boundary.translating_boundary import TranslatingBoundaryBC
 from pyfoam.boundary.scaled_heat_flux import ScaledHeatFluxBC
 from pyfoam.boundary.outlet_phase_mean_velocity import OutletPhaseMeanVelocityBC
 
+# Phase 5: Heat exchanger BC
+from pyfoam.boundary.heat_exchanger_bc import HeatExchangerBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -388,4 +392,6 @@ __all__ = [
     # Phase 5: Scaled heat flux and outlet phase mean velocity BCs
     "ScaledHeatFluxBC",
     "OutletPhaseMeanVelocityBC",
+    # Phase 5: Heat exchanger BC
+    "HeatExchangerBC",
 ]
