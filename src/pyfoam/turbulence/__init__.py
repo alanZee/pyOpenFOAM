@@ -63,6 +63,12 @@ Provides:
 - :class:`KolmogorovTimeScale` — Kolmogorov micro time scale: tau = sqrt(nu/epsilon)
 - :class:`IntegralTimeScale` — Integral (large-eddy) time scale: tau = k/epsilon
 
+**Non-Linear Viscosity Models:**
+- :class:`NonLinearViscosityModel` — Abstract base for non-linear viscosity with RTS registry
+- :class:`PowerLawViscosity` (non_linear_viscosity) — Power-law viscosity model (RTS-registered)
+- :class:`BirdCarreauViscosity` (non_linear_viscosity) — Bird-Carreau four-parameter model (RTS-registered)
+- :class:`CrossPowerLawViscosity` — Cross power-law model (RTS-registered)
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -211,6 +217,12 @@ from pyfoam.turbulence.wall_treatment import (
     AutomaticWallTreatment,
 )
 
+# Non-linear viscosity models (RTS-registered)
+from pyfoam.turbulence.non_linear_viscosity import (
+    NonLinearViscosityModel,
+    CrossPowerLawViscosity,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -321,4 +333,7 @@ __all__ = [
     "WallTreatment",
     "StandardWallTreatment",
     "AutomaticWallTreatment",
+    # Non-linear viscosity models (RTS-registered)
+    "NonLinearViscosityModel",
+    "CrossPowerLawViscosity",
 ]
