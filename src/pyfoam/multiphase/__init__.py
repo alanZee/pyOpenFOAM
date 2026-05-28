@@ -32,6 +32,8 @@ Provides:
 - :class:`RelativeVelocityModel` — Abstract base for relative velocity models
 - :class:`ManninenRelativeVelocity` — Manninen et al. algebraic slip model
 - :class:`GraceRelativeVelocity` — Grace drag correlation for bubbles/particles
+- :class:`TurbulenceInteractionModel` — Abstract interphase turbulence interaction model
+- :class:`StandardInteraction` — Standard interphase turbulence interaction (Lopez de Bertodano)
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -107,6 +109,12 @@ from pyfoam.multiphase.turbulence_transfer import (
     DispersedTurbulenceTransfer,
 )
 
+# Phase 7: Turbulence interaction models
+from pyfoam.multiphase.turbulence_interaction import (
+    TurbulenceInteractionModel,
+    StandardInteraction,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -168,4 +176,7 @@ __all__ = [
     "TurbulenceTransferModel",
     "ContinuousTurbulenceTransfer",
     "DispersedTurbulenceTransfer",
+    # Phase 7: Turbulence interaction models
+    "TurbulenceInteractionModel",
+    "StandardInteraction",
 ]
