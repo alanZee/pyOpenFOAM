@@ -24,6 +24,9 @@ Provides:
 - :class:`InterfacialAreaModel` — Abstract interfacial area density model with RTS registry
 - :class:`ConstantInterfacialArea` — Constant interfacial area density
 - :class:`VariableInterfacialArea` — Alpha-dependent interfacial area density
+- :class:`RelativeVelocityModel` — Abstract base for relative velocity models
+- :class:`ManninenRelativeVelocity` — Manninen et al. algebraic slip model
+- :class:`GraceRelativeVelocity` — Grace drag correlation for bubbles/particles
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -82,6 +85,11 @@ from pyfoam.multiphase.interfacial_area import (
     ConstantInterfacialArea,
     VariableInterfacialArea,
 )
+from pyfoam.multiphase.relative_velocity import (
+    RelativeVelocityModel,
+    ManninenRelativeVelocity,
+    GraceRelativeVelocity,
+)
 
 __all__ = [
     "VOFAdvection",
@@ -132,4 +140,8 @@ __all__ = [
     "InterfacialAreaModel",
     "ConstantInterfacialArea",
     "VariableInterfacialArea",
+    # Relative velocity models
+    "RelativeVelocityModel",
+    "ManninenRelativeVelocity",
+    "GraceRelativeVelocity",
 ]
