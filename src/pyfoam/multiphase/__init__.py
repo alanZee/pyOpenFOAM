@@ -39,6 +39,8 @@ Provides:
 - :class:`TomiyamaWallLubrication` — Tomiyama et al. (1998) Eo-dependent wall lubrication
 - :class:`TurbulenceDamping2Model` — Enhanced turbulence damping with y+ awareness
 - :class:`WolfhardtDamping` — Wolfhardt model for near-wall turbulence damping
+- :class:`TurbulenceWallDampingModel` — Abstract wall damping model for VOF with RTS registry
+- :class:`BrackbillDamping` — Brackbill near-wall damping for VOF simulations
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -133,6 +135,12 @@ from pyfoam.multiphase.turbulence_damping_2 import (
     WolfhardtDamping,
 )
 
+# Phase 7: Wall damping models for VOF
+from pyfoam.multiphase.turbulence_wall_damping import (
+    TurbulenceWallDampingModel,
+    BrackbillDamping,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -204,4 +212,7 @@ __all__ = [
     # Phase 7: Enhanced turbulence damping models
     "TurbulenceDamping2Model",
     "WolfhardtDamping",
+    # Phase 7: Wall damping models for VOF
+    "TurbulenceWallDampingModel",
+    "BrackbillDamping",
 ]
