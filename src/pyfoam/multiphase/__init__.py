@@ -8,6 +8,11 @@ Provides:
 - :class:`SurfaceTensionModel` — Continuum Surface Force (CSF) model
 - Interphase models: SchillerNaumannDrag, WenYuDrag, GidaspowDrag,
   TomiyamaLift, VirtualMassForce
+- Drag model ABC: :class:`DragModel` with RTS registry
+  (``pyfoam.multiphase.drag_models``)
+- Lift model ABC: :class:`LiftModel` with RTS registry
+  (``pyfoam.multiphase.lift_models``)
+- :class:`SaffmanLift` — Saffman shear-induced lift force
 - Cavitation models: SchnerrSauer, Merkle, ZGB
 - Enhanced cavitation models: ZGBModel, MerkleModel (with convergence enhancements)
 - Interface reconstruction: PLICReconstruction
@@ -91,6 +96,10 @@ from pyfoam.multiphase.relative_velocity import (
     GraceRelativeVelocity,
 )
 
+# Phase 7: Drag and lift model ABC hierarchies
+from pyfoam.multiphase.drag_models import DragModel
+from pyfoam.multiphase.lift_models import LiftModel, SaffmanLift
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -144,4 +153,8 @@ __all__ = [
     "RelativeVelocityModel",
     "ManninenRelativeVelocity",
     "GraceRelativeVelocity",
+    # Phase 7: Drag and lift model ABCs
+    "DragModel",
+    "LiftModel",
+    "SaffmanLift",
 ]
