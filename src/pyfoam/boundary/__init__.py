@@ -50,6 +50,8 @@ Provides:
 - symmetrySlip: Combined symmetry/slip with plane validation
 - adjointInlet: Adjoint velocity inlet for adjoint optimization solvers
 - wallFilm: Wall film boundary for Lagrangian film models
+- phaseMeanVelocity: Phase-mean velocity for Euler-Euler multiphase models
+- convectiveHeatTransfer: Robin BC for conjugate heat transfer
 """
 
 # Import base and collection first
@@ -222,6 +224,10 @@ from pyfoam.boundary.wall_heat_flux import WallHeatFluxBC
 from pyfoam.boundary.adjoint_inlet import AdjointInletBC
 from pyfoam.boundary.wall_film import WallFilmBC
 
+# Phase 5: Phase-mean velocity and convective heat transfer BCs
+from pyfoam.boundary.phase_mean_velocity import PhaseMeanVelocityBC
+from pyfoam.boundary.convective_heat_transfer import ConvectiveHeatTransferBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -347,4 +353,7 @@ __all__ = [
     # Phase 5: Adjoint inlet and wall film BCs
     "AdjointInletBC",
     "WallFilmBC",
+    # Phase 5: Phase-mean velocity and convective heat transfer BCs
+    "PhaseMeanVelocityBC",
+    "ConvectiveHeatTransferBC",
 ]
