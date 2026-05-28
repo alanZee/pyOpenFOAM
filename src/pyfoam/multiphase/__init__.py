@@ -50,6 +50,11 @@ from pyfoam.multiphase.bubble_models import (
     ConstantBubble,
     BubbleBreakup,
 )
+from pyfoam.multiphase.drift_flux_models import (
+    DriftFluxModel,
+    SimpleDriftFlux,
+    GeneralDriftFlux,
+)
 
 __all__ = [
     "VOFAdvection",
@@ -81,4 +86,8 @@ __all__ = [
     "BubbleModel",
     "ConstantBubble",
     "BubbleBreakup",
+    # Drift-flux models
+    "DriftFluxModel",
+    "SimpleDriftFlux",
+    "GeneralDriftFlux",
 ]
