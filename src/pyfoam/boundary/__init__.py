@@ -228,6 +228,10 @@ from pyfoam.boundary.wall_film import WallFilmBC
 from pyfoam.boundary.phase_mean_velocity import PhaseMeanVelocityBC
 from pyfoam.boundary.convective_heat_transfer import ConvectiveHeatTransferBC
 
+# Phase 5-7: Variable height / mass outlet BCs
+from pyfoam.boundary.variable_height import VariableHeightBC
+from pyfoam.boundary.mass_outlet import MassOutletBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -356,4 +360,7 @@ __all__ = [
     # Phase 5: Phase-mean velocity and convective heat transfer BCs
     "PhaseMeanVelocityBC",
     "ConvectiveHeatTransferBC",
+    # Phase 5-7: Variable height / mass outlet BCs
+    "VariableHeightBC",
+    "MassOutletBC",
 ]
