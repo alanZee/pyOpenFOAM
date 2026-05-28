@@ -32,6 +32,10 @@ Provides:
 - :class:`SpalartAllmarasDESModel` — SA DES model
 - :class:`SpalartAllmarasIDDESModel` — SA IDDES model
 
+**Enhanced RANS Models:**
+- :class:`KOmegaSST2003Model` — k-ω SST Menter 2003 with improved cross-diffusion
+- :class:`RealizableKE2Model` — Enhanced realizable k-ε with production limiter
+
 **Wall Functions:**
 - :class:`NutkWallFunctionBC` — k-based wall function for ν_t
 - :class:`NutLowReWallFunctionBC` — low-Re wall function (ν_t=0)
@@ -98,6 +102,14 @@ from pyfoam.turbulence.k_omega_sst_sas import KOmegaSSTSASModel, KOmegaSSTSASCon
 from pyfoam.turbulence.sa_ddes import SpalartAllmarasDDESModel, SpalartAllmarasDDESConstants
 from pyfoam.turbulence.sa_des import SpalartAllmarasDESModel, SpalartAllmarasDESConstants
 from pyfoam.turbulence.sa_iddes import SpalartAllmarasIDDESModel, SpalartAllmarasIDDESConstants
+
+# Enhanced RANS models
+from pyfoam.turbulence.turbulence_2 import (
+    KOmegaSST2003Model,
+    KOmegaSST2003Constants,
+    RealizableKE2Model,
+    RealizableKE2Constants,
+)
 
 # Wall functions
 from pyfoam.turbulence.wall_functions import (
@@ -176,6 +188,11 @@ __all__ = [
     "SpalartAllmarasDDESModel",
     "SpalartAllmarasDESModel",
     "SpalartAllmarasIDDESModel",
+    # Enhanced RANS Models
+    "KOmegaSST2003Model",
+    "KOmegaSST2003Constants",
+    "RealizableKE2Model",
+    "RealizableKE2Constants",
     # Constants
     "KEpsilonConstants",
     "KOmegaSSTConstants",
