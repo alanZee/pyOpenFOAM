@@ -204,6 +204,13 @@ from pyfoam.turbulence.production_limiter import (
     KatoLimiter,
 )
 
+# Wall treatment models
+from pyfoam.turbulence.wall_treatment import (
+    WallTreatment,
+    StandardWallTreatment,
+    AutomaticWallTreatment,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -310,4 +317,8 @@ __all__ = [
     "ProductionLimiter",
     "StandardLimiter",
     "KatoLimiter",
+    # Wall treatment models
+    "WallTreatment",
+    "StandardWallTreatment",
+    "AutomaticWallTreatment",
 ]
