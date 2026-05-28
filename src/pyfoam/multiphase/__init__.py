@@ -16,6 +16,9 @@ Provides:
 - :class:`BubbleModel` — Abstract bubble diameter model with RTS registry
 - :class:`ConstantBubble` — Constant (fixed) bubble diameter
 - :class:`BubbleBreakup` — Bubble breakup/coalescence equilibrium model
+- :class:`PhaseChangeModel` — Abstract phase change model with RTS registry
+- :class:`LeeModel` — Lee empirical phase change model
+- :class:`SchnerrSauerEnhanced` — Enhanced Schnerr-Sauer with convergence improvements
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -55,6 +58,11 @@ from pyfoam.multiphase.drift_flux_models import (
     SimpleDriftFlux,
     GeneralDriftFlux,
 )
+from pyfoam.multiphase.phase_change import (
+    PhaseChangeModel,
+    LeeModel,
+    SchnerrSauerEnhanced,
+)
 
 __all__ = [
     "VOFAdvection",
@@ -90,4 +98,8 @@ __all__ = [
     "DriftFluxModel",
     "SimpleDriftFlux",
     "GeneralDriftFlux",
+    # Phase change models
+    "PhaseChangeModel",
+    "LeeModel",
+    "SchnerrSauerEnhanced",
 ]
