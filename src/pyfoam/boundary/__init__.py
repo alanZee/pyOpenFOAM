@@ -57,6 +57,7 @@ Provides:
 - scaledHeatFlux: Scaled heat flux BC (q = scale * q_ref)
 - outletPhaseMeanVelocity: Outlet phase mean velocity for Euler-Euler multiphase
 - heatExchanger: Multi-zone heat exchanger with effectiveness-NTU model
+- turbulentInlet2: Enhanced turbulent inlet with digital filter method
 """
 
 # Import base and collection first
@@ -252,6 +253,9 @@ from pyfoam.boundary.outlet_phase_mean_velocity import OutletPhaseMeanVelocityBC
 # Phase 5: Heat exchanger BC
 from pyfoam.boundary.heat_exchanger_bc import HeatExchangerBC
 
+# Phase 5: Enhanced turbulent inlet BC
+from pyfoam.boundary.turbulent_inlet_2 import TurbulentInlet2BC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -394,4 +398,6 @@ __all__ = [
     "OutletPhaseMeanVelocityBC",
     # Phase 5: Heat exchanger BC
     "HeatExchangerBC",
+    # Phase 5: Enhanced turbulent inlet BC
+    "TurbulentInlet2BC",
 ]
