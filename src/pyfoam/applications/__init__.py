@@ -55,6 +55,7 @@ Available solvers:
 - :class:`AdjointShapeFoam` — Enhanced adjoint shape optimization with mesh morphing
 - :class:`DieselFoam` — Diesel spray combustion solver (compressible PIMPLE + Lagrangian spray + Arrhenius chemistry)
 - :class:`AdjointTurbulenceFoam` — Adjoint turbulence optimisation solver
+- :class:`ReactingMultiphaseFoam` — Reacting multiphase Euler-Euler solver
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -110,6 +111,7 @@ from pyfoam.applications.porous_inter_foam import PorousInterFoam
 from pyfoam.applications.adjoint_shape_foam import AdjointShapeFoam
 from pyfoam.applications.diesel_foam import DieselFoam
 from pyfoam.applications.adjoint_turbulence_foam import AdjointTurbulenceFoam
+from pyfoam.applications.reacting_multiphase_foam import ReactingMultiphaseFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -169,6 +171,7 @@ __all__ = [
     "AdjointShapeFoam",
     "DieselFoam",
     "AdjointTurbulenceFoam",
+    "ReactingMultiphaseFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
