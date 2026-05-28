@@ -212,6 +212,10 @@ from pyfoam.boundary.subcooling import SubcoolingBC
 from pyfoam.boundary.stagnation_inlet import StagnationInletBC
 from pyfoam.boundary.symmetry_slip import SymmetrySlipBC
 
+# Phase 5: Enhanced flow rate inlet and wall heat flux BCs
+from pyfoam.boundary.flow_rate_inlet_2 import FlowRateInlet2BC
+from pyfoam.boundary.wall_heat_flux import WallHeatFluxBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -331,4 +335,7 @@ __all__ = [
     # Phase 5-7: Stagnation inlet / symmetry-slip BCs
     "StagnationInletBC",
     "SymmetrySlipBC",
+    # Phase 5: Enhanced flow rate inlet and wall heat flux BCs
+    "FlowRateInlet2BC",
+    "WallHeatFluxBC",
 ]
