@@ -1,65 +1,12 @@
 {
-  "case_name": "Couette Flow",
-  "case_description": "Plane Couette flow: Re=10, U_top=1.0, H=1.0, mesh=32x32",
-  "overall_passed": true,
-  "run_time": 0.03563310002209619,
-  "parameters": {
-    "n_cells": 32,
-    "Re": 10.0
-  },
-  "solver_info": {
-    "iterations": 833,
-    "converged": true,
-    "final_residual": 9.904126549997727e-07
-  },
-  "field_results": {
-    "U": {
-      "passed": true,
-      "l2_tol": 0.1,
-      "max_tol": 0.1,
-      "metrics": {
-        "l2_norm": 0.0023214619141072035,
-        "l2_relative_error": 0.00012566814257297665,
-        "max_absolute_error": 0.00010210275650024414,
-        "max_relative_error": 0.000643610954284668,
-        "rms_error": 4.1884271922754124e-05
-      },
-      "component_metrics": {
-        "x": {
-          "l2_norm": 0.0023214619141072035,
-          "l2_relative_error": 0.00012566814257297665,
-          "max_absolute_error": 0.00010210275650024414,
-          "max_relative_error": 0.000643610954284668,
-          "rms_error": 7.254568481585011e-05
-        },
-        "y": {
-          "l2_norm": 0.0,
-          "l2_relative_error": 0.0,
-          "max_absolute_error": 0.0,
-          "max_relative_error": 0.0,
-          "rms_error": 0.0
-        },
-        "z": {
-          "l2_norm": 0.0,
-          "l2_relative_error": 0.0,
-          "max_absolute_error": 0.0,
-          "max_relative_error": 0.0,
-          "rms_error": 0.0
-        }
-      }
-    },
-    "p": {
-      "passed": true,
-      "l2_tol": 0.1,
-      "max_tol": 0.1,
-      "metrics": {
-        "l2_norm": 0.0,
-        "l2_relative_error": 0.0,
-        "max_absolute_error": 0.0,
-        "max_relative_error": 0.0,
-        "rms_error": 0.0
-      },
-      "component_metrics": {}
+  "description": "Couette 流 (解析解)",
+  "solver": "icoFoam",
+  "reference": {
+    "source": "Couette 解析解",
+    "formula": "u(y) = U_wall * y/H",
+    "tolerance": {
+      "l2_relative": 0.05
     }
-  }
+  },
+  "status": "pending"
 }

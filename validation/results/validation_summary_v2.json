@@ -1,0 +1,212 @@
+{
+  "generated_at": "2026-05-28 11:39:03",
+  "pyfoam_version": "0.2.0",
+  "total_cases": 13,
+  "cases": {
+    "lid_driven_cavity": {
+      "description": "盖驱动方腔流 Re=100 (Ghia et al. 1982)",
+      "solver": "icoFoam",
+      "reference": {
+        "source": "Ghia et al. 1982, J. Comput. Phys. 48, 387-411",
+        "Re": 100,
+        "mesh": "32x32",
+        "u_centreline_y": {
+          "y": [
+            0.0,
+            0.0547,
+            0.0625,
+            0.0703,
+            0.1016,
+            0.1719,
+            0.2813,
+            0.4531,
+            0.5,
+            0.6172,
+            0.7344,
+            0.8516,
+            0.9531,
+            0.9609,
+            0.9688,
+            0.9766,
+            1.0
+          ],
+          "u": [
+            0.0,
+            -0.03717,
+            -0.04192,
+            -0.04775,
+            -0.06434,
+            -0.1015,
+            -0.15662,
+            -0.2109,
+            -0.20581,
+            -0.13641,
+            0.00332,
+            0.23151,
+            0.68717,
+            0.73722,
+            0.78871,
+            0.84123,
+            1.0
+          ]
+        },
+        "tolerance": {
+          "l2_relative": 0.2,
+          "max_absolute": 0.15
+        }
+      },
+      "status": "pending"
+    },
+    "poiseuille_flow": {
+      "description": "Poiseuille 管道流 (解析解)",
+      "solver": "icoFoam",
+      "reference": {
+        "source": "Hagen-Poiseuille 解析解",
+        "formula": "u(y) = U_max * (1 - (2y/H)^2)",
+        "tolerance": {
+          "l2_relative": 0.05
+        }
+      },
+      "status": "pending"
+    },
+    "couette_flow": {
+      "description": "Couette 流 (解析解)",
+      "solver": "icoFoam",
+      "reference": {
+        "source": "Couette 解析解",
+        "formula": "u(y) = U_wall * y/H",
+        "tolerance": {
+          "l2_relative": 0.05
+        }
+      },
+      "status": "pending"
+    },
+    "taylor_green_vortex": {
+      "description": "Taylor-Green 涡衰减 (解析解)",
+      "solver": "icoFoam",
+      "reference": {
+        "source": "Taylor & Green 1937",
+        "formula": "E(t) = E(0) * exp(-4*nu*k^2*t)",
+        "tolerance": {
+          "energy_decay_relative": 0.2
+        }
+      },
+      "status": "pending"
+    },
+    "backward_facing_step": {
+      "description": "后向台阶流 (Driver & Seegmiller 1985)",
+      "solver": "simpleFoam",
+      "reference": {
+        "source": "Driver & Seegmiller 1985, AIAA J. 23(2)",
+        "Re_h": 28000,
+        "reattachment_length": {
+          "expected_ratio": 6.0,
+          "tolerance": 3.0
+        }
+      },
+      "status": "pending"
+    },
+    "sod_shock_tube": {
+      "description": "Sod 激波管 (Sod 1978)",
+      "solver": "rhoCentralFoam",
+      "reference": {
+        "source": "Sod 1978, J. Comput. Phys. 27, 1-31",
+        "shock_position": {
+          "x_shock": 0.48,
+          "tolerance": 0.05
+        },
+        "tolerance": {
+          "density_l2": 0.1,
+          "pressure_l2": 0.1
+        }
+      },
+      "status": "pending"
+    },
+    "natural_convection": {
+      "description": "自然对流方腔 (de Vahl Davis 1983)",
+      "solver": "buoyantBoussinesqSimpleFoam",
+      "reference": {
+        "source": "de Vahl Davis 1983, Int. J. Numer. Methods Fluids 3, 249-264",
+        "Ra": 100000.0,
+        "Nu_expected": 4.519,
+        "tolerance": {
+          "Nu_relative": 0.3
+        }
+      },
+      "status": "pending"
+    },
+    "dam_break": {
+      "description": "溃坝 (Martin & Moyce 1952)",
+      "solver": "interFoam",
+      "reference": {
+        "source": "Martin & Moyce 1952, Phil. Trans. R. Soc. A 244, 312-324",
+        "tolerance": {
+          "mass_conservation": 0.1
+        }
+      },
+      "status": "pending"
+    },
+    "turbulent_channel": {
+      "description": "湍流通道 Re_tau=180 (Moser, Kim & Mansour 1999)",
+      "solver": "simpleFoam+kOmegaSST",
+      "reference": {
+        "source": "Moser, Kim & Mansour 1999, Phys. Fluids 11(4), 943-945",
+        "Re_tau": 180,
+        "tolerance": {
+          "velocity_profile_l2": 0.2
+        }
+      },
+      "status": "pending"
+    },
+    "compressible_nozzle": {
+      "description": "收缩-扩张喷管等熵流",
+      "solver": "rhoCentralFoam",
+      "reference": {
+        "source": "等熵喷管流动理论解",
+        "tolerance": {
+          "Mach_number_relative": 0.1
+        }
+      },
+      "status": "pending"
+    },
+    "laminar_cylinder": {
+      "description": "层流圆柱绕流 Re=20 (Dennis & Chang 1970)",
+      "solver": "icoFoam",
+      "reference": {
+        "source": "Dennis & Chang 1970, J. Fluid Mech. 42, 471-489",
+        "Re": 20,
+        "Cd_expected": 2.045,
+        "tolerance": {
+          "Cd_relative": 0.3
+        }
+      },
+      "status": "pending"
+    },
+    "cylinder_flow": {
+      "description": "圆柱绕流 Re=100 (Williamson 1996)",
+      "solver": "pisoFoam",
+      "reference": {
+        "source": "Williamson 1996, Annu. Rev. Fluid Mech. 28, 477-539",
+        "Re": 100,
+        "St_expected": 0.164,
+        "tolerance": {
+          "St_relative": 0.2
+        }
+      },
+      "status": "pending"
+    },
+    "turbulent_duct": {
+      "description": "湍流方管 Re=10000 (Petukhov 摩擦系数)",
+      "solver": "simpleFoam+kOmegaSST",
+      "reference": {
+        "source": "Petukhov 1970",
+        "Re": 10000,
+        "f_expected": 0.0315,
+        "tolerance": {
+          "f_relative": 0.3
+        }
+      },
+      "status": "pending"
+    }
+  }
+}

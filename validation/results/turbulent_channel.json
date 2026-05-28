@@ -1,0 +1,12 @@
+{
+  "description": "湍流通道 Re_tau=180 (Moser, Kim & Mansour 1999)",
+  "solver": "simpleFoam+kOmegaSST",
+  "reference": {
+    "source": "Moser, Kim & Mansour 1999, Phys. Fluids 11(4), 943-945",
+    "Re_tau": 180,
+    "tolerance": {
+      "velocity_profile_l2": 0.2
+    }
+  },
+  "status": "pending"
+}

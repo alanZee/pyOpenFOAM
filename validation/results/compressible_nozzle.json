@@ -1,0 +1,11 @@
+{
+  "description": "收缩-扩张喷管等熵流",
+  "solver": "rhoCentralFoam",
+  "reference": {
+    "source": "等熵喷管流动理论解",
+    "tolerance": {
+      "Mach_number_relative": 0.1
+    }
+  },
+  "status": "pending"
+}

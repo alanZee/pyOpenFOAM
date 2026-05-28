@@ -1,0 +1,16 @@
+{
+  "description": "Sod 激波管 (Sod 1978)",
+  "solver": "rhoCentralFoam",
+  "reference": {
+    "source": "Sod 1978, J. Comput. Phys. 27, 1-31",
+    "shock_position": {
+      "x_shock": 0.48,
+      "tolerance": 0.05
+    },
+    "tolerance": {
+      "density_l2": 0.1,
+      "pressure_l2": 0.1
+    }
+  },
+  "status": "pending"
+}

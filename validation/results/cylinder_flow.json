@@ -1,0 +1,13 @@
+{
+  "description": "圆柱绕流 Re=100 (Williamson 1996)",
+  "solver": "pisoFoam",
+  "reference": {
+    "source": "Williamson 1996, Annu. Rev. Fluid Mech. 28, 477-539",
+    "Re": 100,
+    "St_expected": 0.164,
+    "tolerance": {
+      "St_relative": 0.2
+    }
+  },
+  "status": "pending"
+}

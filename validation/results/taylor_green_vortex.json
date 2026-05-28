@@ -1,0 +1,12 @@
+{
+  "description": "Taylor-Green 涡衰减 (解析解)",
+  "solver": "icoFoam",
+  "reference": {
+    "source": "Taylor & Green 1937",
+    "formula": "E(t) = E(0) * exp(-4*nu*k^2*t)",
+    "tolerance": {
+      "energy_decay_relative": 0.2
+    }
+  },
+  "status": "pending"
+}

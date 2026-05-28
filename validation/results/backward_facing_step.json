@@ -1,0 +1,13 @@
+{
+  "description": "后向台阶流 (Driver & Seegmiller 1985)",
+  "solver": "simpleFoam",
+  "reference": {
+    "source": "Driver & Seegmiller 1985, AIAA J. 23(2)",
+    "Re_h": 28000,
+    "reattachment_length": {
+      "expected_ratio": 6.0,
+      "tolerance": 3.0
+    }
+  },
+  "status": "pending"
+}

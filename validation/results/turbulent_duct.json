@@ -1,0 +1,13 @@
+{
+  "description": "湍流方管 Re=10000 (Petukhov 摩擦系数)",
+  "solver": "simpleFoam+kOmegaSST",
+  "reference": {
+    "source": "Petukhov 1970",
+    "Re": 10000,
+    "f_expected": 0.0315,
+    "tolerance": {
+      "f_relative": 0.3
+    }
+  },
+  "status": "pending"
+}

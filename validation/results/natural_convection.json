@@ -1,0 +1,13 @@
+{
+  "description": "自然对流方腔 (de Vahl Davis 1983)",
+  "solver": "buoyantBoussinesqSimpleFoam",
+  "reference": {
+    "source": "de Vahl Davis 1983, Int. J. Numer. Methods Fluids 3, 249-264",
+    "Ra": 100000.0,
+    "Nu_expected": 4.519,
+    "tolerance": {
+      "Nu_relative": 0.3
+    }
+  },
+  "status": "pending"
+}

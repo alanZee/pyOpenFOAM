@@ -1,0 +1,11 @@
+{
+  "description": "溃坝 (Martin & Moyce 1952)",
+  "solver": "interFoam",
+  "reference": {
+    "source": "Martin & Moyce 1952, Phil. Trans. R. Soc. A 244, 312-324",
+    "tolerance": {
+      "mass_conservation": 0.1
+    }
+  },
+  "status": "pending"
+}

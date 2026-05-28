@@ -1,65 +1,12 @@
 {
-  "case_name": "Poiseuille Flow",
-  "case_description": "Plane Poiseuille flow: Re=10, u_max=10.0000, H=1.0, mesh=32x32",
-  "overall_passed": true,
-  "run_time": 0.06853780004894361,
-  "parameters": {
-    "n_cells": 32,
-    "Re": 10.0
-  },
-  "solver_info": {
-    "iterations": 1411,
-    "converged": true,
-    "final_residual": 9.99414249136521e-07
-  },
-  "field_results": {
-    "U": {
-      "passed": true,
-      "l2_tol": 0.05,
-      "max_tol": 0.5,
-      "metrics": {
-        "l2_norm": 0.30407819151878357,
-        "l2_relative_error": 0.0013011750997975469,
-        "max_absolute_error": 0.009745299816131592,
-        "max_relative_error": 0.01583997905254364,
-        "rms_error": 0.00548623688519001
-      },
-      "component_metrics": {
-        "x": {
-          "l2_norm": 0.30407819151878357,
-          "l2_relative_error": 0.0013011750997975469,
-          "max_absolute_error": 0.009745299816131592,
-          "max_relative_error": 0.01583997905254364,
-          "rms_error": 0.009502440690994263
-        },
-        "y": {
-          "l2_norm": 0.0,
-          "l2_relative_error": 0.0,
-          "max_absolute_error": 0.0,
-          "max_relative_error": 0.0,
-          "rms_error": 0.0
-        },
-        "z": {
-          "l2_norm": 0.0,
-          "l2_relative_error": 0.0,
-          "max_absolute_error": 0.0,
-          "max_relative_error": 0.0,
-          "rms_error": 0.0
-        }
-      }
-    },
-    "p": {
-      "passed": true,
-      "l2_tol": 0.05,
-      "max_tol": 0.5,
-      "metrics": {
-        "l2_norm": 0.0,
-        "l2_relative_error": 0.0,
-        "max_absolute_error": 0.0,
-        "max_relative_error": 0.0,
-        "rms_error": 0.0
-      },
-      "component_metrics": {}
+  "description": "Poiseuille 管道流 (解析解)",
+  "solver": "icoFoam",
+  "reference": {
+    "source": "Hagen-Poiseuille 解析解",
+    "formula": "u(y) = U_max * (1 - (2y/H)^2)",
+    "tolerance": {
+      "l2_relative": 0.05
     }
-  }
+  },
+  "status": "pending"
 }

@@ -1,0 +1,13 @@
+{
+  "description": "层流圆柱绕流 Re=20 (Dennis & Chang 1970)",
+  "solver": "icoFoam",
+  "reference": {
+    "source": "Dennis & Chang 1970, J. Fluid Mech. 42, 471-489",
+    "Re": 20,
+    "Cd_expected": 2.045,
+    "tolerance": {
+      "Cd_relative": 0.3
+    }
+  },
+  "status": "pending"
+}
