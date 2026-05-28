@@ -77,6 +77,13 @@ Provides:
 - :class:`CompressibleWallFunction` — Abstract base for compressible wall functions
 - :class:`CompressibleNutWallFunction` — Compressible nut wall function with Van Driest damping
 - :class:`CompressibleKWallFunction` — Compressible k wall function with local equilibrium and Van Driest correction
+- :class:`CompressibleEpsilonWallFunction` — Compressible epsilon wall function (log-law + viscous sublayer)
+- :class:`CompressibleOmegaWallFunction` — Compressible omega wall function (log-law + viscous sublayer)
+
+**Turbulence Inlet Models:**
+- :class:`TurbulenceInletModel` — Abstract base for turbulence inlet models with RTS registry
+- :class:`FixedTurbulenceInlet` — Fixed (uniform) turbulence quantities at inlet
+- :class:`MappedTurbulenceInlet` — Mapped turbulence quantities from reference data
 
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
@@ -246,6 +253,19 @@ from pyfoam.turbulence.compressible_wall_functions import (
     CompressibleKWallFunction,
 )
 
+# Compressible epsilon and omega wall functions
+from pyfoam.turbulence.compressible_wal_functions_2 import (
+    CompressibleEpsilonWallFunction,
+    CompressibleOmegaWallFunction,
+)
+
+# Turbulence inlet models
+from pyfoam.turbulence.turbulence_inlet_models import (
+    TurbulenceInletModel,
+    FixedTurbulenceInlet,
+    MappedTurbulenceInlet,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -367,4 +387,11 @@ __all__ = [
     "CompressibleWallFunction",
     "CompressibleNutWallFunction",
     "CompressibleKWallFunction",
+    # Compressible epsilon and omega wall functions
+    "CompressibleEpsilonWallFunction",
+    "CompressibleOmegaWallFunction",
+    # Turbulence inlet models
+    "TurbulenceInletModel",
+    "FixedTurbulenceInlet",
+    "MappedTurbulenceInlet",
 ]
