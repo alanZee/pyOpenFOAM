@@ -13,6 +13,9 @@ Provides:
 - Interface reconstruction: PLICReconstruction
 - :class:`PopulationBalanceModel` — Population balance equation solver
   (method of classes, droplet/bubble size distribution tracking)
+- :class:`BubbleModel` — Abstract bubble diameter model with RTS registry
+- :class:`ConstantBubble` — Constant (fixed) bubble diameter
+- :class:`BubbleBreakup` — Bubble breakup/coalescence equilibrium model
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -42,6 +45,11 @@ from pyfoam.multiphase.population_balance import (
     ShearBreakup,
 )
 from pyfoam.multiphase.cavitation_models_enhanced import ZGBModel, MerkleModel
+from pyfoam.multiphase.bubble_models import (
+    BubbleModel,
+    ConstantBubble,
+    BubbleBreakup,
+)
 
 __all__ = [
     "VOFAdvection",
@@ -69,4 +77,8 @@ __all__ = [
     # Enhanced cavitation models
     "ZGBModel",
     "MerkleModel",
+    # Bubble models
+    "BubbleModel",
+    "ConstantBubble",
+    "BubbleBreakup",
 ]

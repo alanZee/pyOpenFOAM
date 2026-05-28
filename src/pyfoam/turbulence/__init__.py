@@ -140,6 +140,13 @@ from pyfoam.turbulence.les_deltas import (
     VanDriestDelta,
 )
 
+# LES spatial filters
+from pyfoam.turbulence.les_filters import (
+    LESFilter,
+    SimpleFilter,
+    LaplaceFilter,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -217,4 +224,8 @@ __all__ = [
     "CubeRootVolDelta",
     "MaxDeltaXYZ",
     "VanDriestDelta",
+    # LES spatial filters
+    "LESFilter",
+    "SimpleFilter",
+    "LaplaceFilter",
 ]
