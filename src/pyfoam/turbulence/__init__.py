@@ -284,6 +284,13 @@ from pyfoam.turbulence.turbulence_inlet_models_2 import (
     SyntheticEddyInlet,
 )
 
+# SGS models (standardised interface)
+from pyfoam.turbulence.les_sgs_models import (
+    SGSModel,
+    DynamicSmagorinskySGS,
+    WALE_SGS,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -418,4 +425,8 @@ __all__ = [
     "TurbulenceInletModel2",
     "DigitalFilterInlet",
     "SyntheticEddyInlet",
+    # SGS models (standardised interface)
+    "SGSModel",
+    "DynamicSmagorinskySGS",
+    "WALE_SGS",
 ]
