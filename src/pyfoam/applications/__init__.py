@@ -60,6 +60,7 @@ Available solvers:
 - :class:`HeatTransferFoam` — Enhanced heat transfer solver with radiation, convection, and conduction coupling
 - :class:`ViscousFoam` — Steady-state viscous flow solver for high-viscosity fluids (non-Newtonian)
 - :class:`EnergyFoam` — Enhanced energy equation solver with viscous dissipation, compressibility work, radiation coupling
+- :class:`MultiphaseReactingFoam` — Multiphase reacting solver with Euler-Euler + combustion
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -120,6 +121,7 @@ from pyfoam.applications.combustion_foam import CombustionFoam
 from pyfoam.applications.heat_transfer_foam import HeatTransferFoam
 from pyfoam.applications.viscous_foam import ViscousFoam
 from pyfoam.applications.energy_foam import EnergyFoam
+from pyfoam.applications.multiphase_reacting_foam import MultiphaseReactingFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -184,6 +186,7 @@ __all__ = [
     "HeatTransferFoam",
     "ViscousFoam",
     "EnergyFoam",
+    "MultiphaseReactingFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
