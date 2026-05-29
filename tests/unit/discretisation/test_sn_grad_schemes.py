@@ -20,6 +20,9 @@ from pyfoam.discretisation.sn_grad import (
     UncorrectedSnGrad,
     CorrectedSnGrad,
     LimitedSnGrad,
+    OrthogonalSnGrad,
+    OverRelaxedSnGrad,
+    BoundedSnGrad,
     sn_grad_from_name,
     _SN_GRAD_REGISTRY,
     _compute_correction_vectors,
@@ -189,6 +192,9 @@ class TestSnGradRegistry:
         assert "uncorrected" in _SN_GRAD_REGISTRY
         assert "corrected" in _SN_GRAD_REGISTRY
         assert "limited" in _SN_GRAD_REGISTRY
+        assert "orthogonal" in _SN_GRAD_REGISTRY
+        assert "overRelaxed" in _SN_GRAD_REGISTRY
+        assert "bounded" in _SN_GRAD_REGISTRY
 
     def test_from_name_uncorrected(self, ortho_mesh):
         scheme = sn_grad_from_name("uncorrected", ortho_mesh)
@@ -202,6 +208,18 @@ class TestSnGradRegistry:
         scheme = sn_grad_from_name("limited", ortho_mesh, k_coeff=0.3)
         assert isinstance(scheme, LimitedSnGrad)
         assert scheme.k_coeff == 0.3
+
+    def test_from_name_orthogonal(self, ortho_mesh):
+        scheme = sn_grad_from_name("orthogonal", ortho_mesh)
+        assert isinstance(scheme, OrthogonalSnGrad)
+
+    def test_from_name_over_relaxed(self, ortho_mesh):
+        scheme = sn_grad_from_name("overRelaxed", ortho_mesh)
+        assert isinstance(scheme, OverRelaxedSnGrad)
+
+    def test_from_name_bounded(self, ortho_mesh):
+        scheme = sn_grad_from_name("bounded", ortho_mesh)
+        assert isinstance(scheme, BoundedSnGrad)
 
     def test_from_name_unknown_raises(self, ortho_mesh):
         with pytest.raises(ValueError, match="Unknown snGrad scheme"):
@@ -461,3 +479,233 @@ class TestScalingAndConsistency:
             phi = torch.tensor([0.0, 0.0], dtype=torch.float64)
             result = scheme.sn_grad(phi)
             assert torch.allclose(result, torch.zeros_like(result), atol=1e-12)
+
+
+# ---------------------------------------------------------------------------
+# OrthogonalSnGrad
+# ---------------------------------------------------------------------------
+
+
+class TestOrthogonalSnGrad:
+    def test_returns_tensor(self, ortho_mesh):
+        scheme = OrthogonalSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert isinstance(result, torch.Tensor)
+
+    def test_shape(self, ortho_mesh):
+        scheme = OrthogonalSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert result.shape == (ortho_mesh.n_faces,)
+
+    def test_constant_field_zero(self, ortho_mesh):
+        scheme = OrthogonalSnGrad(ortho_mesh)
+        phi = torch.tensor([5.0, 5.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert torch.allclose(result, torch.zeros_like(result), atol=1e-12)
+
+    def test_boundary_faces_zero(self, ortho_mesh):
+        scheme = OrthogonalSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        n_internal = ortho_mesh.n_internal_faces
+        assert torch.allclose(
+            result[n_internal:], torch.zeros_like(result[n_internal:]),
+        )
+
+    def test_linear_field_value(self, ortho_mesh):
+        """For phi = z, snGrad should be close to 1.0 at the internal face."""
+        scheme = OrthogonalSnGrad(ortho_mesh)
+        cc = ortho_mesh.cell_centres
+        phi = cc[:, 2]  # z-coordinate
+        result = scheme.sn_grad(phi)
+        assert abs(result[0].item() - 1.0) < 1e-10
+
+    def test_close_to_uncorrected_ortho(self, ortho_mesh):
+        """For orthogonal mesh, should be very close to uncorrected."""
+        unc = UncorrectedSnGrad(ortho_mesh)
+        orth = OrthogonalSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 3.0], dtype=torch.float64)
+        assert torch.allclose(
+            orth.sn_grad(phi), unc.sn_grad(phi), atol=1e-10,
+        )
+
+    def test_callable_interface(self, ortho_mesh):
+        scheme = OrthogonalSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        assert torch.allclose(scheme(phi), scheme.sn_grad(phi))
+
+    def test_repr(self, ortho_mesh):
+        scheme = OrthogonalSnGrad(ortho_mesh)
+        assert "OrthogonalSnGrad" in repr(scheme)
+
+    def test_skew_mesh_nonzero(self, skew_mesh):
+        """Should produce nonzero result on non-orthogonal mesh."""
+        scheme = OrthogonalSnGrad(skew_mesh)
+        phi = torch.tensor([1.0, 3.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert result[0].abs() > 1e-6
+
+
+# ---------------------------------------------------------------------------
+# OverRelaxedSnGrad
+# ---------------------------------------------------------------------------
+
+
+class TestOverRelaxedSnGrad:
+    def test_returns_tensor(self, ortho_mesh):
+        scheme = OverRelaxedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert isinstance(result, torch.Tensor)
+
+    def test_shape(self, ortho_mesh):
+        scheme = OverRelaxedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert result.shape == (ortho_mesh.n_faces,)
+
+    def test_constant_field_zero(self, ortho_mesh):
+        scheme = OverRelaxedSnGrad(ortho_mesh)
+        phi = torch.tensor([5.0, 5.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert torch.allclose(result, torch.zeros_like(result), atol=1e-12)
+
+    def test_boundary_faces_zero(self, ortho_mesh):
+        scheme = OverRelaxedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        n_internal = ortho_mesh.n_internal_faces
+        assert torch.allclose(
+            result[n_internal:], torch.zeros_like(result[n_internal:]),
+        )
+
+    def test_equals_uncorrected_ortho(self, ortho_mesh):
+        """For orthogonal mesh, d_hat . n_hat = 1 → same as uncorrected."""
+        unc = UncorrectedSnGrad(ortho_mesh)
+        ovr = OverRelaxedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 3.0], dtype=torch.float64)
+        assert torch.allclose(
+            ovr.sn_grad(phi), unc.sn_grad(phi), atol=1e-10,
+        )
+
+    def test_differs_from_uncorrected_skew(self, skew_mesh):
+        """For non-orthogonal mesh, over-relaxed != uncorrected."""
+        unc = UncorrectedSnGrad(skew_mesh)
+        ovr = OverRelaxedSnGrad(skew_mesh)
+        phi = torch.tensor([1.0, 3.0], dtype=torch.float64)
+        # Over-relaxed should produce larger magnitude
+        unc_mag = unc.sn_grad(phi)[0].abs()
+        ovr_mag = ovr.sn_grad(phi)[0].abs()
+        assert ovr_mag > unc_mag - 1e-10
+
+    def test_callable_interface(self, ortho_mesh):
+        scheme = OverRelaxedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        assert torch.allclose(scheme(phi), scheme.sn_grad(phi))
+
+    def test_repr(self, ortho_mesh):
+        scheme = OverRelaxedSnGrad(ortho_mesh)
+        assert "OverRelaxedSnGrad" in repr(scheme)
+
+    def test_zero_phi_zero(self, ortho_mesh):
+        scheme = OverRelaxedSnGrad(ortho_mesh)
+        phi = torch.tensor([0.0, 0.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert torch.allclose(result, torch.zeros_like(result), atol=1e-12)
+
+    def test_scaling(self, ortho_mesh):
+        scheme = OverRelaxedSnGrad(ortho_mesh)
+        phi1 = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        phi2 = 2.0 * phi1
+        assert torch.allclose(
+            scheme.sn_grad(phi2), 2.0 * scheme.sn_grad(phi1), atol=1e-10,
+        )
+
+
+# ---------------------------------------------------------------------------
+# BoundedSnGrad
+# ---------------------------------------------------------------------------
+
+
+class TestBoundedSnGrad:
+    def test_returns_tensor(self, ortho_mesh):
+        scheme = BoundedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert isinstance(result, torch.Tensor)
+
+    def test_shape(self, ortho_mesh):
+        scheme = BoundedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert result.shape == (ortho_mesh.n_faces,)
+
+    def test_constant_field_zero(self, ortho_mesh):
+        scheme = BoundedSnGrad(ortho_mesh)
+        phi = torch.tensor([5.0, 5.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert torch.allclose(result, torch.zeros_like(result), atol=1e-10)
+
+    def test_boundary_faces_zero(self, ortho_mesh):
+        scheme = BoundedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        n_internal = ortho_mesh.n_internal_faces
+        assert torch.allclose(
+            result[n_internal:], torch.zeros_like(result[n_internal:]),
+        )
+
+    def test_ortho_close_to_uncorrected(self, ortho_mesh):
+        """For orthogonal mesh, bounded should be close to uncorrected."""
+        unc = UncorrectedSnGrad(ortho_mesh)
+        bnd = BoundedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 3.0], dtype=torch.float64)
+        assert torch.allclose(
+            bnd.sn_grad(phi), unc.sn_grad(phi), atol=1e-10,
+        )
+
+    def test_sign_preserved(self, ortho_mesh):
+        """Bounded should preserve the sign of the uncorrected gradient."""
+        unc = UncorrectedSnGrad(ortho_mesh)
+        bnd = BoundedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 3.0], dtype=torch.float64)
+        r_unc = unc.sn_grad(phi)
+        r_bnd = bnd.sn_grad(phi)
+        n_internal = ortho_mesh.n_internal_faces
+        for i in range(n_internal):
+            if r_unc[i].abs() > 1e-12:
+                assert r_unc[i].sign() == r_bnd[i].sign()
+
+    def test_zero_phi_zero(self, ortho_mesh):
+        scheme = BoundedSnGrad(ortho_mesh)
+        phi = torch.tensor([0.0, 0.0], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert torch.allclose(result, torch.zeros_like(result), atol=1e-12)
+
+    def test_callable_interface(self, ortho_mesh):
+        scheme = BoundedSnGrad(ortho_mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        assert torch.allclose(scheme(phi), scheme.sn_grad(phi))
+
+    def test_repr(self, ortho_mesh):
+        scheme = BoundedSnGrad(ortho_mesh)
+        assert "BoundedSnGrad" in repr(scheme)
+
+    def test_finite_values(self, ortho_mesh):
+        scheme = BoundedSnGrad(ortho_mesh)
+        phi = torch.tensor([0.0, 1e6], dtype=torch.float64)
+        result = scheme.sn_grad(phi)
+        assert torch.isfinite(result).all()
+
+    def test_bounded_magnitude(self, skew_mesh):
+        """Bounded magnitude should be <= corrected magnitude."""
+        cor = CorrectedSnGrad(skew_mesh)
+        bnd = BoundedSnGrad(skew_mesh)
+        phi = torch.tensor([1.0, 5.0], dtype=torch.float64)
+        r_cor = cor.sn_grad(phi)
+        r_bnd = bnd.sn_grad(phi)
+        n_internal = skew_mesh.n_internal_faces
+        for i in range(n_internal):
+            assert r_bnd[i].abs() <= r_cor[i].abs() + 1e-10

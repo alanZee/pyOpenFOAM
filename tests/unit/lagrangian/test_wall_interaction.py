@@ -11,6 +11,7 @@ from pyfoam.lagrangian.wall_interaction import (
     WallInteractionModel,
     ElasticBounce,
     Stick,
+    SplashModel,
     _dot,
     _normalize,
 )
@@ -332,3 +333,155 @@ class TestStick:
         r = repr(model)
         assert "Stick" in r
         assert "0.5" in r
+
+
+# ======================================================================
+# SplashModel
+# ======================================================================
+
+class TestSplashModel:
+    """Tests for SplashModel."""
+
+    def test_moving_away_unchanged(self):
+        """Particle moving away from wall is not modified."""
+        model = SplashModel()
+        result = model.interact(
+            velocity=[0.0, 5.0, 0.0],
+            wall_normal=[0.0, 1.0, 0.0],
+        )
+        assert result["stuck"] is False
+        assert result["splashed"] is False
+        assert result["velocity"] == [0.0, 5.0, 0.0]
+
+    def test_stick_regime(self):
+        """Low-impact We → particle sticks."""
+        model = SplashModel(
+            we_stick=5.0,
+            surface_tension=0.072,
+            particle_density=1000.0,
+            diameter=1e-4,
+        )
+        # 低速冲击: We = 1000 * 0.1^2 * 1e-4 / 0.072 ≈ 0.014 < 5.0
+        result = model.interact(
+            velocity=[0.0, -0.1, 0.0],
+            wall_normal=[0.0, 1.0, 0.0],
+        )
+        assert result["stuck"] is True
+        assert result["splashed"] is False
+        assert result["velocity"] == [0.0, 0.0, 0.0]
+        assert result["fragment_diameter"] is None
+
+    def test_bounce_regime(self):
+        """Medium We → particle bounces with restitution."""
+        model = SplashModel(
+            we_stick=1.0,
+            we_splash=100.0,
+            restitution=0.8,
+            surface_tension=0.072,
+            particle_density=1000.0,
+            diameter=1e-4,
+        )
+        # We = 1000 * 1.0^2 * 1e-4 / 0.072 ≈ 1.39 → 在 [1, 100) 之间
+        result = model.interact(
+            velocity=[0.0, -1.0, 0.0],
+            wall_normal=[0.0, 1.0, 0.0],
+        )
+        assert result["stuck"] is False
+        assert result["splashed"] is False
+        assert result["fragment_diameter"] is None
+        # 法向分量应反弹
+        assert result["velocity"][1] > 0.0
+
+    def test_splash_regime(self):
+        """High We → particle splashes."""
+        model = SplashModel(
+            we_stick=1.0,
+            we_splash=10.0,
+            surface_tension=0.072,
+            particle_density=1000.0,
+            fragment_ratio=0.6,
+            diameter=1e-4,
+        )
+        # 高速冲击: We = 1000 * 10^2 * 1e-4 / 0.072 ≈ 138.9 > 10.0
+        result = model.interact(
+            velocity=[0.0, -10.0, 0.0],
+            wall_normal=[0.0, 1.0, 0.0],
+        )
+        assert result["stuck"] is False
+        assert result["splashed"] is True
+        assert result["fragment_diameter"] == pytest.approx(1e-4 * 0.6)
+
+    def test_splash_velocity_reflected(self):
+        """Splashed particle should have upward velocity component."""
+        model = SplashModel(
+            we_stick=1.0,
+            we_splash=10.0,
+            surface_tension=0.072,
+            particle_density=1000.0,
+            diameter=1e-4,
+        )
+        result = model.interact(
+            velocity=[0.0, -10.0, 0.0],
+            wall_normal=[0.0, 1.0, 0.0],
+        )
+        # 速度法向分量应反向
+        assert result["velocity"][1] > 0.0
+
+    def test_zero_normal_no_interaction(self):
+        """Zero wall normal → no interaction."""
+        model = SplashModel()
+        result = model.interact(
+            velocity=[5.0, -3.0, 0.0],
+            wall_normal=[0.0, 0.0, 0.0],
+        )
+        assert result["stuck"] is False
+        assert result["splashed"] is False
+        assert result["velocity"] == [5.0, -3.0, 0.0]
+
+    def test_splash_fragment_ratio(self):
+        """Fragment diameter should scale with fragment_ratio."""
+        model = SplashModel(
+            we_stick=0.0,
+            we_splash=0.01,
+            fragment_ratio=0.5,
+            surface_tension=0.072,
+            particle_density=1000.0,
+            diameter=2e-4,
+        )
+        result = model.interact(
+            velocity=[0.0, -10.0, 0.0],
+            wall_normal=[0.0, 1.0, 0.0],
+        )
+        assert result["splashed"] is True
+        assert result["fragment_diameter"] == pytest.approx(1e-4)
+
+    def test_invalid_we_stick_raises(self):
+        with pytest.raises(ValueError, match="non-negative"):
+            SplashModel(we_stick=-1.0)
+
+    def test_we_splash_not_greater_than_stick_raises(self):
+        with pytest.raises(ValueError, match=r"we_splash.*we_stick"):
+            SplashModel(we_stick=10.0, we_splash=5.0)
+
+    def test_invalid_restitution_raises(self):
+        with pytest.raises(ValueError, match=r"\[0, 1\]"):
+            SplashModel(restitution=1.5)
+
+    def test_invalid_splash_absorption_raises(self):
+        with pytest.raises(ValueError, match=r"\[0, 1\]"):
+            SplashModel(splash_absorption=1.5)
+
+    def test_invalid_fragment_ratio_raises(self):
+        with pytest.raises(ValueError, match=r"\(0, 1\]"):
+            SplashModel(fragment_ratio=0.0)
+
+    def test_invalid_surface_tension_raises(self):
+        with pytest.raises(ValueError, match="positive"):
+            SplashModel(surface_tension=0.0)
+
+    def test_repr(self):
+        model = SplashModel(we_stick=3.0, we_splash=50.0)
+        r = repr(model)
+        assert "SplashModel" in r
+        assert "3.0" in r
+        assert "50.0" in r

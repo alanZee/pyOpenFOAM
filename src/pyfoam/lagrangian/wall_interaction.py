@@ -10,6 +10,7 @@ Provides:
 - :class:`WallInteractionModel` — abstract base
 - :class:`ElasticBounce`       — elastic wall bounce with restitution
 - :class:`Stick`               — particle sticks to wall
+- :class:`SplashModel`         — particle splash on wall impact
 
 Usage::
 
@@ -34,6 +35,7 @@ __all__ = [
     "WallInteractionModel",
     "ElasticBounce",
     "Stick",
+    "SplashModel",
 ]
 
 
@@ -218,3 +220,193 @@ class Stick(WallInteractionModel):
 
     def __repr__(self) -> str:
         return f"Stick(min_approach_speed={self.min_approach_speed})"
+
+
+# ======================================================================
+# 飞溅模型
+# ======================================================================
+
+class SplashModel(WallInteractionModel):
+    """Particle splash on wall impact.
+
+    Models the outcome of a droplet hitting a wall based on the impact
+    Weber number:
+
+    .. math::
+
+        We_{impact} = \\frac{\\rho_d \\, v_n^2 \\, d}{\\sigma}
+
+    The interaction has three regimes:
+
+    1. **Stick** (:math:`We_{impact} < We_{stick}`): particle adheres
+       to the wall (velocity zeroed, ``stuck = True``).
+    2. **Bounce** (:math:`We_{stick} \\le We_{impact} < We_{splash}`):
+       particle reflects off the wall with normal restitution.
+    3. **Splash** (:math:`We_{impact} \\ge We_{splash}`): particle
+       shatters — the post-interaction velocity is reduced (energy
+       absorbed by the splash) and a *fragment_diameter* is computed.
+
+    Parameters
+    ----------
+    we_stick : float
+        Critical Weber number below which the particle sticks.
+        Default ``5.0``.
+    we_splash : float
+        Critical Weber number above which splash occurs.
+        Default ``80.0``.
+    restitution : float
+        Normal restitution coefficient for the bounce regime.
+        Default ``0.5``.
+    splash_absorption : float
+        Fraction of kinetic energy absorbed during splash (0–1).
+        Default ``0.3``.
+    fragment_ratio : float
+        Ratio of fragment diameter to original diameter during splash.
+        Default ``0.6``.
+    surface_tension : float
+        Liquid-gas surface tension (N/m) for Weber number calculation.
+        Default ``0.072`` (water at 20°C).
+    particle_density : float
+        Droplet material density (kg/m³). Default ``1000.0``.
+    diameter : float
+        Particle diameter (m) for Weber number calculation.
+        Default ``1e-4``.
+    """
+
+    def __init__(
+        self,
+        we_stick: float = 5.0,
+        we_splash: float = 80.0,
+        restitution: float = 0.5,
+        splash_absorption: float = 0.3,
+        fragment_ratio: float = 0.6,
+        surface_tension: float = 0.072,
+        particle_density: float = 1000.0,
+        diameter: float = 1e-4,
+    ) -> None:
+        if we_stick < 0:
+            raise ValueError(f"we_stick must be non-negative, got {we_stick}")
+        if we_splash <= we_stick:
+            raise ValueError(
+                f"we_splash ({we_splash}) must be > we_stick ({we_stick})."
+            )
+        if not 0.0 <= restitution <= 1.0:
+            raise ValueError(
+                f"restitution must be in [0, 1], got {restitution}"
+            )
+        if not 0.0 <= splash_absorption <= 1.0:
+            raise ValueError(
+                f"splash_absorption must be in [0, 1], got {splash_absorption}"
+            )
+        if not 0.0 < fragment_ratio <= 1.0:
+            raise ValueError(
+                f"fragment_ratio must be in (0, 1], got {fragment_ratio}"
+            )
+        if surface_tension <= 0:
+            raise ValueError(
+                f"surface_tension must be positive, got {surface_tension}"
+            )
+
+        self.we_stick = we_stick
+        self.we_splash = we_splash
+        self.restitution = restitution
+        self.splash_absorption = splash_absorption
+        self.fragment_ratio = fragment_ratio
+        self.surface_tension = surface_tension
+        self.particle_density = particle_density
+        self.diameter = diameter
+
+    def interact(
+        self,
+        velocity: list[float],
+        wall_normal: list[float],
+    ) -> dict:
+        """Compute post-wall-interaction state with splash.
+
+        Parameters
+        ----------
+        velocity : list[float]
+            Particle velocity ``[u, v, w]`` before interaction (m/s).
+        wall_normal : list[float]
+            Outward unit normal of the wall surface.
+
+        Returns
+        -------
+        dict
+            ``{"velocity": list[float], "stuck": bool, "splashed": bool,
+            "fragment_diameter": float | None}``
+        """
+        n = _normalize(wall_normal)
+        n_mag = math.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2)
+        if n_mag < 1e-15:
+            return {
+                "velocity": list(velocity),
+                "stuck": False,
+                "splashed": False,
+                "fragment_diameter": None,
+            }
+
+        v_n = _dot(velocity, n)
+
+        # 粒子正在远离壁面
+        if v_n >= 0:
+            return {
+                "velocity": list(velocity),
+                "stuck": False,
+                "splashed": False,
+                "fragment_diameter": None,
+            }
+
+        # 冲击法向速度
+        v_impact = abs(v_n)
+
+        # 冲击 Weber 数: We = rho_d * v_n^2 * d / sigma
+        We = (
+            self.particle_density * v_impact ** 2 * self.diameter
+            / self.surface_tension
+        )
+
+        # 粘附区: We < we_stick
+        if We < self.we_stick:
+            return {
+                "velocity": [0.0, 0.0, 0.0],
+                "stuck": True,
+                "splashed": False,
+                "fragment_diameter": None,
+            }
+
+        # 反弹区: we_stick <= We < we_splash
+        if We < self.we_splash:
+            e = self.restitution
+            new_velocity = [
+                velocity[i] - (1.0 + e) * v_n * n[i]
+                for i in range(3)
+            ]
+            return {
+                "velocity": new_velocity,
+                "stuck": False,
+                "splashed": False,
+                "fragment_diameter": None,
+            }
+
+        # 飞溅区: We >= we_splash
+        # 动能被部分吸收，速度衰减
+        factor = math.sqrt(1.0 - self.splash_absorption)
+        new_velocity = [
+            velocity[i] - (1.0 + factor) * v_n * n[i]
+            for i in range(3)
+        ]
+        fragment_diameter = self.diameter * self.fragment_ratio
+
+        return {
+            "velocity": new_velocity,
+            "stuck": False,
+            "splashed": True,
+            "fragment_diameter": fragment_diameter,
+        }
+
+    def __repr__(self) -> str:
+        return (
+            f"SplashModel(we_stick={self.we_stick}, "
+            f"we_splash={self.we_splash})"
+        )

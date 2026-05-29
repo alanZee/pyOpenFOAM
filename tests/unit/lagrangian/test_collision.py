@@ -11,6 +11,7 @@ from pyfoam.lagrangian.collision import (
     CollisionModel,
     NoCollision,
     PairCollision,
+    SoftSphereModel,
 )
 
 
@@ -239,3 +240,148 @@ class TestPairCollision:
         r = repr(model)
         assert "PairCollision" in r
         assert "0.85" in r
+
+
+# ======================================================================
+# SoftSphereModel
+# ======================================================================
+
+class TestSoftSphereModel:
+    """Tests for SoftSphereModel."""
+
+    def test_no_contact_no_change(self):
+        """Particles far apart should not collide."""
+        model = SoftSphereModel()
+        v1_in = [1.0, 0.0, 0.0]
+        v2_in = [-1.0, 0.0, 0.0]
+        pos1 = [0.0, 0.0, 0.0]
+        pos2 = [1.0, 0.0, 0.0]
+
+        v1, v2 = model.collide(
+            pos1, v1_in, 1e-4, 1000.0, pos2, v2_in, 1e-4, 1000.0,
+        )
+        assert v1 == v1_in
+        assert v2 == v2_in
+
+    def test_head_on_contact_produces_change(self):
+        """Overlapping head-on particles should change velocities."""
+        model = SoftSphereModel(spring_constant=1e4)
+        d = 1e-4
+        rho = 1000.0
+        v1_in = [1.0, 0.0, 0.0]
+        v2_in = [-1.0, 0.0, 0.0]
+        pos1 = [0.0, 0.0, 0.0]
+        # 让粒子重叠: 距离 < d
+        pos2 = [d * 0.8, 0.0, 0.0]
+
+        v1, v2 = model.collide(pos1, v1_in, d, rho, pos2, v2_in, d, rho)
+
+        # 至少一个速度应改变
+        changed = any(
+            abs(v1[i] - v1_in[i]) > 1e-10 or abs(v2[i] - v2_in[i]) > 1e-10
+            for i in range(3)
+        )
+        assert changed
+
+    def test_momentum_conserved(self):
+        """Total momentum should be approximately conserved."""
+        model = SoftSphereModel(spring_constant=1e4)
+        d1, rho1 = 1e-4, 1000.0
+        d2, rho2 = 1e-4, 1000.0
+        m = (math.pi / 6.0) * d1 ** 3 * rho1
+
+        v1_in = [2.0, 0.0, 0.0]
+        v2_in = [-1.0, 0.0, 0.0]
+        pos1 = [0.0, 0.0, 0.0]
+        pos2 = [d1 * 0.5, 0.0, 0.0]  # 重叠
+
+        v1, v2 = model.collide(pos1, v1_in, d1, rho1, pos2, v2_in, d2, rho2)
+
+        for i in range(3):
+            p_before = m * v1_in[i] + m * v2_in[i]
+            p_after = m * v1[i] + m * v2[i]
+            assert p_after == pytest.approx(p_before, abs=1e-6)
+
+    def test_finite_results(self):
+        """All results should be finite."""
+        model = SoftSphereModel(spring_constant=1e6)
+        d = 1e-4
+        rho = 1000.0
+        pos1 = [0.0, 0.0, 0.0]
+        pos2 = [d * 0.5, 0.0, 0.0]
+        v1, v2 = model.collide(
+            pos1, [5.0, -3.0, 2.0], d, rho,
+            pos2, [-2.0, 1.0, -4.0], d, rho,
+        )
+        assert all(math.isfinite(x) for x in v1)
+        assert all(math.isfinite(x) for x in v2)
+
+    def test_with_damping(self):
+        """Damped collision should dissipate energy compared to undamped."""
+        model_undamped = SoftSphereModel(spring_constant=1e4, damping_coefficient=0.0)
+        model_damped = SoftSphereModel(spring_constant=1e4, damping_coefficient=500.0)
+
+        d = 1e-4
+        rho = 1000.0
+        v1_in = [2.0, 0.0, 0.0]
+        v2_in = [-1.0, 0.0, 0.0]
+        pos1 = [0.0, 0.0, 0.0]
+        pos2 = [d * 0.5, 0.0, 0.0]
+
+        v1_u, v2_u = model_undamped.collide(
+            pos1, v1_in, d, rho, pos2, v2_in, d, rho,
+        )
+        v1_d, v2_d = model_damped.collide(
+            pos1, v1_in, d, rho, pos2, v2_in, d, rho,
+        )
+
+        # 动能 (仅法向分量)
+        ke_u = sum(v ** 2 for v in v1_u) + sum(v ** 2 for v in v2_u)
+        ke_d = sum(v ** 2 for v in v1_d) + sum(v ** 2 for v in v2_d)
+
+        # 有阻尼碰撞耗散更多能量
+        assert ke_d < ke_u
+
+    def test_with_friction(self):
+        """Friction should modify tangential velocity components."""
+        model = SoftSphereModel(
+            spring_constant=1e4,
+            tangential_friction=0.5,
+        )
+        d = 1e-4
+        rho = 1000.0
+        # 粒子有切向相对速度
+        v1_in = [2.0, 1.0, 0.0]
+        v2_in = [0.0, 0.0, 0.0]
+        pos1 = [0.0, 0.0, 0.0]
+        pos2 = [d * 0.5, 0.0, 0.0]
+
+        v1, v2 = model.collide(pos1, v1_in, d, rho, pos2, v2_in, d, rho)
+
+        # 结果应为有限值
+        assert all(math.isfinite(x) for x in v1)
+        assert all(math.isfinite(x) for x in v2)
+
+    def test_positive_spring_constant_required(self):
+        with pytest.raises(ValueError, match="positive"):
+            SoftSphereModel(spring_constant=0.0)
+
+    def test_negative_damping_raises(self):
+        with pytest.raises(ValueError, match="non-negative"):
+            SoftSphereModel(damping_coefficient=-1.0)
+
+    def test_negative_friction_raises(self):
+        with pytest.raises(ValueError, match="non-negative"):
+            SoftSphereModel(tangential_friction=-0.1)
+
+    def test_repr(self):
+        model = SoftSphereModel(
+            spring_constant=5000.0,
+            damping_coefficient=0.3,
+            tangential_friction=0.2,
+        )
+        r = repr(model)
+        assert "SoftSphereModel" in r
+        assert "5000" in r
+        assert "0.3" in r
+        assert "0.2" in r

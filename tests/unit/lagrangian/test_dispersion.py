@@ -11,6 +11,7 @@ from pyfoam.lagrangian.dispersion import (
     DispersionModel,
     NoDispersion,
     GradientDispersion,
+    StochasticDispersion,
 )
 
 
@@ -165,3 +166,92 @@ class TestGradientDispersion:
         assert "GradientDispersion" in r
         assert "0.5" in r
         assert "0.3" in r
+
+
+# ======================================================================
+# StochasticDispersion
+# ======================================================================
+
+class TestStochasticDispersion:
+    """Tests for StochasticDispersion."""
+
+    def test_zero_k_returns_zero(self):
+        """No turbulence → no dispersion."""
+        model = StochasticDispersion(seed=42)
+        dv = model.disperse(dt=0.01, turbulent_kinetic_energy=0.0,
+                            turbulent_dissipation=0.1)
+        assert dv == [0.0, 0.0, 0.0]
+
+    def test_zero_epsilon_returns_zero(self):
+        """Zero dissipation → no dispersion."""
+        model = StochasticDispersion(seed=42)
+        dv = model.disperse(dt=0.01, turbulent_kinetic_energy=1.0,
+                            turbulent_dissipation=0.0)
+        assert dv == [0.0, 0.0, 0.0]
+
+    def test_nonzero_turbulence_gives_nonzero_dispersion(self):
+        """With turbulence, dispersion should be non-zero after a step."""
+        model = StochasticDispersion(seed=42)
+        dv = model.disperse(
+            dt=0.01,
+            turbulent_kinetic_energy=1.0,
+            turbulent_dissipation=0.1,
+        )
+        assert any(abs(v) > 1e-15 for v in dv)
+
+    def test_finite_values(self):
+        """All components should be finite."""
+        model = StochasticDispersion(seed=42)
+        for _ in range(10):
+            dv = model.disperse(
+                dt=0.001,
+                turbulent_kinetic_energy=0.5,
+                turbulent_dissipation=0.05,
+            )
+            assert all(math.isfinite(v) for v in dv)
+
+    def test_reproducible_with_seed(self):
+        """Same seed should give identical results."""
+        m1 = StochasticDispersion(seed=123)
+        m2 = StochasticDispersion(seed=123)
+        dv1 = m1.disperse(dt=0.01, turbulent_kinetic_energy=0.5,
+                          turbulent_dissipation=0.05)
+        dv2 = m2.disperse(dt=0.01, turbulent_kinetic_energy=0.5,
+                          turbulent_dissipation=0.05)
+        assert dv1 == dv2
+
+    def test_temporal_correlation(self):
+        """Successive calls should show temporal correlation (stateful)."""
+        model = StochasticDispersion(seed=42)
+        # 连续调用应返回不同的结果（因为时间演化）
+        dv1 = model.disperse(dt=0.01, turbulent_kinetic_energy=0.5,
+                             turbulent_dissipation=0.05)
+        dv2 = model.disperse(dt=0.01, turbulent_kinetic_energy=0.5,
+                             turbulent_dissipation=0.05)
+        # 两次结果不同（O-U 过程的随机性）
+        assert dv1 != dv2
+
+    def test_reset_zeroes_state(self):
+        """reset() should zero out the velocity fluctuation."""
+        model = StochasticDispersion(seed=42)
+        model.disperse(dt=0.01, turbulent_kinetic_energy=1.0,
+                       turbulent_dissipation=0.1)
+        model.reset()
+        # reset 后下一个输出应该接近零（因为 u_prime 已归零）
+        dv = model.disperse(dt=0.0, turbulent_kinetic_energy=1.0,
+                            turbulent_dissipation=0.1)
+        assert dv == [0.0, 0.0, 0.0]
+
+    def test_negative_c_tau_raises(self):
+        with pytest.raises(ValueError, match="positive"):
+            StochasticDispersion(c_tau=-0.1)
+
+    def test_zero_c_tau_raises(self):
+        with pytest.raises(ValueError, match="positive"):
+            StochasticDispersion(c_tau=0.0)
+
+    def test_repr(self):
+        model = StochasticDispersion(c_tau=0.4)
+        r = repr(model)
+        assert "StochasticDispersion" in r
+        assert "0.4" in r

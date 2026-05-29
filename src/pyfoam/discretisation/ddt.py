@@ -7,6 +7,8 @@ for use in finite volume solvers:
 - :class:`EulerDdt` — first-order implicit Euler (backward Euler).
 - :class:`SteadyStateDdt` — zero time derivative for steady-state solvers.
 - :class:`CrankNicolsonDdt` — second-order Crank-Nicolson with blending.
+- :class:`BackwardDdt` — second-order backward differencing (three time levels).
+- :class:`BoundedDdt` — bounded Euler with Co-ratio limiting.
 
 Usage with the :class:`~pyfoam.discretisation.operators._FvmNamespace`::
 
@@ -30,6 +32,8 @@ __all__ = [
     "EulerDdt",
     "SteadyStateDdt",
     "CrankNicolsonDdt",
+    "BackwardDdt",
+    "BoundedDdt",
     "DDT_REGISTRY",
 ]
 
@@ -311,6 +315,260 @@ class CrankNicolsonDdt(DdtScheme):
 
 
 # ---------------------------------------------------------------------------
+# Backward second-order (three time levels)
+# ---------------------------------------------------------------------------
+
+
+class BackwardDdt(DdtScheme):
+    """Second-order backward time derivative (BDF2).
+
+    Discretisation using three time levels::
+
+        d(phi)/dt ≈ (3*phi - 4*phi_old + phi_old2) / (2*dt)
+
+    The resulting FvMatrix coefficients::
+
+        diag_i   = 3 * coeff * V_i / (2 * dt)
+        source_i = coeff * V_i / (2 * dt) * (4 * phi_old_i - phi_old2_i)
+
+    This scheme requires two previous time-step fields: *phi_old* (n-1)
+    and *phi_old2* (n-2).
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+
+    Notes
+    -----
+    Requires *phi_old* and *phi_old2* to be explicitly passed.
+    A :class:`ValueError` is raised if either is missing.
+    """
+
+    def ddt(
+        self,
+        coeff: float,
+        phi: Any,
+        dt: float,
+        *,
+        mesh: Any = None,
+        phi_old: Any = None,
+        phi_old2: Any = None,
+    ) -> FvMatrix:
+        """Second-order backward ddt.
+
+        Args:
+            coeff: Scalar coefficient (e.g. density ρ or 1).
+            phi: Current field values.
+            dt: Time step size.
+            mesh: The ``FvMesh`` (inferred from *phi* when possible).
+            phi_old: **Required.**  Field at previous time-step (n-1).
+            phi_old2: **Required.**  Field at two time-steps ago (n-2).
+
+        Raises:
+            ValueError: If *phi_old* or *phi_old2* is not provided.
+        """
+        if phi_old is None:
+            raise ValueError(
+                "BackwardDdt requires phi_old (previous time-step field)"
+            )
+        if phi_old2 is None:
+            raise ValueError(
+                "BackwardDdt requires phi_old2 (two time-steps ago field)"
+            )
+
+        mesh = mesh or self._mesh
+
+        phi_data = self._extract_phi(phi).to(
+            device=mesh.device, dtype=mesh.dtype,
+        )
+        phi_old_data = self._extract_phi(phi_old).to(
+            device=mesh.device, dtype=mesh.dtype,
+        )
+        phi_old2_data = self._extract_phi(phi_old2).to(
+            device=mesh.device, dtype=mesh.dtype,
+        )
+
+        n_cells = mesh.n_cells
+        cell_volumes = mesh.cell_volumes
+        owner = mesh.owner[: mesh.n_internal_faces]
+        neighbour = mesh.neighbour
+
+        mat = FvMatrix(
+            n_cells, owner, neighbour,
+            device=mesh.device, dtype=mesh.dtype,
+        )
+
+        # Diagonal: 3 * coeff * V / (2 * dt)
+        mat.diag = 3.0 * coeff * cell_volumes / (2.0 * dt)
+
+        # Source: coeff * V / (2*dt) * (4*phi_old - phi_old2)
+        if phi_old_data.dim() == 1:
+            source_val = 4.0 * phi_old_data - phi_old2_data
+            mat.source = coeff * cell_volumes * source_val / (2.0 * dt)
+        else:
+            source_val = 4.0 * phi_old_data - phi_old2_data
+            mat.source = (
+                coeff * cell_volumes * source_val.sum(dim=-1) / (2.0 * dt)
+            )
+
+        return mat
+
+
+# ---------------------------------------------------------------------------
+# Bounded Euler (with Co-ratio limiting)
+# ---------------------------------------------------------------------------
+
+
+class BoundedDdt(DdtScheme):
+    r"""Bounded Euler time derivative with Courant-number-based limiting.
+
+    A variant of :class:`EulerDdt` that applies a bounding factor
+    based on the ratio of the local Courant number to a reference
+    Courant number:
+
+    .. math::
+
+        \text{diag}_i = \frac{\text{coeff} \cdot V_i}{\Delta t}
+            \cdot \min\left(1, \frac{\text{Co}_{\text{ref}}}{\text{Co}_i}\right)
+
+    When the local Courant number exceeds *Co_ref*, the diagonal is
+    reduced (implicit blending toward steady-state), which helps
+    prevent divergence in regions with very high local Co.
+
+    If *face_flux* is not provided, the scheme degenerates to standard
+    Euler without limiting.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    Co_ref : float, optional
+        Reference Courant number for limiting.  Default is 1.0.
+    face_flux : torch.Tensor, optional
+        Face flux values ``(n_faces,)``.  When provided, used to
+        compute the local Courant number per cell.
+    """
+
+    def __init__(
+        self, mesh: Any, Co_ref: float = 1.0,
+        face_flux: Any = None,
+    ) -> None:
+        super().__init__(mesh)
+        if Co_ref <= 0.0:
+            raise ValueError(
+                f"Co_ref must be positive, got {Co_ref}"
+            )
+        self._Co_ref = Co_ref
+        self._face_flux = face_flux
+
+    @property
+    def Co_ref(self) -> float:
+        """Reference Courant number."""
+        return self._Co_ref
+
+    def ddt(
+        self,
+        coeff: float,
+        phi: Any,
+        dt: float,
+        *,
+        mesh: Any = None,
+        phi_old: Any = None,
+    ) -> FvMatrix:
+        """Bounded Euler ddt.
+
+        Args:
+            coeff: Scalar coefficient (e.g. density ρ or 1).
+            phi: Current field values.
+            dt: Time step size.
+            mesh: The ``FvMesh`` (inferred from *phi* when possible).
+            phi_old: Previous time-step field.  Defaults to *phi*.
+
+        Returns:
+            :class:`FvMatrix` with bounded Euler coefficients.
+        """
+        mesh = mesh or self._mesh
+
+        phi_data = self._extract_phi(phi).to(
+            device=mesh.device, dtype=mesh.dtype,
+        )
+        if phi_old is None:
+            phi_old_data = phi_data
+        else:
+            phi_old_data = self._extract_phi(phi_old).to(
+                device=mesh.device, dtype=mesh.dtype,
+            )
+
+        n_cells = mesh.n_cells
+        cell_volumes = mesh.cell_volumes
+        owner = mesh.owner[: mesh.n_internal_faces]
+        neighbour = mesh.neighbour
+
+        mat = FvMatrix(
+            n_cells, owner, neighbour,
+            device=mesh.device, dtype=mesh.dtype,
+        )
+
+        # Compute limiting factor from face flux if available
+        if self._face_flux is not None:
+            flux = self._face_flux.to(
+                device=mesh.device, dtype=mesh.dtype,
+            )
+            n_internal = mesh.n_internal_faces
+
+            # Sum of |flux| over all faces of each cell
+            flux_abs = flux.abs()
+            cell_flux_sum = torch.zeros(
+                n_cells, dtype=mesh.dtype, device=mesh.device,
+            )
+            # Internal faces: contribute to both owner and neighbour
+            if n_internal > 0:
+                cell_flux_sum.scatter_add_(
+                    0, mesh.owner[:n_internal], flux_abs[:n_internal],
+                )
+                cell_flux_sum.scatter_add_(
+                    0, mesh.neighbour, flux_abs[:n_internal],
+                )
+            # Boundary faces: contribute to owner only
+            if mesh.n_faces > n_internal:
+                cell_flux_sum.scatter_add_(
+                    0,
+                    mesh.owner[n_internal:],
+                    flux_abs[n_internal:],
+                )
+
+            # Local Co = sum(|flux|) * dt / V
+            local_co = cell_flux_sum * dt / cell_volumes.clamp(min=1e-30)
+
+            # Limiting factor: min(1, Co_ref / Co_local)
+            limit = torch.clamp(
+                self._Co_ref / local_co.clamp(min=1e-30), max=1.0,
+            )
+        else:
+            limit = torch.ones(n_cells, dtype=mesh.dtype, device=mesh.device)
+
+        # Diagonal: coeff * V * limit / dt
+        mat.diag = coeff * cell_volumes * limit / dt
+
+        # Source: coeff * V * phi_old / dt  (standard Euler source)
+        if phi_old_data.dim() == 1:
+            mat.source = coeff * cell_volumes * phi_old_data / dt
+        else:
+            mat.source = (
+                coeff * cell_volumes * phi_old_data.sum(dim=-1) / dt
+            )
+
+        return mat
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}(mesh={self._mesh}, "
+            f"Co_ref={self._Co_ref})"
+        )
+
+
+# ---------------------------------------------------------------------------
 # Scheme registry
 # ---------------------------------------------------------------------------
 
@@ -318,6 +576,8 @@ DDT_REGISTRY: dict[str, type[DdtScheme]] = {
     "Euler": EulerDdt,
     "steadyState": SteadyStateDdt,
     "CrankNicolson": CrankNicolsonDdt,
+    "backward": BackwardDdt,
+    "bounded": BoundedDdt,
 }
 
 

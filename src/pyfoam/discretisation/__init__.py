@@ -57,6 +57,10 @@ SteadyStateDdt
     Zero time derivative for steady-state solvers.
 CrankNicolsonDdt
     Second-order Crank-Nicolson with blending coefficient.
+BackwardDdt
+    Second-order backward differencing (BDF2) with three time levels.
+BoundedDdt
+    Bounded Euler with Courant-number-based limiting.
 
 Gradient schemes
 ----------------
@@ -64,6 +68,14 @@ GaussLinearGrad
     Gauss theorem with linear face interpolation (default).
 LeastSquaresGrad
     Least-squares gradient reconstruction.
+FourthGrad
+    Fourth-order gradient using extended stencil.
+CellLimitedGrad
+    Cell-limited gradient to prevent overshoots.
+FaceLimitedGrad
+    Face-limited gradient.
+GaussLinearCorrectedGrad
+    Gauss linear with non-orthogonal correction.
 
 Surface-normal gradient schemes
 -------------------------------
@@ -73,6 +85,12 @@ CorrectedSnGrad
     Full non-orthogonal correction using cell gradient.
 LimitedSnGrad
     Limited non-orthogonal correction with coefficient.
+OrthogonalSnGrad
+    Simple orthogonal snGrad — fast path for orthogonal meshes.
+OverRelaxedSnGrad
+    Over-relaxed correction for non-orthogonal meshes.
+BoundedSnGrad
+    Bounded snGrad to prevent overshoots.
 
 Weight utilities
 ----------------
@@ -115,6 +133,8 @@ from pyfoam.discretisation.ddt import (
     EulerDdt,
     SteadyStateDdt,
     CrankNicolsonDdt,
+    BackwardDdt,
+    BoundedDdt,
     DDT_REGISTRY,
     create_ddt_scheme,
 )
@@ -122,6 +142,10 @@ from pyfoam.discretisation.grad import (
     GradScheme,
     GaussLinearGrad,
     LeastSquaresGrad,
+    FourthGrad,
+    CellLimitedGrad,
+    FaceLimitedGrad,
+    GaussLinearCorrectedGrad,
     resolve_grad_scheme,
 )
 from pyfoam.discretisation.sn_grad import (
@@ -129,6 +153,9 @@ from pyfoam.discretisation.sn_grad import (
     UncorrectedSnGrad,
     CorrectedSnGrad,
     LimitedSnGrad,
+    OrthogonalSnGrad,
+    OverRelaxedSnGrad,
+    BoundedSnGrad,
     sn_grad_from_name,
 )
 
@@ -165,17 +192,26 @@ __all__ = [
     "EulerDdt",
     "SteadyStateDdt",
     "CrankNicolsonDdt",
+    "BackwardDdt",
+    "BoundedDdt",
     "DDT_REGISTRY",
     "create_ddt_scheme",
     # Gradient schemes
     "GradScheme",
     "GaussLinearGrad",
     "LeastSquaresGrad",
+    "FourthGrad",
+    "CellLimitedGrad",
+    "FaceLimitedGrad",
+    "GaussLinearCorrectedGrad",
     "resolve_grad_scheme",
     # Surface-normal gradient schemes
     "SnGradScheme",
     "UncorrectedSnGrad",
     "CorrectedSnGrad",
     "LimitedSnGrad",
+    "OrthogonalSnGrad",
+    "OverRelaxedSnGrad",
+    "BoundedSnGrad",
     "sn_grad_from_name",
 ]

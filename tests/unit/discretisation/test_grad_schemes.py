@@ -12,6 +12,10 @@ from pyfoam.discretisation.grad import (
     GradScheme,
     GaussLinearGrad,
     LeastSquaresGrad,
+    FourthGrad,
+    CellLimitedGrad,
+    FaceLimitedGrad,
+    GaussLinearCorrectedGrad,
     resolve_grad_scheme,
     _GRAD_REGISTRY,
 )
@@ -217,3 +221,252 @@ class TestLeastSquaresGrad:
         phi = torch.tensor([0.0, 0.0], dtype=torch.float64)
         result = grad(phi)
         assert not torch.isinf(result).any()
+
+
+# ---------------------------------------------------------------------------
+# FourthGrad
+# ---------------------------------------------------------------------------
+
+
+class TestFourthGrad:
+    def test_registered(self):
+        assert "fourth" in _GRAD_REGISTRY
+        assert _GRAD_REGISTRY["fourth"] is FourthGrad
+
+    def test_is_subclass(self, mesh):
+        scheme = FourthGrad(mesh)
+        assert isinstance(scheme, GradScheme)
+
+    def test_output_shape(self, mesh):
+        grad = FourthGrad(mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = grad.compute_grad(phi)
+        assert result.shape == (2, 3)
+
+    def test_constant_field_zero(self, mesh):
+        grad = FourthGrad(mesh)
+        phi = torch.tensor([5.0, 5.0], dtype=torch.float64)
+        result = grad.compute_grad(phi)
+        assert torch.allclose(
+            result, torch.zeros(2, 3, dtype=torch.float64), atol=1e-10,
+        )
+
+    def test_gradient_direction(self, mesh):
+        grad = FourthGrad(mesh)
+        phi = torch.tensor([0.0, 10.0], dtype=torch.float64)
+        result = grad(phi)
+        assert result[0, 2] > 0
+        assert result[1, 2] > 0
+
+    def test_callable_interface(self, mesh):
+        grad = FourthGrad(mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        assert torch.equal(grad(phi), grad.compute_grad(phi))
+
+    def test_no_nan(self, mesh):
+        grad = FourthGrad(mesh)
+        phi = torch.tensor([3.0, 7.0], dtype=torch.float64)
+        result = grad(phi)
+        assert not torch.isnan(result).any()
+
+    def test_nonzero_gradient(self, mesh):
+        grad = FourthGrad(mesh)
+        phi = torch.tensor([0.0, 10.0], dtype=torch.float64)
+        result = grad(phi)
+        assert result.abs().sum() > 0
+
+    def test_repr(self, mesh):
+        scheme = FourthGrad(mesh)
+        assert "FourthGrad" in repr(scheme)
+
+    def test_resolve_from_name(self, mesh):
+        scheme = resolve_grad_scheme("Gauss fourth", mesh)
+        assert isinstance(scheme, FourthGrad)
+
+
+# ---------------------------------------------------------------------------
+# CellLimitedGrad
+# ---------------------------------------------------------------------------
+
+
+class TestCellLimitedGrad:
+    def test_registered(self):
+        assert "cellLimited" in _GRAD_REGISTRY
+        assert _GRAD_REGISTRY["cellLimited"] is CellLimitedGrad
+
+    def test_is_subclass(self, mesh):
+        scheme = CellLimitedGrad(mesh)
+        assert isinstance(scheme, GradScheme)
+
+    def test_output_shape(self, mesh):
+        grad = CellLimitedGrad(mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = grad.compute_grad(phi)
+        assert result.shape == (2, 3)
+
+    def test_constant_field_zero(self, mesh):
+        grad = CellLimitedGrad(mesh)
+        phi = torch.tensor([5.0, 5.0], dtype=torch.float64)
+        result = grad.compute_grad(phi)
+        assert torch.allclose(
+            result, torch.zeros(2, 3, dtype=torch.float64), atol=1e-10,
+        )
+
+    def test_gradient_direction(self, mesh):
+        grad = CellLimitedGrad(mesh)
+        phi = torch.tensor([0.0, 10.0], dtype=torch.float64)
+        result = grad(phi)
+        assert result[0, 2] > 0
+        assert result[1, 2] > 0
+
+    def test_limiting_reduces_magnitude(self, mesh):
+        """Cell-limited gradient should be <= unlimited gradient magnitude."""
+        unlimited = GaussLinearGrad(mesh)
+        limited = CellLimitedGrad(mesh)
+        phi = torch.tensor([0.0, 10.0], dtype=torch.float64)
+        result_unlim = unlimited(phi)
+        result_lim = limited(phi)
+        # Limited magnitude should be <= unlimited magnitude per cell
+        for i in range(mesh.n_cells):
+            assert result_lim[i].norm() <= result_unlim[i].norm() + 1e-10
+
+    def test_no_nan(self, mesh):
+        grad = CellLimitedGrad(mesh)
+        phi = torch.tensor([0.0, 10.0], dtype=torch.float64)
+        result = grad(phi)
+        assert not torch.isnan(result).any()
+
+    def test_callable_interface(self, mesh):
+        grad = CellLimitedGrad(mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        assert torch.equal(grad(phi), grad.compute_grad(phi))
+
+    def test_repr(self, mesh):
+        scheme = CellLimitedGrad(mesh)
+        assert "CellLimitedGrad" in repr(scheme)
+
+    def test_resolve_from_name(self, mesh):
+        scheme = resolve_grad_scheme("Gauss cellLimited", mesh)
+        assert isinstance(scheme, CellLimitedGrad)
+
+
+# ---------------------------------------------------------------------------
+# FaceLimitedGrad
+# ---------------------------------------------------------------------------
+
+
+class TestFaceLimitedGrad:
+    def test_registered(self):
+        assert "faceLimited" in _GRAD_REGISTRY
+        assert _GRAD_REGISTRY["faceLimited"] is FaceLimitedGrad
+
+    def test_is_subclass(self, mesh):
+        scheme = FaceLimitedGrad(mesh)
+        assert isinstance(scheme, GradScheme)
+
+    def test_output_shape(self, mesh):
+        grad = FaceLimitedGrad(mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = grad.compute_grad(phi)
+        assert result.shape == (2, 3)
+
+    def test_constant_field_zero(self, mesh):
+        grad = FaceLimitedGrad(mesh)
+        phi = torch.tensor([5.0, 5.0], dtype=torch.float64)
+        result = grad.compute_grad(phi)
+        assert torch.allclose(
+            result, torch.zeros(2, 3, dtype=torch.float64), atol=1e-10,
+        )
+
+    def test_gradient_direction(self, mesh):
+        grad = FaceLimitedGrad(mesh)
+        phi = torch.tensor([0.0, 10.0], dtype=torch.float64)
+        result = grad(phi)
+        assert result[0, 2] > 0
+        assert result[1, 2] > 0
+
+    def test_no_nan(self, mesh):
+        grad = FaceLimitedGrad(mesh)
+        phi = torch.tensor([0.0, 10.0], dtype=torch.float64)
+        result = grad(phi)
+        assert not torch.isnan(result).any()
+
+    def test_callable_interface(self, mesh):
+        grad = FaceLimitedGrad(mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        assert torch.equal(grad(phi), grad.compute_grad(phi))
+
+    def test_repr(self, mesh):
+        scheme = FaceLimitedGrad(mesh)
+        assert "FaceLimitedGrad" in repr(scheme)
+
+    def test_resolve_from_name(self, mesh):
+        scheme = resolve_grad_scheme("Gauss faceLimited", mesh)
+        assert isinstance(scheme, FaceLimitedGrad)
+
+
+# ---------------------------------------------------------------------------
+# GaussLinearCorrectedGrad
+# ---------------------------------------------------------------------------
+
+
+class TestGaussLinearCorrectedGrad:
+    def test_registered(self):
+        assert "linear corrected" in _GRAD_REGISTRY
+        assert (
+            _GRAD_REGISTRY["linear corrected"] is GaussLinearCorrectedGrad
+        )
+
+    def test_is_subclass(self, mesh):
+        scheme = GaussLinearCorrectedGrad(mesh)
+        assert isinstance(scheme, GradScheme)
+
+    def test_output_shape(self, mesh):
+        grad = GaussLinearCorrectedGrad(mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        result = grad.compute_grad(phi)
+        assert result.shape == (2, 3)
+
+    def test_constant_field_zero(self, mesh):
+        grad = GaussLinearCorrectedGrad(mesh)
+        phi = torch.tensor([5.0, 5.0], dtype=torch.float64)
+        result = grad.compute_grad(phi)
+        assert torch.allclose(
+            result, torch.zeros(2, 3, dtype=torch.float64), atol=1e-10,
+        )
+
+    def test_gradient_direction(self, mesh):
+        grad = GaussLinearCorrectedGrad(mesh)
+        phi = torch.tensor([0.0, 10.0], dtype=torch.float64)
+        result = grad(phi)
+        assert result[0, 2] > 0
+        assert result[1, 2] > 0
+
+    def test_no_nan(self, mesh):
+        grad = GaussLinearCorrectedGrad(mesh)
+        phi = torch.tensor([3.0, 7.0], dtype=torch.float64)
+        result = grad(phi)
+        assert not torch.isnan(result).any()
+
+    def test_callable_interface(self, mesh):
+        grad = GaussLinearCorrectedGrad(mesh)
+        phi = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        assert torch.equal(grad(phi), grad.compute_grad(phi))
+
+    def test_repr(self, mesh):
+        scheme = GaussLinearCorrectedGrad(mesh)
+        assert "GaussLinearCorrectedGrad" in repr(scheme)
+
+    def test_resolve_from_name(self, mesh):
+        scheme = resolve_grad_scheme("Gauss linear corrected", mesh)
+        assert isinstance(scheme, GaussLinearCorrectedGrad)
+
+    def test_close_to_gauss_linear_ortho(self, mesh):
+        """For orthogonal mesh, corrected should be close to plain Gauss linear."""
+        plain = GaussLinearGrad(mesh)
+        corrected = GaussLinearCorrectedGrad(mesh)
+        phi = torch.tensor([1.0, 3.0], dtype=torch.float64)
+        # Should be close (correction vector is ~0 for orthogonal mesh)
+        assert torch.allclose(
+            corrected(phi), plain(phi), atol=1e-6,
+        )

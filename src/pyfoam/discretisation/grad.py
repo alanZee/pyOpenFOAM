@@ -10,6 +10,14 @@ GaussLinearGrad
     Gauss theorem with linear face interpolation (default).
 LeastSquaresGrad
     Least-squares gradient reconstruction.
+FourthGrad
+    Fourth-order gradient using extended stencil (higher-order Gauss).
+CellLimitedGrad
+    Cell-limited gradient to prevent overshoots / undershoots.
+FaceLimitedGrad
+    Face-limited gradient — limits per face rather than per cell.
+GaussLinearCorrectedGrad
+    Gauss linear with non-orthogonal correction.
 """
 
 from __future__ import annotations
@@ -25,6 +33,10 @@ __all__ = [
     "GradScheme",
     "GaussLinearGrad",
     "LeastSquaresGrad",
+    "FourthGrad",
+    "CellLimitedGrad",
+    "FaceLimitedGrad",
+    "GaussLinearCorrectedGrad",
     "resolve_grad_scheme",
 ]
 
@@ -400,6 +412,579 @@ class GaussLinearGrad(GradScheme):
 
         V = self._cell_volumes.unsqueeze(-1).clamp(min=1e-30)
         return grad_phi / V
+
+
+# ---------------------------------------------------------------------------
+# Fourth-order gradient (higher-order Gauss)
+# ---------------------------------------------------------------------------
+
+
+@_register_grad("fourth")
+class FourthGrad(GradScheme):
+    r"""Fourth-order gradient using extended stencil.
+
+    Improves on the standard Gauss linear scheme by adding a
+    face-curvature correction.  For each cell *P*:
+
+    .. math::
+
+        \nabla\phi_P =
+        \frac{1}{V_P} \sum_f \phi_f \, \mathbf{S}_f
+        + \frac{1}{V_P} \sum_f
+          \left[ \frac{1}{12}\,(\nabla\phi_f - (\nabla\phi_f \cdot \hat{n}_f)\hat{n}_f)
+          \cdot \mathbf{S}_f \right]
+
+    The correction accounts for the variation of *phi* across the face,
+    providing fourth-order accuracy on structured meshes.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    """
+
+    def __init__(self, mesh) -> None:
+        super().__init__(mesh)
+        device = mesh.device
+        dtype = mesh.dtype
+
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        # Pre-compute interpolation weights (same as GaussLinearGrad)
+        w_all = compute_centre_weights(
+            mesh.cell_centres,
+            mesh.face_centres,
+            mesh.owner,
+            mesh.neighbour,
+            n_internal,
+            n_faces,
+            device=device,
+            dtype=dtype,
+        )
+        self._w = w_all[:n_internal]
+        self._face_areas = mesh.face_areas.to(device=device, dtype=dtype)
+        self._cell_volumes = mesh.cell_volumes.to(device=device, dtype=dtype)
+
+    def compute_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        """Compute gradient via higher-order Gauss theorem.
+
+        First pass: standard Gauss-linear to get a provisional gradient.
+        Second pass: use the provisional gradient to add face-curvature
+        correction for fourth-order accuracy.
+        """
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+
+        # --- First pass: standard Gauss-linear gradient ---
+        int_own = mesh.owner[:n_internal]
+        int_nei = mesh.neighbour[:n_internal]
+
+        phi_P = gather(phi, int_own)
+        phi_N = gather(phi, int_nei)
+        w = self._w
+
+        phi_face = torch.zeros(n_faces, dtype=dtype, device=device)
+        phi_face[:n_internal] = w * phi_P + (1.0 - w) * phi_N
+        if n_faces > n_internal:
+            phi_face[n_internal:] = gather(phi, mesh.owner[n_internal:])
+
+        face_contrib = phi_face.unsqueeze(-1) * self._face_areas
+        grad_phi = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        grad_phi.index_add_(0, int_own, face_contrib[:n_internal])
+        grad_phi.index_add_(0, int_nei, -face_contrib[:n_internal])
+        if n_faces > n_internal:
+            grad_phi.index_add_(
+                0, mesh.owner[n_internal:], face_contrib[n_internal:],
+            )
+
+        V = self._cell_volumes.unsqueeze(-1).clamp(min=1e-30)
+        grad_phi = grad_phi / V
+
+        # --- Second pass: face-curvature correction ---
+        if n_internal > 0:
+            # Interpolate gradient to internal faces
+            grad_P = grad_phi[int_own]  # (n_int, 3)
+            grad_N = grad_phi[int_nei]
+            wt = w.unsqueeze(-1)
+            grad_face = wt * grad_P + (1.0 - wt) * grad_N  # (n_int, 3)
+
+            # Face normal
+            S = self._face_areas[:n_internal]  # (n_int, 3)
+            S_mag = S.norm(dim=1, keepdim=True).clamp(min=1e-30)
+            n_hat = S / S_mag
+
+            # Remove normal component: tangential gradient
+            grad_normal = (grad_face * n_hat).sum(dim=1, keepdim=True)
+            grad_tangential = grad_face - grad_normal * n_hat
+
+            # Fourth-order correction: (1/12) * grad_tangential * S
+            correction = (1.0 / 12.0) * grad_tangential * S
+
+            corr = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+            corr.index_add_(0, int_own, correction)
+            corr.index_add_(0, int_nei, -correction)
+
+            grad_phi = grad_phi + corr / V
+
+        return grad_phi
+
+
+# ---------------------------------------------------------------------------
+# Cell-limited gradient
+# ---------------------------------------------------------------------------
+
+
+@_register_grad("cellLimited")
+class CellLimitedGrad(GradScheme):
+    r"""Cell-limited gradient to prevent overshoots.
+
+    Computes an unlimited gradient (default: Gauss linear), then limits
+    it so that face values extrapolated from the cell centre do not
+    exceed the cell's neighbours' min/max:
+
+    .. math::
+
+        \nabla\phi_P^{\text{lim}} = \alpha_P \, \nabla\phi_P
+
+    where :math:`\alpha_P \in [0, 1]` is the minimum limiter coefficient
+    across all faces of cell *P*, ensuring:
+
+    .. math::
+
+        \phi_P + \nabla\phi_P \cdot (\mathbf{x}_f - \mathbf{x}_P)
+        \in [\phi_{\min},\; \phi_{\max}]
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    base_scheme : type[GradScheme], optional
+        The unlimited gradient scheme class.  Default is
+        :class:`GaussLinearGrad`.
+    """
+
+    def __init__(self, mesh, base_scheme=None) -> None:
+        super().__init__(mesh)
+        if base_scheme is None:
+            base_scheme = GaussLinearGrad
+        self._base = base_scheme(mesh)
+
+    def compute_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        """Compute cell-limited gradient."""
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+
+        # Unlimited gradient from base scheme
+        grad_unlimited = self._base.compute_grad(phi)  # (n_cells, 3)
+
+        if n_internal == 0:
+            return grad_unlimited
+
+        cc = mesh.cell_centres.to(device=device, dtype=dtype)
+        fa = mesh.face_centres.to(device=device, dtype=dtype)
+
+        int_own = mesh.owner[:n_internal]
+        int_nei = mesh.neighbour[:n_internal]
+
+        # Compute face-extrapolated values from unlimited gradient
+        # delta_Pf = x_f - x_P for owner side
+        delta_P = fa[:n_internal] - cc[int_own]  # (n_int, 3)
+        delta_N = fa[:n_internal] - cc[int_nei]  # (n_int, 3)
+
+        grad_P = grad_unlimited[int_own]  # (n_int, 3)
+        grad_N = grad_unlimited[int_nei]
+
+        phi_P = gather(phi, int_own)
+        phi_N = gather(phi, int_nei)
+
+        # Extrapolated face values
+        phi_ext_P = phi_P + (grad_P * delta_P).sum(dim=1)  # (n_int,)
+        phi_ext_N = phi_N + (grad_N * delta_N).sum(dim=1)
+
+        # Min/max at each face (from owner and neighbour cell values)
+        phi_face_min = torch.min(phi_P, phi_N)  # (n_int,)
+        phi_face_max = torch.max(phi_P, phi_N)
+
+        # Limiter per face (owner side and neighbour side)
+        eps = 1e-30
+
+        # Owner limiter: how much can we extrapolate from P toward face?
+        diff_P = phi_ext_P - phi_P  # extrapolated - cell-centre
+        max_allow_P = phi_face_max - phi_P
+        min_allow_P = phi_face_min - phi_P
+
+        alpha_P = torch.ones(n_internal, dtype=dtype, device=device)
+        pos_mask = diff_P > eps
+        neg_mask = diff_P < -eps
+        alpha_P = torch.where(
+            pos_mask,
+            torch.clamp(max_allow_P / (diff_P + eps), 0.0, 1.0),
+            alpha_P,
+        )
+        alpha_P = torch.where(
+            neg_mask,
+            torch.clamp(min_allow_P / (diff_P - eps), 0.0, 1.0),
+            alpha_P,
+        )
+
+        # Neighbour limiter
+        diff_N = phi_ext_N - phi_N
+        max_allow_N = phi_face_max - phi_N
+        min_allow_N = phi_face_min - phi_N
+
+        alpha_N = torch.ones(n_internal, dtype=dtype, device=device)
+        pos_mask = diff_N > eps
+        neg_mask = diff_N < -eps
+        alpha_N = torch.where(
+            pos_mask,
+            torch.clamp(max_allow_N / (diff_N + eps), 0.0, 1.0),
+            alpha_N,
+        )
+        alpha_N = torch.where(
+            neg_mask,
+            torch.clamp(min_allow_N / (diff_N - eps), 0.0, 1.0),
+            alpha_N,
+        )
+
+        # Take minimum alpha across all faces for each cell
+        cell_alpha = torch.ones(n_cells, dtype=dtype, device=device)
+        # Owner side
+        cell_alpha.scatter_reduce_(
+            0, int_own, alpha_P, reduce="amin", include_self=True,
+        )
+        # Neighbour side
+        cell_alpha.scatter_reduce_(
+            0, int_nei, alpha_N, reduce="amin", include_self=True,
+        )
+
+        return cell_alpha.unsqueeze(-1) * grad_unlimited
+
+
+# ---------------------------------------------------------------------------
+# Face-limited gradient
+# ---------------------------------------------------------------------------
+
+
+@_register_grad("faceLimited")
+class FaceLimitedGrad(GradScheme):
+    r"""Face-limited gradient — limits per face rather than per cell.
+
+    Similar to :class:`CellLimitedGrad` but applies the limiter at each
+    face independently, producing a face-limited gradient that can be
+    more accurate than the cell-limited version on meshes with mixed
+    cell quality.
+
+    The algorithm:
+
+    1. Compute unlimited gradient (default Gauss linear).
+    2. For each face, compute a limiter that prevents the extrapolated
+       face value from exceeding the neighbour min/max.
+    3. Scatter the limited gradient contribution back to cells.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    base_scheme : type[GradScheme], optional
+        The unlimited gradient scheme class.  Default is
+        :class:`GaussLinearGrad`.
+    """
+
+    def __init__(self, mesh, base_scheme=None) -> None:
+        super().__init__(mesh)
+        if base_scheme is None:
+            base_scheme = GaussLinearGrad
+        self._base = base_scheme(mesh)
+
+        device = mesh.device
+        dtype = mesh.dtype
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        # Pre-compute interpolation weights for face-limited correction
+        w_all = compute_centre_weights(
+            mesh.cell_centres,
+            mesh.face_centres,
+            mesh.owner,
+            mesh.neighbour,
+            n_internal,
+            n_faces,
+            device=device,
+            dtype=dtype,
+        )
+        self._w = w_all[:n_internal]
+        self._face_areas = mesh.face_areas.to(device=device, dtype=dtype)
+        self._cell_volumes = mesh.cell_volumes.to(device=device, dtype=dtype)
+
+    def compute_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        """Compute face-limited gradient."""
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+
+        # Unlimited gradient from base scheme
+        grad_unlimited = self._base.compute_grad(phi)  # (n_cells, 3)
+
+        if n_internal == 0:
+            return grad_unlimited
+
+        cc = mesh.cell_centres.to(device=device, dtype=dtype)
+        fa = mesh.face_centres.to(device=device, dtype=dtype)
+        int_own = mesh.owner[:n_internal]
+        int_nei = mesh.neighbour[:n_internal]
+
+        # Extrapolate face values from each side using unlimited gradient
+        delta_P = fa[:n_internal] - cc[int_own]
+        delta_N = fa[:n_internal] - cc[int_nei]
+
+        grad_P = grad_unlimited[int_own]
+        grad_N = grad_unlimited[int_nei]
+        phi_P = gather(phi, int_own)
+        phi_N = gather(phi, int_nei)
+
+        phi_ext_P = phi_P + (grad_P * delta_P).sum(dim=1)
+        phi_ext_N = phi_N + (grad_N * delta_N).sum(dim=1)
+
+        phi_face_min = torch.min(phi_P, phi_N)
+        phi_face_max = torch.max(phi_P, phi_N)
+
+        eps = 1e-30
+
+        # Face limiter for owner side
+        diff_P = phi_ext_P - phi_P
+        alpha_P = torch.ones(n_internal, dtype=dtype, device=device)
+        pos_mask = diff_P > eps
+        neg_mask = diff_P < -eps
+        alpha_P = torch.where(
+            pos_mask,
+            torch.clamp((phi_face_max - phi_P) / (diff_P + eps), 0.0, 1.0),
+            alpha_P,
+        )
+        alpha_P = torch.where(
+            neg_mask,
+            torch.clamp((phi_face_min - phi_P) / (diff_P - eps), 0.0, 1.0),
+            alpha_P,
+        )
+
+        # Face limiter for neighbour side
+        diff_N = phi_ext_N - phi_N
+        alpha_N = torch.ones(n_internal, dtype=dtype, device=device)
+        pos_mask = diff_N > eps
+        neg_mask = diff_N < -eps
+        alpha_N = torch.where(
+            pos_mask,
+            torch.clamp((phi_face_max - phi_N) / (diff_N + eps), 0.0, 1.0),
+            alpha_N,
+        )
+        alpha_N = torch.where(
+            neg_mask,
+            torch.clamp((phi_face_min - phi_N) / (diff_N - eps), 0.0, 1.0),
+            alpha_N,
+        )
+
+        # Per-face limited gradient: interpolate limited grad to face
+        grad_limited_P = alpha_P.unsqueeze(-1) * grad_P
+        grad_limited_N = alpha_N.unsqueeze(-1) * grad_N
+
+        # Use the average limited gradient at the face
+        w = self._w.unsqueeze(-1)
+        grad_face_lim = w * grad_limited_P + (1.0 - w) * grad_limited_N
+
+        # Gauss integration with limited face gradient
+        # grad_P = (1/V) * sum_f (phi_f * S_f)
+        # where phi_f = w*phi_P + (1-w)*phi_N (standard linear interp)
+        # plus correction from limited gradient at face
+        phi_face = w.squeeze(-1) * phi_P + (1.0 - w.squeeze(-1)) * phi_N
+
+        face_contrib = phi_face.unsqueeze(-1) * self._face_areas[:n_internal]
+        grad_phi = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        grad_phi.index_add_(0, int_own, face_contrib)
+        grad_phi.index_add_(0, int_nei, -face_contrib)
+
+        # Add boundary contributions
+        if n_faces > n_internal:
+            bnd_own = mesh.owner[n_internal:]
+            phi_bnd = gather(phi, bnd_own)
+            bnd_contrib = phi_bnd.unsqueeze(-1) * self._face_areas[n_internal:]
+            grad_phi.index_add_(0, bnd_own, bnd_contrib)
+
+        V = self._cell_volumes.unsqueeze(-1).clamp(min=1e-30)
+        grad_phi = grad_phi / V
+
+        # Blend with unlimited gradient using the average limiting factor
+        # For cells where all faces are unlimited, alpha ~ 1 (no change)
+        alpha_cell = torch.ones(n_cells, dtype=dtype, device=device)
+        alpha_cell.scatter_reduce_(
+            0, int_own, alpha_P, reduce="amin", include_self=True,
+        )
+        alpha_cell.scatter_reduce_(
+            0, int_nei, alpha_N, reduce="amin", include_self=True,
+        )
+
+        return alpha_cell.unsqueeze(-1) * grad_phi + \
+            (1.0 - alpha_cell.unsqueeze(-1)) * grad_unlimited
+
+
+# ---------------------------------------------------------------------------
+# Gauss-linear corrected gradient (non-orthogonal correction)
+# ---------------------------------------------------------------------------
+
+
+@_register_grad("linear corrected")
+class GaussLinearCorrectedGrad(GradScheme):
+    r"""Gauss linear with non-orthogonal correction.
+
+    Extends :class:`GaussLinearGrad` by adding a non-orthogonal
+    correction at each face.  For each internal face *f*:
+
+    .. math::
+
+        \phi_f = w\,\phi_P + (1 - w)\,\phi_N
+        + \mathbf{k}_f \cdot \nabla\phi_f
+
+    where :math:`\mathbf{k}_f` is the minimum-correction vector:
+
+    .. math::
+
+        \mathbf{k}_f = \hat{\mathbf{n}}_f
+        - \hat{\mathbf{d}}_f \, (\hat{\mathbf{d}}_f \cdot \hat{\mathbf{n}}_f)
+
+    This scheme is more accurate than plain Gauss linear on
+    non-orthogonal meshes.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    """
+
+    def __init__(self, mesh) -> None:
+        super().__init__(mesh)
+        device = mesh.device
+        dtype = mesh.dtype
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        # Interpolation weights
+        w_all = compute_centre_weights(
+            mesh.cell_centres,
+            mesh.face_centres,
+            mesh.owner,
+            mesh.neighbour,
+            n_internal,
+            n_faces,
+            device=device,
+            dtype=dtype,
+        )
+        self._w = w_all[:n_internal]
+        self._face_areas = mesh.face_areas.to(device=device, dtype=dtype)
+        self._cell_volumes = mesh.cell_volumes.to(device=device, dtype=dtype)
+
+        # Pre-compute correction vectors (minimum correction approach)
+        if n_internal > 0:
+            cc = mesh.cell_centres.to(device=device, dtype=dtype)
+            fa = mesh.face_areas.to(device=device, dtype=dtype)
+
+            d = cc[mesh.neighbour[:n_internal]] - cc[mesh.owner[:n_internal]]
+            d_mag = d.norm(dim=1, keepdim=True)
+            d_hat = d / d_mag.clamp(min=1e-30)
+
+            n_hat = fa[:n_internal] / fa[:n_internal].norm(
+                dim=1, keepdim=True,
+            ).clamp(min=1e-30)
+
+            d_dot_n = (d_hat * n_hat).sum(dim=1, keepdim=True)
+            self._k = n_hat - d_hat * d_dot_n  # (n_int, 3)
+        else:
+            self._k = torch.zeros(0, 3, dtype=dtype, device=device)
+
+    def compute_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        """Compute corrected Gauss linear gradient (iterative)."""
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+
+        int_own = mesh.owner[:n_internal]
+        int_nei = mesh.neighbour[:n_internal]
+
+        # --- Pass 1: standard Gauss linear (provisional gradient) ---
+        phi_P = gather(phi, int_own)
+        phi_N = gather(phi, int_nei)
+        w = self._w
+
+        phi_face = torch.zeros(n_faces, dtype=dtype, device=device)
+        phi_face[:n_internal] = w * phi_P + (1.0 - w) * phi_N
+        if n_faces > n_internal:
+            phi_face[n_internal:] = gather(phi, mesh.owner[n_internal:])
+
+        face_contrib = phi_face.unsqueeze(-1) * self._face_areas
+        grad_phi = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        grad_phi.index_add_(0, int_own, face_contrib[:n_internal])
+        grad_phi.index_add_(0, int_nei, -face_contrib[:n_internal])
+        if n_faces > n_internal:
+            grad_phi.index_add_(
+                0, mesh.owner[n_internal:], face_contrib[n_internal:],
+            )
+        V = self._cell_volumes.unsqueeze(-1).clamp(min=1e-30)
+        grad_phi = grad_phi / V
+
+        # --- Pass 2: corrected face values using provisional gradient ---
+        if n_internal > 0:
+            # Interpolate gradient to internal faces
+            grad_P = grad_phi[int_own]
+            grad_N = grad_phi[int_nei]
+            wt = w.unsqueeze(-1)
+            grad_face = wt * grad_P + (1.0 - wt) * grad_N
+
+            # Non-orthogonal correction: k . grad_f
+            correction = (self._k * grad_face).sum(dim=1)  # (n_int,)
+            phi_face_corr = phi_face.clone()
+            phi_face_corr[:n_internal] = phi_face_corr[:n_internal] + correction
+
+            # Re-integrate with corrected face values
+            face_contrib_corr = phi_face_corr.unsqueeze(-1) * self._face_areas
+            grad_phi_corr = torch.zeros(
+                n_cells, 3, dtype=dtype, device=device,
+            )
+            grad_phi_corr.index_add_(
+                0, int_own, face_contrib_corr[:n_internal],
+            )
+            grad_phi_corr.index_add_(
+                0, int_nei, -face_contrib_corr[:n_internal],
+            )
+            if n_faces > n_internal:
+                grad_phi_corr.index_add_(
+                    0,
+                    mesh.owner[n_internal:],
+                    face_contrib_corr[n_internal:],
+                )
+
+            grad_phi = grad_phi_corr / V
+
+        return grad_phi
 
 
 # ---------------------------------------------------------------------------

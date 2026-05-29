@@ -6,10 +6,12 @@ applying a stochastic velocity perturbation each time step.
 
 Provides:
 
-- :class:`DispersionModel` — abstract base
-- :class:`NoDispersion`    — no turbulent dispersion
-- :class:`GradientDispersion` — gradient-based dispersion using local
+- :class:`DispersionModel`        — abstract base
+- :class:`NoDispersion`           — no turbulent dispersion
+- :class:`GradientDispersion`     — gradient-based dispersion using local
   turbulence quantities
+- :class:`StochasticDispersion`   — stochastic dispersion with Ornstein-Uhlenbeck
+  process
 
 Usage::
 
@@ -37,6 +39,7 @@ __all__ = [
     "DispersionModel",
     "NoDispersion",
     "GradientDispersion",
+    "StochasticDispersion",
 ]
 
 
@@ -205,3 +208,106 @@ class GradientDispersion(DispersionModel):
             f"GradientDispersion(intensity={self.intensity}, "
             f"c_tau={self.c_tau})"
         )
+
+
+# ======================================================================
+# 随机弥散模型 (Ornstein-Uhlenbeck)
+# ======================================================================
+
+class StochasticDispersion(DispersionModel):
+    """Stochastic dispersion model using an Ornstein-Uhlenbeck process.
+
+    Models the turbulent velocity fluctuation experienced by a particle
+    as a mean-reverting stochastic process:
+
+    .. math::
+
+        du'_i = -\\frac{u'_i}{\\tau_L}\\,dt
+              + \\sigma_u \\sqrt{\\frac{2}{\\tau_L}}\\,dW_i
+
+    where :math:`u'_i` is the turbulent velocity fluctuation,
+    :math:`\\tau_L` is the Lagrangian integral time scale,
+    :math:`\\sigma_u = \\sqrt{2k/3}` is the turbulence intensity,
+    and :math:`dW_i` is a Wiener process increment.
+
+    Unlike :class:`GradientDispersion` which produces independent
+    perturbations each call, this model tracks the state of the
+    velocity fluctuation ``u_prime`` across successive calls, providing
+    temporal correlation of turbulent fluctuations.
+
+    Parameters
+    ----------
+    c_tau : float
+        Model constant for Lagrangian time-scale estimation
+        :math:`\\tau_L = c_\\tau k / \\varepsilon`.  Default ``0.3``.
+    seed : int or None
+        Random seed for reproducibility.
+    """
+
+    def __init__(
+        self,
+        c_tau: float = 0.3,
+        seed: int | None = None,
+    ) -> None:
+        if c_tau <= 0:
+            raise ValueError(f"c_tau must be positive, got {c_tau}")
+
+        self.c_tau = c_tau
+        self.seed = seed
+        self._rng = random.Random(seed)
+        # 状态变量: 上一步的湍流脉动速度
+        self._u_prime: list[float] = [0.0, 0.0, 0.0]
+
+    def disperse(
+        self,
+        dt: float,
+        turbulent_kinetic_energy: float = 0.0,
+        turbulent_dissipation: float = 0.0,
+        fluid_density: float = 1.225,
+        particle_diameter: float = 1e-4,
+        particle_density: float = 1000.0,
+    ) -> list[float]:
+        """Compute stochastic dispersion velocity perturbation.
+
+        Returns ``[0, 0, 0]`` when turbulence quantities are negligible.
+        Otherwise returns the updated velocity fluctuation from the
+        Ornstein-Uhlenbeck process.
+        """
+        k = turbulent_kinetic_energy
+        epsilon = turbulent_dissipation
+
+        if k < 1e-15 or epsilon < 1e-15:
+            self._u_prime = [0.0, 0.0, 0.0]
+            return [0.0, 0.0, 0.0]
+
+        # 湍流脉动速度标准差
+        sigma_u = math.sqrt(2.0 / 3.0 * k)
+
+        # Lagrangian 积分时间尺度
+        tau_L = self.c_tau * k / epsilon
+        if tau_L < 1e-15:
+            self._u_prime = [0.0, 0.0, 0.0]
+            return [0.0, 0.0, 0.0]
+
+        # Ornstein-Uhlenbeck 更新:
+        # u'_new = u'_old * exp(-dt/tau_L)
+        #        + sigma_u * sqrt(1 - exp(-2*dt/tau_L)) * xi
+        # 离散化形式 (Euler-Maruyama):
+        # u'_new = u'_old * (1 - dt/tau_L) + sigma * sqrt(2*dt/tau_L) * xi
+        exp_decay = math.exp(-dt / tau_L)
+        noise_coeff = sigma_u * math.sqrt(1.0 - exp_decay ** 2)
+
+        self._u_prime = [
+            self._u_prime[i] * exp_decay
+            + noise_coeff * self._rng.gauss(0.0, 1.0)
+            for i in range(3)
+        ]
+
+        return list(self._u_prime)
+
+    def reset(self) -> None:
+        """重置脉动速度状态为零。"""
+        self._u_prime = [0.0, 0.0, 0.0]
+
+    def __repr__(self) -> str:
+        return f"StochasticDispersion(c_tau={self.c_tau})"

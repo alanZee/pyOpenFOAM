@@ -32,6 +32,9 @@ from pyfoam.postprocessing.particle_tracks import ParticleTracks
 from pyfoam.postprocessing.field_min_max import FieldMinMax, MinMaxResult
 from pyfoam.postprocessing.field_average import FieldAverage
 from pyfoam.postprocessing.y_plus_enhanced import YPlusEnhanced, WallTreatment, YPatchStats
+from pyfoam.postprocessing.noise_enhanced import NoiseEnhanced, ThirdOctaveBand
+from pyfoam.postprocessing.particle_tracks_enhanced import ParticleTracksEnhanced, TrackStatistics
+from pyfoam.postprocessing.field_min_max_enhanced import FieldMinMaxEnhanced, EnhancedMinMaxResult
 
 __all__ = [
     # Framework
@@ -67,4 +70,13 @@ __all__ = [
     "YPlusEnhanced",
     "WallTreatment",
     "YPatchStats",
+    # Enhanced noise analysis
+    "NoiseEnhanced",
+    "ThirdOctaveBand",
+    # Enhanced particle tracking
+    "ParticleTracksEnhanced",
+    "TrackStatistics",
+    # Enhanced field min/max
+    "FieldMinMaxEnhanced",
+    "EnhancedMinMaxResult",
 ]

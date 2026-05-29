@@ -13,6 +13,15 @@ CorrectedSnGrad
     Full non-orthogonal correction using interpolated cell gradient.
 LimitedSnGrad
     Limited non-orthogonal correction with coefficient *k* in [0, 1].
+OrthogonalSnGrad
+    Simple orthogonal snGrad using |S|/(d . S) form — fast path for
+    orthogonal meshes.
+OverRelaxedSnGrad
+    Over-relaxed correction: divides by (d_hat . n_hat) to obtain the
+    full normal gradient, better for non-orthogonal meshes.
+BoundedSnGrad
+    Bounded snGrad: bounds the face-normal gradient to prevent overshoots
+    beyond the owner/neighbour cell values.
 
 The surface-normal gradient controls how the Laplacian operator
 ``nabla cdot (D nabla phi)`` is discretised:
@@ -37,6 +46,9 @@ __all__ = [
     "UncorrectedSnGrad",
     "CorrectedSnGrad",
     "LimitedSnGrad",
+    "OrthogonalSnGrad",
+    "OverRelaxedSnGrad",
+    "BoundedSnGrad",
     "sn_grad_from_name",
 ]
 
@@ -446,3 +458,220 @@ class LimitedSnGrad(SnGradScheme):
 
 
 _SN_GRAD_REGISTRY["limited"] = LimitedSnGrad
+
+
+# ---------------------------------------------------------------------------
+# Orthogonal scheme
+# ---------------------------------------------------------------------------
+
+
+class OrthogonalSnGrad(SnGradScheme):
+    """Simple orthogonal surface-normal gradient.
+
+    For each internal face *f*:
+
+    .. math::
+
+        \\text{snGrad}_f = \\frac{\\phi_N - \\phi_P}{|\\mathbf{d}_f|}
+
+    where :math:`|\\mathbf{d}_f|` is the distance between the owner and
+    neighbour cell centres projected onto the face normal direction.
+
+    This is equivalent to the uncorrected scheme but uses
+    ``|S|/(d . S)`` as the delta coefficient — exact for orthogonal
+    meshes with no non-orthogonal correction.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    """
+
+    def sn_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_faces = mesh.n_faces
+        n_internal = mesh.n_internal_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+        result = torch.zeros(n_faces, dtype=dtype, device=device)
+
+        if n_internal == 0:
+            return result
+
+        cc = mesh.cell_centres.to(device=device, dtype=dtype)
+        fa = mesh.face_areas.to(device=device, dtype=dtype)
+
+        # d = x_N - x_P
+        d = cc[mesh.neighbour[:n_internal]] - cc[mesh.owner[:n_internal]]
+
+        # |d . S| / |S|^2 gives 1/(d_hat . n_hat) * 1/|d|
+        # For orthogonal: d . S = |d| * |S| (since d || n)
+        # snGrad = (phi_N - phi_P) * |S| / (d . S)
+        S = fa[:n_internal]  # (n_int, 3)
+        d_dot_S = (d * S).sum(dim=1)  # (n_int,)
+        S_mag = S.norm(dim=1)  # (n_int,)
+
+        # delta = |S| / (d . S)  →  snGrad = delta * (phi_N - phi_P)
+        delta = S_mag / d_dot_S.clamp(min=1e-30)
+
+        phi_P = gather(phi, mesh.owner[:n_internal])
+        phi_N = gather(phi, mesh.neighbour)
+        result[:n_internal] = delta * (phi_N - phi_P)
+
+        return result
+
+
+_SN_GRAD_REGISTRY["orthogonal"] = OrthogonalSnGrad
+
+
+# ---------------------------------------------------------------------------
+# Over-relaxed scheme
+# ---------------------------------------------------------------------------
+
+
+class OverRelaxedSnGrad(SnGradScheme):
+    r"""Over-relaxed surface-normal gradient.
+
+    For each internal face *f*:
+
+    .. math::
+
+        \text{snGrad}_f = \frac{\phi_N - \phi_P}
+        {|\mathbf{d}_f| \, (\hat{\mathbf{d}}_f \cdot \hat{\mathbf{n}}_f)}
+
+    This divides by the cosine of the angle between the cell-centre
+    displacement and the face normal, effectively "over-relaxing" the
+    gradient for non-orthogonal meshes.  The result is the full
+    face-normal component of the gradient rather than the component
+    along *d*.
+
+    On perfectly orthogonal meshes, :math:`\hat{\mathbf{d}} \cdot
+    \hat{\mathbf{n}} = 1` and this reduces to the uncorrected scheme.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    """
+
+    def sn_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_faces = mesh.n_faces
+        n_internal = mesh.n_internal_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+        result = torch.zeros(n_faces, dtype=dtype, device=device)
+
+        if n_internal == 0:
+            return result
+
+        cc = mesh.cell_centres.to(device=device, dtype=dtype)
+        fa = mesh.face_areas.to(device=device, dtype=dtype)
+
+        # d = x_N - x_P
+        d = cc[mesh.neighbour[:n_internal]] - cc[mesh.owner[:n_internal]]
+        d_mag = d.norm(dim=1)  # (n_int,)
+        d_hat = d / d_mag.clamp(min=1e-30)
+
+        # Unit face normal
+        n_hat = fa[:n_internal] / fa[:n_internal].norm(dim=1, keepdim=True).clamp(
+            min=1e-30,
+        )
+
+        # d_hat . n_hat (cosine of angle between d and n)
+        cos_angle = (d_hat * n_hat).sum(dim=1)  # (n_int,)
+
+        # Over-relaxed delta: 1 / (|d| * cos(angle))
+        # For orthogonal: cos(angle) = 1, so delta = 1/|d| = delta_coeff
+        # For non-orthogonal: delta is larger → over-relaxed
+        delta = 1.0 / (d_mag * cos_angle.clamp(min=1e-30))
+
+        phi_P = gather(phi, mesh.owner[:n_internal])
+        phi_N = gather(phi, mesh.neighbour)
+        result[:n_internal] = delta * (phi_N - phi_P)
+
+        return result
+
+
+_SN_GRAD_REGISTRY["overRelaxed"] = OverRelaxedSnGrad
+
+
+# ---------------------------------------------------------------------------
+# Bounded scheme
+# ---------------------------------------------------------------------------
+
+
+class BoundedSnGrad(SnGradScheme):
+    r"""Bounded surface-normal gradient.
+
+    Computes the snGrad using the fully corrected scheme, then bounds
+    the result to prevent overshoots / undershoots.  The bounding
+    ensures that the face-normal gradient does not imply face values
+    outside the range defined by the owner and neighbour cell values.
+
+    For each internal face *f*:
+
+    1. Compute the uncorrected snGrad:
+       ``snGrad_unc = delta * (phi_N - phi_P)``
+
+    2. Compute the full corrected snGrad (with non-orthogonal
+       correction).
+
+    3. Bound: ``snGrad_bounded = clamp(snGrad_full, 0, snGrad_unc)``
+       or vice versa, ensuring the correction does not change the
+       sign of the uncorrected gradient.
+
+    This is useful for maintaining boundedness in transport equations
+    on non-orthogonal meshes.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    """
+
+    def __init__(self, mesh: Any) -> None:
+        super().__init__(mesh)
+        self._k = _compute_correction_vectors(mesh)
+
+    def sn_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_faces = mesh.n_faces
+        n_internal = mesh.n_internal_faces
+        delta = mesh.delta_coefficients
+
+        phi = phi.to(device=device, dtype=dtype)
+        result = torch.zeros(n_faces, dtype=dtype, device=device)
+
+        if n_internal == 0:
+            return result
+
+        # --- Uncorrected part ---
+        phi_P = gather(phi, mesh.owner[:n_internal])
+        phi_N = gather(phi, mesh.neighbour)
+        sn_grad_unc = delta[:n_internal] * (phi_N - phi_P)
+
+        # --- Non-orthogonal correction ---
+        grad_phi = _compute_cell_gradient(mesh, phi)
+        grad_face = _interpolate_vector_to_faces(mesh, grad_phi)
+        correction = (self._k * grad_face[:n_internal]).sum(dim=1)
+
+        sn_grad_full = sn_grad_unc + correction
+
+        # --- Bounding ---
+        # Bound the full gradient between 0 and uncorrected (or vice versa)
+        lo = torch.min(sn_grad_unc, torch.zeros_like(sn_grad_unc))
+        hi = torch.max(sn_grad_unc, torch.zeros_like(sn_grad_unc))
+
+        result[:n_internal] = torch.clamp(sn_grad_full, lo, hi)
+
+        return result
+
+
+_SN_GRAD_REGISTRY["bounded"] = BoundedSnGrad
