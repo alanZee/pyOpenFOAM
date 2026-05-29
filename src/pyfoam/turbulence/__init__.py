@@ -85,6 +85,9 @@ Provides:
 - :class:`FixedTurbulenceInlet` — Fixed (uniform) turbulence quantities at inlet
 - :class:`MappedTurbulenceInlet` — Mapped turbulence quantities from reference data
 
+**Kato-Launder Production Limiter:**
+- :class:`KatoLaunderDamping` — Kato-Launder production limiter (|S|*|Omega| instead of |S|^2)
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -266,6 +269,9 @@ from pyfoam.turbulence.turbulence_inlet_models import (
     MappedTurbulenceInlet,
 )
 
+# Kato-Launder production limiter
+from pyfoam.turbulence.turbulence_kato_launder import KatoLaunderDamping
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -394,4 +400,6 @@ __all__ = [
     "TurbulenceInletModel",
     "FixedTurbulenceInlet",
     "MappedTurbulenceInlet",
+    # Kato-Launder production limiter
+    "KatoLaunderDamping",
 ]
