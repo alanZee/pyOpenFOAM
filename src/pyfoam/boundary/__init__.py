@@ -99,6 +99,14 @@ Provides:
 - turbulentKineticEnergyInlet2: Enhanced k inlet with intensity and length scale clamping
 - turbulentDissipationInlet2: Enhanced epsilon inlet from intensity and length scale
 - turbulentFrequencyInlet2: Enhanced omega inlet from intensity and length scale
+- mappedFlowRate2: Enhanced mapped flow rate with power-law radial profile
+- pressureWaveTransmissive2: Enhanced wave transmissive with NSCBC blending
+- turbulentViscosityInlet2: Enhanced turbulent viscosity inlet with clamping
+- turbulentLengthScaleInlet2: Enhanced turbulent length scale inlet with clamping
+- turbulentIntensityInlet2: Enhanced turbulent intensity inlet with clamping
+- turbulentKineticEnergyInlet3: v3 enhanced k inlet with blended intensity/length-scale
+- turbulentDissipationInlet3: v3 enhanced epsilon inlet with blending
+- turbulentFrequencyInlet3: v3 enhanced omega inlet with blending
 """
 
 # Import base and collection first
@@ -365,6 +373,16 @@ from pyfoam.boundary.turbulent_kinetic_energy_inlet_2 import TurbulentKineticEne
 from pyfoam.boundary.turbulent_dissipation_inlet_2 import TurbulentDissipationInlet2BC
 from pyfoam.boundary.turbulent_frequency_inlet_2 import TurbulentFrequencyInlet2BC
 
+# Phase 25: Enhanced mapped flow rate / wave transmissive / turbulent inlet BCs (v2 + v3)
+from pyfoam.boundary.mapped_flow_rate_2 import MappedFlowRate2BC
+from pyfoam.boundary.pressure_wave_transmissive_2 import PressureWaveTransmissive2BC
+from pyfoam.boundary.turbulent_viscosity_inlet_2 import TurbulentViscosityInlet2BC
+from pyfoam.boundary.turbulent_length_scale_inlet_2 import TurbulentLengthScaleInlet2BC
+from pyfoam.boundary.turbulent_intensity_inlet_2 import TurbulentIntensityInlet2BC
+from pyfoam.boundary.turbulent_kinetic_energy_inlet_3 import TurbulentKineticEnergyInlet3BC
+from pyfoam.boundary.turbulent_dissipation_inlet_3 import TurbulentDissipationInlet3BC
+from pyfoam.boundary.turbulent_frequency_inlet_3 import TurbulentFrequencyInlet3BC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -566,4 +584,13 @@ __all__ = [
     "TurbulentKineticEnergyInlet2BC",
     "TurbulentDissipationInlet2BC",
     "TurbulentFrequencyInlet2BC",
+    # Phase 25: Enhanced mapped flow rate / wave transmissive / turbulent inlet BCs (v2 + v3)
+    "MappedFlowRate2BC",
+    "PressureWaveTransmissive2BC",
+    "TurbulentViscosityInlet2BC",
+    "TurbulentLengthScaleInlet2BC",
+    "TurbulentIntensityInlet2BC",
+    "TurbulentKineticEnergyInlet3BC",
+    "TurbulentDissipationInlet3BC",
+    "TurbulentFrequencyInlet3BC",
 ]
