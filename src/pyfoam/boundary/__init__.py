@@ -82,6 +82,13 @@ Provides:
 - turbulentKineticEnergyInlet: k = 1.5 * (I * |U|)^2 inlet
 - turbulentDissipationRateInlet: epsilon = C_mu^0.75 * k^1.5 / l_mix inlet
 - turbulentSpecificDissipationRateInlet: omega = k^0.5 / (C_mu^0.25 * l_mix) inlet
+- compressibleTurbulentTemperatureCoupled: Compressible coupled temperature with turbulent diffusivity
+- waveTransmissive2: Enhanced wave transmissive with NSCBC blending
+- advectiveDiffusive: Combined advective-diffusive outflow
+- pressureInterpolationAMG: AMG-stabilised pressure interpolation
+- codedFixedValue: User-coded expression evaluated as Dirichlet BC
+- cyclicAMI2: Enhanced cyclic AMI with conservation and non-orthogonal correction
+- processorCyclic: Processor cyclic for parallel decompositions with coordinate transforms
 """
 
 # Import base and collection first
@@ -323,6 +330,19 @@ from pyfoam.boundary.turbulent_kinetic_energy_inlet import TurbulentKineticEnerg
 from pyfoam.boundary.turbulent_dissipation_rate_inlet import TurbulentDissipationRateInletBC
 from pyfoam.boundary.turbulent_specific_dissipation_rate_inlet import TurbulentSpecificDissipationRateInletBC
 
+# Phase 23: Compressible coupled HT / enhanced wave transmissive /
+#          advective-diffusive / AMG pressure interpolation /
+#          coded fixed value / enhanced cyclic AMI / processor cyclic BCs
+from pyfoam.boundary.compressible_turbulent_temperature_coupled import (
+    CompressibleTurbulentTemperatureCoupledBC,
+)
+from pyfoam.boundary.wave_transmissive_2 import WaveTransmissive2BC
+from pyfoam.boundary.advective_diffusive import AdvectiveDiffusiveBC
+from pyfoam.boundary.pressure_interpolation_amg import PressureInterpolationAMGBC
+from pyfoam.boundary.coded_fixed_value import CodedFixedValueBC
+from pyfoam.boundary.cyclic_ami_2 import CyclicAMI2BC
+from pyfoam.boundary.processor_cyclic import ProcessorCyclicBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -503,4 +523,14 @@ __all__ = [
     "TurbulentKineticEnergyInletBC",
     "TurbulentDissipationRateInletBC",
     "TurbulentSpecificDissipationRateInletBC",
+    # Phase 23: Compressible coupled HT / enhanced wave transmissive /
+    #          advective-diffusive / AMG pressure interpolation /
+    #          coded fixed value / enhanced cyclic AMI / processor cyclic BCs
+    "CompressibleTurbulentTemperatureCoupledBC",
+    "WaveTransmissive2BC",
+    "AdvectiveDiffusiveBC",
+    "PressureInterpolationAMGBC",
+    "CodedFixedValueBC",
+    "CyclicAMI2BC",
+    "ProcessorCyclicBC",
 ]
