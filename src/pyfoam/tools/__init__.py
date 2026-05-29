@@ -46,6 +46,12 @@ from pyfoam.tools.tetgen_to_foam import tetgen_to_foam
 from pyfoam.tools.foam_to_star_mesh import foam_to_star_mesh
 from pyfoam.tools.foam_to_fluent_mesh import foam_to_fluent_mesh
 from pyfoam.tools.subset_mesh import subset_mesh, subset_mesh_by_box
+from pyfoam.tools.surface_mesh_info import SurfaceMeshInfo, surface_mesh_info
+from pyfoam.tools.surface_boolean_features import BooleanResult, surface_boolean
+from pyfoam.tools.surface_refine_red_green import RefineResult, surface_refine
+from pyfoam.tools.view_factors_gen import ViewFactorResult, view_factors_gen
+from pyfoam.tools.noise_enhanced import NoiseResult, noise_analysis
+from pyfoam.tools.temporal_interpolate_enhanced import TemporalInterpolateResult, temporal_interpolate
 __all__ = [
     "box_turb", "CheckMeshResult", "check_mesh", "CellQuality", "QualityReport", "check_mesh_quality",
     "BoxRegion", "CylinderRegion", "set_fields",
@@ -72,4 +78,10 @@ __all__ = [
     "ideas_unv_to_foam", "ansys_to_foam", "star_to_foam", "tetgen_to_foam",
     "foam_to_star_mesh", "foam_to_fluent_mesh",
     "subset_mesh", "subset_mesh_by_box",
+    "SurfaceMeshInfo", "surface_mesh_info",
+    "BooleanResult", "surface_boolean",
+    "RefineResult", "surface_refine",
+    "ViewFactorResult", "view_factors_gen",
+    "NoiseResult", "noise_analysis",
+    "TemporalInterpolateResult", "temporal_interpolate",
 ]
