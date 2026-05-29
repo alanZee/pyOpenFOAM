@@ -52,6 +52,9 @@ Provides:
 - :class:`PLICReconstructionStandalone` — Enhanced standalone PLIC (mesh-free)
 - Contact angle models: ContactAngleModel, ConstantContactAngle,
   DynamicContactAngle, KistlerContactAngle
+- Enhanced PBE solvers: MOMSolver, QMOMSolver, SectionalSolver
+- Enhanced turbulence damping v2: TurbulenceDamping2EnhancedModel,
+  LopezDeBertodanoDamping, KataokaDamping
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -208,6 +211,20 @@ from pyfoam.multiphase.turbulence_damping_enhanced import (
     ExponentialBlendedDamping,
 )
 
+# Phase 10: Enhanced population balance solvers
+from pyfoam.multiphase.population_balance_enhanced import (
+    MOMSolver,
+    QMOMSolver,
+    SectionalSolver,
+)
+
+# Phase 10: Enhanced turbulence damping — Phase 2
+from pyfoam.multiphase.turbulence_damping_enhanced_2 import (
+    TurbulenceDamping2EnhancedModel,
+    LopezDeBertodanoDamping,
+    KataokaDamping,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -316,4 +333,12 @@ __all__ = [
     "TurbulenceDampingEnhancedModel",
     "GradientDamping",
     "ExponentialBlendedDamping",
+    # Phase 10: Enhanced population balance solvers
+    "MOMSolver",
+    "QMOMSolver",
+    "SectionalSolver",
+    # Phase 10: Enhanced turbulence damping — Phase 2
+    "TurbulenceDamping2EnhancedModel",
+    "LopezDeBertodanoDamping",
+    "KataokaDamping",
 ]

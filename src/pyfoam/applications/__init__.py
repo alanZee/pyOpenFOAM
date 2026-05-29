@@ -62,6 +62,14 @@ Available solvers:
 - :class:`EnergyFoam` — Enhanced energy equation solver with viscous dissipation, compressibility work, radiation coupling
 - :class:`MultiphaseReactingFoam` — Multiphase reacting solver with Euler-Euler + combustion
 - :class:`AcousticFoam` — Acoustic wave propagation solver (linearized Euler equations)
+- :class:`FinancialFoam2` — Enhanced Black-Scholes with Greeks and American options
+- :class:`ReactingFoam2` — Enhanced reacting flow with multi-step mechanisms and ISAT
+- :class:`CompressibleInterFoam2` — Enhanced compressible VOF with energy equation and variable Cp
+- :class:`TwoPhaseEulerFoam2` — Enhanced Euler-Euler with kinetic theory of granular flow
+- :class:`MultiphaseEulerFoam2` — Enhanced N-phase with population balance (MUSIG)
+- :class:`SolidFoam` — Solid mechanics solver with thermal stress analysis
+- :class:`FilmFoam` — Thin film flow solver with surface tension
+- :class:`SprayFoam2` — Enhanced Lagrangian spray with KH-RT breakup
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -124,6 +132,14 @@ from pyfoam.applications.viscous_foam import ViscousFoam
 from pyfoam.applications.energy_foam import EnergyFoam
 from pyfoam.applications.multiphase_reacting_foam import MultiphaseReactingFoam
 from pyfoam.applications.acoustic_foam import AcousticFoam
+from pyfoam.applications.financial_foam_2 import FinancialFoam2
+from pyfoam.applications.reacting_foam_enhanced_2 import ReactingFoam2
+from pyfoam.applications.compressible_inter_foam_2 import CompressibleInterFoam2
+from pyfoam.applications.two_phase_euler_foam_2 import TwoPhaseEulerFoam2
+from pyfoam.applications.multiphase_euler_foam_2 import MultiphaseEulerFoam2
+from pyfoam.applications.solid_foam import SolidFoam
+from pyfoam.applications.film_foam import FilmFoam
+from pyfoam.applications.spray_foam_2 import SprayFoam2
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -190,6 +206,14 @@ __all__ = [
     "EnergyFoam",
     "MultiphaseReactingFoam",
     "AcousticFoam",
+    "FinancialFoam2",
+    "ReactingFoam2",
+    "CompressibleInterFoam2",
+    "TwoPhaseEulerFoam2",
+    "MultiphaseEulerFoam2",
+    "SolidFoam",
+    "FilmFoam",
+    "SprayFoam2",
     "TimeLoop",
     "ConvergenceMonitor",
 ]

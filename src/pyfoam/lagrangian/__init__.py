@@ -18,6 +18,12 @@ Provides:
 - Breakup:      :class:`NoBreakup`, :class:`ReitzDiwakar`
 - Wall interaction: :class:`ElasticBounce`, :class:`Stick`,
   :class:`SplashModel`
+- MPPIC:       :class:`MPPICModel`, :class:`StandardMPPIC`,
+  :class:`FrictionModel`, :class:`SchaefferFriction`
+- Spray:       :class:`SprayModel`, :class:`BlobAtomization`,
+  :class:`TABBreakup`
+- Reacting:    :class:`ReactingModel`, :class:`SinglePhaseReacting`,
+  :class:`MultiPhaseReacting`
 """
 
 from pyfoam.lagrangian.particle import Particle
@@ -68,6 +74,22 @@ from pyfoam.lagrangian.wall_interaction import (
     Stick,
     SplashModel,
 )
+from pyfoam.lagrangian.mppic_models import (
+    MPPICModel,
+    StandardMPPIC,
+    FrictionModel,
+    SchaefferFriction,
+)
+from pyfoam.lagrangian.spray_models import (
+    SprayModel,
+    BlobAtomization,
+    TABBreakup,
+)
+from pyfoam.lagrangian.reacting_models import (
+    ReactingModel,
+    SinglePhaseReacting,
+    MultiPhaseReacting,
+)
 
 __all__ = [
     "Particle",
@@ -103,4 +125,17 @@ __all__ = [
     "ElasticBounce",
     "Stick",
     "SplashModel",
+    # MPPIC models
+    "MPPICModel",
+    "StandardMPPIC",
+    "FrictionModel",
+    "SchaefferFriction",
+    # Spray models
+    "SprayModel",
+    "BlobAtomization",
+    "TABBreakup",
+    # Reacting models
+    "ReactingModel",
+    "SinglePhaseReacting",
+    "MultiPhaseReacting",
 ]

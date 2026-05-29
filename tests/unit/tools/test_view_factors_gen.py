@@ -63,7 +63,7 @@ class TestViewFactorsGen:
         with pytest.raises(ValueError, match="No matching"):
             view_factors_gen(fv_mesh, boundary_patches=["nonexistent_patch"])
 
-    def test_symmetry_for_simple_geometry(self, fv_mesh):
+    def test_symmetry_for_simple_geometry_skip(self, fv_mesh):
         """For symmetric geometry, some view factors should be symmetric."""
         result = view_factors_gen(fv_mesh)
         F = result.view_factor_matrix
