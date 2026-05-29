@@ -33,22 +33,19 @@ class TestOrthotropicPlasticModel:
         assert stress.shape == (6,)
         assert model.equivalent_plastic_strain == 0.0
 
-    def test_plastic_above_yield_skip(self):
+    def test_plastic_above_yield(self):
         """Direct stress return-mapping triggers plasticity."""
         model = OrthotropicPlasticModel(
             yield_1=100e6, yield_2=250e6, yield_3=250e6,
         )
-        # sigma_y_ref = (100+250+250)/3 = 200 MPa
-        # For uniaxial stress [sigma, 0, 0, 0, 0, 0] at yield in dir 1:
-        # sigma_hill = sigma, and sigma_hill > sigma_y_ref = 200 MPa
-        # So any sigma > 200 MPa yields in direction 1
-        # Use a large trial stress directly
+        # Hill criterion: f = sigma_hill_sq - 1.0 (dimensionless)
+        # For trial stress from 0.01 strain, sigma_hill_sq >> 1
         large_strain = torch.tensor([0.01, 0, 0, 0, 0, 0], dtype=torch.float64)
         trial_stress = model._elastic.stress(large_strain)
         f = model.hill_yield_function(trial_stress)
         assert f > 0, f"Hill function should be positive for large stress, got {f}"
 
-    def test_reset_state_skip(self):
+    def test_reset_state(self):
         model = OrthotropicPlasticModel()
         strain = torch.tensor([0.01, 0, 0, 0, 0, 0], dtype=torch.float64)
         model.stress(strain)
@@ -116,7 +113,7 @@ class TestViscoelasticMaxwellModel:
         s_inf = 1e9 * 0.001  # = 1e6
         assert s2[0].item() < s_peak  # Stress decreased from peak
 
-    def test_reset_state_skip(self):
+    def test_reset_state(self):
         model = ViscoelasticMaxwellModel(E_inf=1e9, E_1=5e8, eta_1=1e6)
         strain = torch.tensor([0.001, 0, 0, 0, 0, 0], dtype=torch.float64)
         model.stress(strain, dt=0.001)

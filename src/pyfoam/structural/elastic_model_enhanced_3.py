@@ -139,7 +139,7 @@ class OrthotropicPlasticModel:
             + 2.0 * self._M * s13 ** 2
             + 2.0 * self._N * s12 ** 2
         )
-        return sigma_hill_sq.item() - self._sigma_y_ref ** 2
+        return sigma_hill_sq.item() - 1.0
 
     def stress(self, strain: torch.Tensor) -> torch.Tensor:
         """Compute stress with Hill yield return-mapping.
@@ -157,14 +157,16 @@ class OrthotropicPlasticModel:
         if f <= 0:
             return trial
 
-        # Simplified return: scale trial stress to yield surface
-        scale = self._sigma_y_ref / torch.sqrt(
-            torch.tensor(f + self._sigma_y_ref ** 2, dtype=torch.float64)
+        # Scale trial stress to yield surface: sigma_hill_sq = f + 1.0
+        # scale = 1/sqrt(sigma_hill_sq) brings stress to yield surface
+        sigma_hill_sq = f + 1.0
+        scale = 1.0 / torch.sqrt(
+            torch.tensor(sigma_hill_sq, dtype=torch.float64)
         )
         corrected = trial * scale
 
-        # Track plastic strain
-        delta_eps = (1.0 - scale.item()) * strain.norm().item()
+        # Track plastic strain (approximate)
+        delta_eps = max(0.0, strain.norm().item() * (1.0 - scale.item()))
         self._eq_plastic_strain += delta_eps
 
         return corrected
