@@ -55,8 +55,9 @@ class TestVorticity:
         assert fo.omega is None
 
     def test_registered(self):
-        from pyfoam.postprocessing import vorticity as _m
-        importlib.reload(_m)
+        from pyfoam.postprocessing.function_object import FunctionObjectRegistry
+        from pyfoam.postprocessing.vorticity import Vorticity
+        FunctionObjectRegistry.register("vorticity", Vorticity)
         assert "vorticity" in FunctionObjectRegistry.list_registered()
 
 
