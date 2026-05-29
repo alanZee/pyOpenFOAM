@@ -4,8 +4,13 @@ pyfoam.thermophysical — Thermodynamic and transport models.
 Provides:
 
 **Equation of State:**
-- :class:`PerfectGas` — ideal gas EOS (p = ρRT)
-- :class:`IncompressiblePerfectGas` — incompressible ideal gas (ρ = p_ref/RT)
+- :class:`PerfectGas` — ideal gas EOS (p = rho*RT)
+- :class:`IncompressiblePerfectGas` — incompressible ideal gas (rho = p_ref/RT)
+- :class:`CubicEOS` — generic cubic EOS base class
+- :class:`PengRobinsonEOS` — Peng-Robinson cubic EOS
+- :class:`RedlichKwongEOS` — Redlich-Kwong cubic EOS
+- :class:`VanDerWaalsEOS` — van der Waals cubic EOS
+- :class:`IcoTabulatedEOS` — incompressible tabulated EOS (bilinear interpolation)
 
 **Transport Models:**
 - :class:`ConstantViscosity` — constant dynamic viscosity
@@ -13,6 +18,8 @@ Provides:
 - :class:`PolynomialTransport` — polynomial viscosity model
 - :class:`ConstantTransport` — constant viscosity + optional constant kappa
 - :class:`SutherlandTransport` — Sutherland viscosity + optional polynomial kappa
+- :class:`TabulatedTransport` — tabulated viscosity/conductivity interpolation
+- :class:`WilkeTransport` — Wilke mixing rule for gas mixture viscosity
 
 **Thermodynamic Models:**
 - :class:`JanafThermo` — JANAF polynomial Cp model
@@ -49,6 +56,11 @@ from pyfoam.thermophysical.equation_of_state import (
     EquationOfState,
     PerfectGas,
     IncompressiblePerfectGas,
+    CubicEOS,
+    PengRobinsonEOS,
+    RedlichKwongEOS,
+    VanDerWaalsEOS,
+    IcoTabulatedEOS,
 )
 from pyfoam.thermophysical.transport_model import (
     TransportModel,
@@ -58,6 +70,8 @@ from pyfoam.thermophysical.transport_model import (
 from pyfoam.thermophysical.polynomial_transport import PolynomialTransport
 from pyfoam.thermophysical.constant_transport import ConstantTransport
 from pyfoam.thermophysical.sutherland_transport import SutherlandTransport
+from pyfoam.thermophysical.tabulated_transport import TabulatedTransport
+from pyfoam.thermophysical.wilke_transport import WilkeTransport
 from pyfoam.thermophysical.janaf_thermo import JanafThermo
 from pyfoam.thermophysical.hconst_thermo import HConstThermo
 from pyfoam.thermophysical.econst_thermo import EConstThermo
@@ -91,6 +105,11 @@ __all__ = [
     "EquationOfState",
     "PerfectGas",
     "IncompressiblePerfectGas",
+    "CubicEOS",
+    "PengRobinsonEOS",
+    "RedlichKwongEOS",
+    "VanDerWaalsEOS",
+    "IcoTabulatedEOS",
     # Transport
     "TransportModel",
     "ConstantViscosity",
@@ -98,6 +117,8 @@ __all__ = [
     "PolynomialTransport",
     "ConstantTransport",
     "SutherlandTransport",
+    "TabulatedTransport",
+    "WilkeTransport",
     # Thermodynamic models
     "JanafThermo",
     "HConstThermo",
