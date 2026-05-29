@@ -162,14 +162,15 @@ class TestEnhancedHaloExchange4:
         )
         halo = EnhancedHaloExchange4([patch])
         field = torch.tensor([10.0, 20.0, 30.0, 40.0, 50.0, 60.0], dtype=torch.float64)
+        original = field.clone()  # Keep copy before exchange modifies in-place
         all_fields = {
             0: field,
             1: field.clone(),
         }
         result = halo.exchange_periodic(field, 5.0, all_fields)
-        # Ghost cells [0, 1] get values from remote [4, 5] + offset 5.0
-        # Original field[0]=10.0, after exchange should be different
-        assert result[0].item() != field[0].item() or result[1].item() != field[1].item()
+        # Ghost cells [0, 1] get values from remote [4, 5] (50, 60) + offset 5.0
+        # So result[0]=55.0, result[1]=65.0 — different from original 10.0, 20.0
+        assert result[0].item() != original[0].item() or result[1].item() != original[1].item()
 
     def test_repr(self):
         halo = EnhancedHaloExchange4([])

@@ -291,12 +291,20 @@ class EnhancedHaloExchange4(EnhancedHaloExchange3):
         """
         result = self.exchange(field_values, all_fields)
 
-        # Apply periodic offset to all ghost cells
+        # Apply periodic offset to all ghost cells (both conformal and non-conformal)
         for patch in self._patches:
             if hasattr(patch, 'local_ghost_cells'):
                 ghost_idx = patch.local_ghost_cells
                 if ghost_idx.numel() > 0:
                     result[ghost_idx] += periodic_offset
+
+        # Also iterate over non-conformal patches stored in parent
+        if hasattr(self, '_nc_patches'):
+            for patch in self._nc_patches:
+                if hasattr(patch, 'local_ghost_cells'):
+                    ghost_idx = patch.local_ghost_cells
+                    if ghost_idx.numel() > 0:
+                        result[ghost_idx] += periodic_offset
 
         return result
 

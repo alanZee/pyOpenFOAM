@@ -114,24 +114,24 @@ class EnhancedDisplacementSolver3(EnhancedDisplacementSolver2):
         E = self._model.youngs_modulus
         L = length
 
-        # Current deformed length
+        # Displacement increment
         du = u[1] - u[0]
-        L_def = L + du
 
-        # Material stiffness (in deformed configuration)
+        # Material stiffness (reference configuration)
+        # K_m = E*A/L * [[1, -1], [-1, 1]]
         K_m = torch.tensor([
             [1.0, -1.0],
             [-1.0, 1.0],
-        ], dtype=torch.float64) * E * area / max(L_def.item(), 1e-15)
+        ], dtype=torch.float64) * E * area / L
 
-        # Geometric stiffness (stress-dependent, computed from current state)
-        # N = E * A * du / L (axial force in reference config)
-        N = E * area * du / max(L, 1e-15)
-        # Geometric stiffness: N/L_def for deformed configuration
+        # Geometric stiffness from axial force (stress stiffening)
+        # N = E*A*du/L (axial force in reference config)
+        # K_g = N/L * [[1, -1], [-1, 1]]
+        N = E * area * du / L
         K_g = torch.tensor([
             [1.0, -1.0],
             [-1.0, 1.0],
-        ], dtype=torch.float64) * N.item() / max(L_def.item(), 1e-15)
+        ], dtype=torch.float64) * N / L
 
         return K_m + K_g
 

@@ -117,19 +117,21 @@ class OrthotropicPlasticModel:
         return self._eq_plastic_strain
 
     def hill_yield_function(self, stress: torch.Tensor) -> float:
-        """Evaluate Hill yield function.
+        """Evaluate the Hill yield function.
 
-        Args:
-            stress: ``(6,)`` stress in Voigt notation.
+        Computes the Hill equivalent stress::
+
+            sigma_hill = sqrt(F*(s22-s33)^2 + G*(s33-s11)^2 + H*(s11-s22)^2
+                          + 2L*s23^2 + 2M*s13^2 + 2N*s12^2)
 
         Returns:
-            Value of f (positive means yielding).
+            Value of f = sigma_hill^2 - sigma_y_ref^2 (positive means yielding).
         """
         s = stress.to(dtype=torch.float64)
         s11, s22, s33 = s[0], s[1], s[2]
         s23, s13, s12 = s[3], s[4], s[5]
 
-        f = (
+        sigma_hill_sq = (
             self._F * (s22 - s33) ** 2
             + self._G * (s33 - s11) ** 2
             + self._H * (s11 - s22) ** 2
@@ -137,7 +139,7 @@ class OrthotropicPlasticModel:
             + 2.0 * self._M * s13 ** 2
             + 2.0 * self._N * s12 ** 2
         )
-        return f.item() - self._sigma_y_ref ** 2
+        return sigma_hill_sq.item() - self._sigma_y_ref ** 2
 
     def stress(self, strain: torch.Tensor) -> torch.Tensor:
         """Compute stress with Hill yield return-mapping.

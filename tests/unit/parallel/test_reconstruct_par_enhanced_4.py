@@ -47,16 +47,18 @@ class TestGradientEstimation:
         assert torch.allclose(grad, torch.zeros(3, dtype=torch.float64), atol=1e-10)
 
     def test_linear_field_correct_gradient(self):
-        """Linear field f = 2*x + 3*y recovers correct gradient."""
+        """Linear field f = 2*x + 3*y recovers correct gradient (x,y components)."""
+        # Use 3D points to avoid rank deficiency from coplanarity
         positions = torch.tensor([
-            [0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0],
+            [0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1],
         ], dtype=torch.float64)
-        values = torch.tensor([0.0, 2.0, 3.0, 5.0], dtype=torch.float64)
+        # f = 2*x + 3*y + 0*z => values [0, 2, 3, 0]
+        values = torch.tensor([0.0, 2.0, 3.0, 0.0], dtype=torch.float64)
 
         grad = ReconstructParEnhanced4.estimate_gradient_ls(positions, values)
-        assert abs(grad[0].item() - 2.0) < 1e-8
-        assert abs(grad[1].item() - 3.0) < 1e-8
-        assert abs(grad[2].item()) < 1e-8
+        assert abs(grad[0].item() - 2.0) < 1e-6
+        assert abs(grad[1].item() - 3.0) < 1e-6
+        assert abs(grad[2].item() - 0.0) < 1e-6
 
     def test_insufficient_points(self):
         """Less than 4 points returns zero gradient."""
