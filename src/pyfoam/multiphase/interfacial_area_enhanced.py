@@ -236,11 +236,16 @@ class BreakupCoalescenceInterfacialArea(InterfacialAreaModel):
             eps_t = epsilon.to(device=device, dtype=dtype).clamp(min=1e-30)
             # Hinze-Topycal: d_eq = C_h * sigma^(3/5) * epsilon^(-2/5) * rho_c^(-3/5)
             C_h = 0.5  # model constant
-            d_eq = C_h * sigma.pow(0.6) * eps_t.pow(-0.4) * rho_c.pow(-0.6)
+            sigma_t = torch.tensor(sigma, device=device, dtype=dtype) if not isinstance(sigma, torch.Tensor) else sigma.to(device=device, dtype=dtype)
+            rho_c_t = torch.tensor(rho_c, device=device, dtype=dtype) if not isinstance(rho_c, torch.Tensor) else rho_c.to(device=device, dtype=dtype)
+            d_eq = C_h * sigma_t.pow(0.6) * eps_t.pow(-0.4) * rho_c_t.pow(-0.6)
             d_eq = d_eq.clamp(min=1e-10, max=1.0)
 
+        # Ensure d_eq is a tensor
+        d_eq_t = torch.tensor(d_eq, device=device, dtype=dtype) if not isinstance(d_eq, torch.Tensor) else d_eq.to(device=device, dtype=dtype)
+
         # Equilibrium area
-        a_eq = 6.0 * alpha_dev / d_eq.clamp(min=1e-20)
+        a_eq = 6.0 * alpha_dev / d_eq_t.clamp(min=1e-20)
 
         # Deviation from equilibrium
         deviation = self._C_dev * (alpha_dev - self._alpha_eq).pow(2)

@@ -185,6 +185,29 @@ from pyfoam.multiphase.contact_angle_models import (
     KistlerContactAngle,
 )
 
+# Phase 9: Incompressible N-phase VOF
+from pyfoam.multiphase.incompressible_multiphase_vof import IncompressibleMultiphaseVoF
+
+# Phase 9: Compressible N-phase VOF
+from pyfoam.multiphase.compressible_multiphase_vof import CompressibleMultiphaseVoF
+
+# Phase 9: Multi-component mixture
+from pyfoam.multiphase.multicomponent_mixture import MulticomponentMixture
+
+# Phase 9: Enhanced interfacial area models
+from pyfoam.multiphase.interfacial_area_enhanced import (
+    SauterMeanInterfacialArea,
+    BreakupCoalescenceInterfacialArea,
+    BlendedInterfacialArea,
+)
+
+# Phase 9: Enhanced turbulence damping
+from pyfoam.multiphase.turbulence_damping_enhanced import (
+    TurbulenceDampingEnhancedModel,
+    GradientDamping,
+    ExponentialBlendedDamping,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -280,4 +303,17 @@ __all__ = [
     "ConstantContactAngle",
     "DynamicContactAngle",
     "KistlerContactAngle",
+    # Phase 9: N-phase VOF models
+    "IncompressibleMultiphaseVoF",
+    "CompressibleMultiphaseVoF",
+    # Phase 9: Multi-component mixture
+    "MulticomponentMixture",
+    # Phase 9: Enhanced interfacial area models
+    "SauterMeanInterfacialArea",
+    "BreakupCoalescenceInterfacialArea",
+    "BlendedInterfacialArea",
+    # Phase 9: Enhanced turbulence damping
+    "TurbulenceDampingEnhancedModel",
+    "GradientDamping",
+    "ExponentialBlendedDamping",
 ]

@@ -27,6 +27,7 @@ Provides:
 - :class:`EConstThermo` — constant specific heat model (energy-based)
 - :class:`HPowerThermo` — power-law Cp model
 - :class:`JanafMultiThermo` — multi-phase JANAF model
+- :class:`JanafMultiThermoEnhanced` — enhanced multi-phase JANAF with Gibbs blending
 
 **Combined Thermo:**
 - :class:`BasicThermo` — basic combined model (EOS + transport)
@@ -100,6 +101,9 @@ from pyfoam.thermophysical.reaction import (
     InfinitelyFastChemistry,
 )
 
+# Phase 9: Enhanced multi-phase JANAF
+from pyfoam.thermophysical.janaf_multi_thermo_enhanced import JanafMultiThermoEnhanced
+
 __all__ = [
     # Equation of state
     "EquationOfState",
@@ -146,4 +150,6 @@ __all__ = [
     "PaSRModel",
     "EDCModel",
     "InfinitelyFastChemistry",
+    # Phase 9: Enhanced multi-phase JANAF
+    "JanafMultiThermoEnhanced",
 ]
