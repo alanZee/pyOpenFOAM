@@ -91,6 +91,9 @@ from pyfoam.boundary.wall_function import (
     KqRWallFunctionBC,
     NutkWallFunctionBC,
     NutLowReWallFunctionBC,
+    NutUWallFunctionBC,
+    NutURoughWallFunctionBC,
+    NutUSpaldingWallFunctionBC,
     EpsilonWallFunctionBC,
     OmegaWallFunctionBC,
 )
