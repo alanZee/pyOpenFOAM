@@ -101,7 +101,7 @@ class ForcesEnhanced2(ForcesEnhanced):
         self._drag_dir = self._drag_dir / max(self._drag_dir.norm().item(), _EPS)
 
         # Side direction: drag x lift
-        self._side_dir = torch.cross(self._drag_dir, self._lift_dir)
+        self._side_dir = torch.linalg.cross(self._drag_dir, self._lift_dir)
         side_norm = self._side_dir.norm().item()
         if side_norm > _EPS:
             self._side_dir = self._side_dir / side_norm

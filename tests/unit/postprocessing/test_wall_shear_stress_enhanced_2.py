@@ -36,7 +36,7 @@ class TestWallShearStressEnhanced2:
         assert fo._non_orth_correction is True
         assert fo._wall_function_estimate is False
         assert fo._kappa == pytest.approx(0.41)
-        assert fo._compute_distribution is True
+        assert fo._compute_distribution_enabled is True
 
     def test_custom_params(self):
         fo = WallShearStressEnhanced2("test", {
