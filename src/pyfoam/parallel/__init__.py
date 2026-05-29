@@ -61,6 +61,21 @@ from pyfoam.parallel.processor_patch_enhanced_2 import (
     EnhancedHaloExchange2,
     FaceCentreInterpolator,
 )
+from pyfoam.parallel.reconstruct_par_enhanced_3 import (
+    ReconstructParEnhanced3,
+    V3ReconstructResult,
+    ZoneMergeResult,
+)
+from pyfoam.parallel.redistribute_par_enhanced_3 import (
+    RedistributeParEnhanced3,
+    SpatialDecompositionStrategy,
+    V3RedistributeResult,
+)
+from pyfoam.parallel.processor_patch_enhanced_3 import (
+    NonConformalPatch3,
+    EnhancedHaloExchange3,
+    AdaptiveInterpolator,
+)
 
 __all__ = [
     # Decomposition
@@ -112,4 +127,16 @@ __all__ = [
     "NonConformalPatch2",
     "EnhancedHaloExchange2",
     "FaceCentreInterpolator",
+    # V3 enhanced reconstruction
+    "ReconstructParEnhanced3",
+    "V3ReconstructResult",
+    "ZoneMergeResult",
+    # V3 enhanced redistribution
+    "RedistributeParEnhanced3",
+    "SpatialDecompositionStrategy",
+    "V3RedistributeResult",
+    # V3 enhanced processor patches
+    "NonConformalPatch3",
+    "EnhancedHaloExchange3",
+    "AdaptiveInterpolator",
 ]

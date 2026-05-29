@@ -30,6 +30,20 @@ from pyfoam.structural.displacement_solver_enhanced import (
     EnhancedDisplacementSolver,
     NonlinearSolveResult,
 )
+from pyfoam.structural.elastic_model_enhanced_2 import (
+    TransverselyIsotropicModel,
+    HyperelasticNeoHookean,
+    CombinedPlasticityModel,
+)
+from pyfoam.structural.stress_solver_enhanced_2 import (
+    EnhancedStressSolver2,
+    AdaptiveStressResult,
+)
+from pyfoam.structural.displacement_solver_enhanced_2 import (
+    EnhancedDisplacementSolver2,
+    ArcLengthResult,
+    LoadStepResult,
+)
 
 __all__ = [
     "LinearElasticModel",
@@ -44,4 +58,13 @@ __all__ = [
     "IterativeStressResult",
     "EnhancedDisplacementSolver",
     "NonlinearSolveResult",
+    # V2 enhanced
+    "TransverselyIsotropicModel",
+    "HyperelasticNeoHookean",
+    "CombinedPlasticityModel",
+    "EnhancedStressSolver2",
+    "AdaptiveStressResult",
+    "EnhancedDisplacementSolver2",
+    "ArcLengthResult",
+    "LoadStepResult",
 ]

@@ -44,6 +44,22 @@ from pyfoam.rigid_body.restraints_enhanced import (
     MotorRestraint,
     BushingRestraint,
 )
+from pyfoam.rigid_body.six_dof_solver_enhanced_2 import (
+    EnhancedSixDoFSolver2,
+    BaumgarteParams,
+)
+from pyfoam.rigid_body.joints_enhanced_2 import (
+    ScrewJoint,
+    GimbalJoint,
+    BushingJoint,
+    RackPinionJoint,
+)
+from pyfoam.rigid_body.restraints_enhanced_2 import (
+    CoulombFriction,
+    HydraulicDamper,
+    StopRestraint,
+    PIDRestraint,
+)
 
 __all__ = [
     "SixDoFSolver",
@@ -71,4 +87,15 @@ __all__ = [
     "NonlinearSpring",
     "MotorRestraint",
     "BushingRestraint",
+    # V2 enhanced
+    "EnhancedSixDoFSolver2",
+    "BaumgarteParams",
+    "ScrewJoint",
+    "GimbalJoint",
+    "BushingJoint",
+    "RackPinionJoint",
+    "CoulombFriction",
+    "HydraulicDamper",
+    "StopRestraint",
+    "PIDRestraint",
 ]
