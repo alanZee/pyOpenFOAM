@@ -51,6 +51,7 @@ Provides:
 - :class:`PaSRModel` — Partially Stirred Reactor
 - :class:`EDCModel` — Eddy Dissipation Concept
 - :class:`InfinitelyFastChemistry` — mixing-limited combustion
+- :class:`FSDModel` — Flame Surface Density model for premixed flames
 
 **Chemistry Models:**
 - :class:`ChemistryModel` — abstract base for chemistry
@@ -104,6 +105,7 @@ from pyfoam.thermophysical.reaction import (
     PaSRModel,
     EDCModel,
     InfinitelyFastChemistry,
+    FSDModel,
 )
 
 # Phase 9: Enhanced multi-phase JANAF
@@ -162,6 +164,7 @@ __all__ = [
     "PaSRModel",
     "EDCModel",
     "InfinitelyFastChemistry",
+    "FSDModel",
     # Phase 9: Enhanced multi-phase JANAF
     "JanafMultiThermoEnhanced",
     # Chemistry models

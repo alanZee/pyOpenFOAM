@@ -25,6 +25,7 @@ from pyfoam.thermophysical.reaction import (
     PaSRModel,
     EDCModel,
     InfinitelyFastChemistry,
+    FSDModel,
 )
 
 
@@ -274,6 +275,7 @@ class TestCombustionRTS:
         assert "PaSR" in types
         assert "EDC" in types
         assert "infinitelyFast" in types
+        assert "FSD" in types
 
     def test_factory_create_pasr(self):
         model = CombustionModel.create("PaSR", A=1e10, Ea=8e4, C_mix=0.1)
@@ -525,6 +527,131 @@ class TestInfinitelyFastChemistry:
 
 
 # ===================================================================
+# FSDModel
+# ===================================================================
+
+
+class TestFSDModel:
+    """FSD 燃烧模型测试。"""
+
+    def test_basic_source(self):
+        """Su = rho * Sigma * S_L * min(Y_fuel, Y_ox/s)。"""
+        model = FSDModel(S_L=0.4, Sigma_0=100.0, C_sigma=0.5, u_prime=1.0)
+        Su, Sp = model.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+        # Sigma = 100 * (1 + 0.5 * 1.0 / 0.4) = 100 * 2.25 = 225
+        # Y_limit = min(0.05, 0.23) = 0.05
+        # Su = 1.0 * 225 * 0.4 * 0.05 = 4.5
+        expected = 1.0 * 225.0 * 0.4 * 0.05
+        assert float(Su.item()) == pytest.approx(expected, rel=1e-6)
+
+    def test_finite_source_terms(self):
+        """源项应对合理输入产生有限值。"""
+        model = FSDModel(S_L=0.4, Sigma_0=100.0)
+        Su, Sp = model.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+        assert torch.isfinite(Su).all()
+        assert torch.isfinite(Sp).all()
+
+    def test_source_positive(self):
+        """正的燃料和氧化剂浓度应产生正的燃烧源项。"""
+        model = FSDModel()
+        Su, _ = model.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+        assert float(Su.item()) > 0.0
+
+    def test_zero_fuel_gives_zero_source(self):
+        """无燃料时源项为零。"""
+        model = FSDModel()
+        Su, _ = model.source(Y_fuel=0.0, Y_ox=0.23, T=1000.0, rho=1.0)
+        assert abs(float(Su.item())) < 1e-30
+
+    def test_zero_oxidizer_gives_zero_source(self):
+        """无氧化剂时源项为零。"""
+        model = FSDModel()
+        Su, _ = model.source(Y_fuel=0.05, Y_ox=0.0, T=1000.0, rho=1.0)
+        assert abs(float(Su.item())) < 1e-30
+
+    def test_independent_of_temperature(self):
+        """源项应与温度无关（预混火焰面传播）。"""
+        model = FSDModel()
+        Su1, _ = model.source(Y_fuel=0.05, Y_ox=0.23, T=300.0, rho=1.0)
+        Su2, _ = model.source(Y_fuel=0.05, Y_ox=0.23, T=3000.0, rho=1.0)
+        assert abs(float(Su1.item()) - float(Su2.item())) < 1e-10
+
+    def test_sp_zero(self):
+        """FSD 的 Sp 应为零（与温度无关）。"""
+        model = FSDModel()
+        _, Sp = model.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+        assert float(Sp.item()) == 0.0
+
+    def test_scales_with_density(self):
+        """源项应与密度成正比。"""
+        model = FSDModel()
+        Su1, _ = model.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+        Su2, _ = model.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=3.0)
+        assert abs(float(Su2.item()) / float(Su1.item()) - 3.0) < 1e-6
+
+    def test_scales_with_sigma(self):
+        """源项应随火焰面密度增大。"""
+        model_low = FSDModel(S_L=0.4, Sigma_0=50.0, C_sigma=0.0)
+        model_high = FSDModel(S_L=0.4, Sigma_0=200.0, C_sigma=0.0)
+        Su_low, _ = model_low.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+        Su_high, _ = model_high.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+        assert float(Su_high.item()) > float(Su_low.item())
+        # Sigma_0 4x -> source 4x
+        assert abs(float(Su_high.item()) / float(Su_low.item()) - 4.0) < 1e-6
+
+    def test_turbulence_enhancement(self):
+        """湍流增强应增大火焰面密度和源项。"""
+        model_lam = FSDModel(S_L=0.4, Sigma_0=100.0, C_sigma=0.0)
+        model_turb = FSDModel(S_L=0.4, Sigma_0=100.0, C_sigma=0.5, u_prime=2.0)
+        Su_lam, _ = model_lam.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+        Su_turb, _ = model_turb.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+        assert float(Su_turb.item()) > float(Su_lam.item())
+
+    def test_stoich_ratio(self):
+        """化学计量比应限制氧化剂效率。"""
+        model = FSDModel(stoich_ratio=4.0)
+        # Y_fuel=0.1, Y_ox=0.2, s=4 → Y_limit = min(0.1, 0.05) = 0.05
+        Su, _ = model.source(Y_fuel=0.1, Y_ox=0.2, T=1000.0, rho=1.0)
+        model_no_limit = FSDModel(stoich_ratio=1.0)
+        Su2, _ = model_no_limit.source(Y_fuel=0.1, Y_ox=0.2, T=1000.0, rho=1.0)
+        assert float(Su.item()) < float(Su2.item())
+
+    def test_tensor_input(self):
+        """应支持张量输入。"""
+        model = FSDModel()
+        n = 5
+        Yf = torch.full((n,), 0.05)
+        Yo = torch.full((n,), 0.23)
+        T = torch.full((n,), 1000.0)
+        rho = torch.full((n,), 1.0)
+        Su, Sp = model.source(Yf, Yo, T, rho)
+        assert Su.shape == (n,)
+        assert Sp.shape == (n,)
+        assert torch.isfinite(Su).all()
+
+    def test_rts_create(self):
+        """RTS 工厂应能创建 FSDModel。"""
+        model = CombustionModel.create("FSD", S_L=0.4, Sigma_0=100.0)
+        assert isinstance(model, FSDModel)
+
+    def test_invalid_S_L(self):
+        """负的 S_L 应引发 ValueError。"""
+        with pytest.raises(ValueError, match="S_L must be positive"):
+            FSDModel(S_L=-0.1)
+
+    def test_invalid_Sigma_0(self):
+        """负的 Sigma_0 应引发 ValueError。"""
+        with pytest.raises(ValueError, match="Sigma_0 must be positive"):
+            FSDModel(Sigma_0=-10.0)
+
+    def test_repr(self):
+        model = FSDModel(S_L=0.4, Sigma_0=100.0)
+        r = repr(model)
+        assert "FSDModel" in r
+        assert "0.4" in r
+
+
+# ===================================================================
 # 跨模型集成测试
 # ===================================================================
 
@@ -584,11 +711,30 @@ class TestIntegration:
         pasr = PaSRModel(A=1e10, Ea=8e4, C_mix=0.1)
         edc = EDCModel(C_tau=0.4, tau_chem=1e-3)
         inf_model = InfinitelyFastChemistry(dt=1e-3)
+        fsd = FSDModel(S_L=0.4, Sigma_0=100.0)
 
         Su_pasr, _ = pasr.source(Yf, Yo, T, rho)
         Su_edc, _ = edc.source(Yf, Yo, T, rho)
         Su_inf, _ = inf_model.source(Yf, Yo, T, rho)
+        Su_fsd, _ = fsd.source(Yf, Yo, T, rho)
 
-        # 三个模型应产生不同的数值
-        vals = [float(Su_pasr.item()), float(Su_edc.item()), float(Su_inf.item())]
+        # 四个模型应产生不同的数值
+        vals = [
+            float(Su_pasr.item()), float(Su_edc.item()),
+            float(Su_inf.item()), float(Su_fsd.item()),
+        ]
         assert len(set(f"{v:.6e}" for v in vals)) > 1
+
+    def test_fsd_at_different_conditions(self):
+        """FSD 在不同工况下应产生合理结果。"""
+        model = FSDModel(S_L=0.4, Sigma_0=100.0, C_sigma=0.5)
+        conditions = [
+            (0.05, 0.23, 300.0, 1.2),
+            (0.05, 0.23, 1500.0, 1.0),
+            (0.01, 0.23, 1000.0, 0.5),
+            (0.10, 0.23, 1000.0, 2.0),
+        ]
+        for Yf, Yo, T, rho in conditions:
+            Su, Sp = model.source(Yf, Yo, T, rho)
+            assert torch.isfinite(Su).all()
+            assert torch.isfinite(Sp).all()

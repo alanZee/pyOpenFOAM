@@ -17,6 +17,7 @@ combustion closures commonly used in CFD reacting-flow solvers.
 - :class:`PaSRModel` — Partially Stirred Reactor
 - :class:`EDCModel` — Eddy Dissipation Concept
 - :class:`InfinitelyFastChemistry` — mixing-limited (equilibrium) combustion
+- :class:`FSDModel` — Flame Surface Density model for premixed flames
 
 Usage::
 
@@ -29,6 +30,10 @@ Usage::
     # PaSR combustion
     comb = CombustionModel.create("PaSR", A=1e10, Ea=8e4, C_mix=0.1)
     Su, Sp = comb.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+
+    # FSD premixed combustion
+    fsd = CombustionModel.create("FSD", S_L=0.4, Sigma_0=100.0)
+    Su, Sp = fsd.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
 """
 
 from __future__ import annotations
@@ -50,6 +55,7 @@ __all__ = [
     "PaSRModel",
     "EDCModel",
     "InfinitelyFastChemistry",
+    "FSDModel",
 ]
 
 logger = logging.getLogger(__name__)
@@ -785,3 +791,112 @@ class InfinitelyFastChemistry(CombustionModel):
 
     def __repr__(self) -> str:
         return f"InfinitelyFastChemistry(dt={self.dt}, stoich_ratio={self.stoich_ratio})"
+
+
+# ===================================================================
+# FSD 模型
+# ===================================================================
+
+
+@CombustionModel.register("FSD")
+class FSDModel(CombustionModel):
+    """Flame Surface Density (FSD) 燃烧模型。
+
+    用于预混火焰的湍流燃烧封闭，基于火焰面密度概念::
+
+        Sigma = Sigma_0 * (1 + c * u'/S_L)
+        source = rho * Sigma * S_L * min(Y_fuel, Y_ox/s)
+
+    其中 Sigma 是火焰面密度，S_L 是层流火焰速度，
+    u' 是湍流脉动速度，c 是模型常数。
+
+    Parameters
+    ----------
+    S_L : float
+        层流火焰速度 (m/s)。默认 0.4。
+    Sigma_0 : float
+        基准火焰面密度 (1/m)。默认 100.0。
+    C_sigma : float
+        湍流增强系数。默认 0.5。
+    u_prime : float
+        湍流脉动速度 (m/s)。默认 1.0。
+    stoich_ratio : float
+        化学计量比 (氧化剂/燃料质量比)。默认 1.0。
+
+    Examples::
+
+        fsd = FSDModel(S_L=0.4, Sigma_0=100.0, C_sigma=0.5)
+        Su, Sp = fsd.source(Y_fuel=0.05, Y_ox=0.23, T=1000.0, rho=1.0)
+    """
+
+    def __init__(
+        self,
+        S_L: float = 0.4,
+        Sigma_0: float = 100.0,
+        C_sigma: float = 0.5,
+        u_prime: float = 1.0,
+        stoich_ratio: float = 1.0,
+    ) -> None:
+        if S_L <= 0:
+            raise ValueError(f"S_L must be positive, got {S_L}")
+        if Sigma_0 <= 0:
+            raise ValueError(f"Sigma_0 must be positive, got {Sigma_0}")
+
+        self.S_L = S_L
+        self.Sigma_0 = Sigma_0
+        self.C_sigma = C_sigma
+        self.u_prime = u_prime
+        self.stoich_ratio = stoich_ratio
+
+    def source(
+        self,
+        Y_fuel: torch.Tensor | float,
+        Y_ox: torch.Tensor | float,
+        T: torch.Tensor | float,
+        rho: torch.Tensor | float,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        """计算 FSD 燃烧源项。
+
+        Sigma = Sigma_0 * (1 + C_sigma * u' / S_L)
+        Su    = rho * Sigma * S_L * min(Y_fuel, Y_ox/s)
+
+        Parameters
+        ----------
+        Y_fuel : torch.Tensor | float
+            燃料质量分数。
+        Y_ox : torch.Tensor | float
+            氧化剂质量分数。
+        T : torch.Tensor | float
+            温度 (K) — 未使用，保持接口一致。
+        rho : torch.Tensor | float
+            密度 (kg/m³)。
+
+        Returns
+        -------
+        Su, Sp : tuple[torch.Tensor, torch.Tensor]
+        """
+        T_t = _to_tensor(T)
+        Yf = _to_tensor(Y_fuel, ref=T_t)
+        Yo = _to_tensor(Y_ox, ref=T_t)
+        rho_t = _to_tensor(rho, ref=T_t)
+
+        # 火焰面密度（考虑湍流增强）
+        Sigma = self.Sigma_0 * (1.0 + self.C_sigma * self.u_prime / self.S_L)
+
+        # 化学计量约束
+        Y_limit = torch.min(Yf, Yo / self.stoich_ratio)
+
+        # 燃烧源项: Su = rho * Sigma * S_L * Y_limit
+        Su = rho_t * Sigma * self.S_L * Y_limit
+
+        # FSD 模型与温度无关（预混火焰面传播）
+        Sp = torch.zeros_like(Su)
+
+        return Su, Sp
+
+    def __repr__(self) -> str:
+        return (
+            f"FSDModel(S_L={self.S_L}, Sigma_0={self.Sigma_0}, "
+            f"C_sigma={self.C_sigma}, u_prime={self.u_prime}, "
+            f"stoich_ratio={self.stoich_ratio})"
+        )
