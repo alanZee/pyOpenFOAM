@@ -26,6 +26,12 @@ from pyfoam.tools.foam_to_openfoam import foam_to_openfoam
 from pyfoam.tools.foam_to_vtk_2 import foam_to_vtk_enhanced
 from pyfoam.tools.foam_post_process import foam_post_process, PostProcessResult
 from pyfoam.tools.reconstruct_par import ReconstructParResult, reconstruct_par
+from pyfoam.tools.stitch_mesh import stitch_mesh
+from pyfoam.tools.create_baffles import create_baffles
+from pyfoam.tools.create_patch import create_patch
+from pyfoam.tools.transform_points_2 import transform_points_enhanced
+from pyfoam.tools.mirror_mesh import mirror_mesh
+from pyfoam.tools.flatten_mesh import flatten_mesh
 __all__ = [
     "box_turb", "CheckMeshResult", "check_mesh", "CellQuality", "QualityReport", "check_mesh_quality",
     "BoxRegion", "CylinderRegion", "set_fields",
@@ -40,4 +46,6 @@ __all__ = [
     "foam_to_vtk_enhanced",
     "foam_post_process", "PostProcessResult",
     "ReconstructParResult", "reconstruct_par",
+    "stitch_mesh", "create_baffles", "create_patch",
+    "transform_points_enhanced", "mirror_mesh", "flatten_mesh",
 ]
