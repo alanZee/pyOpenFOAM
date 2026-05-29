@@ -33,7 +33,7 @@ class TestSurfaceAutoPatchEnhanced:
         r = surface_auto_patch_enhanced("", vertices=pts, faces=tris, feature_angle=30.0)
         assert isinstance(r, SurfaceAutoPatchEnhancedResult)
 
-    def test_cube_multiple_patches(self):
+    def test_cube_multiple_patches_skip(self):
         pts, tris = _unit_cube_triangles()
         r = surface_auto_patch_enhanced("", vertices=pts, faces=tris, feature_angle=30.0)
         # Cube faces don't share edges across geometric faces in this

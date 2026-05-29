@@ -262,6 +262,36 @@ from pyfoam.multiphase.turbulence_damping_enhanced_3 import (
     BlendedWallInterfaceDamping,
 )
 
+# Phase 12: Enhanced incompressible N-phase VOF v3
+from pyfoam.multiphase.incompressible_multiphase_vof_enhanced_2 import (
+    IncompressibleMultiphaseVoFEnhanced2,
+)
+
+# Phase 12: Enhanced compressible N-phase VOF v3
+from pyfoam.multiphase.compressible_multiphase_vof_enhanced_2 import (
+    CompressibleMultiphaseVoFEnhanced2,
+)
+
+# Phase 12: Enhanced multicomponent mixture v3
+from pyfoam.multiphase.multicomponent_mixture_enhanced_2 import (
+    MulticomponentMixtureEnhanced2,
+)
+
+# Phase 12: Enhanced interfacial area v3
+from pyfoam.multiphase.interfacial_area_enhanced_3 import (
+    InterfacialArea3Model,
+    TurbulentBreakupArea,
+    TipStreamingArea,
+)
+
+# Phase 12: Enhanced turbulence damping v4
+from pyfoam.multiphase.turbulence_damping_enhanced_4 import (
+    TurbulenceDamping4EnhancedModel,
+    ReynoldsAdaptiveDamping,
+    TwoLayerDamping,
+    AlphaGradientLimiter,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -393,4 +423,19 @@ __all__ = [
     "WallDampedDamping",
     "SpaldingDamping",
     "BlendedWallInterfaceDamping",
+    # Phase 12: Enhanced incompressible N-phase VOF v3
+    "IncompressibleMultiphaseVoFEnhanced2",
+    # Phase 12: Enhanced compressible N-phase VOF v3
+    "CompressibleMultiphaseVoFEnhanced2",
+    # Phase 12: Enhanced multicomponent mixture v3
+    "MulticomponentMixtureEnhanced2",
+    # Phase 12: Enhanced interfacial area v3
+    "InterfacialArea3Model",
+    "TurbulentBreakupArea",
+    "TipStreamingArea",
+    # Phase 12: Enhanced turbulence damping v4
+    "TurbulenceDamping4EnhancedModel",
+    "ReynoldsAdaptiveDamping",
+    "TwoLayerDamping",
+    "AlphaGradientLimiter",
 ]

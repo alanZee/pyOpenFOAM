@@ -20,6 +20,13 @@ Solver names:
 - ``"SIS"`` -- Semi-Implicit Solver (extrapolation)
 - ``"SEulex"`` -- Semi-Explicit Extrapolation solver
 - ``"SIBS"`` -- Semi-Implicit Bulirsch-Stoer (BDF backend)
+- ``"RKCK45_v2"`` -- Runge-Kutta-Cash-Karp v2 (extended stability)
+- ``"RKDP45_v2"`` -- Runge-Kutta-Dormand-Prince v2 (FSAL optimized)
+- ``"Rosenbrock12_v2"`` -- Rosenbrock 1(2) v2 (BDF backend)
+- ``"Rosenbrock23_v2"`` -- Rosenbrock 2(3) v2 (LSODA backend)
+- ``"Rosenbrock34_v2"`` -- Rosenbrock 3(4) v2 (DOP853 backend)
+- ``"SIS_v2"`` -- Semi-Implicit Solver v2 (BDF backend)
+- ``"SEulex_v2"`` -- Semi-Explicit Extrapolation v2 (DOP853 backend)
 
 All tensors respect the global device/dtype configuration from
 :mod:`pyfoam.core.device`.
@@ -154,6 +161,15 @@ class ODESolver(ABC):
                 SISSolver,
                 SEulexSolver,
                 SIBSSolver,
+            )
+            from pyfoam.ode.ode_solvers_v2 import (  # noqa: F401
+                RKCK45Solver_v2,
+                RKDP45Solver_v2,
+                Rosenbrock12Solver_v2,
+                Rosenbrock23Solver_v2,
+                Rosenbrock34Solver_v2,
+                SISSolver_v2,
+                SEulexSolver_v2,
             )
 
         if name not in cls._registry:

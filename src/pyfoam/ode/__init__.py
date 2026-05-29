@@ -52,6 +52,15 @@ from pyfoam.ode.runge_kutta_ck_dp import RKCK45Solver, RKDP45Solver
 from pyfoam.ode.implicit import TrapezoidSolver, Rosenbrock12Solver
 from pyfoam.ode.rosenbrock import Rosenbrock23Solver, Rosenbrock34Solver
 from pyfoam.ode.semi_implicit import SISSolver, SEulexSolver, SIBSSolver
+from pyfoam.ode.ode_solvers_v2 import (
+    RKCK45Solver_v2,
+    RKDP45Solver_v2,
+    Rosenbrock12Solver_v2,
+    Rosenbrock23Solver_v2,
+    Rosenbrock34Solver_v2,
+    SISSolver_v2,
+    SEulexSolver_v2,
+)
 
 __all__ = [
     # Base
@@ -64,13 +73,23 @@ __all__ = [
     "RKF45Solver",
     "RKCK45Solver",
     "RKDP45Solver",
+    # Explicit v2
+    "RKCK45Solver_v2",
+    "RKDP45Solver_v2",
     # Implicit / stiff
     "TrapezoidSolver",
     "Rosenbrock12Solver",
     "Rosenbrock23Solver",
     "Rosenbrock34Solver",
+    # Implicit / stiff v2
+    "Rosenbrock12Solver_v2",
+    "Rosenbrock23Solver_v2",
+    "Rosenbrock34Solver_v2",
     # Semi-implicit / extrapolation
     "SISSolver",
     "SEulexSolver",
     "SIBSSolver",
+    # Semi-implicit / extrapolation v2
+    "SISSolver_v2",
+    "SEulexSolver_v2",
 ]

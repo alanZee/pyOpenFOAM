@@ -52,6 +52,9 @@ __all__ = [
     "OverRelaxedSnGrad2",
     "BoundedSnGrad",
     "BoundedSnGrad2",
+    "OrthogonalSnGrad3",
+    "OverRelaxedSnGrad3",
+    "BoundedSnGrad3",
     "sn_grad_from_name",
 ]
 
@@ -869,3 +872,203 @@ class BoundedSnGrad2(SnGradScheme):
 
 
 _SN_GRAD_REGISTRY["bounded2"] = BoundedSnGrad2
+
+
+# ---------------------------------------------------------------------------
+# Orthogonal v3 scheme
+# ---------------------------------------------------------------------------
+
+
+class OrthogonalSnGrad3(SnGradScheme):
+    r"""Orthogonal surface-normal gradient v3 with area-weighted delta.
+
+    Improves on :class:`OrthogonalSnGrad2` by using the full area-weighted
+    formulation that accounts for face area variations:
+
+    .. math::
+
+        \text{snGrad}_f = \frac{(\phi_N - \phi_P) \, |\mathbf{S}_f|^2}
+        {(\mathbf{d}_f \cdot \mathbf{S}_f) \, |\mathbf{d}_f|}
+
+    This provides better accuracy on meshes with varying face sizes.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    """
+
+    def sn_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_faces = mesh.n_faces
+        n_internal = mesh.n_internal_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+        result = torch.zeros(n_faces, dtype=dtype, device=device)
+
+        if n_internal == 0:
+            return result
+
+        cc = mesh.cell_centres.to(device=device, dtype=dtype)
+        fa = mesh.face_areas.to(device=device, dtype=dtype)
+
+        d = cc[mesh.neighbour[:n_internal]] - cc[mesh.owner[:n_internal]]
+        d_mag = d.norm(dim=1)
+        S = fa[:n_internal]
+        S_sq = (S * S).sum(dim=1)
+        d_dot_S = (d * S).sum(dim=1)
+
+        # v3: delta = |S|^2 / (d . S * |d|)
+        delta = S_sq / (d_dot_S.clamp(min=1e-30) * d_mag.clamp(min=1e-30))
+
+        phi_P = gather(phi, mesh.owner[:n_internal])
+        phi_N = gather(phi, mesh.neighbour)
+        result[:n_internal] = delta * (phi_N - phi_P)
+
+        return result
+
+
+_SN_GRAD_REGISTRY["orthogonal3"] = OrthogonalSnGrad3
+
+
+# ---------------------------------------------------------------------------
+# Over-relaxed v3 scheme
+# ---------------------------------------------------------------------------
+
+
+class OverRelaxedSnGrad3(SnGradScheme):
+    r"""Over-relaxed surface-normal gradient v3 with tanh-based relaxation.
+
+    Improves on :class:`OverRelaxedSnGrad2` by using a tanh-based limiting
+    on the over-relaxation factor, preventing excessive correction on
+    highly non-orthogonal meshes:
+
+    .. math::
+
+        \text{snGrad}_f = \frac{\phi_N - \phi_P}
+        {|\mathbf{d}_f| \, \tanh((\hat{\mathbf{d}}_f \cdot \hat{\mathbf{n}}_f)^2)}
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    """
+
+    def sn_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_faces = mesh.n_faces
+        n_internal = mesh.n_internal_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+        result = torch.zeros(n_faces, dtype=dtype, device=device)
+
+        if n_internal == 0:
+            return result
+
+        cc = mesh.cell_centres.to(device=device, dtype=dtype)
+        fa = mesh.face_areas.to(device=device, dtype=dtype)
+
+        d = cc[mesh.neighbour[:n_internal]] - cc[mesh.owner[:n_internal]]
+        d_mag = d.norm(dim=1)
+        d_hat = d / d_mag.clamp(min=1e-30)
+
+        n_hat = fa[:n_internal] / fa[:n_internal].norm(dim=1, keepdim=True).clamp(
+            min=1e-30,
+        )
+
+        cos_angle = (d_hat * n_hat).sum(dim=1)
+
+        # v3: 使用 tanh 限制的过度松弛因子
+        cos_sq = cos_angle.clamp(min=1e-30) ** 2
+        tanh_cos = torch.tanh(cos_sq).clamp(min=1e-30)
+        delta = 1.0 / (d_mag * tanh_cos)
+
+        phi_P = gather(phi, mesh.owner[:n_internal])
+        phi_N = gather(phi, mesh.neighbour)
+        result[:n_internal] = delta * (phi_N - phi_P)
+
+        return result
+
+
+_SN_GRAD_REGISTRY["overRelaxed3"] = OverRelaxedSnGrad3
+
+
+# ---------------------------------------------------------------------------
+# Bounded v3 scheme
+# ---------------------------------------------------------------------------
+
+
+class BoundedSnGrad3(SnGradScheme):
+    r"""Bounded surface-normal gradient v3 with adaptive bound factor.
+
+    Improves on :class:`BoundedSnGrad2` by adaptively adjusting the
+    bounding factor based on the local non-orthogonality angle:
+
+    .. math::
+
+        f_{\text{adaptive}} = f_{\text{base}} \cdot (1 + \sin^2(\theta))
+
+    where *theta* is the angle between the cell-centre displacement and
+    the face normal.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    bound_factor : float, optional
+        Base bounding factor.  Default is 1.5.
+    """
+
+    def __init__(self, mesh: Any, bound_factor: float = 1.5) -> None:
+        super().__init__(mesh)
+        self._bound_factor = bound_factor
+        self._k = _compute_correction_vectors(mesh)
+
+    def sn_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_faces = mesh.n_faces
+        n_internal = mesh.n_internal_faces
+        delta = mesh.delta_coefficients
+
+        phi = phi.to(device=device, dtype=dtype)
+        result = torch.zeros(n_faces, dtype=dtype, device=device)
+
+        if n_internal == 0:
+            return result
+
+        phi_P = gather(phi, mesh.owner[:n_internal])
+        phi_N = gather(phi, mesh.neighbour)
+        sn_grad_unc = delta[:n_internal] * (phi_N - phi_P)
+
+        grad_phi = _compute_cell_gradient(mesh, phi)
+        grad_face = _interpolate_vector_to_faces(mesh, grad_phi)
+        correction = (self._k * grad_face[:n_internal]).sum(dim=1)
+
+        sn_grad_full = sn_grad_unc + correction
+
+        # v3: 自适应限制因子
+        cc = mesh.cell_centres.to(device=device, dtype=dtype)
+        fa = mesh.face_areas.to(device=device, dtype=dtype)
+
+        d = cc[mesh.neighbour[:n_internal]] - cc[mesh.owner[:n_internal]]
+        d_hat = d / d.norm(dim=1, keepdim=True).clamp(min=1e-30)
+        n_hat = fa[:n_internal] / fa[:n_internal].norm(dim=1, keepdim=True).clamp(
+            min=1e-30,
+        )
+        cos_theta = (d_hat * n_hat).sum(dim=1)
+        sin_sq = (1.0 - cos_theta ** 2).clamp(min=0.0)
+
+        adaptive_factor = self._bound_factor * (1.0 + sin_sq)
+        bound = adaptive_factor * sn_grad_unc.abs()
+        result[:n_internal] = torch.clamp(sn_grad_full, -bound, bound)
+
+        return result
+
+
+_SN_GRAD_REGISTRY["bounded3"] = BoundedSnGrad3

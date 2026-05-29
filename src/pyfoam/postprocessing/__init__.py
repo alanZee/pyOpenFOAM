@@ -26,6 +26,11 @@ Provides:
 - :class:`ForcesEnhanced` — enhanced forces with full decomposition and fluctuation stats
 - :class:`WallShearStressEnhanced` — enhanced wall shear stress with u_tau and Cf
 - :class:`YPlusEnhanced2` — enhanced y+ v2 with wall laws and mesh quality
+- :class:`FieldMinMaxEnhanced3` — enhanced field min/max v3 with percentiles and histograms
+- :class:`ProbesEnhanced3` — enhanced probes v3 with per-probe spectra and coherence matrices
+- :class:`ForcesEnhanced2` — enhanced forces v2 with projected forces and Cd/Cl
+- :class:`WallShearStressEnhanced2` — enhanced wall shear stress v2 with non-orthogonal correction
+- :class:`YPlusEnhanced3` — enhanced y+ v3 with adaptive wall law and regime classification
 
 All function objects follow OpenFOAM's function object API and can be
 configured via dictionary entries in ``system/controlDict``.
@@ -77,6 +82,31 @@ from pyfoam.postprocessing.y_plus_enhanced_2 import (
     YPlusEnhanced2,
     MeshQualityMetrics,
     WallLawType,
+)
+
+# Phase 12: Enhanced postprocessing models
+from pyfoam.postprocessing.field_min_max_enhanced_3 import (
+    FieldMinMaxEnhanced3,
+    PercentileStats,
+    HistogramData,
+)
+from pyfoam.postprocessing.probes_enhanced_3 import (
+    ProbesEnhanced3,
+    ProbeSpectrumResult,
+    CoherenceMatrix,
+)
+from pyfoam.postprocessing.forces_enhanced_2 import (
+    ForcesEnhanced2,
+    ProjectedForces,
+)
+from pyfoam.postprocessing.wall_shear_stress_enhanced_2 import (
+    WallShearStressEnhanced2,
+    WSSDistribution,
+)
+from pyfoam.postprocessing.y_plus_enhanced_3 import (
+    YPlusEnhanced3,
+    RegimeClassification,
+    YPlusEvolution,
 )
 
 __all__ = [
@@ -147,4 +177,18 @@ __all__ = [
     "YPlusEnhanced2",
     "MeshQualityMetrics",
     "WallLawType",
+    # Phase 12: Enhanced postprocessing v3
+    "FieldMinMaxEnhanced3",
+    "PercentileStats",
+    "HistogramData",
+    "ProbesEnhanced3",
+    "ProbeSpectrumResult",
+    "CoherenceMatrix",
+    "ForcesEnhanced2",
+    "ProjectedForces",
+    "WallShearStressEnhanced2",
+    "WSSDistribution",
+    "YPlusEnhanced3",
+    "RegimeClassification",
+    "YPlusEvolution",
 ]

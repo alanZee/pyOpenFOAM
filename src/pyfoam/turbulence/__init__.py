@@ -113,6 +113,16 @@ Provides:
 - :class:`ImprovedSmagorinskyModel` — Smagorinsky with Van Driest wall damping and SGS energy
 - :class:`ImprovedWALEModel` — WALE with clipping, SGS energy, and SGS time scale
 
+**Enhanced RANS/LES Models (Phase 11):**
+- :class:`KEpsilonEnhanced2Model` — Realizable k-epsilon v2 with improved C_mu and wall-reflection correction
+- :class:`KOmegaEnhanced2Model` — k-omega v2 with improved cross-diffusion and stress limiter
+- :class:`KOmegaSSTEnhanced2Model` — SST v2 with F4 blending and Kato-Launder option
+- :class:`SpalartAllmarasEnhanced2Model` — SA v2 with QCR and rotational correction (SARC)
+- :class:`DynamicLikeSmagorinskyModel` — Smagorinsky with dynamic-like Cs from strain/vorticity ratio
+- :class:`ImprovedWALE2Model` — WALE v2 with improved near-wall scaling and wall distance damping
+- :class:`EnhancedWallTreatment` — Enhanced wall treatment with tanh blending
+- :class:`ThreeLayerWallTreatment` — Three-layer (viscous/buffer/log-law) wall treatment
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -333,6 +343,14 @@ from pyfoam.turbulence.k_omega_sst_enhanced import KOmegaSSTEnhancedModel, KOmeg
 from pyfoam.turbulence.spalart_allmaras_enhanced import SpalartAllmarasEnhancedModel, SpalartAllmarasEnhancedConstants
 from pyfoam.turbulence.les_model_enhanced import ImprovedSmagorinskyModel, ImprovedWALEModel
 
+# Enhanced RANS/LES models (Phase 11)
+from pyfoam.turbulence.k_epsilon_enhanced_2 import KEpsilonEnhanced2Model, KEpsilonEnhanced2Constants
+from pyfoam.turbulence.k_omega_enhanced_2 import KOmegaEnhanced2Model, KOmegaEnhanced2Constants
+from pyfoam.turbulence.k_omega_sst_enhanced_2 import KOmegaSSTEnhanced2Model, KOmegaSSTEnhanced2Constants
+from pyfoam.turbulence.spalart_allmaras_enhanced_2 import SpalartAllmarasEnhanced2Model, SpalartAllmarasEnhanced2Constants
+from pyfoam.turbulence.les_model_enhanced_2 import DynamicLikeSmagorinskyModel, ImprovedWALE2Model
+from pyfoam.turbulence.wall_treatment_enhanced import EnhancedWallTreatment, ThreeLayerWallTreatment
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -494,4 +512,17 @@ __all__ = [
     "SpalartAllmarasEnhancedConstants",
     "ImprovedSmagorinskyModel",
     "ImprovedWALEModel",
+    # Enhanced RANS/LES models (Phase 11)
+    "KEpsilonEnhanced2Model",
+    "KEpsilonEnhanced2Constants",
+    "KOmegaEnhanced2Model",
+    "KOmegaEnhanced2Constants",
+    "KOmegaSSTEnhanced2Model",
+    "KOmegaSSTEnhanced2Constants",
+    "SpalartAllmarasEnhanced2Model",
+    "SpalartAllmarasEnhanced2Constants",
+    "DynamicLikeSmagorinskyModel",
+    "ImprovedWALE2Model",
+    "EnhancedWallTreatment",
+    "ThreeLayerWallTreatment",
 ]

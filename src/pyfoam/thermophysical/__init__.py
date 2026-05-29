@@ -64,6 +64,17 @@ Provides:
 - :class:`ChemistryModel` — abstract base for chemistry
 - :class:`ODEChemistrySolver` — ODE-based stiff chemistry integration
 - :class:`SRMChemistrySolver` — Simplified Reaction Mechanism (progress variable)
+
+**Phase 11 — Enhanced v2/v3 Models:**
+- :class:`JanafMultiThermoEnhanced3` — JANAF v3 with Gibbs energy, multi-order departure
+- :class:`TabulatedTransportEnhanced2` — tabulated transport with Hermite/monotone interpolation
+- :class:`WilkeTransportEnhanced2` — Wilke v2 with FSG diffusion correlation
+- :class:`ConstantTransportEnhanced2` — constant transport v2 with exponential/piecewise correction
+- :class:`SutherlandTransportEnhanced2` — Sutherland v2 with polar collision correction
+- :class:`TwuAlphaPR` — Peng-Robinson with Twu alpha function
+- :class:`MathiasCopemanPR` — Peng-Robinson with Mathias-Copeman alpha
+- :class:`VirialEOS` — Truncated virial equation of state
+- :class:`SoaveRedlichKwongEOS` — Soave-Redlich-Kwong cubic EOS
 """
 
 from pyfoam.thermophysical.equation_of_state import (
@@ -124,6 +135,19 @@ from pyfoam.thermophysical.tabulated_transport_enhanced import TabulatedTranspor
 from pyfoam.thermophysical.wilke_transport_enhanced import WilkeTransportEnhanced
 from pyfoam.thermophysical.constant_transport_enhanced import ConstantTransportEnhanced
 from pyfoam.thermophysical.sutherland_transport_enhanced import SutherlandTransportEnhanced
+
+# Phase 11: Enhanced models v2/v3
+from pyfoam.thermophysical.janaf_multi_thermo_enhanced_3 import JanafMultiThermoEnhanced3
+from pyfoam.thermophysical.tabulated_transport_enhanced_2 import TabulatedTransportEnhanced2
+from pyfoam.thermophysical.wilke_transport_enhanced_2 import WilkeTransportEnhanced2
+from pyfoam.thermophysical.constant_transport_enhanced_2 import ConstantTransportEnhanced2
+from pyfoam.thermophysical.sutherland_transport_enhanced_2 import SutherlandTransportEnhanced2
+from pyfoam.thermophysical.equation_of_state_enhanced import (
+    TwuAlphaPR,
+    MathiasCopemanPR,
+    VirialEOS,
+    SoaveRedlichKwongEOS,
+)
 
 # Chemistry models
 from pyfoam.thermophysical.chemistry import (
@@ -187,6 +211,16 @@ __all__ = [
     "WilkeTransportEnhanced",
     "ConstantTransportEnhanced",
     "SutherlandTransportEnhanced",
+    # Phase 11: Enhanced models v2/v3
+    "JanafMultiThermoEnhanced3",
+    "TabulatedTransportEnhanced2",
+    "WilkeTransportEnhanced2",
+    "ConstantTransportEnhanced2",
+    "SutherlandTransportEnhanced2",
+    "TwuAlphaPR",
+    "MathiasCopemanPR",
+    "VirialEOS",
+    "SoaveRedlichKwongEOS",
     # Chemistry models
     "ChemistryModel",
     "ODEChemistrySolver",
