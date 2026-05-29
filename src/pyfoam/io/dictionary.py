@@ -270,7 +270,7 @@ class Tokenizer:
         start = self._pos
         while self._pos < self._len:
             ch = self._text[self._pos]
-            if ch.isalnum() or ch in "_-.:+*^/\\<>(),":
+            if ch.isalnum() or ch in "_-.:+*^/\\<>()',":
                 self._pos += 1
             else:
                 break
