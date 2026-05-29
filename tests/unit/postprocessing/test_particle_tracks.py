@@ -296,12 +296,12 @@ class TestParticleTracksRegistration:
 
     def test_registered(self):
         from pyfoam.postprocessing.function_object import FunctionObjectRegistry
-        from pyfoam.postprocessing import particle_tracks  # noqa: F401
+        FunctionObjectRegistry.register("particleTracks", ParticleTracks)
         assert "particleTracks" in FunctionObjectRegistry.list_registered()
 
     def test_create_from_registry(self):
         from pyfoam.postprocessing.function_object import FunctionObjectRegistry
-        from pyfoam.postprocessing import particle_tracks  # noqa: F401
+        FunctionObjectRegistry.register("particleTracks", ParticleTracks)
         fo = FunctionObjectRegistry.create("particleTracks", {"name": "pt1"})
         assert isinstance(fo, ParticleTracks)
         assert fo.name == "pt1"

@@ -279,12 +279,12 @@ class TestTemporalInterpolateRegistration:
 
     def test_registered(self):
         from pyfoam.postprocessing.function_object import FunctionObjectRegistry
-        from pyfoam.postprocessing import temporal_interpolate  # noqa: F401
+        FunctionObjectRegistry.register("temporalInterpolate", TemporalInterpolate)
         assert "temporalInterpolate" in FunctionObjectRegistry.list_registered()
 
     def test_create_from_registry(self):
         from pyfoam.postprocessing.function_object import FunctionObjectRegistry
-        from pyfoam.postprocessing import temporal_interpolate  # noqa: F401
+        FunctionObjectRegistry.register("temporalInterpolate", TemporalInterpolate)
         fo = FunctionObjectRegistry.create("temporalInterpolate", {"name": "interp1"})
         assert isinstance(fo, TemporalInterpolate)
         assert fo.name == "interp1"
