@@ -301,8 +301,13 @@ class ParticleTracksEnhanced(ParticleTracks):
             )
             f.write(header.encode())
 
-            # Count total points and lines
-            valid_tracks = [t for t in self._tracks if len(t) >= 2]
+            # Count total points and lines, track original indices
+            valid_tracks = []
+            valid_track_indices = []
+            for idx, t in enumerate(self._tracks):
+                if len(t) >= 2:
+                    valid_tracks.append(t)
+                    valid_track_indices.append(idx)
             total_points = sum(len(t) for t in valid_tracks)
             total_lines = len(valid_tracks)
 
@@ -326,9 +331,7 @@ class ParticleTracksEnhanced(ParticleTracks):
                 f.write(f"CELL_DATA {total_lines}\n".encode())
                 f.write(b"SCALARS residence_time float 1\n")
                 f.write(b"LOOKUP_TABLE default\n")
-                for i, track in enumerate(valid_tracks):
-                    # Find original track index
-                    orig_idx = self._tracks.index(track)
+                for i, orig_idx in enumerate(valid_track_indices):
                     val = self._residence_time[orig_idx].item() if orig_idx < len(self._residence_time) else 0.0
                     f.write(f"{val:.6e}\n".encode())
 
@@ -338,8 +341,7 @@ class ParticleTracksEnhanced(ParticleTracks):
                     f.write(f"CELL_DATA {total_lines}\n".encode())
                 f.write(b"SCALARS tortuosity float 1\n")
                 f.write(b"LOOKUP_TABLE default\n")
-                for i, track in enumerate(valid_tracks):
-                    orig_idx = self._tracks.index(track)
+                for i, orig_idx in enumerate(valid_track_indices):
                     if orig_idx < len(self._statistics):
                         f.write(f"{self._statistics[orig_idx].tortuosity:.6e}\n".encode())
                     else:
@@ -352,8 +354,7 @@ class ParticleTracksEnhanced(ParticleTracks):
                 f.write(b"SCALARS velocity_magnitude float 1\n")
                 f.write(b"LOOKUP_TABLE default\n")
                 point_offset = 0
-                for track in valid_tracks:
-                    orig_idx = self._tracks.index(track)
+                for track_i, (track, orig_idx) in enumerate(zip(valid_tracks, valid_track_indices)):
                     n_pts = len(track)
                     for j in range(n_pts):
                         step_idx = min(j, vel_stack.shape[0] - 1)

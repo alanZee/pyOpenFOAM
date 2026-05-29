@@ -45,6 +45,7 @@ from pyfoam.tools.star_to_foam import star_to_foam
 from pyfoam.tools.tetgen_to_foam import tetgen_to_foam
 from pyfoam.tools.foam_to_star_mesh import foam_to_star_mesh
 from pyfoam.tools.foam_to_fluent_mesh import foam_to_fluent_mesh
+from pyfoam.tools.subset_mesh import subset_mesh, subset_mesh_by_box
 __all__ = [
     "box_turb", "CheckMeshResult", "check_mesh", "CellQuality", "QualityReport", "check_mesh_quality",
     "BoxRegion", "CylinderRegion", "set_fields",
@@ -70,4 +71,5 @@ __all__ = [
     "BoundaryLayerProperties", "apply_boundary_layer",
     "ideas_unv_to_foam", "ansys_to_foam", "star_to_foam", "tetgen_to_foam",
     "foam_to_star_mesh", "foam_to_fluent_mesh",
+    "subset_mesh", "subset_mesh_by_box",
 ]

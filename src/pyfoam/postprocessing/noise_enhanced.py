@@ -88,7 +88,7 @@ def a_weighting(frequency: torch.Tensor) -> torch.Tensor:
 
     ra = num / den.clamp(min=1e-40)
     # Normalise so that A(1000 Hz) = 0 dB
-    # R_A(1000) computed analytically
+    # R_A(1000) computed analytically; +2.0 offset is absorbed into normalization
     f_ref = torch.tensor(1000.0, dtype=frequency.dtype)
     f_ref2 = f_ref ** 2
     num_ref = 12194.0 ** 2 * f_ref2 ** 2
@@ -99,7 +99,11 @@ def a_weighting(frequency: torch.Tensor) -> torch.Tensor:
     )
     ra_ref = num_ref / den_ref
 
-    a_db = 20.0 * torch.log10(ra / ra_ref + 1e-40) + 2.0
+    # Standard A-weighting: A(f) = 20*log10(R_A(f)) + 2.0
+    # To normalise A(1000) = 0: A(f) = 20*log10(R_A(f)/R_A(1000))
+    # The +2.0 constant in the standard formula is a normalization offset
+    # that makes A(1000) = 20*log10(R_A(1000)) + 2.0 = 0
+    a_db = 20.0 * torch.log10(ra / ra_ref + 1e-40)
     return a_db
 
 
