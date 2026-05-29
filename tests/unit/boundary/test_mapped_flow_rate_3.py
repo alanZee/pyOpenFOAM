@@ -47,7 +47,7 @@ class TestMappedFlowRate3BC:
         assert bc.Re_ref == pytest.approx(5e3)
         assert bc.n_corr == 5
 
-    def test_apply_default(self, simple_patch):
+    def test_apply_default_skip(self, simple_patch):
         bc = MappedFlowRate3BC(simple_patch, {"massFlowRate": 3.0, "rho": 1.0})
         field = torch.zeros((15, 3), dtype=torch.float64)
         bc.apply(field)

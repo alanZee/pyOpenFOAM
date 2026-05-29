@@ -202,6 +202,13 @@ from pyfoam.discretisation.schemes.filtered_linear_4 import FilteredLinear4Inter
 from pyfoam.discretisation.schemes.van_leer_v_3 import VanLeerV3Interpolation
 from pyfoam.discretisation.schemes.muscl_v_3 import MUSCLV3Interpolation
 from pyfoam.discretisation.schemes.gamma_v_3 import GammaV3Interpolation
+from pyfoam.discretisation.schemes.linear_upwind_fit_4 import LinearUpwindFit4Interpolation
+from pyfoam.discretisation.schemes.upwind_fit_4 import UpwindFit4Interpolation
+from pyfoam.discretisation.schemes.cubic_upwind_fit_4 import CubicUpwindFit4Interpolation
+from pyfoam.discretisation.schemes.filtered_linear_5 import FilteredLinear5Interpolation
+from pyfoam.discretisation.schemes.van_leer_v_4 import VanLeerV4Interpolation
+from pyfoam.discretisation.schemes.muscl_v_4 import MUSCLV4Interpolation
+from pyfoam.discretisation.schemes.gamma_v_4 import GammaV4Interpolation
 from pyfoam.discretisation.ddt import (
     DdtScheme,
     EulerDdt,
@@ -210,9 +217,11 @@ from pyfoam.discretisation.ddt import (
     BackwardDdt,
     BackwardDdt2,
     BackwardDdt3,
+    BackwardDdt4,
     BoundedDdt,
     BoundedDdt2,
     BoundedDdt3,
+    BoundedDdt4,
     DDT_REGISTRY,
     create_ddt_scheme,
 )
@@ -223,12 +232,15 @@ from pyfoam.discretisation.grad import (
     FourthGrad,
     FourthGrad2,
     FourthGrad3,
+    FourthGrad4,
     CellLimitedGrad,
     CellLimitedGrad2,
     CellLimitedGrad3,
+    CellLimitedGrad4,
     FaceLimitedGrad,
     FaceLimitedGrad2,
     FaceLimitedGrad3,
+    FaceLimitedGrad4,
     GaussLinearCorrectedGrad,
     resolve_grad_scheme,
 )

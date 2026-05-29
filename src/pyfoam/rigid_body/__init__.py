@@ -60,6 +60,23 @@ from pyfoam.rigid_body.restraints_enhanced_2 import (
     StopRestraint,
     PIDRestraint,
 )
+from pyfoam.rigid_body.six_dof_solver_enhanced_3 import (
+    EnhancedSixDoFSolver3,
+    ContactParams,
+    EnergyState,
+)
+from pyfoam.rigid_body.joints_enhanced_3 import (
+    CamJoint,
+    GearJoint,
+    ConstantVelocityJoint,
+    FlexibleJoint,
+)
+from pyfoam.rigid_body.restraints_enhanced_3 import (
+    MagneticRestraint,
+    BouyancyRestraint,
+    ImpactRestraint,
+    WindRestraint,
+)
 
 __all__ = [
     "SixDoFSolver",
@@ -98,4 +115,16 @@ __all__ = [
     "HydraulicDamper",
     "StopRestraint",
     "PIDRestraint",
+    # V3 enhanced
+    "EnhancedSixDoFSolver3",
+    "ContactParams",
+    "EnergyState",
+    "CamJoint",
+    "GearJoint",
+    "ConstantVelocityJoint",
+    "FlexibleJoint",
+    "MagneticRestraint",
+    "BouyancyRestraint",
+    "ImpactRestraint",
+    "WindRestraint",
 ]

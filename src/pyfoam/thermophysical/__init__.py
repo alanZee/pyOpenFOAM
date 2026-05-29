@@ -75,6 +75,16 @@ Provides:
 - :class:`MathiasCopemanPR` — Peng-Robinson with Mathias-Copeman alpha
 - :class:`VirialEOS` — Truncated virial equation of state
 - :class:`SoaveRedlichKwongEOS` — Soave-Redlich-Kwong cubic EOS
+
+**Phase 12 — Enhanced v3/v4 Models:**
+- :class:`JanafMultiThermoEnhanced4` — JANAF v4 with phase transition decomposition, fugacity, vapour quality
+- :class:`TabulatedTransportEnhanced3` — tabulated transport with Catmull-Rom and extrapolation
+- :class:`WilkeTransportEnhanced3` — Wilke v3 with Knudsen correction and Lewis number
+- :class:`ConstantTransportEnhanced3` — constant transport v3 with VFT and WLF models
+- :class:`SutherlandTransportEnhanced3` — Sutherland v3 with collision diameter and Mason-Saxena mixing
+- :class:`PatelTejaEOS` — Patel-Teja three-parameter cubic EOS
+- :class:`VolumeTranslatedPR` — Peng-Robinson with volume translation
+- :class:`PatelTejaValderramaEOS` — Patel-Teja-Valderrama variant for polar fluids
 """
 
 from pyfoam.thermophysical.equation_of_state import (
