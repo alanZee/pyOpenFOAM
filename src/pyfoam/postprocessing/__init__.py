@@ -14,6 +14,11 @@ Provides:
 - :class:`SurfaceSample` — surface sampling
 - :class:`VTKWriter` — VTK file output
 - :class:`FoamToVTK` — case-level VTK conversion
+- :class:`Vorticity` — vorticity (∇ × U) computation
+- :class:`QCriterion` — Q-criterion vortex identification
+- :class:`Lambda2` — λ₂ criterion vortex identification
+- :class:`Enstrophy` — enstrophy (0.5 * |ω|²) computation
+- :class:`TurbulentKineticEnergy` — TKE computation (resolved/RANS)
 
 All function objects follow OpenFOAM's function object API and can be
 configured via dictionary entries in ``system/controlDict``.
@@ -35,6 +40,11 @@ from pyfoam.postprocessing.y_plus_enhanced import YPlusEnhanced, WallTreatment, 
 from pyfoam.postprocessing.noise_enhanced import NoiseEnhanced, ThirdOctaveBand
 from pyfoam.postprocessing.particle_tracks_enhanced import ParticleTracksEnhanced, TrackStatistics
 from pyfoam.postprocessing.field_min_max_enhanced import FieldMinMaxEnhanced, EnhancedMinMaxResult
+from pyfoam.postprocessing.vorticity import Vorticity
+from pyfoam.postprocessing.q_criterion import QCriterion
+from pyfoam.postprocessing.lambda2 import Lambda2
+from pyfoam.postprocessing.enstrophy import Enstrophy
+from pyfoam.postprocessing.turbulent_kinetic_energy import TurbulentKineticEnergy
 
 __all__ = [
     # Framework
@@ -79,4 +89,11 @@ __all__ = [
     # Enhanced field min/max
     "FieldMinMaxEnhanced",
     "EnhancedMinMaxResult",
+    # Vortex identification
+    "Vorticity",
+    "QCriterion",
+    "Lambda2",
+    # Turbulence quantities
+    "Enstrophy",
+    "TurbulentKineticEnergy",
 ]

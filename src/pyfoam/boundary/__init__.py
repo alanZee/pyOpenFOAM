@@ -75,6 +75,13 @@ Provides:
 - externalCoupled: Coupled with external solver via file-based data exchange
 - mixedTemperature: Mixed (Robin) temperature BC blending fixed value and gradient
 - turbulentTemperatureCoupled: Coupled temperature with turbulent thermal diffusivity
+- mappedVelocityAdjustedPressure: Adjusts velocity from mapped coupled patch pressure
+- flowRateInletVelocity2: Enhanced flow rate inlet with power-law profile
+- pressureInletOutletVelocity2: Enhanced pressure inlet/outlet with direction blending
+- surfaceNormalFixedValue2: Enhanced surface normal fixed value with tangential preservation
+- turbulentKineticEnergyInlet: k = 1.5 * (I * |U|)^2 inlet
+- turbulentDissipationRateInlet: epsilon = C_mu^0.75 * k^1.5 / l_mix inlet
+- turbulentSpecificDissipationRateInlet: omega = k^0.5 / (C_mu^0.25 * l_mix) inlet
 """
 
 # Import base and collection first
@@ -305,6 +312,17 @@ from pyfoam.boundary.external_coupled import ExternalCoupledBC
 from pyfoam.boundary.mixed_temperature import MixedTemperatureBC
 from pyfoam.boundary.turbulent_temperature_coupled import TurbulentTemperatureCoupledBC
 
+# Phase 22: Mapped velocity adjusted pressure / enhanced flow rate /
+#          enhanced pressure inlet/outlet velocity / enhanced surface normal /
+#          turbulent inlet BCs (k, epsilon, omega)
+from pyfoam.boundary.mapped_velocity_adjusted_pressure import MappedVelocityAdjustedPressureBC
+from pyfoam.boundary.flow_rate_inlet_velocity_2 import FlowRateInletVelocity2BC
+from pyfoam.boundary.pressure_inlet_outlet_velocity_2 import PressureInletOutletVelocity2BC
+from pyfoam.boundary.surface_normal_fixed_value_2 import SurfaceNormalFixedValue2BC
+from pyfoam.boundary.turbulent_kinetic_energy_inlet import TurbulentKineticEnergyInletBC
+from pyfoam.boundary.turbulent_dissipation_rate_inlet import TurbulentDissipationRateInletBC
+from pyfoam.boundary.turbulent_specific_dissipation_rate_inlet import TurbulentSpecificDissipationRateInletBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -475,4 +493,14 @@ __all__ = [
     "ExternalCoupledBC",
     "MixedTemperatureBC",
     "TurbulentTemperatureCoupledBC",
+    # Phase 22: Mapped velocity adjusted pressure / enhanced flow rate /
+    #          enhanced pressure inlet/outlet velocity / enhanced surface normal /
+    #          turbulent inlet BCs (k, epsilon, omega)
+    "MappedVelocityAdjustedPressureBC",
+    "FlowRateInletVelocity2BC",
+    "PressureInletOutletVelocity2BC",
+    "SurfaceNormalFixedValue2BC",
+    "TurbulentKineticEnergyInletBC",
+    "TurbulentDissipationRateInletBC",
+    "TurbulentSpecificDissipationRateInletBC",
 ]
