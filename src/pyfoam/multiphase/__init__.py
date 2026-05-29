@@ -44,6 +44,7 @@ Provides:
 - :class:`VirtualMassModel` — Abstract virtual mass force model with RTS registry
 - :class:`ConstantVirtualMass` — Constant virtual mass coefficient
 - :class:`LambVirtualMass` — Lamb's inviscid virtual mass (C_vm = 0.5)
+- :class:`KatoLaunderDamping2` — Enhanced Kato-Launder damping with alpha-dependent and gradient damping
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -151,6 +152,9 @@ from pyfoam.multiphase.virtual_mass_models import (
     LambVirtualMass,
 )
 
+# Phase 7: Enhanced Kato-Launder damping for multiphase
+from pyfoam.multiphase.turbulence_kato_launder_2 import KatoLaunderDamping2
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -229,4 +233,6 @@ __all__ = [
     "VirtualMassModel",
     "ConstantVirtualMass",
     "LambVirtualMass",
+    # Phase 7: Enhanced Kato-Launder damping
+    "KatoLaunderDamping2",
 ]
