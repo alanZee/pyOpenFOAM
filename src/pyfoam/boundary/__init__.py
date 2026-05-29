@@ -89,6 +89,16 @@ Provides:
 - codedFixedValue: User-coded expression evaluated as Dirichlet BC
 - cyclicAMI2: Enhanced cyclic AMI with conservation and non-orthogonal correction
 - processorCyclic: Processor cyclic for parallel decompositions with coordinate transforms
+- mappedFlowRate: Mapped mass flow rate from coupled patch
+- pressureWaveTransmissive: Non-reflecting wave transmissive pressure BC
+- turbulentViscosityInlet: Turbulent viscosity inlet (nut = C_mu * k^2 / epsilon)
+- turbulentLengthScaleInlet: Turbulent length scale inlet (l_mix = C_mu^0.75 * k^1.5 / epsilon)
+- turbulentIntensityInlet: Turbulent intensity inlet (k = 1.5 * (I * |U|)^2)
+- turbulentDissipationInlet: Turbulent dissipation inlet with explicit k/l_mix override
+- turbulentFrequencyInlet: Turbulent frequency inlet with explicit k/l_mix override
+- turbulentKineticEnergyInlet2: Enhanced k inlet with intensity and length scale clamping
+- turbulentDissipationInlet2: Enhanced epsilon inlet from intensity and length scale
+- turbulentFrequencyInlet2: Enhanced omega inlet from intensity and length scale
 """
 
 # Import base and collection first
@@ -343,6 +353,18 @@ from pyfoam.boundary.coded_fixed_value import CodedFixedValueBC
 from pyfoam.boundary.cyclic_ami_2 import CyclicAMI2BC
 from pyfoam.boundary.processor_cyclic import ProcessorCyclicBC
 
+# Phase 24: Mapped flow rate / wave transmissive / turbulent inlet BCs
+from pyfoam.boundary.mapped_flow_rate import MappedFlowRateBC
+from pyfoam.boundary.pressure_wave_transmissive import PressureWaveTransmissiveBC
+from pyfoam.boundary.turbulent_viscosity_inlet import TurbulentViscosityInletBC
+from pyfoam.boundary.turbulent_length_scale_inlet import TurbulentLengthScaleInletBC
+from pyfoam.boundary.turbulent_intensity_inlet import TurbulentIntensityInletBC
+from pyfoam.boundary.turbulent_dissipation_inlet import TurbulentDissipationInletBC
+from pyfoam.boundary.turbulent_frequency_inlet import TurbulentFrequencyInletBC
+from pyfoam.boundary.turbulent_kinetic_energy_inlet_2 import TurbulentKineticEnergyInlet2BC
+from pyfoam.boundary.turbulent_dissipation_inlet_2 import TurbulentDissipationInlet2BC
+from pyfoam.boundary.turbulent_frequency_inlet_2 import TurbulentFrequencyInlet2BC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -533,4 +555,15 @@ __all__ = [
     "CodedFixedValueBC",
     "CyclicAMI2BC",
     "ProcessorCyclicBC",
+    # Phase 24: Mapped flow rate / wave transmissive / turbulent inlet BCs
+    "MappedFlowRateBC",
+    "PressureWaveTransmissiveBC",
+    "TurbulentViscosityInletBC",
+    "TurbulentLengthScaleInletBC",
+    "TurbulentIntensityInletBC",
+    "TurbulentDissipationInletBC",
+    "TurbulentFrequencyInletBC",
+    "TurbulentKineticEnergyInlet2BC",
+    "TurbulentDissipationInlet2BC",
+    "TurbulentFrequencyInlet2BC",
 ]
