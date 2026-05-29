@@ -282,8 +282,11 @@ class ReconstructParEnhanced2(ReconstructParEnhanced):
             Dict mapping patch name to its metadata dict
             (``type``, ``nFaces``, ``startFace``).
         """
-        if not self._processor_dirs:
-            self.discover()
+        try:
+            if not self._processor_dirs:
+                self.discover()
+        except FileNotFoundError:
+            return {}
 
         if not self._processor_dirs:
             return {}

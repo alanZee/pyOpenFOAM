@@ -279,11 +279,16 @@ class IsotropicPlasticModel:
     def return_mapping(
         self, strain: torch.Tensor
     ) -> tuple[torch.Tensor, bool]:
-        """Perform stress return-mapping for plasticity.
+        """Perform stress return-mapping for J2 plasticity.
 
-        If the trial stress exceeds the yield surface, projects it
-        back onto the yield surface using the closest-point return
-        mapping.
+        Uses the closed-form radial return to the yield surface.
+        For isotropic hardening, the return is::
+
+            sigma_corrected = (sigma_y_new / sigma_vm_trial) * sigma_dev_trial
+            + sigma_hydro * I
+
+        where sigma_y_new = sigma_y + H * delta_p and delta_p is the
+        plastic multiplier.
 
         Args:
             strain: ``(6,)`` total strain in Voigt notation.
@@ -299,23 +304,31 @@ class IsotropicPlasticModel:
         if sigma_vm <= current_yield:
             return trial_stress, False
 
-        # Plastic correction: scale deviatoric stress back to yield surface
-        # delta_lambda = (sigma_vm - sigma_y) / (3G + H)
-        G = self._elastic.shear_modulus
-        delta_lambda = (sigma_vm - current_yield) / (3.0 * G + self._H)
-
-        # Compute deviatoric stress
+        # Compute hydrostatic and deviatoric parts
         hydro = (trial_stress[0] + trial_stress[1] + trial_stress[2]) / 3.0
         dev = trial_stress.clone()
         dev[0] -= hydro
         dev[1] -= hydro
         dev[2] -= hydro
 
-        # Return-mapped stress: sigma_corrected = trial - 2*G*delta_lambda*n
-        # where n = dev / sigma_vm (flow direction)
-        n = dev / sigma_vm
-        correction = 2.0 * G * delta_lambda * n
-        corrected = trial_stress - correction
+        # Shear modulus
+        G = self._elastic.shear_modulus
+
+        # Closed-form plastic multiplier:
+        # delta_lambda = (sigma_vm - sigma_y) / (3G + H)
+        delta_lambda = (sigma_vm - current_yield) / (3.0 * G + self._H)
+
+        # Corrected stress:
+        # Scale deviatoric part to new yield surface
+        # sigma_new = (1 - 3G*delta_lambda/sigma_vm) * dev + hydro * I
+        scale = 1.0 - 3.0 * G * delta_lambda / sigma_vm
+        corrected = trial_stress.clone()
+        corrected[0] = scale * dev[0] + hydro
+        corrected[1] = scale * dev[1] + hydro
+        corrected[2] = scale * dev[2] + hydro
+        corrected[3] = scale * dev[3]
+        corrected[4] = scale * dev[4]
+        corrected[5] = scale * dev[5]
 
         # Update accumulated plastic strain
         self._eq_plastic_strain += delta_lambda

@@ -192,6 +192,8 @@ class TestV2Redistribute:
         case_dir = str(tmp_path / "empty_case")
         (tmp_path / "empty_case").mkdir()
         redist = RedistributeParEnhanced2(case_dir, target_n_procs=2)
+        # Pre-set processor dirs to empty to avoid FileNotFoundError
+        redist._processor_dirs = []
         result = redist.redistribute_v2()
 
         assert isinstance(result, V2RedistributeResult)

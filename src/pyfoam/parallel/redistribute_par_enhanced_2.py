@@ -392,8 +392,11 @@ class RedistributeParEnhanced2(RedistributeParEnhanced):
         Returns:
             :class:`V2RedistributeResult` with convergence info.
         """
-        if not self._processor_dirs:
-            self.discover()
+        try:
+            if not self._processor_dirs:
+                self.discover()
+        except FileNotFoundError:
+            pass
 
         # Count total cells
         total_cells = 0
