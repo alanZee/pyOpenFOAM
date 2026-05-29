@@ -92,6 +92,7 @@ from pyfoam.discretisation.schemes.central import CentralInterpolation
 from pyfoam.discretisation.schemes.sfcd import SFCDInterpolation
 from pyfoam.discretisation.schemes.cubic import CubicInterpolation
 from pyfoam.discretisation.schemes.linear_fit import LinearFitInterpolation
+from pyfoam.discretisation.schemes.limited_linear import LimitedLinearInterpolation
 from pyfoam.discretisation.ddt import (
     DdtScheme,
     EulerDdt,
@@ -136,6 +137,7 @@ __all__ = [
     "SFCDInterpolation",
     "CubicInterpolation",
     "LinearFitInterpolation",
+    "LimitedLinearInterpolation",
     # Time derivative (ddt) schemes
     "DdtScheme",
     "EulerDdt",
