@@ -90,6 +90,31 @@ from pyfoam.io.vtk_io import (
     write_vtk_unstructured,
     write_vtu_unstructured,
 )
+from pyfoam.io.vtk_io_enhanced import (
+    VTKBlock,
+    write_vtk_binary,
+    write_vtm_multiblock,
+)
+from pyfoam.io.ensight_io import (
+    EnSightCase,
+    EnSightGeometry,
+    EnSightPart,
+    EnSightVariable,
+    read_ensight_case,
+    read_ensight_geometry,
+    read_ensight_variable,
+    write_ensight_case,
+    write_ensight_geometry,
+    write_ensight_variable,
+    foam_to_ensight,
+)
+from pyfoam.io.gmsh_io_enhanced import (
+    GmshEntity,
+    GmshMeshV4,
+    GmshPartitionTag,
+    read_gmsh_v4,
+    gmsh_to_foam_enhanced,
+)
 from pyfoam.io.foam_format_convert import (
     FoamFormatConverter,
     convert_file,
@@ -191,6 +216,28 @@ __all__ = [
     "write_vtk_unstructured",
     "write_vtu_unstructured",
     "foam_to_vtk",
+    # Enhanced VTK I/O
+    "VTKBlock",
+    "write_vtk_binary",
+    "write_vtm_multiblock",
+    # EnSight I/O
+    "EnSightCase",
+    "EnSightGeometry",
+    "EnSightPart",
+    "EnSightVariable",
+    "read_ensight_case",
+    "read_ensight_geometry",
+    "read_ensight_variable",
+    "write_ensight_case",
+    "write_ensight_geometry",
+    "write_ensight_variable",
+    "foam_to_ensight",
+    # Enhanced Gmsh I/O (v4.x)
+    "GmshEntity",
+    "GmshMeshV4",
+    "GmshPartitionTag",
+    "read_gmsh_v4",
+    "gmsh_to_foam_enhanced",
     # Format conversion
     "FoamFormatConverter",
     "convert_file",

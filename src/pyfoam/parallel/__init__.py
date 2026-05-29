@@ -30,6 +30,21 @@ from pyfoam.parallel.parallel_io import ParallelReader, ParallelWriter
 from pyfoam.parallel.parallel_solver import ParallelSolver, ParallelSolverConfig
 from pyfoam.parallel.reconstruct_par import ReconstructPar, ReconstructResult
 from pyfoam.parallel.redistribute_par import RedistributePar, RedistributeResult
+from pyfoam.parallel.reconstruct_par_enhanced import (
+    ReconstructParEnhanced,
+    ZoneInfo,
+    EnhancedReconstructResult,
+)
+from pyfoam.parallel.redistribute_par_enhanced import (
+    RedistributeParEnhanced,
+    BalancingStrategy,
+    EnhancedRedistributeResult,
+    PartitionDiagnostics,
+)
+from pyfoam.parallel.processor_patch_enhanced import (
+    NonConformalPatch,
+    EnhancedHaloExchange,
+)
 
 __all__ = [
     # Decomposition
@@ -53,7 +68,19 @@ __all__ = [
     # Reconstruction
     "ReconstructPar",
     "ReconstructResult",
+    # Enhanced reconstruction
+    "ReconstructParEnhanced",
+    "ZoneInfo",
+    "EnhancedReconstructResult",
     # Redistribution
     "RedistributePar",
     "RedistributeResult",
+    # Enhanced redistribution
+    "RedistributeParEnhanced",
+    "BalancingStrategy",
+    "EnhancedRedistributeResult",
+    "PartitionDiagnostics",
+    # Enhanced processor patches
+    "NonConformalPatch",
+    "EnhancedHaloExchange",
 ]

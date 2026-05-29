@@ -19,6 +19,8 @@ Provides:
 - :class:`Lambda2` — λ₂ criterion vortex identification
 - :class:`Enstrophy` — enstrophy (0.5 * |ω|²) computation
 - :class:`TurbulentKineticEnergy` — TKE computation (resolved/RANS)
+- :class:`FieldAverageEnhanced` — enhanced time-weighted averaging with Reynolds decomposition
+- :class:`ProbesEnhanced` — enhanced probes with time interpolation and spectral analysis
 
 All function objects follow OpenFOAM's function object API and can be
 configured via dictionary entries in ``system/controlDict``.
@@ -45,6 +47,8 @@ from pyfoam.postprocessing.q_criterion import QCriterion
 from pyfoam.postprocessing.lambda2 import Lambda2
 from pyfoam.postprocessing.enstrophy import Enstrophy
 from pyfoam.postprocessing.turbulent_kinetic_energy import TurbulentKineticEnergy
+from pyfoam.postprocessing.field_average_enhanced import FieldAverageEnhanced
+from pyfoam.postprocessing.probes_enhanced import ProbesEnhanced, SpectrumResult
 
 __all__ = [
     # Framework
@@ -96,4 +100,9 @@ __all__ = [
     # Turbulence quantities
     "Enstrophy",
     "TurbulentKineticEnergy",
+    # Enhanced field averaging
+    "FieldAverageEnhanced",
+    # Enhanced probes
+    "ProbesEnhanced",
+    "SpectrumResult",
 ]

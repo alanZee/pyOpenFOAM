@@ -193,6 +193,7 @@ class EnhancedHaloExchange(HaloExchange):
                 # Weighted interpolation
                 source_vals = recv_buf[patch.local_src_indices]  # (n_ghost, n_src)
                 interpolated = (source_vals * patch.local_weights).sum(dim=1)
+                interpolated = interpolated.to(dtype=field_values.dtype)
                 field_values[patch.local_ghost_cells] = interpolated
             else:
                 # Fallback: direct mapping (same as conformal)
