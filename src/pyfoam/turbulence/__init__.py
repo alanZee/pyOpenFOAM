@@ -88,6 +88,11 @@ Provides:
 **Kato-Launder Production Limiter:**
 - :class:`KatoLaunderDamping` — Kato-Launder production limiter (|S|*|Omega| instead of |S|^2)
 
+**Enhanced Turbulence Inlet Models (v2):**
+- :class:`TurbulenceInletModel2` — Enhanced base class with spatial correlation support
+- :class:`DigitalFilterInlet` — Digital filter turbulence generation (Klein et al., 2003)
+- :class:`SyntheticEddyInlet` — Synthetic eddy method (Jarrin et al., 2006)
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -272,6 +277,13 @@ from pyfoam.turbulence.turbulence_inlet_models import (
 # Kato-Launder production limiter
 from pyfoam.turbulence.turbulence_kato_launder import KatoLaunderDamping
 
+# Enhanced turbulence inlet models
+from pyfoam.turbulence.turbulence_inlet_models_2 import (
+    TurbulenceInletModel2,
+    DigitalFilterInlet,
+    SyntheticEddyInlet,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -402,4 +414,8 @@ __all__ = [
     "MappedTurbulenceInlet",
     # Kato-Launder production limiter
     "KatoLaunderDamping",
+    # Enhanced turbulence inlet models
+    "TurbulenceInletModel2",
+    "DigitalFilterInlet",
+    "SyntheticEddyInlet",
 ]
