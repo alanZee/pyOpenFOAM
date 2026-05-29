@@ -93,6 +93,18 @@ Provides:
 - :class:`DigitalFilterInlet` — Digital filter turbulence generation (Klein et al., 2003)
 - :class:`SyntheticEddyInlet` — Synthetic eddy method (Jarrin et al., 2006)
 
+**LES Spatial Filters:**
+- :class:`SimpleFilter` — simple spatial filter
+- :class:`LaplaceFilter` — Laplacian spatial filter
+
+**Generalised Newtonian Viscosity Models:**
+- :class:`GeneralizedNewtonianViscosity` — Abstract base for generalised Newtonian viscosity with RTS registry
+- :class:`CassonModel` — Casson yield-stress model (RTS-registered)
+- :class:`HerschelBulkleyModel` — Herschel-Bulkley yield-stress + power-law (RTS-registered)
+- :class:`BinghamModel` — Bingham plastic model (RTS-registered)
+- :class:`QuemadaModel` — Quemada suspension model (RTS-registered)
+- :class:`StrainRateFunctionModel` — user-defined arbitrary viscosity function (RTS-registered)
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -291,6 +303,16 @@ from pyfoam.turbulence.les_sgs_models import (
     WALE_SGS,
 )
 
+# Generalised Newtonian viscosity models (RTS-registered)
+from pyfoam.turbulence.generalized_newtonian import (
+    GeneralizedNewtonianViscosity,
+    CassonModel,
+    HerschelBulkleyModel,
+    BinghamModel,
+    QuemadaModel,
+    StrainRateFunctionModel,
+)
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -429,4 +451,11 @@ __all__ = [
     "SGSModel",
     "DynamicSmagorinskySGS",
     "WALE_SGS",
+    # Generalised Newtonian viscosity models (RTS-registered)
+    "GeneralizedNewtonianViscosity",
+    "CassonModel",
+    "HerschelBulkleyModel",
+    "BinghamModel",
+    "QuemadaModel",
+    "StrainRateFunctionModel",
 ]
