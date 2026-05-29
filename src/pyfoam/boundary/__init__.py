@@ -66,6 +66,9 @@ Provides:
 - pressureInletOutlet2: Enhanced pressure inlet/outlet with turbulence-aware treatment
 - coupledVelocity: Coupled velocity BC for conjugate heat transfer interfaces
 - pressureTransmissive: Transmissive (non-reflecting) pressure BC for outflow
+- pressureDirectedInletVelocity: Velocity inlet driven by pressure gradient (Bernoulli)
+- swirlFlowRateInletVelocity: Flow rate inlet with superimposed swirl component
+- mappedConvectiveHeatTransfer: Mapped conjugate heat transfer with coupled patch temperature
 """
 
 # Import base and collection first
@@ -280,6 +283,11 @@ from pyfoam.boundary.pressure_inlet_outlet_2 import PressureInletOutlet2BC
 from pyfoam.boundary.coupled_velocity import CoupledVelocityBC
 from pyfoam.boundary.pressure_transmissive import PressureTransmissiveBC
 
+# Phase 20: Pressure-directed inlet / swirl flow rate / mapped convective HT BCs
+from pyfoam.boundary.pressure_directed_inlet_velocity import PressureDirectedInletVelocityBC
+from pyfoam.boundary.swirl_flow_rate_inlet_velocity import SwirlFlowRateInletVelocityBC
+from pyfoam.boundary.mapped_convective_heat_transfer import MappedConvectiveHeatTransferBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -436,4 +444,8 @@ __all__ = [
     # Phase 5: Coupled velocity and transmissive pressure BCs
     "CoupledVelocityBC",
     "PressureTransmissiveBC",
+    # Phase 20: Pressure-directed inlet / swirl flow rate / mapped convective HT BCs
+    "PressureDirectedInletVelocityBC",
+    "SwirlFlowRateInletVelocityBC",
+    "MappedConvectiveHeatTransferBC",
 ]
