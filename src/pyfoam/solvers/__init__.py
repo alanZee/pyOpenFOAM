@@ -58,7 +58,15 @@ from pyfoam.solvers.gamg import GAMGSolver
 from pyfoam.solvers.preconditioners import (
     DICPreconditioner,
     DILUPreconditioner,
+    ILU0Preconditioner,
+    ILUTPreconditioner,
+    JacobiPreconditioner,
     Preconditioner,
+)
+from pyfoam.solvers.smoothers import (
+    GaussSeidelSmoother,
+    JacobiSmoother,
+    DICGSmoother,
 )
 from pyfoam.solvers.residual import ConvergenceInfo, ResidualMonitor
 from pyfoam.solvers.coupled_solver import (
@@ -94,6 +102,13 @@ __all__ = [
     "Preconditioner",
     "DICPreconditioner",
     "DILUPreconditioner",
+    "ILU0Preconditioner",
+    "ILUTPreconditioner",
+    "JacobiPreconditioner",
+    # Smoothers
+    "GaussSeidelSmoother",
+    "JacobiSmoother",
+    "DICGSmoother",
     # Factory functions
     "create_solver",
     "solver_from_dict",
