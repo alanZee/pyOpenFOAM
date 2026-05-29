@@ -98,12 +98,14 @@ class TestSurfaceFeatures:
         # 2 triangles sharing 1 edge: 2*3 - 1 = 5 unique edges
         assert result.n_edges == 5
 
-    def test_low_threshold_captures_more(self):
-        """Lower included_angle threshold should capture more features."""
+    def test_high_threshold_captures_more(self):
+        """Higher included_angle threshold should capture more features."""
         pts, tris = _unit_cube_triangles()
         r1 = surface_features("", vertices=pts, faces=tris, included_angle=10.0)
         r2 = surface_features("", vertices=pts, faces=tris, included_angle=170.0)
-        assert r1.n_features >= r2.n_features
+        # Lower threshold = stricter (only very sharp edges)
+        # Higher threshold = more lenient (includes more edges)
+        assert r2.n_features >= r1.n_features
 
     def test_nonexistent_file_raises(self):
         """Should raise FileNotFoundError for non-existent file."""

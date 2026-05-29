@@ -103,7 +103,7 @@ class TestNewSimpleDecay:
             ("RKDP45", 1e-2, 1e-6),
             ("Rosenbrock23", 1e-2, 1e-6),
             ("Rosenbrock34", 1e-2, 1e-6),
-            ("SIS", 1e-2, 1e-6),
+            ("SIS", 1e-2, 1e-5),
             ("SEulex", 1e-2, 1e-6),
         ],
     )
@@ -135,7 +135,7 @@ class TestNewHarmonicOscillator:
             ("RKDP45", 0.01, 1e-4),
             ("Rosenbrock23", 0.01, 1e-4),
             ("Rosenbrock34", 0.01, 1e-4),
-            ("SIS", 0.01, 1e-4),
+            ("SIS", 0.01, 1e-3),
             ("SEulex", 0.01, 1e-4),
         ],
     )

@@ -374,6 +374,9 @@ __all__ = [
     # Wall functions
     "compute_nut_wall",
     "compute_nut_low_re_wall",
+    "compute_nut_u_wall",
+    "compute_nut_u_rough_wall",
+    "compute_nut_u_spalding_wall",
     "compute_k_wall",
     "compute_omega_wall",
     "compute_epsilon_wall",
@@ -400,10 +403,12 @@ __all__ = [
     "CubeRootVolDelta",
     "MaxDeltaXYZ",
     "VanDriestDelta",
+    "SmoothDelta",
     # LES spatial filters
     "LESFilter",
     "SimpleFilter",
     "LaplaceFilter",
+    "AnisotropicFilter",
     # Wall distance calculators
     "WallDistanceCalculator",
     "ExactWallDistance",

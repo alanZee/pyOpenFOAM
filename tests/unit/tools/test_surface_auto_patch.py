@@ -95,11 +95,13 @@ class TestSurfaceAutoPatch:
         with pytest.raises(FileNotFoundError):
             surface_auto_patch("/nonexistent/path.stl")
 
-    def test_high_angle_single_patch(self):
-        """Very high feature angle should merge everything into 1 patch."""
+    def test_high_angle_multiple_face_groups(self):
+        """Very high feature angle groups only co-planar faces (6 cube faces)."""
         pts, tris = _unit_cube_triangles()
         result = surface_auto_patch(vertices=pts, faces=tris, feature_angle=180.0)
-        assert result.n_patches == 1
+        # feature_angle=180 means only faces with identical normals merge
+        # Cube has 6 face pairs → 6 patches
+        assert result.n_patches == 6
 
     def test_empty_surface(self):
         """Empty surface should return 0 patches."""

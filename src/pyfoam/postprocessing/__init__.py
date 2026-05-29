@@ -29,6 +29,9 @@ from pyfoam.postprocessing.vtk_output import VTKWriter, FoamToVTK
 from pyfoam.postprocessing.noise import Noise
 from pyfoam.postprocessing.temporal_interpolate import TemporalInterpolate
 from pyfoam.postprocessing.particle_tracks import ParticleTracks
+from pyfoam.postprocessing.field_min_max import FieldMinMax, MinMaxResult
+from pyfoam.postprocessing.field_average import FieldAverage
+from pyfoam.postprocessing.y_plus_enhanced import YPlusEnhanced, WallTreatment, YPatchStats
 
 __all__ = [
     # Framework
@@ -55,4 +58,13 @@ __all__ = [
     "TemporalInterpolate",
     # Particle tracking
     "ParticleTracks",
+    # Field min/max
+    "FieldMinMax",
+    "MinMaxResult",
+    # Field averaging
+    "FieldAverage",
+    # Enhanced y+
+    "YPlusEnhanced",
+    "WallTreatment",
+    "YPatchStats",
 ]
