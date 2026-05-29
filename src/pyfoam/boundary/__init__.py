@@ -62,6 +62,8 @@ Provides:
 - variableHeight2: Enhanced variable height with momentum-consistent velocity correction
 - tomiyamaWallLubrication2: Enhanced Tomiyama Eo-dependent + distance-dependent wall lubrication
 - interfacialHeatTransfer: Interfacial heat transfer for boiling/condensation at interfaces
+- antalWallLubrication2: Enhanced Antal wall lubrication with exponent and interface damping
+- pressureInletOutlet2: Enhanced pressure inlet/outlet with turbulence-aware treatment
 """
 
 # Import base and collection first
@@ -268,6 +270,10 @@ from pyfoam.boundary.variable_height_2 import VariableHeight2BC
 from pyfoam.boundary.wall_lubrication_tomiyama import TomiyamaWallLubrication2BC
 from pyfoam.boundary.interfacial_heat_transfer import InterfacialHeatTransferBC
 
+# Phase 5-7: Enhanced Antal wall lubrication and pressure inlet/outlet 2 BCs
+from pyfoam.boundary.wall_lubrication_antal import AntalWallLubrication2BC
+from pyfoam.boundary.pressure_inlet_outlet_2 import PressureInletOutlet2BC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -418,4 +424,7 @@ __all__ = [
     # Phase 4-7: Enhanced Tomiyama and interfacial HT BCs
     "TomiyamaWallLubrication2BC",
     "InterfacialHeatTransferBC",
+    # Phase 5-7: Enhanced Antal and pressure inlet/outlet 2 BCs
+    "AntalWallLubrication2BC",
+    "PressureInletOutlet2BC",
 ]
