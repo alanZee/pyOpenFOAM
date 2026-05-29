@@ -33,7 +33,9 @@ __all__ = [
     "SteadyStateDdt",
     "CrankNicolsonDdt",
     "BackwardDdt",
+    "BackwardDdt2",
     "BoundedDdt",
+    "BoundedDdt2",
     "DDT_REGISTRY",
 ]
 
@@ -569,6 +571,257 @@ class BoundedDdt(DdtScheme):
 
 
 # ---------------------------------------------------------------------------
+# Backward second-order v2 (three time levels, variable dt)
+# ---------------------------------------------------------------------------
+
+
+class BackwardDdt2(DdtScheme):
+    """Second-order backward time derivative v2 with variable-dt support.
+
+    Improves on :class:`BackwardDdt` by supporting variable time-step sizes.
+    Uses the generalised BDF2 formula::
+
+        d(phi)/dt ≈ ((2*r+1)/(r*(r+1))) * phi
+                    - (r+1)/r * phi_old
+                    + r/(r+1) * phi_old2
+
+    where r = dt / dt_old is the ratio of current to previous time step.
+
+    The resulting FvMatrix coefficients::
+
+        diag_i   = coeff * V_i * (2*r+1) / (r*(r+1)) / dt
+        source_i = coeff * V_i / dt * [(r+1)/r * phi_old_i - r/(r+1) * phi_old2_i]
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    dt_old : float, optional
+        Previous time-step size.  When not provided, assumes equal time
+        steps (equivalent to :class:`BackwardDdt`).
+    """
+
+    def __init__(self, mesh: Any, dt_old: float | None = None) -> None:
+        super().__init__(mesh)
+        self._dt_old = dt_old
+
+    def ddt(
+        self,
+        coeff: float,
+        phi: Any,
+        dt: float,
+        *,
+        mesh: Any = None,
+        phi_old: Any = None,
+        phi_old2: Any = None,
+        dt_old: float | None = None,
+    ) -> FvMatrix:
+        """Second-order backward ddt with variable-dt support.
+
+        Args:
+            coeff: Scalar coefficient (e.g. density ρ or 1).
+            phi: Current field values.
+            dt: Time step size.
+            mesh: The ``FvMesh`` (inferred from *phi* when possible).
+            phi_old: **Required.**  Field at previous time-step (n-1).
+            phi_old2: **Required.**  Field at two time-steps ago (n-2).
+            dt_old: Previous time-step size (overrides constructor value).
+
+        Raises:
+            ValueError: If *phi_old* or *phi_old2* is not provided.
+        """
+        if phi_old is None:
+            raise ValueError(
+                "BackwardDdt2 requires phi_old (previous time-step field)"
+            )
+        if phi_old2 is None:
+            raise ValueError(
+                "BackwardDdt2 requires phi_old2 (two time-steps ago field)"
+            )
+
+        mesh = mesh or self._mesh
+        dt_old_val = dt_old or self._dt_old or dt
+        r = dt / dt_old_val
+
+        phi_data = self._extract_phi(phi).to(
+            device=mesh.device, dtype=mesh.dtype,
+        )
+        phi_old_data = self._extract_phi(phi_old).to(
+            device=mesh.device, dtype=mesh.dtype,
+        )
+        phi_old2_data = self._extract_phi(phi_old2).to(
+            device=mesh.device, dtype=mesh.dtype,
+        )
+
+        n_cells = mesh.n_cells
+        cell_volumes = mesh.cell_volumes
+        owner = mesh.owner[: mesh.n_internal_faces]
+        neighbour = mesh.neighbour
+
+        mat = FvMatrix(
+            n_cells, owner, neighbour,
+            device=mesh.device, dtype=mesh.dtype,
+        )
+
+        # 可变时间步长 BDF2 系数
+        c0 = (2.0 * r + 1.0) / (r * (r + 1.0))
+        c1 = (r + 1.0) / r
+        c2 = r / (r + 1.0)
+
+        mat.diag = coeff * cell_volumes * c0 / dt
+
+        if phi_old_data.dim() == 1:
+            source_val = c1 * phi_old_data - c2 * phi_old2_data
+            mat.source = coeff * cell_volumes * source_val / dt
+        else:
+            source_val = c1 * phi_old_data - c2 * phi_old2_data
+            mat.source = (
+                coeff * cell_volumes * source_val.sum(dim=-1) / dt
+            )
+
+        return mat
+
+
+# ---------------------------------------------------------------------------
+# Bounded Euler v2 (with adaptive limiting)
+# ---------------------------------------------------------------------------
+
+
+class BoundedDdt2(DdtScheme):
+    r"""Bounded Euler time derivative v2 with adaptive limiting.
+
+    Improves on :class:`BoundedDdt` by using a smoother limiting function
+    that blends between Euler and steady-state based on the Courant number:
+
+    .. math::
+
+        \text{diag}_i = \frac{\text{coeff} \cdot V_i}{\Delta t}
+            \cdot \frac{1}{1 + \max(0, \text{Co}_i / \text{Co}_{\text{ref}} - 1)}
+
+    This provides a smoother transition than the sharp clipping used in
+    :class:`BoundedDdt`, avoiding oscillations in the diagonal coefficient.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    Co_ref : float, optional
+        Reference Courant number for limiting.  Default is 1.0.
+    face_flux : torch.Tensor, optional
+        Face flux values ``(n_faces,)``.
+    """
+
+    def __init__(
+        self, mesh: Any, Co_ref: float = 1.0,
+        face_flux: Any = None,
+    ) -> None:
+        super().__init__(mesh)
+        if Co_ref <= 0.0:
+            raise ValueError(
+                f"Co_ref must be positive, got {Co_ref}"
+            )
+        self._Co_ref = Co_ref
+        self._face_flux = face_flux
+
+    @property
+    def Co_ref(self) -> float:
+        """Reference Courant number."""
+        return self._Co_ref
+
+    def ddt(
+        self,
+        coeff: float,
+        phi: Any,
+        dt: float,
+        *,
+        mesh: Any = None,
+        phi_old: Any = None,
+    ) -> FvMatrix:
+        """Bounded Euler v2 ddt.
+
+        Args:
+            coeff: Scalar coefficient (e.g. density ρ or 1).
+            phi: Current field values.
+            dt: Time step size.
+            mesh: The ``FvMesh`` (inferred from *phi* when possible).
+            phi_old: Previous time-step field.  Defaults to *phi*.
+
+        Returns:
+            :class:`FvMatrix` with adaptive bounded Euler coefficients.
+        """
+        mesh = mesh or self._mesh
+
+        phi_data = self._extract_phi(phi).to(
+            device=mesh.device, dtype=mesh.dtype,
+        )
+        if phi_old is None:
+            phi_old_data = phi_data
+        else:
+            phi_old_data = self._extract_phi(phi_old).to(
+                device=mesh.device, dtype=mesh.dtype,
+            )
+
+        n_cells = mesh.n_cells
+        cell_volumes = mesh.cell_volumes
+        owner = mesh.owner[: mesh.n_internal_faces]
+        neighbour = mesh.neighbour
+
+        mat = FvMatrix(
+            n_cells, owner, neighbour,
+            device=mesh.device, dtype=mesh.dtype,
+        )
+
+        if self._face_flux is not None:
+            flux = self._face_flux.to(
+                device=mesh.device, dtype=mesh.dtype,
+            )
+            n_internal = mesh.n_internal_faces
+
+            flux_abs = flux.abs()
+            cell_flux_sum = torch.zeros(
+                n_cells, dtype=mesh.dtype, device=mesh.device,
+            )
+            if n_internal > 0:
+                cell_flux_sum.scatter_add_(
+                    0, mesh.owner[:n_internal], flux_abs[:n_internal],
+                )
+                cell_flux_sum.scatter_add_(
+                    0, mesh.neighbour, flux_abs[:n_internal],
+                )
+            if mesh.n_faces > n_internal:
+                cell_flux_sum.scatter_add_(
+                    0,
+                    mesh.owner[n_internal:],
+                    flux_abs[n_internal:],
+                )
+
+            local_co = cell_flux_sum * dt / cell_volumes.clamp(min=1e-30)
+
+            # v2 改进：平滑限制函数
+            excess = torch.clamp(local_co / self._Co_ref - 1.0, min=0.0)
+            limit = 1.0 / (1.0 + excess)
+        else:
+            limit = torch.ones(n_cells, dtype=mesh.dtype, device=mesh.device)
+
+        mat.diag = coeff * cell_volumes * limit / dt
+
+        if phi_old_data.dim() == 1:
+            mat.source = coeff * cell_volumes * phi_old_data / dt
+        else:
+            mat.source = (
+                coeff * cell_volumes * phi_old_data.sum(dim=-1) / dt
+            )
+
+        return mat
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}(mesh={self._mesh}, "
+            f"Co_ref={self._Co_ref})"
+        )
+
+
+# ---------------------------------------------------------------------------
 # Scheme registry
 # ---------------------------------------------------------------------------
 
@@ -578,6 +831,8 @@ DDT_REGISTRY: dict[str, type[DdtScheme]] = {
     "CrankNicolson": CrankNicolsonDdt,
     "backward": BackwardDdt,
     "bounded": BoundedDdt,
+    "backward2": BackwardDdt2,
+    "bounded2": BoundedDdt2,
 }
 
 

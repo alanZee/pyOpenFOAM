@@ -26,6 +26,24 @@ from pyfoam.rigid_body.restraints import (
     LinearDamper,
     AngularDamper,
 )
+from pyfoam.rigid_body.six_dof_solver_enhanced import (
+    EnhancedSixDoFSolver,
+    PositionConstraint,
+    VelocityConstraint,
+    ConstraintType,
+)
+from pyfoam.rigid_body.joints_enhanced import (
+    CylindricalJoint,
+    PlanarJoint,
+    UniversalJoint,
+    FreeJoint,
+)
+from pyfoam.rigid_body.restraints_enhanced import (
+    TorsionSpring,
+    NonlinearSpring,
+    MotorRestraint,
+    BushingRestraint,
+)
 
 __all__ = [
     "SixDoFSolver",
@@ -40,4 +58,17 @@ __all__ = [
     "LinearSpring",
     "LinearDamper",
     "AngularDamper",
+    # Enhanced
+    "EnhancedSixDoFSolver",
+    "PositionConstraint",
+    "VelocityConstraint",
+    "ConstraintType",
+    "CylindricalJoint",
+    "PlanarJoint",
+    "UniversalJoint",
+    "FreeJoint",
+    "TorsionSpring",
+    "NonlinearSpring",
+    "MotorRestraint",
+    "BushingRestraint",
 ]

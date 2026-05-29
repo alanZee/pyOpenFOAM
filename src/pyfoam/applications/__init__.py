@@ -70,6 +70,14 @@ Available solvers:
 - :class:`SolidFoam` — Solid mechanics solver with thermal stress analysis
 - :class:`FilmFoam` — Thin film flow solver with surface tension
 - :class:`SprayFoam2` — Enhanced Lagrangian spray with KH-RT breakup
+- :class:`PisoFoamEnhanced` — Enhanced PISO solver (Rhie-Chow, non-orthogonal corrections)
+- :class:`PimpleFoamEnhanced` — Enhanced PIMPLE solver (Aitken relaxation, warm-up)
+- :class:`SimpleFoamEnhanced` — Enhanced SIMPLE solver (SIMPLEC, dynamic relaxation)
+- :class:`IcoFoamEnhanced` — Enhanced ICO solver (adaptive dt, Crank-Nicolson)
+- :class:`RhoPimpleFoamEnhanced` — Enhanced compressible PIMPLE (coupled energy, Mach-aware)
+- :class:`BuoyantSimpleFoamEnhanced` — Enhanced buoyant SIMPLE (Boussinesq, Richardson-aware)
+- :class:`BuoyantPimpleFoamEnhanced` — Enhanced buoyant PIMPLE (temp-dependent relaxation)
+- :class:`ReactingFoamEnhanced3` — Enhanced reacting solver v3 (stiff chemistry, Strang splitting)
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -140,6 +148,14 @@ from pyfoam.applications.multiphase_euler_foam_2 import MultiphaseEulerFoam2
 from pyfoam.applications.solid_foam import SolidFoam
 from pyfoam.applications.film_foam import FilmFoam
 from pyfoam.applications.spray_foam_2 import SprayFoam2
+from pyfoam.applications.piso_foam_enhanced import PisoFoamEnhanced
+from pyfoam.applications.pimple_foam_enhanced import PimpleFoamEnhanced
+from pyfoam.applications.simple_foam_enhanced import SimpleFoamEnhanced
+from pyfoam.applications.ico_foam_enhanced import IcoFoamEnhanced
+from pyfoam.applications.rho_pimple_foam_enhanced import RhoPimpleFoamEnhanced
+from pyfoam.applications.buoyant_simple_foam_enhanced import BuoyantSimpleFoamEnhanced
+from pyfoam.applications.buoyant_pimple_foam_enhanced import BuoyantPimpleFoamEnhanced
+from pyfoam.applications.reacting_foam_enhanced_3 import ReactingFoamEnhanced3
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -214,6 +230,14 @@ __all__ = [
     "SolidFoam",
     "FilmFoam",
     "SprayFoam2",
+    "PisoFoamEnhanced",
+    "PimpleFoamEnhanced",
+    "SimpleFoamEnhanced",
+    "IcoFoamEnhanced",
+    "RhoPimpleFoamEnhanced",
+    "BuoyantSimpleFoamEnhanced",
+    "BuoyantPimpleFoamEnhanced",
+    "ReactingFoamEnhanced3",
     "TimeLoop",
     "ConvergenceMonitor",
 ]

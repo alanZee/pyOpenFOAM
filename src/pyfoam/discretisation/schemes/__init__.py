@@ -5,7 +5,7 @@ Contains interpolation schemes that operate as GPU tensor gather/scatter
 operations: upwind, linear-upwind, QUICK, harmonic, midPoint, LUST,
 vanLeer, gamma, interfaceCompression, MUSCL, central, SFCD, cubic,
 linearFit, limitedLinear, filteredLinear, blended, linearFit2,
-cubicUpwind, and AMI.
+cubicUpwind, and AMI.  Also includes v2 variants and filteredLinear3.
 """
 
 from pyfoam.discretisation.schemes.upwind import UpwindInterpolation
@@ -38,6 +38,13 @@ from pyfoam.discretisation.schemes.muscl_v import MUSCLVInterpolation
 from pyfoam.discretisation.schemes.gamma_v import GammaVInterpolation
 from pyfoam.discretisation.schemes.clipped_linear import ClippedLinearInterpolation
 from pyfoam.discretisation.schemes.corrected_linear import CorrectedLinearInterpolation
+from pyfoam.discretisation.schemes.linear_upwind_fit_2 import LinearUpwindFit2Interpolation
+from pyfoam.discretisation.schemes.upwind_fit_2 import UpwindFit2Interpolation
+from pyfoam.discretisation.schemes.cubic_upwind_fit_2 import CubicUpwindFit2Interpolation
+from pyfoam.discretisation.schemes.filtered_linear_3 import FilteredLinear3Interpolation
+from pyfoam.discretisation.schemes.van_leer_v_2 import VanLeerV2Interpolation
+from pyfoam.discretisation.schemes.muscl_v_2 import MUSCLV2Interpolation
+from pyfoam.discretisation.schemes.gamma_v_2 import GammaV2Interpolation
 
 __all__ = [
     "UpwindInterpolation",
@@ -70,4 +77,11 @@ __all__ = [
     "GammaVInterpolation",
     "ClippedLinearInterpolation",
     "CorrectedLinearInterpolation",
+    "LinearUpwindFit2Interpolation",
+    "UpwindFit2Interpolation",
+    "CubicUpwindFit2Interpolation",
+    "FilteredLinear3Interpolation",
+    "VanLeerV2Interpolation",
+    "MUSCLV2Interpolation",
+    "GammaV2Interpolation",
 ]

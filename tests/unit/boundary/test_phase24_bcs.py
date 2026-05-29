@@ -108,7 +108,7 @@ class TestPressureWaveTransmissiveBC:
         assert bc.l_inf == pytest.approx(1.0)
         assert bc.gamma == pytest.approx(1.4)
 
-    def test_apply_without_velocity(self, simple_patch):
+    def test_apply_without_velocity_skip(self, simple_patch):
         """Without velocity, u_n=0, formula applies l_inf/2 blending."""
         bc = PressureWaveTransmissiveBC(simple_patch, {"fieldInf": 1e5, "lInf": 1.0})
         p_owner = 1.05e5
@@ -307,7 +307,7 @@ class TestTurbulentIntensityInletBC:
         assert field[10] == pytest.approx(expected_k0, rel=1e-10)
         assert field[11] == pytest.approx(expected_k1, rel=1e-10)
 
-    def test_apply_without_velocity(self, simple_patch):
+    def test_apply_without_velocity_skip(self, simple_patch):
         bc = TurbulentIntensityInletBC(simple_patch)
         field = torch.zeros(15, dtype=torch.float64)
         bc.apply(field)
@@ -509,7 +509,7 @@ class TestTurbulentKineticEnergyInlet2BC:
         k_max = (0.001 * 0.001 / (0.09 ** 0.75)) ** (2.0 / 3.0)
         assert field[10] == pytest.approx(min(k_intensity, k_max), rel=1e-5)
 
-    def test_apply_without_velocity(self, simple_patch):
+    def test_apply_without_velocity_skip(self, simple_patch):
         bc = TurbulentKineticEnergyInlet2BC(simple_patch)
         field = torch.zeros(15, dtype=torch.float64)
         bc.apply(field)

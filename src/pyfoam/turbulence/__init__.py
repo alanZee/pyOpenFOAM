@@ -105,6 +105,14 @@ Provides:
 - :class:`QuemadaModel` — Quemada suspension model (RTS-registered)
 - :class:`StrainRateFunctionModel` — user-defined arbitrary viscosity function (RTS-registered)
 
+**Enhanced RANS/LES Models (Phase 10):**
+- :class:`KEpsilonEnhancedModel` — Enhanced realizable k-epsilon with dynamic C_mu and production limiter
+- :class:`KOmegaEnhancedModel` — Enhanced k-omega (Wilcox 2006) with cross-diffusion and low-Re correction
+- :class:`KOmegaSSTEnhancedModel` — Enhanced k-omega SST (Menter 2003) with c1 cross-diffusion limiter
+- :class:`SpalartAllmarasEnhancedModel` — SA-noft2 variant (no trip term, standard production code variant)
+- :class:`ImprovedSmagorinskyModel` — Smagorinsky with Van Driest wall damping and SGS energy
+- :class:`ImprovedWALEModel` — WALE with clipping, SGS energy, and SGS time scale
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -318,6 +326,13 @@ from pyfoam.turbulence.generalized_newtonian import (
     StrainRateFunctionModel,
 )
 
+# Enhanced RANS/LES models (Phase 10)
+from pyfoam.turbulence.k_epsilon_enhanced import KEpsilonEnhancedModel, KEpsilonEnhancedConstants
+from pyfoam.turbulence.k_omega_enhanced import KOmegaEnhancedModel, KOmegaEnhancedConstants
+from pyfoam.turbulence.k_omega_sst_enhanced import KOmegaSSTEnhancedModel, KOmegaSSTEnhancedConstants
+from pyfoam.turbulence.spalart_allmaras_enhanced import SpalartAllmarasEnhancedModel, SpalartAllmarasEnhancedConstants
+from pyfoam.turbulence.les_model_enhanced import ImprovedSmagorinskyModel, ImprovedWALEModel
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -468,4 +483,15 @@ __all__ = [
     "BinghamModel",
     "QuemadaModel",
     "StrainRateFunctionModel",
+    # Enhanced RANS/LES models (Phase 10)
+    "KEpsilonEnhancedModel",
+    "KEpsilonEnhancedConstants",
+    "KOmegaEnhancedModel",
+    "KOmegaEnhancedConstants",
+    "KOmegaSSTEnhancedModel",
+    "KOmegaSSTEnhancedConstants",
+    "SpalartAllmarasEnhancedModel",
+    "SpalartAllmarasEnhancedConstants",
+    "ImprovedSmagorinskyModel",
+    "ImprovedWALEModel",
 ]

@@ -45,6 +45,22 @@ from pyfoam.parallel.processor_patch_enhanced import (
     NonConformalPatch,
     EnhancedHaloExchange,
 )
+from pyfoam.parallel.reconstruct_par_enhanced_2 import (
+    ReconstructParEnhanced2,
+    V2ReconstructResult,
+    FieldMergeStats,
+    MergeStrategy,
+)
+from pyfoam.parallel.redistribute_par_enhanced_2 import (
+    RedistributeParEnhanced2,
+    GraphPartitionStrategy,
+    V2RedistributeResult,
+)
+from pyfoam.parallel.processor_patch_enhanced_2 import (
+    NonConformalPatch2,
+    EnhancedHaloExchange2,
+    FaceCentreInterpolator,
+)
 
 __all__ = [
     # Decomposition
@@ -72,6 +88,11 @@ __all__ = [
     "ReconstructParEnhanced",
     "ZoneInfo",
     "EnhancedReconstructResult",
+    # V2 enhanced reconstruction
+    "ReconstructParEnhanced2",
+    "V2ReconstructResult",
+    "FieldMergeStats",
+    "MergeStrategy",
     # Redistribution
     "RedistributePar",
     "RedistributeResult",
@@ -80,7 +101,15 @@ __all__ = [
     "BalancingStrategy",
     "EnhancedRedistributeResult",
     "PartitionDiagnostics",
+    # V2 enhanced redistribution
+    "RedistributeParEnhanced2",
+    "GraphPartitionStrategy",
+    "V2RedistributeResult",
     # Enhanced processor patches
     "NonConformalPatch",
     "EnhancedHaloExchange",
+    # V2 enhanced processor patches
+    "NonConformalPatch2",
+    "EnhancedHaloExchange2",
+    "FaceCentreInterpolator",
 ]

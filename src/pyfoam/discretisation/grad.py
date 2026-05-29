@@ -34,8 +34,11 @@ __all__ = [
     "GaussLinearGrad",
     "LeastSquaresGrad",
     "FourthGrad",
+    "FourthGrad2",
     "CellLimitedGrad",
+    "CellLimitedGrad2",
     "FaceLimitedGrad",
+    "FaceLimitedGrad2",
     "GaussLinearCorrectedGrad",
     "resolve_grad_scheme",
 ]
@@ -985,6 +988,422 @@ class GaussLinearCorrectedGrad(GradScheme):
             grad_phi = grad_phi_corr / V
 
         return grad_phi
+
+
+# ---------------------------------------------------------------------------
+# Fourth-order gradient v2 (tangential correction)
+# ---------------------------------------------------------------------------
+
+
+@_register_grad("fourth2")
+class FourthGrad2(GradScheme):
+    r"""Fourth-order gradient v2 with enhanced tangential correction.
+
+    Improves on :class:`FourthGrad` by using a tangential gradient
+    correction with face-averaged gradient, providing better accuracy
+    on non-uniform structured meshes.
+
+    For each cell *P*:
+
+    .. math::
+
+        \nabla\phi_P =
+        \frac{1}{V_P} \sum_f \phi_f \, \mathbf{S}_f
+        + \frac{1}{V_P} \sum_f
+          \left[ \frac{1}{6}\,
+          (\nabla\phi_P + \nabla\phi_N)_t \cdot \mathbf{S}_f \right]
+
+    where the subscript *t* denotes the tangential component (perpendicular
+    to the face normal).
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    """
+
+    def __init__(self, mesh) -> None:
+        super().__init__(mesh)
+        device = mesh.device
+        dtype = mesh.dtype
+
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        w_all = compute_centre_weights(
+            mesh.cell_centres,
+            mesh.face_centres,
+            mesh.owner,
+            mesh.neighbour,
+            n_internal,
+            n_faces,
+            device=device,
+            dtype=dtype,
+        )
+        self._w = w_all[:n_internal]
+        self._face_areas = mesh.face_areas.to(device=device, dtype=dtype)
+        self._cell_volumes = mesh.cell_volumes.to(device=device, dtype=dtype)
+
+    def compute_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        """Compute v2 higher-order Gauss gradient with enhanced tangential correction."""
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+
+        int_own = mesh.owner[:n_internal]
+        int_nei = mesh.neighbour[:n_internal]
+
+        # 第一步：标准 Gauss 线性梯度
+        phi_P = gather(phi, int_own)
+        phi_N = gather(phi, int_nei)
+        w = self._w
+
+        phi_face = torch.zeros(n_faces, dtype=dtype, device=device)
+        phi_face[:n_internal] = w * phi_P + (1.0 - w) * phi_N
+        if n_faces > n_internal:
+            phi_face[n_internal:] = gather(phi, mesh.owner[n_internal:])
+
+        face_contrib = phi_face.unsqueeze(-1) * self._face_areas
+        grad_phi = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        grad_phi.index_add_(0, int_own, face_contrib[:n_internal])
+        grad_phi.index_add_(0, int_nei, -face_contrib[:n_internal])
+        if n_faces > n_internal:
+            grad_phi.index_add_(
+                0, mesh.owner[n_internal:], face_contrib[n_internal:],
+            )
+
+        V = self._cell_volumes.unsqueeze(-1).clamp(min=1e-30)
+        grad_phi = grad_phi / V
+
+        # 第二步：增强切向修正 (1/6 系数，使用面平均梯度)
+        if n_internal > 0:
+            grad_P = grad_phi[int_own]
+            grad_N = grad_phi[int_nei]
+            # v2：使用算术平均而非距离加权
+            grad_face = 0.5 * (grad_P + grad_N)
+
+            S = self._face_areas[:n_internal]
+            S_mag = S.norm(dim=1, keepdim=True).clamp(min=1e-30)
+            n_hat = S / S_mag
+
+            grad_normal = (grad_face * n_hat).sum(dim=1, keepdim=True)
+            grad_tangential = grad_face - grad_normal * n_hat
+
+            # v2：使用 1/6 系数
+            correction = (1.0 / 6.0) * grad_tangential * S
+
+            corr = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+            corr.index_add_(0, int_own, correction)
+            corr.index_add_(0, int_nei, -correction)
+
+            grad_phi = grad_phi + corr / V
+
+        return grad_phi
+
+
+# ---------------------------------------------------------------------------
+# Cell-limited gradient v2 (face-smoothed limiter)
+# ---------------------------------------------------------------------------
+
+
+@_register_grad("cellLimited2")
+class CellLimitedGrad2(GradScheme):
+    r"""Cell-limited gradient v2 with face-smoothed limiter.
+
+    Improves on :class:`CellLimitedGrad` by applying a smoothing pass
+    to the cell limiter coefficients, reducing the effect of isolated
+    limiters that can cause stepped solutions:
+
+    .. math::
+
+        \alpha_P^{\text{smooth}} = \frac{\alpha_P + \sum_N \alpha_N}{1 + n_N}
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    base_scheme : type[GradScheme], optional
+        The unlimited gradient scheme class.  Default is
+        :class:`GaussLinearGrad`.
+    """
+
+    def __init__(self, mesh, base_scheme=None) -> None:
+        super().__init__(mesh)
+        if base_scheme is None:
+            base_scheme = GaussLinearGrad
+        self._base = base_scheme(mesh)
+
+    def compute_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        """Compute v2 cell-limited gradient with smoothed limiter."""
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+
+        grad_unlimited = self._base.compute_grad(phi)
+
+        if n_internal == 0:
+            return grad_unlimited
+
+        cc = mesh.cell_centres.to(device=device, dtype=dtype)
+        fa = mesh.face_centres.to(device=device, dtype=dtype)
+
+        int_own = mesh.owner[:n_internal]
+        int_nei = mesh.neighbour[:n_internal]
+
+        delta_P = fa[:n_internal] - cc[int_own]
+        delta_N = fa[:n_internal] - cc[int_nei]
+
+        grad_P = grad_unlimited[int_own]
+        grad_N = grad_unlimited[int_nei]
+
+        phi_P = gather(phi, int_own)
+        phi_N = gather(phi, int_nei)
+
+        phi_ext_P = phi_P + (grad_P * delta_P).sum(dim=1)
+        phi_ext_N = phi_N + (grad_N * delta_N).sum(dim=1)
+
+        phi_face_min = torch.min(phi_P, phi_N)
+        phi_face_max = torch.max(phi_P, phi_N)
+
+        eps = 1e-30
+
+        # 所有者限制器
+        diff_P = phi_ext_P - phi_P
+        max_allow_P = phi_face_max - phi_P
+        min_allow_P = phi_face_min - phi_P
+
+        alpha_P = torch.ones(n_internal, dtype=dtype, device=device)
+        pos_mask = diff_P > eps
+        neg_mask = diff_P < -eps
+        alpha_P = torch.where(
+            pos_mask,
+            torch.clamp(max_allow_P / (diff_P + eps), 0.0, 1.0),
+            alpha_P,
+        )
+        alpha_P = torch.where(
+            neg_mask,
+            torch.clamp(min_allow_P / (diff_P - eps), 0.0, 1.0),
+            alpha_P,
+        )
+
+        # 邻居限制器
+        diff_N = phi_ext_N - phi_N
+        max_allow_N = phi_face_max - phi_N
+        min_allow_N = phi_face_min - phi_N
+
+        alpha_N = torch.ones(n_internal, dtype=dtype, device=device)
+        pos_mask = diff_N > eps
+        neg_mask = diff_N < -eps
+        alpha_N = torch.where(
+            pos_mask,
+            torch.clamp(max_allow_N / (diff_N + eps), 0.0, 1.0),
+            alpha_N,
+        )
+        alpha_N = torch.where(
+            neg_mask,
+            torch.clamp(min_allow_N / (diff_N - eps), 0.0, 1.0),
+            alpha_N,
+        )
+
+        # v2 改进：计算每个单元的最小限制器
+        cell_alpha = torch.ones(n_cells, dtype=dtype, device=device)
+        cell_alpha.scatter_reduce_(
+            0, int_own, alpha_P, reduce="amin", include_self=True,
+        )
+        cell_alpha.scatter_reduce_(
+            0, int_nei, alpha_N, reduce="amin", include_self=True,
+        )
+
+        # v2：平滑限制器系数（与邻居平均）
+        cell_count = torch.ones(n_cells, dtype=dtype, device=device)
+        alpha_sum = cell_alpha.clone()
+        # 所有者→邻居
+        alpha_sum.scatter_add_(0, int_own, cell_alpha[int_nei])
+        alpha_sum.scatter_add_(0, int_nei, cell_alpha[int_own])
+        cell_count.scatter_add_(
+            0, int_own, torch.ones(n_internal, dtype=dtype, device=device),
+        )
+        cell_count.scatter_add_(
+            0, int_nei, torch.ones(n_internal, dtype=dtype, device=device),
+        )
+        alpha_smooth = (alpha_sum / cell_count.clamp(min=1)).clamp(0.0, 1.0)
+
+        return alpha_smooth.unsqueeze(-1) * grad_unlimited
+
+
+# ---------------------------------------------------------------------------
+# Face-limited gradient v2 (higher blending)
+# ---------------------------------------------------------------------------
+
+
+@_register_grad("faceLimited2")
+class FaceLimitedGrad2(GradScheme):
+    r"""Face-limited gradient v2 with higher blending ratio.
+
+    Improves on :class:`FaceLimitedGrad` by using a 70/30 blend between
+    the limited and unlimited gradients instead of the alpha-weighted
+    average, providing better accuracy while maintaining boundedness.
+
+    Parameters
+    ----------
+    mesh : FvMesh
+        The finite volume mesh.
+    base_scheme : type[GradScheme], optional
+        The unlimited gradient scheme class.  Default is
+        :class:`GaussLinearGrad`.
+    blend_ratio : float, optional
+        Ratio of unlimited gradient to blend in.  Default is 0.3.
+    """
+
+    def __init__(self, mesh, base_scheme=None, blend_ratio: float = 0.3) -> None:
+        super().__init__(mesh)
+        if base_scheme is None:
+            base_scheme = GaussLinearGrad
+        self._base = base_scheme(mesh)
+        self._blend_ratio = blend_ratio
+
+        device = mesh.device
+        dtype = mesh.dtype
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        w_all = compute_centre_weights(
+            mesh.cell_centres,
+            mesh.face_centres,
+            mesh.owner,
+            mesh.neighbour,
+            n_internal,
+            n_faces,
+            device=device,
+            dtype=dtype,
+        )
+        self._w = w_all[:n_internal]
+        self._face_areas = mesh.face_areas.to(device=device, dtype=dtype)
+        self._cell_volumes = mesh.cell_volumes.to(device=device, dtype=dtype)
+
+    def compute_grad(self, phi: torch.Tensor) -> torch.Tensor:
+        """Compute v2 face-limited gradient with higher blending ratio."""
+        mesh = self._mesh
+        device = mesh.device
+        dtype = mesh.dtype
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        n_faces = mesh.n_faces
+
+        phi = phi.to(device=device, dtype=dtype)
+
+        grad_unlimited = self._base.compute_grad(phi)
+
+        if n_internal == 0:
+            return grad_unlimited
+
+        cc = mesh.cell_centres.to(device=device, dtype=dtype)
+        fa = mesh.face_centres.to(device=device, dtype=dtype)
+        int_own = mesh.owner[:n_internal]
+        int_nei = mesh.neighbour[:n_internal]
+
+        delta_P = fa[:n_internal] - cc[int_own]
+        delta_N = fa[:n_internal] - cc[int_nei]
+
+        grad_P = grad_unlimited[int_own]
+        grad_N = grad_unlimited[int_nei]
+        phi_P = gather(phi, int_own)
+        phi_N = gather(phi, int_nei)
+
+        phi_ext_P = phi_P + (grad_P * delta_P).sum(dim=1)
+        phi_ext_N = phi_N + (grad_N * delta_N).sum(dim=1)
+
+        phi_face_min = torch.min(phi_P, phi_N)
+        phi_face_max = torch.max(phi_P, phi_N)
+
+        eps = 1e-30
+
+        # 面限制器
+        diff_P = phi_ext_P - phi_P
+        alpha_P = torch.ones(n_internal, dtype=dtype, device=device)
+        pos_mask = diff_P > eps
+        neg_mask = diff_P < -eps
+        alpha_P = torch.where(
+            pos_mask,
+            torch.clamp((phi_face_max - phi_P) / (diff_P + eps), 0.0, 1.0),
+            alpha_P,
+        )
+        alpha_P = torch.where(
+            neg_mask,
+            torch.clamp((phi_face_min - phi_P) / (diff_P - eps), 0.0, 1.0),
+            alpha_P,
+        )
+
+        diff_N = phi_ext_N - phi_N
+        alpha_N = torch.ones(n_internal, dtype=dtype, device=device)
+        pos_mask = diff_N > eps
+        neg_mask = diff_N < -eps
+        alpha_N = torch.where(
+            pos_mask,
+            torch.clamp((phi_face_max - phi_N) / (diff_N + eps), 0.0, 1.0),
+            alpha_N,
+        )
+        alpha_N = torch.where(
+            neg_mask,
+            torch.clamp((phi_face_min - phi_N) / (diff_N - eps), 0.0, 1.0),
+            alpha_N,
+        )
+
+        grad_limited_P = alpha_P.unsqueeze(-1) * grad_P
+        grad_limited_N = alpha_N.unsqueeze(-1) * grad_N
+
+        w = self._w.unsqueeze(-1)
+        grad_face_lim = w * grad_limited_P + (1.0 - w) * grad_limited_N
+
+        phi_face = w.squeeze(-1) * phi_P + (1.0 - w.squeeze(-1)) * phi_N
+
+        face_contrib = phi_face.unsqueeze(-1) * self._face_areas[:n_internal]
+        grad_phi = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        grad_phi.index_add_(0, int_own, face_contrib)
+        grad_phi.index_add_(0, int_nei, -face_contrib)
+
+        if n_faces > n_internal:
+            bnd_own = mesh.owner[n_internal:]
+            phi_bnd = gather(phi, bnd_own)
+            bnd_contrib = phi_bnd.unsqueeze(-1) * self._face_areas[n_internal:]
+            grad_phi.index_add_(0, bnd_own, bnd_contrib)
+
+        V = self._cell_volumes.unsqueeze(-1).clamp(min=1e-30)
+        grad_phi = grad_phi / V
+
+        # v2 改进：固定混合比率而非 alpha 加权
+        alpha_cell = torch.ones(n_cells, dtype=dtype, device=device)
+        alpha_cell.scatter_reduce_(
+            0, int_own, alpha_P, reduce="amin", include_self=True,
+        )
+        alpha_cell.scatter_reduce_(
+            0, int_nei, alpha_N, reduce="amin", include_self=True,
+        )
+
+        # 检查哪些单元需要限制
+        needs_limiting = alpha_cell < 1.0 - 1e-10
+        blend = self._blend_ratio
+
+        result = grad_phi.clone()
+        # 对需要限制的单元使用固定混合
+        limited_grad = alpha_cell.unsqueeze(-1) * grad_phi
+        result = torch.where(
+            needs_limiting.unsqueeze(-1),
+            (1.0 - blend) * limited_grad + blend * grad_unlimited,
+            result,
+        )
+
+        return result
 
 
 # ---------------------------------------------------------------------------

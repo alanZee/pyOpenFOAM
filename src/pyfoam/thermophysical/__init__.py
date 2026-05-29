@@ -28,6 +28,13 @@ Provides:
 - :class:`HPowerThermo` — power-law Cp model
 - :class:`JanafMultiThermo` — multi-phase JANAF model
 - :class:`JanafMultiThermoEnhanced` — enhanced multi-phase JANAF with Gibbs blending
+- :class:`JanafMultiThermoEnhanced2` — enhanced JANAF v2 with latent heat and phase fractions
+
+**Enhanced Transport Models:**
+- :class:`TabulatedTransportEnhanced` — tabulated transport with T and P dependence
+- :class:`WilkeTransportEnhanced` — Wilke mixing with multi-component diffusion
+- :class:`ConstantTransportEnhanced` — constant transport with optional T correction
+- :class:`SutherlandTransportEnhanced` — multi-species Sutherland transport
 
 **Combined Thermo:**
 - :class:`BasicThermo` — basic combined model (EOS + transport)
@@ -111,6 +118,13 @@ from pyfoam.thermophysical.reaction import (
 # Phase 9: Enhanced multi-phase JANAF
 from pyfoam.thermophysical.janaf_multi_thermo_enhanced import JanafMultiThermoEnhanced
 
+# Phase 10: Enhanced models
+from pyfoam.thermophysical.janaf_multi_thermo_enhanced_2 import JanafMultiThermoEnhanced2
+from pyfoam.thermophysical.tabulated_transport_enhanced import TabulatedTransportEnhanced
+from pyfoam.thermophysical.wilke_transport_enhanced import WilkeTransportEnhanced
+from pyfoam.thermophysical.constant_transport_enhanced import ConstantTransportEnhanced
+from pyfoam.thermophysical.sutherland_transport_enhanced import SutherlandTransportEnhanced
+
 # Chemistry models
 from pyfoam.thermophysical.chemistry import (
     ChemistryModel,
@@ -167,6 +181,12 @@ __all__ = [
     "FSDModel",
     # Phase 9: Enhanced multi-phase JANAF
     "JanafMultiThermoEnhanced",
+    # Phase 10: Enhanced models
+    "JanafMultiThermoEnhanced2",
+    "TabulatedTransportEnhanced",
+    "WilkeTransportEnhanced",
+    "ConstantTransportEnhanced",
+    "SutherlandTransportEnhanced",
     # Chemistry models
     "ChemistryModel",
     "ODEChemistrySolver",
