@@ -26,6 +26,18 @@ Provides:
 **Thermophysical Transport:**
 - :class:`FourierTransport` — Fourier law: q = -k * grad(T)
 - :class:`FickianTransport` — Fick's law: j = -rho * D * grad(Y)
+
+**Reaction Kinetics:**
+- :class:`ReactionRateModel` — abstract base with RTS registry
+- :class:`ArrheniusReaction` — k = A * T^b * exp(-Ea/RT)
+- :class:`ThirdBodyReaction` — third-body efficiency wrapper
+- :class:`FallOffReaction` — Lindemann fall-off pressure dependence
+
+**Combustion Models:**
+- :class:`CombustionModel` — abstract base with RTS registry
+- :class:`PaSRModel` — Partially Stirred Reactor
+- :class:`EDCModel` — Eddy Dissipation Concept
+- :class:`InfinitelyFastChemistry` — mixing-limited combustion
 """
 
 from pyfoam.thermophysical.equation_of_state import (
@@ -53,6 +65,16 @@ from pyfoam.thermophysical.thermophysical_transport import (
     FourierTransport,
     FickianTransport,
 )
+from pyfoam.thermophysical.reaction import (
+    ReactionRateModel,
+    ArrheniusReaction,
+    ThirdBodyReaction,
+    FallOffReaction,
+    CombustionModel,
+    PaSRModel,
+    EDCModel,
+    InfinitelyFastChemistry,
+)
 
 __all__ = [
     # Equation of state
@@ -77,4 +99,14 @@ __all__ = [
     "ThermophysicalTransportModel",
     "FourierTransport",
     "FickianTransport",
+    # Reaction kinetics
+    "ReactionRateModel",
+    "ArrheniusReaction",
+    "ThirdBodyReaction",
+    "FallOffReaction",
+    # Combustion models
+    "CombustionModel",
+    "PaSRModel",
+    "EDCModel",
+    "InfinitelyFastChemistry",
 ]
