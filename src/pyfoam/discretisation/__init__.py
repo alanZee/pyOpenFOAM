@@ -48,6 +48,26 @@ CubicUpwindInterpolation
     Cubic upwind-biased scheme for structured meshes.
 AMIInterpolation
     Arbitrary Mesh Interface interpolation for non-conformal interfaces.
+LinearUpwindFitInterpolation
+    Linear upwind with least-squares fit gradient reconstruction.
+UpwindFitInterpolation
+    Upwind with least-squares fit gradient reconstruction.
+CubicUpwindFitInterpolation
+    Cubic upwind with least-squares fit for structured meshes.
+FilteredLinear2Interpolation
+    Second variant of filtered linear with tighter NVD bounding.
+FilteredLinearVInterpolation
+    Vector variant of filtered linear (component-wise NVD clipping).
+VanLeerVInterpolation
+    Vector variant of Van Leer TVD scheme.
+MUSCLVInterpolation
+    Vector variant of MUSCL TVD scheme with minmod limiter.
+GammaVInterpolation
+    Vector variant of Gamma Peclet-number-based blending.
+ClippedLinearInterpolation
+    Linear clipped to cell min/max (equivalent to SFCD).
+CorrectedLinearInterpolation
+    Linear with gradient-based non-orthogonal correction.
 
 Time derivative (ddt) schemes
 -----------------------------
@@ -128,6 +148,16 @@ from pyfoam.discretisation.schemes.blended import BlendedInterpolation
 from pyfoam.discretisation.schemes.linear_fit_2 import LinearFit2Interpolation
 from pyfoam.discretisation.schemes.cubic_upwind import CubicUpwindInterpolation
 from pyfoam.discretisation.schemes.ami_interpolation import AMIInterpolation
+from pyfoam.discretisation.schemes.linear_upwind_fit import LinearUpwindFitInterpolation
+from pyfoam.discretisation.schemes.upwind_fit import UpwindFitInterpolation
+from pyfoam.discretisation.schemes.cubic_upwind_fit import CubicUpwindFitInterpolation
+from pyfoam.discretisation.schemes.filtered_linear_2 import FilteredLinear2Interpolation
+from pyfoam.discretisation.schemes.filtered_linear_v import FilteredLinearVInterpolation
+from pyfoam.discretisation.schemes.van_leer_v import VanLeerVInterpolation
+from pyfoam.discretisation.schemes.muscl_v import MUSCLVInterpolation
+from pyfoam.discretisation.schemes.gamma_v import GammaVInterpolation
+from pyfoam.discretisation.schemes.clipped_linear import ClippedLinearInterpolation
+from pyfoam.discretisation.schemes.corrected_linear import CorrectedLinearInterpolation
 from pyfoam.discretisation.ddt import (
     DdtScheme,
     EulerDdt,
@@ -187,6 +217,16 @@ __all__ = [
     "LinearFit2Interpolation",
     "CubicUpwindInterpolation",
     "AMIInterpolation",
+    "LinearUpwindFitInterpolation",
+    "UpwindFitInterpolation",
+    "CubicUpwindFitInterpolation",
+    "FilteredLinear2Interpolation",
+    "FilteredLinearVInterpolation",
+    "VanLeerVInterpolation",
+    "MUSCLVInterpolation",
+    "GammaVInterpolation",
+    "ClippedLinearInterpolation",
+    "CorrectedLinearInterpolation",
     # Time derivative (ddt) schemes
     "DdtScheme",
     "EulerDdt",

@@ -28,6 +28,16 @@ from pyfoam.discretisation.schemes.blended import BlendedInterpolation
 from pyfoam.discretisation.schemes.linear_fit_2 import LinearFit2Interpolation
 from pyfoam.discretisation.schemes.cubic_upwind import CubicUpwindInterpolation
 from pyfoam.discretisation.schemes.ami_interpolation import AMIInterpolation
+from pyfoam.discretisation.schemes.linear_upwind_fit import LinearUpwindFitInterpolation
+from pyfoam.discretisation.schemes.upwind_fit import UpwindFitInterpolation
+from pyfoam.discretisation.schemes.cubic_upwind_fit import CubicUpwindFitInterpolation
+from pyfoam.discretisation.schemes.filtered_linear_2 import FilteredLinear2Interpolation
+from pyfoam.discretisation.schemes.filtered_linear_v import FilteredLinearVInterpolation
+from pyfoam.discretisation.schemes.van_leer_v import VanLeerVInterpolation
+from pyfoam.discretisation.schemes.muscl_v import MUSCLVInterpolation
+from pyfoam.discretisation.schemes.gamma_v import GammaVInterpolation
+from pyfoam.discretisation.schemes.clipped_linear import ClippedLinearInterpolation
+from pyfoam.discretisation.schemes.corrected_linear import CorrectedLinearInterpolation
 
 __all__ = [
     "UpwindInterpolation",
@@ -50,4 +60,14 @@ __all__ = [
     "LinearFit2Interpolation",
     "CubicUpwindInterpolation",
     "AMIInterpolation",
+    "LinearUpwindFitInterpolation",
+    "UpwindFitInterpolation",
+    "CubicUpwindFitInterpolation",
+    "FilteredLinear2Interpolation",
+    "FilteredLinearVInterpolation",
+    "VanLeerVInterpolation",
+    "MUSCLVInterpolation",
+    "GammaVInterpolation",
+    "ClippedLinearInterpolation",
+    "CorrectedLinearInterpolation",
 ]
