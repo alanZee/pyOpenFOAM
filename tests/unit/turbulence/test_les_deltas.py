@@ -1,4 +1,4 @@
-"""Tests for LES delta models (CubeRootVolDelta, MaxDeltaXYZ, VanDriestDelta)."""
+"""Tests for LES delta models (CubeRootVolDelta, MaxDeltaXYZ, VanDriestDelta, SmoothDelta)."""
 
 from __future__ import annotations
 
@@ -224,6 +224,137 @@ class TestVanDriestDelta:
         mesh = FakeMesh(volumes, y_plus=y_plus)
 
         delta_fn = VanDriestDelta()
+        result = delta_fn(mesh)
+
+        assert torch.isfinite(result).all()
+        assert (result >= 0).all()
+
+
+class FakeMeshWithFaces(FakeMesh):
+    """Mesh stub with owner/neighbour for smooth delta tests."""
+
+    def __init__(self, cell_volumes, owner, neighbour, n_internal_faces=None):
+        super().__init__(cell_volumes)
+        self.owner = owner
+        self.neighbour = neighbour
+        self.n_internal_faces = n_internal_faces if n_internal_faces is not None else len(neighbour)
+
+
+class TestSmoothDelta:
+    """Tests for SmoothDelta."""
+
+    def test_registration(self):
+        from pyfoam.turbulence.les_deltas import LESDelta
+        assert "smoothDelta" in LESDelta.available_types()
+
+    def test_factory_creation(self):
+        from pyfoam.turbulence.les_deltas import LESDelta, SmoothDelta
+        delta = LESDelta.create("smoothDelta", n_passes=2)
+        assert isinstance(delta, SmoothDelta)
+        assert delta.n_passes == 2
+
+    def test_default_n_passes(self):
+        from pyfoam.turbulence.les_deltas import SmoothDelta
+        delta_fn = SmoothDelta()
+        assert delta_fn.n_passes == 1
+
+    def test_n_passes_min_one(self):
+        from pyfoam.turbulence.les_deltas import SmoothDelta
+        delta_fn = SmoothDelta(n_passes=0)
+        assert delta_fn.n_passes == 1
+
+    def test_uniform_cells_unchanged(self):
+        """均匀网格的 smooth delta 应接近基础 delta。"""
+        from pyfoam.turbulence.les_deltas import SmoothDelta
+
+        volumes = torch.full((4,), 8.0, dtype=CFD_DTYPE)  # V^(1/3) = 2.0
+        owner = torch.tensor([0, 0, 1], dtype=torch.long)
+        neighbour = torch.tensor([1, 2, 3], dtype=torch.long)
+        mesh = FakeMeshWithFaces(volumes, owner, neighbour)
+
+        delta_fn = SmoothDelta()
+        result = delta_fn(mesh)
+
+        expected = torch.full((4,), 2.0, dtype=CFD_DTYPE)
+        assert torch.allclose(result, expected, atol=1e-10)
+
+    def test_reduces_variation(self):
+        """平滑应减小空间变化。"""
+        from pyfoam.turbulence.les_deltas import SmoothDelta
+
+        # 2 个单元，体积差别大
+        volumes = torch.tensor([1.0, 1000.0], dtype=CFD_DTYPE)
+        owner = torch.tensor([0], dtype=torch.long)
+        neighbour = torch.tensor([1], dtype=torch.long)
+        mesh = FakeMeshWithFaces(volumes, owner, neighbour)
+
+        delta_fn = SmoothDelta()
+        result = delta_fn(mesh)
+
+        # 原始 delta: [1.0, 10.0]
+        # 平滑后两个值应更接近
+        base = volumes.pow(1.0 / 3.0)
+        spread_orig = (base[1] - base[0]).item()
+        spread_smooth = (result[1] - result[0]).item()
+        assert spread_smooth < spread_orig
+
+    def test_multiple_passes_more_smoothing(self):
+        """多次迭代平滑更强。"""
+        from pyfoam.turbulence.les_deltas import SmoothDelta
+
+        volumes = torch.tensor([1.0, 1000.0], dtype=CFD_DTYPE)
+        owner = torch.tensor([0], dtype=torch.long)
+        neighbour = torch.tensor([1], dtype=torch.long)
+        mesh = FakeMeshWithFaces(volumes, owner, neighbour)
+
+        f1 = SmoothDelta(n_passes=1)
+        f5 = SmoothDelta(n_passes=5)
+
+        result1 = f1(mesh)
+        result5 = f5(mesh)
+
+        spread1 = (result1[1] - result1[0]).abs().item()
+        spread5 = (result5[1] - result5[0]).abs().item()
+        assert spread5 <= spread1 + 1e-10
+
+    def test_no_mesh_faces_fallback(self):
+        """无 owner/neighbour 时返回基础 delta。"""
+        from pyfoam.turbulence.les_deltas import SmoothDelta, CubeRootVolDelta
+
+        volumes = torch.tensor([8.0, 27.0, 64.0], dtype=CFD_DTYPE)
+        mesh = FakeMesh(volumes)
+
+        smooth_fn = SmoothDelta()
+        cuberoot_fn = CubeRootVolDelta()
+
+        result_smooth = smooth_fn(mesh)
+        result_cuberoot = cuberoot_fn(mesh)
+
+        assert torch.allclose(result_smooth, result_cuberoot)
+
+    def test_shape(self):
+        """输出形状正确。"""
+        from pyfoam.turbulence.les_deltas import SmoothDelta
+
+        volumes = torch.rand(10, dtype=CFD_DTYPE).clamp(0.01, 100.0)
+        owner = torch.tensor([0, 1, 2, 3, 4, 5, 6, 7, 8], dtype=torch.long)
+        neighbour = torch.tensor([1, 2, 3, 4, 5, 6, 7, 8, 9], dtype=torch.long)
+        mesh = FakeMeshWithFaces(volumes, owner, neighbour)
+
+        delta_fn = SmoothDelta()
+        result = delta_fn(mesh)
+        assert result.shape == (10,)
+
+    def test_finite_output(self):
+        """输出不含 NaN/Inf。"""
+        from pyfoam.turbulence.les_deltas import SmoothDelta
+
+        volumes = torch.rand(20, dtype=CFD_DTYPE).clamp(0.01, 100.0)
+        owner = torch.arange(19, dtype=torch.long)
+        neighbour = torch.arange(1, 20, dtype=torch.long)
+        mesh = FakeMeshWithFaces(volumes, owner, neighbour)
+
+        delta_fn = SmoothDelta()
         result = delta_fn(mesh)
 
         assert torch.isfinite(result).all()

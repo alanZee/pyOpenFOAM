@@ -4,6 +4,7 @@ Tests cover:
 - LESFilter RTS registry
 - SimpleFilter: top-hat (box) filter
 - LaplaceFilter: Laplacian-based filter
+- AnisotropicFilter: direction-dependent filter
 """
 
 import pytest
@@ -15,6 +16,7 @@ from pyfoam.turbulence.les_filters import (
     LESFilter,
     SimpleFilter,
     LaplaceFilter,
+    AnisotropicFilter,
 )
 
 
@@ -280,3 +282,105 @@ class TestLaplaceFilter:
         field = torch.tensor([1e10, -1e10], dtype=torch.float64)
         filtered = f.apply_filter(field, mesh)
         assert torch.isfinite(filtered).all()
+
+
+# ---------------------------------------------------------------------------
+# AnisotropicFilter tests
+# ---------------------------------------------------------------------------
+
+
+class TestAnisotropicFilterRegistry:
+    """AnisotropicFilter RTS registration tests."""
+
+    def test_registered(self):
+        assert "anisotropicFilter" in LESFilter.available_types()
+
+    def test_factory_create(self):
+        f = LESFilter.create("anisotropicFilter", n_iterations=2)
+        assert isinstance(f, AnisotropicFilter)
+        assert f.n_iterations == 2
+
+
+class TestAnisotropicFilter:
+    """Anisotropic (directional) filter tests."""
+
+    def test_default_n_iterations(self):
+        f = AnisotropicFilter()
+        assert f.n_iterations == 1
+
+    def test_custom_n_iterations(self):
+        f = AnisotropicFilter(n_iterations=3)
+        assert f.n_iterations == 3
+
+    def test_n_iterations_min_one(self):
+        f = AnisotropicFilter(n_iterations=0)
+        assert f.n_iterations == 1
+
+    def test_scalar_field_shape(self, mesh):
+        f = AnisotropicFilter()
+        field = torch.ones(mesh.n_cells, dtype=torch.float64)
+        filtered = f.apply_filter(field, mesh)
+        assert filtered.shape == field.shape
+
+    def test_vector_field_shape(self, mesh):
+        f = AnisotropicFilter()
+        field = torch.ones(mesh.n_cells, 3, dtype=torch.float64)
+        filtered = f.apply_filter(field, mesh)
+        assert filtered.shape == field.shape
+
+    def test_uniform_scalar_unchanged(self, mesh):
+        """均匀标量场过滤后不变。"""
+        f = AnisotropicFilter()
+        field = torch.full((mesh.n_cells,), 7.0, dtype=torch.float64)
+        filtered = f.apply_filter(field, mesh)
+        assert torch.allclose(filtered, field, atol=1e-12)
+
+    def test_uniform_vector_unchanged(self, mesh):
+        """均匀矢量场过滤后不变。"""
+        f = AnisotropicFilter()
+        field = torch.tensor([[3.0, 4.0, 5.0]] * mesh.n_cells, dtype=torch.float64)
+        filtered = f.apply_filter(field, mesh)
+        assert torch.allclose(filtered, field, atol=1e-12)
+
+    def test_reduces_variation(self, mesh):
+        """过滤后空间变化减小。"""
+        f = AnisotropicFilter()
+        field = torch.tensor([0.0, 10.0], dtype=torch.float64)
+        filtered = f.apply_filter(field, mesh)
+        mean_orig = field.mean()
+        max_dev_orig = (field - mean_orig).abs().max()
+        max_dev_filt = (filtered - mean_orig).abs().max()
+        assert max_dev_filt < max_dev_orig
+
+    def test_finite_output(self, mesh):
+        """输出不含 NaN/Inf。"""
+        f = AnisotropicFilter()
+        field = torch.tensor([1e10, -1e10], dtype=torch.float64)
+        filtered = f.apply_filter(field, mesh)
+        assert torch.isfinite(filtered).all()
+
+    def test_multiple_iterations_more_smoothing(self, mesh):
+        """多次迭代平滑更强。"""
+        field = torch.tensor([0.0, 10.0], dtype=torch.float64)
+
+        f1 = AnisotropicFilter(n_iterations=1)
+        f3 = AnisotropicFilter(n_iterations=3)
+
+        filtered1 = f1.apply_filter(field.clone(), mesh)
+        filtered3 = f3.apply_filter(field.clone(), mesh)
+
+        mean = field.mean()
+        dev1 = (filtered1 - mean).abs().sum()
+        dev3 = (filtered3 - mean).abs().sum()
+        assert dev3 <= dev1 + 1e-10
+
+    def test_no_mesh_attributes_returns_unchanged(self):
+        """无 owner/neighbour 属性时返回原始 field。"""
+        f = AnisotropicFilter()
+
+        class EmptyMesh:
+            n_cells = 2
+
+        field = torch.tensor([1.0, 2.0], dtype=torch.float64)
+        filtered = f.apply_filter(field, EmptyMesh())
+        assert torch.allclose(filtered, field)

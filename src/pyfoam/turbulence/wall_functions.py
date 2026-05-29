@@ -421,17 +421,18 @@ def compute_nut_u_spalding_wall(
     B = math.log(E) / kappa
     exp_neg_kB = math.exp(-kappa * B)
 
-    # Initial guess
-    u_tau = torch.sqrt(nu_safe * U_mag / y)
+    # 初始猜测：log-law 估计（比粘性估计更可靠）
+    ln_est = torch.log(E * y / nu_safe).clamp(min=1.0)
+    u_tau = kappa * U_mag / ln_est
 
     for _ in range(30):
-        u_plus = (U_mag / u_tau).clamp(min=1e-4, max=200.0)
+        u_plus = (U_mag / u_tau).clamp(min=1e-4, max=500.0)
         y_plus = u_tau * y / nu_safe
 
         # Spalding function: f(y_plus) = y_plus
         # g(u_plus) = u_plus + exp_neg_kB * (exp(kappa * u_plus) - 1 - kappa*u_plus - (kappa*u_plus)^2/2 - (kappa*u_plus)^3/6)
         ku = kappa * u_plus
-        ku = ku.clamp(max=50.0)  # 防止溢出
+        ku = ku.clamp(max=40.0)  # 防止 exp 溢出
         exp_ku = torch.exp(ku)
         taylor = 1.0 + ku + ku**2 / 2.0 + ku**3 / 6.0
         spalding = u_plus + exp_neg_kB * (exp_ku - taylor)

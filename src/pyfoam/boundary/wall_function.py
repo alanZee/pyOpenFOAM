@@ -723,14 +723,16 @@ class NutUSpaldingWallFunctionBC(BoundaryCondition):
         B = math.log(self._E) / self._kappa
         exp_neg_kB = math.exp(-self._kappa * B)
 
-        u_tau = torch.sqrt(nu_safe * U_mag / y)
+        # 初始猜测：log-law 估计（比粘性估计更可靠）
+        ln_est = torch.log(self._E * y / nu_safe).clamp(min=1.0)
+        u_tau = self._kappa * U_mag / ln_est
 
         for _ in range(30):
-            u_plus = (U_mag / u_tau).clamp(min=1e-4, max=200.0)
+            u_plus = (U_mag / u_tau).clamp(min=1e-4, max=500.0)
             y_plus = u_tau * y / nu_safe
 
             ku = self._kappa * u_plus
-            ku = ku.clamp(max=50.0)
+            ku = ku.clamp(max=40.0)
             exp_ku = torch.exp(ku)
             taylor = 1.0 + ku + ku**2 / 2.0 + ku**3 / 6.0
             spalding = u_plus + exp_neg_kB * (exp_ku - taylor)
