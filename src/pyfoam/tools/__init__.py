@@ -52,6 +52,13 @@ from pyfoam.tools.surface_refine_red_green import RefineResult, surface_refine
 from pyfoam.tools.view_factors_gen import ViewFactorResult, view_factors_gen
 from pyfoam.tools.noise_enhanced import NoiseResult, noise_analysis
 from pyfoam.tools.temporal_interpolate_enhanced import TemporalInterpolateResult, temporal_interpolate
+from pyfoam.tools.foam_to_ensight_enhanced import EnSightEnhancedResult, foam_to_ensight_enhanced
+from pyfoam.tools.foam_to_gmsh_enhanced import GmshEnhancedResult, foam_to_gmsh_enhanced
+from pyfoam.tools.foam_to_vtk_enhanced_2 import VtkZoneExportResult, foam_to_vtk_zone_export
+from pyfoam.tools.snappy_hex_mesh_enhanced import SnappyHexMeshConfig, SnappyHexMeshResult, snappy_hex_mesh
+from pyfoam.tools.block_mesh_enhanced import Block, BlockMeshConfig, BlockMeshResult, block_mesh
+from pyfoam.tools.refine_mesh_enhanced import RefineConfig, RefineEnhancedResult, refine_mesh_enhanced
+from pyfoam.tools.renumber_mesh_enhanced import RenumberEnhancedConfig, RenumberEnhancedResult, renumber_mesh_enhanced
 __all__ = [
     "box_turb", "CheckMeshResult", "check_mesh", "CellQuality", "QualityReport", "check_mesh_quality",
     "BoxRegion", "CylinderRegion", "set_fields",
@@ -84,4 +91,11 @@ __all__ = [
     "ViewFactorResult", "view_factors_gen",
     "NoiseResult", "noise_analysis",
     "TemporalInterpolateResult", "temporal_interpolate",
+    "EnSightEnhancedResult", "foam_to_ensight_enhanced",
+    "GmshEnhancedResult", "foam_to_gmsh_enhanced",
+    "VtkZoneExportResult", "foam_to_vtk_zone_export",
+    "SnappyHexMeshConfig", "SnappyHexMeshResult", "snappy_hex_mesh",
+    "Block", "BlockMeshConfig", "BlockMeshResult", "block_mesh",
+    "RefineConfig", "RefineEnhancedResult", "refine_mesh_enhanced",
+    "RenumberEnhancedConfig", "RenumberEnhancedResult", "renumber_mesh_enhanced",
 ]

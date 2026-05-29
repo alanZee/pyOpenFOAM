@@ -68,6 +68,20 @@ ClippedLinearInterpolation
     Linear clipped to cell min/max (equivalent to SFCD).
 CorrectedLinearInterpolation
     Linear with gradient-based non-orthogonal correction.
+LinearUpwindFit2Interpolation
+    v2 linear upwind with distance-squared weighted least-squares fit.
+UpwindFit2Interpolation
+    v2 upwind with averaged gradient reconstruction.
+CubicUpwindFit2Interpolation
+    v2 cubic upwind with distance-squared blending.
+FilteredLinear3Interpolation
+    Third variant with Peclet-dependent adaptive NVD filtering.
+VanLeerV2Interpolation
+    v2 vector variant blending Van Leer with superbee limiter.
+MUSCLV2Interpolation
+    v2 vector variant using van Albada limiter.
+GammaV2Interpolation
+    v2 vector variant with adjustable Peclet exponent blending.
 
 Time derivative (ddt) schemes
 -----------------------------
@@ -79,8 +93,12 @@ CrankNicolsonDdt
     Second-order Crank-Nicolson with blending coefficient.
 BackwardDdt
     Second-order backward differencing (BDF2) with three time levels.
+BackwardDdt2
+    v2 BDF2 with variable-dt support (generalised BDF2).
 BoundedDdt
     Bounded Euler with Courant-number-based limiting.
+BoundedDdt2
+    v2 bounded Euler with smooth adaptive limiting.
 
 Gradient schemes
 ----------------
@@ -90,10 +108,16 @@ LeastSquaresGrad
     Least-squares gradient reconstruction.
 FourthGrad
     Fourth-order gradient using extended stencil.
+FourthGrad2
+    v2 fourth-order gradient with enhanced tangential correction.
 CellLimitedGrad
     Cell-limited gradient to prevent overshoots.
+CellLimitedGrad2
+    v2 cell-limited gradient with face-smoothed limiter.
 FaceLimitedGrad
     Face-limited gradient.
+FaceLimitedGrad2
+    v2 face-limited gradient with higher blending ratio.
 GaussLinearCorrectedGrad
     Gauss linear with non-orthogonal correction.
 
@@ -107,10 +131,16 @@ LimitedSnGrad
     Limited non-orthogonal correction with coefficient.
 OrthogonalSnGrad
     Simple orthogonal snGrad — fast path for orthogonal meshes.
+OrthogonalSnGrad2
+    v2 orthogonal snGrad with inverse distance weighting.
 OverRelaxedSnGrad
     Over-relaxed correction for non-orthogonal meshes.
+OverRelaxedSnGrad2
+    v2 over-relaxed snGrad with squared correction.
 BoundedSnGrad
     Bounded snGrad to prevent overshoots.
+BoundedSnGrad2
+    v2 bounded snGrad with wider bounding range.
 
 Weight utilities
 ----------------
