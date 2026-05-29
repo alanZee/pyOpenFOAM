@@ -280,8 +280,9 @@ class RedistributePar:
 
             # Copy boundary from source processor 0
             src_boundary = self._processor_dirs[0] / "constant" / "polyMesh" / "boundary"
-            if src_boundary.exists():
-                shutil.copy2(src_boundary, mesh_dir / "boundary")
+            dst_boundary = mesh_dir / "boundary"
+            if src_boundary.exists() and src_boundary.resolve() != dst_boundary.resolve():
+                shutil.copy2(src_boundary, dst_boundary)
 
             # Copy and filter fields for each time step
             if field_names:

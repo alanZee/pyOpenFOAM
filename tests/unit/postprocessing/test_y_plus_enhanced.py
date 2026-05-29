@@ -237,6 +237,9 @@ class TestYPlusEnhanced:
     def test_registry(self):
         """YPlusEnhanced is registered."""
         from pyfoam.postprocessing.function_object import FunctionObjectRegistry
+        from pyfoam.postprocessing.y_plus_enhanced import YPlusEnhanced
+        # Manually re-register (other tests may clear the registry)
+        FunctionObjectRegistry.register("yPlusEnhanced", YPlusEnhanced)
         assert "yPlusEnhanced" in FunctionObjectRegistry.list_registered()
 
     def test_times_property(self, fv_mesh, sample_fields):

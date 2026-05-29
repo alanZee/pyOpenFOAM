@@ -168,7 +168,7 @@ class TestConvertDirectory:
         """Non-recursive conversion."""
         src_dir = tmp_path / "src"
         sub_dir = src_dir / "sub"
-        sub_dir.mkdir()
+        sub_dir.mkdir(parents=True)
 
         _create_test_field(src_dir / "p", "ascii")
         _create_test_field(sub_dir / "U", "ascii")
