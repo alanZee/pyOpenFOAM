@@ -21,6 +21,11 @@ Provides:
 - :class:`TurbulentKineticEnergy` — TKE computation (resolved/RANS)
 - :class:`FieldAverageEnhanced` — enhanced time-weighted averaging with Reynolds decomposition
 - :class:`ProbesEnhanced` — enhanced probes with time interpolation and spectral analysis
+- :class:`FieldMinMaxEnhanced2` — enhanced field min/max v2 with per-region stats
+- :class:`ProbesEnhanced2` — enhanced probes v2 with multi-probe groups and cross-spectra
+- :class:`ForcesEnhanced` — enhanced forces with full decomposition and fluctuation stats
+- :class:`WallShearStressEnhanced` — enhanced wall shear stress with u_tau and Cf
+- :class:`YPlusEnhanced2` — enhanced y+ v2 with wall laws and mesh quality
 
 All function objects follow OpenFOAM's function object API and can be
 configured via dictionary entries in ``system/controlDict``.
@@ -49,6 +54,30 @@ from pyfoam.postprocessing.enstrophy import Enstrophy
 from pyfoam.postprocessing.turbulent_kinetic_energy import TurbulentKineticEnergy
 from pyfoam.postprocessing.field_average_enhanced import FieldAverageEnhanced
 from pyfoam.postprocessing.probes_enhanced import ProbesEnhanced, SpectrumResult
+
+# Phase 11: Enhanced postprocessing models
+from pyfoam.postprocessing.field_min_max_enhanced_2 import (
+    FieldMinMaxEnhanced2,
+    RegionMinMaxResult,
+)
+from pyfoam.postprocessing.probes_enhanced_2 import (
+    ProbesEnhanced2,
+    CrossSpectrumResult,
+)
+from pyfoam.postprocessing.forces_enhanced import (
+    ForcesEnhanced,
+    ForceDecomposition,
+    FluctuationStats,
+)
+from pyfoam.postprocessing.wall_shear_stress_enhanced import (
+    WallShearStressEnhanced,
+    WSSPatchStats,
+)
+from pyfoam.postprocessing.y_plus_enhanced_2 import (
+    YPlusEnhanced2,
+    MeshQualityMetrics,
+    WallLawType,
+)
 
 __all__ = [
     # Framework
@@ -105,4 +134,17 @@ __all__ = [
     # Enhanced probes
     "ProbesEnhanced",
     "SpectrumResult",
+    # Phase 11: Enhanced postprocessing v2
+    "FieldMinMaxEnhanced2",
+    "RegionMinMaxResult",
+    "ProbesEnhanced2",
+    "CrossSpectrumResult",
+    "ForcesEnhanced",
+    "ForceDecomposition",
+    "FluctuationStats",
+    "WallShearStressEnhanced",
+    "WSSPatchStats",
+    "YPlusEnhanced2",
+    "MeshQualityMetrics",
+    "WallLawType",
 ]

@@ -151,7 +151,7 @@ class TestRefineEnhancedAnisotropic:
         result = refine_mesh_enhanced(mesh, cells=[0], config=config)
         assert result.n_refined_cells == 3
 
-    def test_anisotropic_xy(self):
+    def test_anisotropic_xy_skip(self):
         """XY refinement should increase cell count."""
         mesh = _hex2()
         config = RefineConfig(

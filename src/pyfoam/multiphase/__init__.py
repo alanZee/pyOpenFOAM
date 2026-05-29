@@ -55,6 +55,13 @@ Provides:
 - Enhanced PBE solvers: MOMSolver, QMOMSolver, SectionalSolver
 - Enhanced turbulence damping v2: TurbulenceDamping2EnhancedModel,
   LopezDeBertodanoDamping, KataokaDamping
+- Enhanced incompressible N-phase VOF v2: IncompressibleMultiphaseVoFEnhanced
+- Enhanced compressible N-phase VOF v2: CompressibleMultiphaseVoFEnhanced
+- Enhanced multicomponent mixture v2: MulticomponentMixtureEnhanced
+- Enhanced interfacial area v2: InterfacialArea2Model,
+  DiameterTransportArea, LuoCoalescenceBreakupArea
+- Enhanced turbulence damping v3: TurbulenceDamping3EnhancedModel,
+  WallDampedDamping, SpaldingDamping, BlendedWallInterfaceDamping
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -225,6 +232,36 @@ from pyfoam.multiphase.turbulence_damping_enhanced_2 import (
     KataokaDamping,
 )
 
+# Phase 11: Enhanced incompressible N-phase VOF v2
+from pyfoam.multiphase.incompressible_multiphase_vof_enhanced import (
+    IncompressibleMultiphaseVoFEnhanced,
+)
+
+# Phase 11: Enhanced compressible N-phase VOF v2
+from pyfoam.multiphase.compressible_multiphase_vof_enhanced import (
+    CompressibleMultiphaseVoFEnhanced,
+)
+
+# Phase 11: Enhanced multicomponent mixture v2
+from pyfoam.multiphase.multicomponent_mixture_enhanced import (
+    MulticomponentMixtureEnhanced,
+)
+
+# Phase 11: Enhanced interfacial area v2
+from pyfoam.multiphase.interfacial_area_enhanced_2 import (
+    InterfacialArea2Model,
+    DiameterTransportArea,
+    LuoCoalescenceBreakupArea,
+)
+
+# Phase 11: Enhanced turbulence damping v3 (near-wall)
+from pyfoam.multiphase.turbulence_damping_enhanced_3 import (
+    TurbulenceDamping3EnhancedModel,
+    WallDampedDamping,
+    SpaldingDamping,
+    BlendedWallInterfaceDamping,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -341,4 +378,19 @@ __all__ = [
     "TurbulenceDamping2EnhancedModel",
     "LopezDeBertodanoDamping",
     "KataokaDamping",
+    # Phase 11: Enhanced incompressible N-phase VOF v2
+    "IncompressibleMultiphaseVoFEnhanced",
+    # Phase 11: Enhanced compressible N-phase VOF v2
+    "CompressibleMultiphaseVoFEnhanced",
+    # Phase 11: Enhanced multicomponent mixture v2
+    "MulticomponentMixtureEnhanced",
+    # Phase 11: Enhanced interfacial area v2
+    "InterfacialArea2Model",
+    "DiameterTransportArea",
+    "LuoCoalescenceBreakupArea",
+    # Phase 11: Enhanced turbulence damping v3
+    "TurbulenceDamping3EnhancedModel",
+    "WallDampedDamping",
+    "SpaldingDamping",
+    "BlendedWallInterfaceDamping",
 ]

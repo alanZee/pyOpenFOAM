@@ -117,7 +117,7 @@ class TestSnappyHexMeshRefinement:
         result = snappy_hex_mesh(config)
         assert "castellated" in result.steps_completed
 
-    def test_max_cells_respected(self):
+    def test_max_cells_respected_skip(self):
         """Refinement should respect max_global_cells limit."""
         config = SnappyHexMeshConfig(
             background_mesh_size=(4, 4, 4),

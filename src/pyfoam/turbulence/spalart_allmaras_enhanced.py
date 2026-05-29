@@ -141,7 +141,10 @@ class SpalartAllmarasEnhancedModel(TurbulenceModel):
         """Return turbulent kinetic energy (approximated from nu_tilde).
 
         k ~ nu_tilde * |S| / sqrt(C_mu)
+        Returns zero if velocity gradient not yet computed.
         """
+        if self._grad_U is None:
+            return torch.zeros_like(self._nuTilde)
         C_mu = 0.09
         S_mag = self._strain_magnitude()
         return self._nuTilde.clamp(min=0.0) * S_mag / C_mu**0.5

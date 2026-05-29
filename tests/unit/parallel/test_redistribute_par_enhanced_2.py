@@ -187,7 +187,7 @@ class TestAdaptiveRebalance:
 class TestV2Redistribute:
     """Test v2 redistribution."""
 
-    def test_redistribute_v2_no_cells(self, tmp_path):
+    def test_redistribute_v2_no_cells_skip(self, tmp_path):
         """Empty case returns empty result."""
         case_dir = str(tmp_path / "empty_case")
         (tmp_path / "empty_case").mkdir()

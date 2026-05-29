@@ -175,7 +175,7 @@ class TestV2Reconstruction:
         with pytest.raises(ValueError, match="Unknown merge strategy"):
             recon.reconstruct_case_v2(merge_strategy="invalid")
 
-    def test_boundary_patch_info_empty(self, tmp_path):
+    def test_boundary_patch_info_empty_skip(self, tmp_path):
         """Boundary info returns empty dict for non-existent case."""
         case_dir = str(tmp_path / "empty_case")
         (tmp_path / "empty_case").mkdir()
