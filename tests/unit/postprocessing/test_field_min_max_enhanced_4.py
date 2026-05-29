@@ -22,11 +22,11 @@ class TestFieldMinMaxEnhanced4:
     """Tests for FieldMinMaxEnhanced4."""
 
     def test_inherits_from_enhanced3(self):
-        fo = FieldMinMaxEnhanced4("test", {"fields": ["p"]})
+        fo = FieldMinMaxEnhanced4("test", {"field": "p"})
         assert isinstance(fo, FieldMinMaxEnhanced3)
 
     def test_default_params(self):
-        fo = FieldMinMaxEnhanced4("test", {"fields": ["p"]})
+        fo = FieldMinMaxEnhanced4("test", {"field": "p"})
         assert fo._per_region is True
         assert fo._track_time_history is True
         assert fo._compute_rate is True
@@ -34,7 +34,7 @@ class TestFieldMinMaxEnhanced4:
 
     def test_custom_params(self):
         fo = FieldMinMaxEnhanced4("test", {
-            "fields": ["p"],
+            "field": "p",
             "perRegion": False,
             "trackTimeHistory": False,
             "maxHistoryLength": 500,
@@ -45,7 +45,7 @@ class TestFieldMinMaxEnhanced4:
 
     def test_execute(self, fv_mesh, sample_fields):
         fo = FieldMinMaxEnhanced4("test", {
-            "fields": ["p"],
+            "field": "p",
             "perRegion": True,
             "trackTimeHistory": True,
         })
@@ -56,7 +56,7 @@ class TestFieldMinMaxEnhanced4:
 
     def test_region_stats(self, fv_mesh, sample_fields):
         fo = FieldMinMaxEnhanced4("test", {
-            "fields": ["p"],
+            "field": "p",
             "perRegion": True,
         })
         fo.initialise(fv_mesh, sample_fields)
@@ -71,7 +71,7 @@ class TestFieldMinMaxEnhanced4:
 
     def test_time_history_entry(self, fv_mesh, sample_fields):
         fo = FieldMinMaxEnhanced4("test", {
-            "fields": ["p"],
+            "field": "p",
             "trackTimeHistory": True,
         })
         fo.initialise(fv_mesh, sample_fields)
@@ -84,7 +84,7 @@ class TestFieldMinMaxEnhanced4:
 
     def test_rate_of_change(self, fv_mesh, sample_fields):
         fo = FieldMinMaxEnhanced4("test", {
-            "fields": ["p"],
+            "field": "p",
             "trackTimeHistory": True,
             "computeRateOfChange": True,
         })
@@ -98,7 +98,7 @@ class TestFieldMinMaxEnhanced4:
 
     def test_time_history_summary(self, fv_mesh, sample_fields):
         fo = FieldMinMaxEnhanced4("test", {
-            "fields": ["p"],
+            "field": "p",
             "trackTimeHistory": True,
         })
         fo.initialise(fv_mesh, sample_fields)
@@ -112,16 +112,16 @@ class TestFieldMinMaxEnhanced4:
         assert summary["n_steps"] == 2
 
     def test_get_latest_region_stats_no_data(self):
-        fo = FieldMinMaxEnhanced4("test", {"fields": ["p"]})
+        fo = FieldMinMaxEnhanced4("test", {"field": "p"})
         assert fo.get_latest_region_stats("__all__") is None
 
     def test_time_history_summary_no_data(self):
-        fo = FieldMinMaxEnhanced4("test", {"fields": ["p"]})
+        fo = FieldMinMaxEnhanced4("test", {"field": "p"})
         assert fo.get_time_history_summary() == {}
 
     def test_execute_no_field(self, fv_mesh):
         """Should handle missing field gracefully."""
-        fo = FieldMinMaxEnhanced4("test", {"fields": ["p"]})
+        fo = FieldMinMaxEnhanced4("test", {"field": "p"})
         fo.initialise(fv_mesh, {})
         fo.execute(0.0)
         assert len(fo.time_history) == 0

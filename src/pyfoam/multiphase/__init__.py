@@ -62,6 +62,16 @@ Provides:
   DiameterTransportArea, LuoCoalescenceBreakupArea
 - Enhanced turbulence damping v3: TurbulenceDamping3EnhancedModel,
   WallDampedDamping, SpaldingDamping, BlendedWallInterfaceDamping
+- Enhanced incompressible N-phase VOF v4: IncompressibleMultiphaseVoFEnhanced3
+  (curvature correction, hierarchical clamp, slip correction)
+- Enhanced compressible N-phase VOF v4: CompressibleMultiphaseVoFEnhanced3
+  (relaxed EOS, mixing correction, transonic limiter)
+- Enhanced multicomponent mixture v4: MulticomponentMixtureEnhanced3
+  (reactive transport, Wassiljewa conductivity, Lewis number correction)
+- Enhanced interfacial area v4: InterfacialArea4Model,
+  WaveBreakupArea, StretchRateArea, UnifiedBreakupCoalescenceArea
+- Enhanced turbulence damping v5: TurbulenceDamping5EnhancedModel,
+  NearWallAnisotropicDamping, BetaDampedModel, MultiScaleDamping
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -292,6 +302,37 @@ from pyfoam.multiphase.turbulence_damping_enhanced_4 import (
     AlphaGradientLimiter,
 )
 
+# Phase 13: Enhanced incompressible N-phase VOF v4
+from pyfoam.multiphase.incompressible_multiphase_vof_enhanced_3 import (
+    IncompressibleMultiphaseVoFEnhanced3,
+)
+
+# Phase 13: Enhanced compressible N-phase VOF v4
+from pyfoam.multiphase.compressible_multiphase_vof_enhanced_3 import (
+    CompressibleMultiphaseVoFEnhanced3,
+)
+
+# Phase 13: Enhanced multicomponent mixture v4
+from pyfoam.multiphase.multicomponent_mixture_enhanced_3 import (
+    MulticomponentMixtureEnhanced3,
+)
+
+# Phase 13: Enhanced interfacial area v4
+from pyfoam.multiphase.interfacial_area_enhanced_4 import (
+    InterfacialArea4Model,
+    WaveBreakupArea,
+    StretchRateArea,
+    UnifiedBreakupCoalescenceArea,
+)
+
+# Phase 13: Enhanced turbulence damping v5
+from pyfoam.multiphase.turbulence_damping_enhanced_5 import (
+    TurbulenceDamping5EnhancedModel,
+    NearWallAnisotropicDamping,
+    BetaDampedModel,
+    MultiScaleDamping,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -438,4 +479,20 @@ __all__ = [
     "ReynoldsAdaptiveDamping",
     "TwoLayerDamping",
     "AlphaGradientLimiter",
+    # Phase 13: Enhanced incompressible N-phase VOF v4
+    "IncompressibleMultiphaseVoFEnhanced3",
+    # Phase 13: Enhanced compressible N-phase VOF v4
+    "CompressibleMultiphaseVoFEnhanced3",
+    # Phase 13: Enhanced multicomponent mixture v4
+    "MulticomponentMixtureEnhanced3",
+    # Phase 13: Enhanced interfacial area v4
+    "InterfacialArea4Model",
+    "WaveBreakupArea",
+    "StretchRateArea",
+    "UnifiedBreakupCoalescenceArea",
+    # Phase 13: Enhanced turbulence damping v5
+    "TurbulenceDamping5EnhancedModel",
+    "NearWallAnisotropicDamping",
+    "BetaDampedModel",
+    "MultiScaleDamping",
 ]

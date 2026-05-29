@@ -135,7 +135,7 @@ class ForcesEnhanced3(ForcesEnhanced2):
         device = get_device()
         dtype = torch.float64
 
-        CoR = self._CoR.to(device=device, dtype=dtype)
+        CoR = self._cofr.to(device=device, dtype=dtype)
 
         # Get total force from projected forces
         pf = self.get_latest_projected()

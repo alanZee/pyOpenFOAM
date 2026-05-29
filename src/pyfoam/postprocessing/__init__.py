@@ -31,6 +31,11 @@ Provides:
 - :class:`ForcesEnhanced2` — enhanced forces v2 with projected forces and Cd/Cl
 - :class:`WallShearStressEnhanced2` — enhanced wall shear stress v2 with non-orthogonal correction
 - :class:`YPlusEnhanced3` — enhanced y+ v3 with adaptive wall law and regime classification
+- :class:`FieldMinMaxEnhanced4` — enhanced field min/max v4 with per-region stats and time history
+- :class:`ProbesEnhanced4` — enhanced probes v4 with multi-probe management and signal filtering
+- :class:`ForcesEnhanced3` — enhanced forces v3 with moment coefficients and spectral analysis
+- :class:`WallShearStressEnhanced3` — enhanced wall shear stress v3 with adaptive near-wall treatment
+- :class:`YPlusEnhanced4` — enhanced y+ v4 with improved wall distance and dt suggestion
 
 All function objects follow OpenFOAM's function object API and can be
 configured via dictionary entries in ``system/controlDict``.
@@ -107,6 +112,33 @@ from pyfoam.postprocessing.y_plus_enhanced_3 import (
     YPlusEnhanced3,
     RegimeClassification,
     YPlusEvolution,
+)
+
+# Phase 13: Enhanced postprocessing models
+from pyfoam.postprocessing.field_min_max_enhanced_4 import (
+    FieldMinMaxEnhanced4,
+    RegionStats,
+    TimeHistoryEntry,
+)
+from pyfoam.postprocessing.probes_enhanced_4 import (
+    ProbesEnhanced4,
+    ProbeGroupManager,
+    FrequencyTracker,
+)
+from pyfoam.postprocessing.forces_enhanced_3 import (
+    ForcesEnhanced3,
+    MomentCoefficients,
+    ForceSpectrum,
+)
+from pyfoam.postprocessing.wall_shear_stress_enhanced_3 import (
+    WallShearStressEnhanced3,
+    CfDistribution,
+    WSSEvolution,
+)
+from pyfoam.postprocessing.y_plus_enhanced_4 import (
+    YPlusEnhanced4,
+    WallDistanceMetrics,
+    TimeStepSuggestion,
 )
 
 __all__ = [
@@ -191,4 +223,20 @@ __all__ = [
     "YPlusEnhanced3",
     "RegimeClassification",
     "YPlusEvolution",
+    # Phase 13: Enhanced postprocessing v4
+    "FieldMinMaxEnhanced4",
+    "RegionStats",
+    "TimeHistoryEntry",
+    "ProbesEnhanced4",
+    "ProbeGroupManager",
+    "FrequencyTracker",
+    "ForcesEnhanced3",
+    "MomentCoefficients",
+    "ForceSpectrum",
+    "WallShearStressEnhanced3",
+    "CfDistribution",
+    "WSSEvolution",
+    "YPlusEnhanced4",
+    "WallDistanceMetrics",
+    "TimeStepSuggestion",
 ]

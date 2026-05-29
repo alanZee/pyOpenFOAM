@@ -251,7 +251,7 @@ class BetaDampedModel(TurbulenceDamping5EnhancedModel):
         # Normalize so peak is 1.0
         peak_alpha = (a - 1.0) / max(a + b - 2.0, _EPS) if (a + b) > 2.0 else 0.5
         peak_alpha = max(_EPS, min(peak_alpha, 1.0 - _EPS))
-        peak_val = peak_alpha.pow(a - 1.0) * (1.0 - peak_alpha).pow(b - 1.0)
+        peak_val = peak_alpha ** (a - 1.0) * (1.0 - peak_alpha) ** (b - 1.0)
 
         return kernel / max(peak_val, _EPS)
 

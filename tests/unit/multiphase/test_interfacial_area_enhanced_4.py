@@ -46,14 +46,14 @@ class TestWaveBreakupArea:
     def test_default_params(self):
         model = WaveBreakupArea()
         assert model.C_w == pytest.approx(0.1)
-        assert model.a_i_min == pytest.approx(1e-6)
+        assert model._a_i_min == pytest.approx(1e-6)
 
     def test_compute_shape(self):
         model = WaveBreakupArea()
         alpha = torch.tensor([0.3, 0.5, 0.8], dtype=torch.float64)
         a_i = model.compute(alpha, n_cells=3)
         assert a_i.shape == (3,)
-        assert (a_i >= model.a_i_min).all()
+        assert (a_i >= model._a_i_min).all()
 
     def test_source_terms_shape(self):
         model = WaveBreakupArea()
@@ -94,7 +94,7 @@ class TestUnifiedBreakupCoalescenceArea:
 
     def test_default_params(self):
         model = UnifiedBreakupCoalescenceArea()
-        assert model.a_i_min == pytest.approx(1e-6)
+        assert model._a_i_min == pytest.approx(1e-6)
 
     def test_compute_shape(self):
         model = UnifiedBreakupCoalescenceArea()
