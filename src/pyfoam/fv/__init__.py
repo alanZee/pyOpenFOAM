@@ -21,6 +21,9 @@ Provides:
 - :class:`CodedFvModel` — user-defined Python function as source
 - :class:`ActuationDiskModel` — actuation disk thrust source for wind turbines
 - :class:`HeatExchangerModel` — temperature-dependent heat exchanger source
+- :class:`SolidificationMeltingModel` — phase change in solids
+- :class:`RASourceModel` — radiation absorption heat source
+- :class:`GravitationalBodyForce` — gravitational body force
 
 Usage::
 
@@ -57,6 +60,11 @@ from pyfoam.fv.fv_models import (
 
 from pyfoam.fv.actuation_disk import ActuationDiskModel
 from pyfoam.fv.heat_exchanger import HeatExchangerModel
+from pyfoam.fv.fv_sources import (
+    SolidificationMeltingModel,
+    RASourceModel,
+    GravitationalBodyForce,
+)
 
 __all__ = [
     # fvConstraints
@@ -76,4 +84,8 @@ __all__ = [
     "ActuationDiskModel",
     "HeatExchangerModel",
     "create_fv_model",
+    # fvSources expansion
+    "SolidificationMeltingModel",
+    "RASourceModel",
+    "GravitationalBodyForce",
 ]

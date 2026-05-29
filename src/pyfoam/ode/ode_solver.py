@@ -19,6 +19,7 @@ Solver names:
 - ``"Rosenbrock34"`` -- Rosenbrock 3(4) adaptive (stiff, L-stable)
 - ``"SIS"`` -- Semi-Implicit Solver (extrapolation)
 - ``"SEulex"`` -- Semi-Explicit Extrapolation solver
+- ``"SIBS"`` -- Semi-Implicit Bulirsch-Stoer (BDF backend)
 
 All tensors respect the global device/dtype configuration from
 :mod:`pyfoam.core.device`.
@@ -124,7 +125,7 @@ class ODESolver(ABC):
                 ``"Euler"``, ``"RK4"``, ``"RKF45"``, ``"RKCK45"``,
                 ``"RKDP45"``, ``"Trapezoid"``, ``"Rosenbrock12"``,
                 ``"Rosenbrock23"``, ``"Rosenbrock34"``, ``"SIS"``,
-                ``"SEulex"``.
+                ``"SEulex"``, ``"SIBS"``.
             **kwargs: Solver-specific parameters (rtol, atol, etc.).
 
         Returns:
@@ -152,6 +153,7 @@ class ODESolver(ABC):
             from pyfoam.ode.semi_implicit import (  # noqa: F401
                 SISSolver,
                 SEulexSolver,
+                SIBSSolver,
             )
 
         if name not in cls._registry:
@@ -234,7 +236,8 @@ def create_ode_solver(name: str, **kwargs: Any) -> ODESolver:
     Args:
         name: Solver name. One of: ``"Euler"``, ``"RK4"``, ``"RKF45"``,
             ``"RKCK45"``, ``"RKDP45"``, ``"Trapezoid"``, ``"Rosenbrock12"``,
-            ``"Rosenbrock23"``, ``"Rosenbrock34"``, ``"SIS"``, ``"SEulex"``.
+            ``"Rosenbrock23"``, ``"Rosenbrock34"``, ``"SIS"``, ``"SEulex"``,
+            ``"SIBS"``.
         **kwargs: Solver parameters (rtol, atol).
 
     Returns:

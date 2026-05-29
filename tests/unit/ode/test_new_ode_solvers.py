@@ -24,6 +24,7 @@ from pyfoam.ode import (
     Rosenbrock34Solver,
     SISSolver,
     SEulexSolver,
+    SIBSSolver,
     create_ode_solver,
 )
 
@@ -66,7 +67,7 @@ class TestNewRTSRegistry:
 
     @pytest.mark.parametrize(
         "name",
-        ["RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex"],
+        ["RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex", "SIBS"],
     )
     def test_create_by_name(self, name):
         """All new solvers should be creatable by name."""
@@ -77,12 +78,12 @@ class TestNewRTSRegistry:
         """Registry should contain all new solver names."""
         # Trigger lazy import
         create_ode_solver("RKCK45")
-        expected = {"RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex"}
+        expected = {"RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex", "SIBS"}
         assert expected.issubset(set(ODESolver._registry.keys()))
 
     def test_repr_all_new(self):
         """repr should work for all new solvers."""
-        for name in ["RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex"]:
+        for name in ["RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex", "SIBS"]:
             solver = create_ode_solver(name)
             r = repr(solver)
             assert name in r or solver.__class__.__name__ in r
@@ -105,6 +106,7 @@ class TestNewSimpleDecay:
             ("Rosenbrock34", 1e-2, 1e-6),
             ("SIS", 1e-2, 1e-5),
             ("SEulex", 1e-2, 1e-6),
+            ("SIBS", 1e-2, 1e-4),
         ],
     )
     def test_simple_decay(self, simple_decay, solver_name, dt, tol):
@@ -137,6 +139,7 @@ class TestNewHarmonicOscillator:
             ("Rosenbrock34", 0.01, 1e-4),
             ("SIS", 0.01, 1e-3),
             ("SEulex", 0.01, 1e-4),
+            ("SIBS", 0.01, 0.5),
         ],
     )
     def test_energy_conservation(self, harmonic_oscillator, solver_name, dt, energy_tol):
@@ -190,7 +193,7 @@ class TestAdaptiveSolvers:
 class TestNewStiffODE:
     """Test stiff ODE handling for implicit solvers."""
 
-    @pytest.mark.parametrize("solver_name", ["Rosenbrock23", "Rosenbrock34", "SIS", "SEulex"])
+    @pytest.mark.parametrize("solver_name", ["Rosenbrock23", "Rosenbrock34", "SIS", "SEulex", "SIBS"])
     def test_implicit_handle_stiffness(self, solver_name):
         """Implicit/semi-implicit solvers should handle stiff problems."""
         lam = 1000.0
@@ -249,7 +252,7 @@ class TestNewEdgeCases:
     """Edge case tests for new solvers."""
 
     @pytest.mark.parametrize(
-        "solver_name", ["RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex"]
+        "solver_name", ["RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex", "SIBS"]
     )
     def test_integrate_zero_duration(self, solver_name):
         """Integration over zero duration should return just the initial state."""
@@ -261,7 +264,7 @@ class TestNewEdgeCases:
         assert torch.allclose(states[0], y0)
 
     @pytest.mark.parametrize(
-        "solver_name", ["RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex"]
+        "solver_name", ["RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex", "SIBS"]
     )
     def test_integrate_exact_boundary(self, solver_name):
         """Integration should reach exactly t_end."""
@@ -272,7 +275,7 @@ class TestNewEdgeCases:
         assert abs(times[-1] - 0.3) < 1e-10
 
     @pytest.mark.parametrize(
-        "solver_name", ["RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex"]
+        "solver_name", ["RKCK45", "RKDP45", "Rosenbrock23", "Rosenbrock34", "SIS", "SEulex", "SIBS"]
     )
     def test_vector_ode(self, solver_name):
         """Should handle vector-valued states."""

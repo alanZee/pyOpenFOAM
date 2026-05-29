@@ -19,6 +19,7 @@ Implicit / stiff solvers:
 Semi-implicit / extrapolation solvers:
 - **SIS**: Semi-Implicit Solver (extrapolation, LSODA backend)
 - **SEulex**: Semi-Explicit Extrapolation (Radau backend)
+- **SIBS**: Semi-Implicit Bulirsch-Stoer (BDF backend)
 
 Usage::
 
@@ -50,7 +51,7 @@ from pyfoam.ode.runge_kutta import RK4Solver, RKF45Solver
 from pyfoam.ode.runge_kutta_ck_dp import RKCK45Solver, RKDP45Solver
 from pyfoam.ode.implicit import TrapezoidSolver, Rosenbrock12Solver
 from pyfoam.ode.rosenbrock import Rosenbrock23Solver, Rosenbrock34Solver
-from pyfoam.ode.semi_implicit import SISSolver, SEulexSolver
+from pyfoam.ode.semi_implicit import SISSolver, SEulexSolver, SIBSSolver
 
 __all__ = [
     # Base
@@ -71,4 +72,5 @@ __all__ = [
     # Semi-implicit / extrapolation
     "SISSolver",
     "SEulexSolver",
+    "SIBSSolver",
 ]

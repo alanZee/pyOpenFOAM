@@ -51,6 +51,11 @@ Provides:
 - :class:`PaSRModel` — Partially Stirred Reactor
 - :class:`EDCModel` — Eddy Dissipation Concept
 - :class:`InfinitelyFastChemistry` — mixing-limited combustion
+
+**Chemistry Models:**
+- :class:`ChemistryModel` — abstract base for chemistry
+- :class:`ODEChemistrySolver` — ODE-based stiff chemistry integration
+- :class:`SRMChemistrySolver` — Simplified Reaction Mechanism (progress variable)
 """
 
 from pyfoam.thermophysical.equation_of_state import (
@@ -104,6 +109,13 @@ from pyfoam.thermophysical.reaction import (
 # Phase 9: Enhanced multi-phase JANAF
 from pyfoam.thermophysical.janaf_multi_thermo_enhanced import JanafMultiThermoEnhanced
 
+# Chemistry models
+from pyfoam.thermophysical.chemistry import (
+    ChemistryModel,
+    ODEChemistrySolver,
+    SRMChemistrySolver,
+)
+
 __all__ = [
     # Equation of state
     "EquationOfState",
@@ -152,4 +164,8 @@ __all__ = [
     "InfinitelyFastChemistry",
     # Phase 9: Enhanced multi-phase JANAF
     "JanafMultiThermoEnhanced",
+    # Chemistry models
+    "ChemistryModel",
+    "ODEChemistrySolver",
+    "SRMChemistrySolver",
 ]
