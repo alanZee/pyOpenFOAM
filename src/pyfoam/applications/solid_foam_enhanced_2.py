@@ -166,7 +166,8 @@ class SolidFoamEnhanced2(SolidFoamEnhanced):
 
         # Creep strain rate magnitude
         t_safe = max(t, 1e-30)
-        eps_rate = self.creep_A * self.creep_n * sigma_eq.pow(self.creep_n - 1) * t_safe.pow(self.creep_m - 1)
+        t_tensor = torch.tensor(t_safe, dtype=sigma.dtype, device=sigma.device)
+        eps_rate = self.creep_A * self.creep_n * sigma_eq.pow(self.creep_n - 1) * t_tensor.pow(self.creep_m - 1)
 
         # Direction: proportional to deviatoric stress
         rate = torch.zeros_like(sigma)
@@ -219,7 +220,7 @@ class SolidFoamEnhanced2(SolidFoamEnhanced):
         sigma_f = self.E * 0.002  # 0.2% strain limit
 
         # Damage per cycle (simplified: dt as cycle proxy)
-        damage_rate = self.fatigue_coeff * (sigma_eq / sigma_f.clamp(min=1e-30)).pow(2)
+        damage_rate = self.fatigue_coeff * (sigma_eq / max(sigma_f, 1e-30)).pow(2)
         self.fatigue_damage = (self.fatigue_damage + damage_rate * dt).clamp(max=1.0)
 
     # ------------------------------------------------------------------

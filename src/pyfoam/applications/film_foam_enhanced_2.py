@@ -136,7 +136,7 @@ class FilmFoamEnhanced2(FilmFoamEnhanced):
 
         # Simplified: scatter face normal divergence
         dn = (gather(n_face, neigh) - gather(n_face, owner)) * delta_coeffs
-        scatter_add(dn.abs(), owner, out=kappa, dim=0)
+        kappa = kappa + scatter_add(dn.abs(), owner, n_cells)
 
         return kappa
 

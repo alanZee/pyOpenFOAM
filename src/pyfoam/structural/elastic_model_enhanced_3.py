@@ -172,8 +172,9 @@ class OrthotropicPlasticModel:
         self._eq_plastic_strain = 0.0
 
     def __repr__(self) -> str:
+        E1 = self._elastic._E[0]
         return (
-            f"OrthotropicPlasticModel(E1={self._elastic._E1:.2e}, "
+            f"OrthotropicPlasticModel(E1={E1:.2e}, "
             f"sigma_y={self._sigma_y_ref:.2e})"
         )
 
@@ -239,17 +240,19 @@ class ViscoelasticMaxwellModel:
         """
         strain = strain.to(dtype=torch.float64)
 
-        # Equilibrium contribution
+        # Equilibrium contribution (long-term response)
         stress = self._E_inf * strain
 
-        # Maxwell elements
+        # Maxwell elements: each element adds its own stress contribution
+        # using exponential update of the relaxation variable
         for i, (E_i, eta_i) in enumerate(self._elements):
             tau_i = eta_i / max(E_i, 1e-30)
             exp_factor = torch.exp(
                 torch.tensor(-dt / max(tau_i, 1e-30), dtype=torch.float64)
             ).item()
 
-            # Update relaxation variable
+            # Update relaxation variable (memory of strain history)
+            # At steady state, q -> strain, stress -> (E_inf + E_i) * strain
             self._q[i] = exp_factor * self._q[i] + (1.0 - exp_factor) * strain
             stress += E_i * self._q[i]
 

@@ -138,9 +138,9 @@ class ReconstructParEnhanced4(ReconstructParEnhanced3):
         Given ``n`` points with positions and scalar values, fits a
         linear field ``f(x) = a + g . x`` and returns the gradient ``g``.
 
-        Uses the normal equation::
+        Uses the normal equation with pseudoinverse for robustness::
 
-            [1, x_i]^T [1, x_i] g = [1, x_i]^T f_i
+            g = pinv([1, x_i]) * f_i
 
         Args:
             positions: ``(n, 3)`` point positions.
@@ -163,12 +163,9 @@ class ReconstructParEnhanced4(ReconstructParEnhanced3):
             positions,
         ], dim=1)
 
-        # Normal equations: (A^T A) g = A^T f
-        ATA = A.T @ A
-        ATf = A.T @ values
-
+        # Use pseudoinverse for robustness (handles singular systems)
         try:
-            params = torch.linalg.solve(ATA, ATf)
+            params = torch.linalg.lstsq(A, values).solution
             return params[1:]  # gradient components
         except Exception:
             return torch.zeros(3, dtype=torch.float64)

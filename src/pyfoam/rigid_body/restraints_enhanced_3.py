@@ -86,11 +86,18 @@ class MagneticRestraint(Restraint):
         if distance < 1e-15:
             return torch.zeros(3, dtype=torch.float64)
 
-        # Force: sign * strength / distance^2 (simplified dipole)
-        force_mag = self._sign * self._strength / (distance ** 2)
+        # Force magnitude: strength / distance^2 (simplified dipole)
+        force_mag = self._strength / (distance ** 2)
 
-        # Direction: toward or away from the origin along the axis
-        direction = -self._sign * torch.sign(proj) * self._axis
+        # Direction: attractive pulls toward origin, repulsive pushes away
+        # proj > 0 means above origin along axis; attractive should pull down
+        if self._sign < 0:
+            # Attractive: force toward origin (opposite to position sign)
+            direction = -torch.sign(proj) * self._axis
+        else:
+            # Repulsive: force away from origin (same as position sign)
+            direction = torch.sign(proj) * self._axis
+
         return force_mag * direction
 
 

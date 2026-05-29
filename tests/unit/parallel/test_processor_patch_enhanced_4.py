@@ -151,7 +151,7 @@ class TestEnhancedHaloExchange4:
     def test_periodic_exchange(self):
         """Periodic exchange adds offset."""
         weights = torch.tensor([[1.0], [1.0]])
-        src_idx = torch.tensor([[0], [1]])
+        src_idx = torch.tensor([[4], [5]])  # Index into remote field
         patch = NonConformalPatch4(
             name="proc0To1",
             neighbour_rank=1,
@@ -167,7 +167,8 @@ class TestEnhancedHaloExchange4:
             1: field.clone(),
         }
         result = halo.exchange_periodic(field, 5.0, all_fields)
-        # Ghost cells should have the offset added
+        # Ghost cells [0, 1] get values from remote [4, 5] + offset 5.0
+        # Original field[0]=10.0, after exchange should be different
         assert result[0].item() != field[0].item() or result[1].item() != field[1].item()
 
     def test_repr(self):

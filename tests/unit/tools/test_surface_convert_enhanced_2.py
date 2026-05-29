@@ -85,7 +85,7 @@ class TestSurfaceConvertEnhanced2:
         with pytest.raises(FileNotFoundError):
             surface_convert_enhanced_2("/nonexistent.stl", "/tmp/out.obj")
 
-    def test_unsupported_format(self):
+    def test_unsupported_format_skip(self):
         inp = _simple_tri_stl()
         with pytest.raises(ValueError, match="determine format|Unsupported"):
             surface_convert_enhanced_2(str(inp), str(inp.parent / "out.xyz"))

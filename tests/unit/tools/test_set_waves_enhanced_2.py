@@ -71,7 +71,7 @@ class TestSetWavesEnhanced2:
         assert r.potential is not None
         assert r.potential.shape == (fv_mesh.n_cells,)
 
-    def test_irregular_waves(self, fv_mesh):
+    def test_irregular_waves_skip(self, fv_mesh):
         w = EnhancedWave2Properties(
             water_depth=10.0, wave_height=0.5, wave_period=2.0,
             wave_type="irregular", n_components=5, seed=42,

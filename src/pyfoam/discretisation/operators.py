@@ -65,6 +65,13 @@ from pyfoam.discretisation.schemes.filtered_linear_4 import FilteredLinear4Inter
 from pyfoam.discretisation.schemes.van_leer_v_3 import VanLeerV3Interpolation
 from pyfoam.discretisation.schemes.muscl_v_3 import MUSCLV3Interpolation
 from pyfoam.discretisation.schemes.gamma_v_3 import GammaV3Interpolation
+from pyfoam.discretisation.schemes.linear_upwind_fit_4 import LinearUpwindFit4Interpolation
+from pyfoam.discretisation.schemes.upwind_fit_4 import UpwindFit4Interpolation
+from pyfoam.discretisation.schemes.cubic_upwind_fit_4 import CubicUpwindFit4Interpolation
+from pyfoam.discretisation.schemes.filtered_linear_5 import FilteredLinear5Interpolation
+from pyfoam.discretisation.schemes.van_leer_v_4 import VanLeerV4Interpolation
+from pyfoam.discretisation.schemes.muscl_v_4 import MUSCLV4Interpolation
+from pyfoam.discretisation.schemes.gamma_v_4 import GammaV4Interpolation
 from pyfoam.discretisation.weights import compute_centre_weights
 
 __all__ = ["fvm", "fvc"]
@@ -119,6 +126,13 @@ _SCHEME_REGISTRY: dict[str, type[InterpolationScheme]] = {
     "vanLeerV3": VanLeerV3Interpolation,
     "MUSCLV3": MUSCLV3Interpolation,
     "gammaV3": GammaV3Interpolation,
+    "linearUpwindFit4": LinearUpwindFit4Interpolation,
+    "upwindFit4": UpwindFit4Interpolation,
+    "cubicUpwindFit4": CubicUpwindFit4Interpolation,
+    "filteredLinear5": FilteredLinear5Interpolation,
+    "vanLeerV4": VanLeerV4Interpolation,
+    "MUSCLV4": MUSCLV4Interpolation,
+    "gammaV4": GammaV4Interpolation,
 }
 
 

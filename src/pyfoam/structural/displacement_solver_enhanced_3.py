@@ -124,12 +124,14 @@ class EnhancedDisplacementSolver3(EnhancedDisplacementSolver2):
             [-1.0, 1.0],
         ], dtype=torch.float64) * E * area / max(L_def.item(), 1e-15)
 
-        # Geometric stiffness (stress-dependent)
-        force = E * area * du / max(L, 1e-15)
+        # Geometric stiffness (stress-dependent, computed from current state)
+        # N = E * A * du / L (axial force in reference config)
+        N = E * area * du / max(L, 1e-15)
+        # Geometric stiffness: N/L_def for deformed configuration
         K_g = torch.tensor([
             [1.0, -1.0],
             [-1.0, 1.0],
-        ], dtype=torch.float64) * force.item() / max(L_def.item(), 1e-15)
+        ], dtype=torch.float64) * N.item() / max(L_def.item(), 1e-15)
 
         return K_m + K_g
 

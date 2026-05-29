@@ -258,7 +258,7 @@ class SimpleFoamEnhanced3(SimpleFoamEnhanced2):
 
         p_corr = p.clone()
         n_cells = mesh.n_cells
-        scatter_add(dp * w, owner, out=p_corr, dim=0)
+        p_corr = p_corr + scatter_add(dp * w, owner, n_cells)
 
         return p_corr, U
 
