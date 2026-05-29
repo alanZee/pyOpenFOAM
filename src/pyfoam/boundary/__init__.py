@@ -64,6 +64,8 @@ Provides:
 - interfacialHeatTransfer: Interfacial heat transfer for boiling/condensation at interfaces
 - antalWallLubrication2: Enhanced Antal wall lubrication with exponent and interface damping
 - pressureInletOutlet2: Enhanced pressure inlet/outlet with turbulence-aware treatment
+- coupledVelocity: Coupled velocity BC for conjugate heat transfer interfaces
+- pressureTransmissive: Transmissive (non-reflecting) pressure BC for outflow
 """
 
 # Import base and collection first
@@ -274,6 +276,10 @@ from pyfoam.boundary.interfacial_heat_transfer import InterfacialHeatTransferBC
 from pyfoam.boundary.wall_lubrication_antal import AntalWallLubrication2BC
 from pyfoam.boundary.pressure_inlet_outlet_2 import PressureInletOutlet2BC
 
+# Phase 5: Coupled velocity and transmissive pressure BCs
+from pyfoam.boundary.coupled_velocity import CoupledVelocityBC
+from pyfoam.boundary.pressure_transmissive import PressureTransmissiveBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -427,4 +433,7 @@ __all__ = [
     # Phase 5-7: Enhanced Antal and pressure inlet/outlet 2 BCs
     "AntalWallLubrication2BC",
     "PressureInletOutlet2BC",
+    # Phase 5: Coupled velocity and transmissive pressure BCs
+    "CoupledVelocityBC",
+    "PressureTransmissiveBC",
 ]
