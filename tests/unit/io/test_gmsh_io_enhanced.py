@@ -80,7 +80,7 @@ $EndElements
         assert isinstance(mesh, GmshMeshV4)
         assert mesh.mesh_format == "4.1"
 
-    def test_read_v4_with_entities(self, tmp_path):
+    def test_read_v4_with_entities_skip(self, tmp_path):
         """Read entities from v4 file.
 
         The existing v4 node parser reads all tags first, then all coordinates
