@@ -237,8 +237,8 @@ class TestSectionalSolver:
     def test_default_parameters(self):
         solver = SectionalSolver()
         assert solver.n_sections == 20
-        assert solver._d_min == pytest.approx(1e-6)
-        assert solver._d_max == pytest.approx(1e-3)
+        assert solver.d_min == pytest.approx(1e-6)
+        assert solver.d_max == pytest.approx(1e-3)
 
     def test_custom_parameters(self):
         solver = SectionalSolver(n_sections=10, d_min=1e-5, d_max=1e-2)

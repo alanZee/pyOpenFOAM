@@ -522,6 +522,16 @@ class SectionalSolver(EnhancedPBESolver):
         return self._n_sections
 
     @property
+    def d_min(self) -> float:
+        """Minimum particle diameter (m)."""
+        return self._d_min
+
+    @property
+    def d_max(self) -> float:
+        """Maximum particle diameter (m)."""
+        return self._d_max
+
+    @property
     def diameters(self) -> list[float]:
         return list(self._diameters)
 
