@@ -36,6 +36,18 @@ CubicInterpolation
     Fourth-order cubic with gradient-based correction.
 LinearFitInterpolation
     Weighted least-squares linear fit reconstruction.
+LimitedLinearInterpolation
+    TVD limited-linear with flux limiter (vanLeer/minmod/superbee).
+FilteredLinearInterpolation
+    NVD-filtered linear: linear clipped to cell min/max range.
+BlendedInterpolation
+    Convex combination of two interpolation schemes.
+LinearFit2Interpolation
+    Second variant of linear fit with distance-squared weighting.
+CubicUpwindInterpolation
+    Cubic upwind-biased scheme for structured meshes.
+AMIInterpolation
+    Arbitrary Mesh Interface interpolation for non-conformal interfaces.
 
 Time derivative (ddt) schemes
 -----------------------------
@@ -93,6 +105,11 @@ from pyfoam.discretisation.schemes.sfcd import SFCDInterpolation
 from pyfoam.discretisation.schemes.cubic import CubicInterpolation
 from pyfoam.discretisation.schemes.linear_fit import LinearFitInterpolation
 from pyfoam.discretisation.schemes.limited_linear import LimitedLinearInterpolation
+from pyfoam.discretisation.schemes.filtered_linear import FilteredLinearInterpolation
+from pyfoam.discretisation.schemes.blended import BlendedInterpolation
+from pyfoam.discretisation.schemes.linear_fit_2 import LinearFit2Interpolation
+from pyfoam.discretisation.schemes.cubic_upwind import CubicUpwindInterpolation
+from pyfoam.discretisation.schemes.ami_interpolation import AMIInterpolation
 from pyfoam.discretisation.ddt import (
     DdtScheme,
     EulerDdt,
@@ -138,6 +155,11 @@ __all__ = [
     "CubicInterpolation",
     "LinearFitInterpolation",
     "LimitedLinearInterpolation",
+    "FilteredLinearInterpolation",
+    "BlendedInterpolation",
+    "LinearFit2Interpolation",
+    "CubicUpwindInterpolation",
+    "AMIInterpolation",
     # Time derivative (ddt) schemes
     "DdtScheme",
     "EulerDdt",

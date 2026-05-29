@@ -4,7 +4,8 @@ pyfoam.discretisation.schemes — Concrete interpolation schemes.
 Contains interpolation schemes that operate as GPU tensor gather/scatter
 operations: upwind, linear-upwind, QUICK, harmonic, midPoint, LUST,
 vanLeer, gamma, interfaceCompression, MUSCL, central, SFCD, cubic,
-and linearFit.
+linearFit, limitedLinear, filteredLinear, blended, linearFit2,
+cubicUpwind, and AMI.
 """
 
 from pyfoam.discretisation.schemes.upwind import UpwindInterpolation
@@ -22,6 +23,11 @@ from pyfoam.discretisation.schemes.sfcd import SFCDInterpolation
 from pyfoam.discretisation.schemes.cubic import CubicInterpolation
 from pyfoam.discretisation.schemes.linear_fit import LinearFitInterpolation
 from pyfoam.discretisation.schemes.limited_linear import LimitedLinearInterpolation
+from pyfoam.discretisation.schemes.filtered_linear import FilteredLinearInterpolation
+from pyfoam.discretisation.schemes.blended import BlendedInterpolation
+from pyfoam.discretisation.schemes.linear_fit_2 import LinearFit2Interpolation
+from pyfoam.discretisation.schemes.cubic_upwind import CubicUpwindInterpolation
+from pyfoam.discretisation.schemes.ami_interpolation import AMIInterpolation
 
 __all__ = [
     "UpwindInterpolation",
@@ -39,4 +45,9 @@ __all__ = [
     "CubicInterpolation",
     "LinearFitInterpolation",
     "LimitedLinearInterpolation",
+    "FilteredLinearInterpolation",
+    "BlendedInterpolation",
+    "LinearFit2Interpolation",
+    "CubicUpwindInterpolation",
+    "AMIInterpolation",
 ]

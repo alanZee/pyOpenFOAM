@@ -36,6 +36,11 @@ from pyfoam.discretisation.schemes.central import CentralInterpolation
 from pyfoam.discretisation.schemes.sfcd import SFCDInterpolation
 from pyfoam.discretisation.schemes.cubic import CubicInterpolation
 from pyfoam.discretisation.schemes.linear_fit import LinearFitInterpolation
+from pyfoam.discretisation.schemes.filtered_linear import FilteredLinearInterpolation
+from pyfoam.discretisation.schemes.blended import BlendedInterpolation
+from pyfoam.discretisation.schemes.linear_fit_2 import LinearFit2Interpolation
+from pyfoam.discretisation.schemes.cubic_upwind import CubicUpwindInterpolation
+from pyfoam.discretisation.schemes.ami_interpolation import AMIInterpolation
 from pyfoam.discretisation.weights import compute_centre_weights
 
 __all__ = ["fvm", "fvc"]
@@ -61,6 +66,11 @@ _SCHEME_REGISTRY: dict[str, type[InterpolationScheme]] = {
     "SFCD": SFCDInterpolation,
     "cubic": CubicInterpolation,
     "linearFit": LinearFitInterpolation,
+    "filteredLinear": FilteredLinearInterpolation,
+    "blended": BlendedInterpolation,
+    "linearFit2": LinearFit2Interpolation,
+    "cubicUpwind": CubicUpwindInterpolation,
+    "AMI": AMIInterpolation,
 }
 
 
@@ -97,6 +107,17 @@ def _resolve_scheme(
     elif name == "interfaceCompression":
         beta = kwargs.get("beta", 1.0)
         return scheme_cls(mesh, beta=beta)
+    elif name == "blended":
+        scheme1_name = kwargs.get("scheme1")
+        scheme2_name = kwargs.get("scheme2")
+        alpha = kwargs.get("alpha", 0.5)
+        if scheme1_name is None or scheme2_name is None:
+            raise ValueError(
+                "BlendedInterpolation requires 'scheme1' and 'scheme2' kwargs."
+            )
+        scheme1 = _resolve_scheme(scheme1_name, mesh=mesh)
+        scheme2 = _resolve_scheme(scheme2_name, mesh=mesh)
+        return scheme_cls(mesh, scheme1=scheme1, scheme2=scheme2, alpha=alpha)
     else:
         return scheme_cls(mesh)
 
