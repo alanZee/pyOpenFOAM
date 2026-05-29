@@ -11,8 +11,14 @@ Solver names:
 - ``"Euler"`` -- Forward Euler (1st order, explicit)
 - ``"RK4"`` -- Classical 4th-order Runge-Kutta (explicit)
 - ``"RKF45"`` -- Runge-Kutta-Fehlberg adaptive (explicit, 4(5) pair)
+- ``"RKCK45"`` -- Runge-Kutta-Cash-Karp adaptive (explicit, 4(5) pair)
+- ``"RKDP45"`` -- Runge-Kutta-Dormand-Prince adaptive (explicit, 4(5) pair)
 - ``"Trapezoid"`` -- Implicit trapezoidal rule (2nd order, A-stable)
-- ``"Rosenbrock12"`` -- Rosenbrock adaptive (stiff, L-stable)
+- ``"Rosenbrock12"`` -- Rosenbrock 1(2) adaptive (stiff, L-stable)
+- ``"Rosenbrock23"`` -- Rosenbrock 2(3) adaptive (stiff, L-stable)
+- ``"Rosenbrock34"`` -- Rosenbrock 3(4) adaptive (stiff, L-stable)
+- ``"SIS"`` -- Semi-Implicit Solver (extrapolation)
+- ``"SEulex"`` -- Semi-Explicit Extrapolation solver
 
 All tensors respect the global device/dtype configuration from
 :mod:`pyfoam.core.device`.
@@ -115,8 +121,10 @@ class ODESolver(ABC):
 
         Args:
             name: Solver name (case-sensitive). One of:
-                ``"Euler"``, ``"RK4"``, ``"RKF45"``, ``"Trapezoid"``,
-                ``"Rosenbrock12"``.
+                ``"Euler"``, ``"RK4"``, ``"RKF45"``, ``"RKCK45"``,
+                ``"RKDP45"``, ``"Trapezoid"``, ``"Rosenbrock12"``,
+                ``"Rosenbrock23"``, ``"Rosenbrock34"``, ``"SIS"``,
+                ``"SEulex"``.
             **kwargs: Solver-specific parameters (rtol, atol, etc.).
 
         Returns:
@@ -129,9 +137,21 @@ class ODESolver(ABC):
         if not cls._registry:
             from pyfoam.ode.euler import EulerSolver  # noqa: F401
             from pyfoam.ode.runge_kutta import RK4Solver, RKF45Solver  # noqa: F401
+            from pyfoam.ode.runge_kutta_ck_dp import (  # noqa: F401
+                RKCK45Solver,
+                RKDP45Solver,
+            )
             from pyfoam.ode.implicit import (  # noqa: F401
                 TrapezoidSolver,
                 Rosenbrock12Solver,
+            )
+            from pyfoam.ode.rosenbrock import (  # noqa: F401
+                Rosenbrock23Solver,
+                Rosenbrock34Solver,
+            )
+            from pyfoam.ode.semi_implicit import (  # noqa: F401
+                SISSolver,
+                SEulexSolver,
             )
 
         if name not in cls._registry:
@@ -213,7 +233,8 @@ def create_ode_solver(name: str, **kwargs: Any) -> ODESolver:
 
     Args:
         name: Solver name. One of: ``"Euler"``, ``"RK4"``, ``"RKF45"``,
-            ``"Trapezoid"``, ``"Rosenbrock12"``.
+            ``"RKCK45"``, ``"RKDP45"``, ``"Trapezoid"``, ``"Rosenbrock12"``,
+            ``"Rosenbrock23"``, ``"Rosenbrock34"``, ``"SIS"``, ``"SEulex"``.
         **kwargs: Solver parameters (rtol, atol).
 
     Returns:

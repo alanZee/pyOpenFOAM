@@ -34,6 +34,9 @@ from pyfoam.core.device import get_device, get_default_dtype
 __all__ = [
     "compute_nut_wall",
     "compute_nut_low_re_wall",
+    "compute_nut_u_wall",
+    "compute_nut_u_rough_wall",
+    "compute_nut_u_spalding_wall",
     "compute_k_wall",
     "compute_omega_wall",
     "compute_epsilon_wall",
@@ -234,3 +237,228 @@ def compute_nut_low_re_wall(
     # Low-Re wall function: ν_t = 0 at wall
     # The wall-adjacent cell resolves the viscous sublayer
     return torch.tensor(0.0)
+
+
+def compute_nut_u_wall(
+    U: torch.Tensor,
+    y: torch.Tensor,
+    nu: float,
+    kappa: float = _KAPPA,
+    E: float = _E,
+) -> torch.Tensor:
+    """Compute turbulent viscosity from velocity (nutUWallFunction).
+
+    Velocity-based nut wall function that computes u_tau from the
+    velocity magnitude at the wall-adjacent cell using an iterative
+    Newton-Raphson approach.
+
+    Given |U| at the cell centre, the wall shear stress is found from:
+
+        |U| = u_tau * [y⁺ + u_tau * y / ν * ...]  (implicit)
+
+    which simplifies to solving:
+
+        f(u_tau) = u_tau * (|U_parallel| / u_tau - y⁺ + f_visc(y⁺)) = 0
+
+    For the standard log-law region:
+
+        |U_parallel| = (u_tau / kappa) * ln(E * y_plus)
+
+    So: u_tau = kappa * |U_parallel| / ln(E * u_tau * y / nu)
+
+    Solved iteratively via Newton-Raphson.
+
+    Args:
+        U: Velocity vector at wall-adjacent cells, shape ``(n_faces, 3)``.
+        y: Wall-normal distance from cell centre to face, shape ``(n_faces,)``.
+        nu: Molecular kinematic viscosity.
+        kappa: Von Karman constant (default 0.41).
+        E: Log-law constant (default 9.8).
+
+    Returns:
+        ν_t at each wall face, shape ``(n_faces,)``.
+    """
+    device = get_device()
+    dtype = get_default_dtype()
+    U = U.to(device=device, dtype=dtype)
+    y = y.to(device=device, dtype=dtype)
+
+    U_mag = torch.sqrt((U * U).sum(dim=-1)).clamp(min=1e-10)
+    y = y.clamp(min=1e-10)
+    nu_safe = max(nu, 1e-30)
+
+    # Initial guess: u_tau = sqrt(nu * U_mag / y)
+    u_tau = torch.sqrt(nu_safe * U_mag / y)
+
+    # Newton-Raphson iterations
+    for _ in range(20):
+        y_plus = (u_tau * y / nu_safe).clamp(min=1e-4)
+        ln_Ey = torch.log(E * y_plus).clamp(min=1e-4)
+
+        # f(u_tau) = u_tau / kappa * ln(E * y_plus) - |U|
+        f_val = u_tau / kappa * ln_Ey - U_mag
+
+        # f'(u_tau) = (1/kappa) * [ln(E * y_plus) + 1]
+        df_val = (ln_Ey + 1.0) / kappa
+
+        delta = f_val / df_val.clamp(min=1e-10)
+        u_tau = (u_tau - delta).clamp(min=1e-10)
+
+        if torch.max(torch.abs(delta)) < 1e-8 * torch.max(u_tau):
+            break
+
+    y_plus = (u_tau * y / nu_safe).clamp(min=1e-4)
+    nut = kappa * u_tau * y / torch.log(E * y_plus)
+
+    return nut.clamp(min=0.0)
+
+
+def compute_nut_u_rough_wall(
+    U: torch.Tensor,
+    y: torch.Tensor,
+    nu: float,
+    Ks: float = 0.0,
+    Cs: float = 0.5,
+    kappa: float = _KAPPA,
+) -> torch.Tensor:
+    """Compute turbulent viscosity for rough walls (nutURoughWallFunction).
+
+    Rough-wall variant of the velocity-based nut wall function.
+    The log-law is modified for roughness:
+
+        |U_parallel| = (u_tau / kappa) * ln(y / (Ks * Cs + y_0))
+
+    where Ks is the equivalent sand-grain roughness height and Cs is
+    the roughness constant.  When Ks = 0, reduces to smooth-wall.
+
+    Args:
+        U: Velocity vector at wall-adjacent cells, shape ``(n_faces, 3)``.
+        y: Wall-normal distance from cell centre to face, shape ``(n_faces,)``.
+        nu: Molecular kinematic viscosity.
+        Ks: Equivalent sand-grain roughness height (default 0).
+        Cs: Roughness constant (default 0.5).
+        kappa: Von Karman constant (default 0.41).
+
+    Returns:
+        ν_t at each wall face, shape ``(n_faces,)``.
+    """
+    device = get_device()
+    dtype = get_default_dtype()
+    U = U.to(device=device, dtype=dtype)
+    y = y.to(device=device, dtype=dtype)
+
+    U_mag = torch.sqrt((U * U).sum(dim=-1)).clamp(min=1e-10)
+    y = y.clamp(min=1e-10)
+    nu_safe = max(nu, 1e-30)
+
+    # Effective roughness length: y0 = max(nu / u_tau, Ks * Cs)
+    # For simplicity, use Ks * Cs + nu_0 where nu_0 is a small offset
+    rough_length = Ks * Cs + nu_safe * 0.01
+
+    # Initial guess
+    u_tau = torch.sqrt(nu_safe * U_mag / y)
+
+    for _ in range(20):
+        # Effective wall distance from roughness
+        y_eff = y + rough_length
+        y_over_y0 = (y / rough_length).clamp(min=1.0 + 1e-6)
+        ln_ratio = torch.log(y_over_y0).clamp(min=1e-4)
+
+        # f(u_tau) = u_tau / kappa * ln(y / y0) - |U|
+        f_val = u_tau / kappa * ln_ratio - U_mag
+        df_val = ln_ratio / kappa
+
+        delta = f_val / df_val.clamp(min=1e-10)
+        u_tau = (u_tau - delta).clamp(min=1e-10)
+
+        if torch.max(torch.abs(delta)) < 1e-8 * torch.max(u_tau):
+            break
+
+    # nut = kappa * u_tau * y (log-law relation)
+    nut = kappa * u_tau * y
+
+    return nut.clamp(min=0.0)
+
+
+def compute_nut_u_spalding_wall(
+    U: torch.Tensor,
+    y: torch.Tensor,
+    nu: float,
+    kappa: float = _KAPPA,
+    E: float = _E,
+) -> torch.Tensor:
+    """Compute turbulent viscosity using Spalding's unified wall function.
+
+    Spalding's law-of-the-wall provides a single continuous expression
+    valid from the viscous sublayer through the log-law region:
+
+        y⁺ = u⁺ + exp(-κB) * [exp(κu⁺) - 1 - κu⁺ - (κu⁺)²/2 - (κu⁺)³/6]
+
+    where B = ln(E) / κ and u⁺ = |U_parallel| / u_tau.
+
+    This avoids the discontinuity between viscous and log-law sublayers.
+
+    Solved iteratively via Newton-Raphson on u_tau.
+
+    Args:
+        U: Velocity vector at wall-adjacent cells, shape ``(n_faces, 3)``.
+        y: Wall-normal distance from cell centre to face, shape ``(n_faces,)``.
+        nu: Molecular kinematic viscosity.
+        kappa: Von Karman constant (default 0.41).
+        E: Log-law constant (default 9.8).
+
+    Returns:
+        ν_t at each wall face, shape ``(n_faces,)``.
+    """
+    device = get_device()
+    dtype = get_default_dtype()
+    U = U.to(device=device, dtype=dtype)
+    y = y.to(device=device, dtype=dtype)
+
+    U_mag = torch.sqrt((U * U).sum(dim=-1)).clamp(min=1e-10)
+    y = y.clamp(min=1e-10)
+    nu_safe = max(nu, 1e-30)
+    B = math.log(E) / kappa
+    exp_neg_kB = math.exp(-kappa * B)
+
+    # Initial guess
+    u_tau = torch.sqrt(nu_safe * U_mag / y)
+
+    for _ in range(30):
+        u_plus = (U_mag / u_tau).clamp(min=1e-4, max=200.0)
+        y_plus = u_tau * y / nu_safe
+
+        # Spalding function: f(y_plus) = y_plus
+        # g(u_plus) = u_plus + exp_neg_kB * (exp(kappa * u_plus) - 1 - kappa*u_plus - (kappa*u_plus)^2/2 - (kappa*u_plus)^3/6)
+        ku = kappa * u_plus
+        ku = ku.clamp(max=50.0)  # 防止溢出
+        exp_ku = torch.exp(ku)
+        taylor = 1.0 + ku + ku**2 / 2.0 + ku**3 / 6.0
+        spalding = u_plus + exp_neg_kB * (exp_ku - taylor)
+
+        # Residual: y_plus(u_tau) - spalding(u_plus) = 0
+        residual = y_plus - spalding
+
+        # d(y_plus)/d(u_tau) = y / nu
+        dy_plus_dutau = y / nu_safe
+
+        # d(u_plus)/d(u_tau) = -U_mag / u_tau^2
+        du_plus_dutau = -U_mag / (u_tau * u_tau)
+
+        # d(spalding)/d(u_tau) = d(spalding)/d(u_plus) * du_plus/dutau
+        dspalding_du_plus = 1.0 + exp_neg_kB * (kappa * exp_ku - kappa - kappa**2 * u_plus - kappa**3 * u_plus**2 / 2.0)
+        dspalding_dutau = dspalding_du_plus * du_plus_dutau
+
+        df = dy_plus_dutau - dspalding_dutau
+        df = df.clamp(min=1e-20)
+
+        delta = residual / df
+        u_tau = (u_tau - delta).clamp(min=1e-10)
+
+        if torch.max(torch.abs(delta)) < 1e-8 * torch.max(u_tau):
+            break
+
+    y_plus = (u_tau * y / nu_safe).clamp(min=1e-4)
+    nut = kappa * u_tau * y / torch.log(E * y_plus)
+
+    return nut.clamp(min=0.0)

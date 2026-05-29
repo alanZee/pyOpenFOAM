@@ -90,6 +90,32 @@ from pyfoam.io.vtk_io import (
     write_vtk_unstructured,
     write_vtu_unstructured,
 )
+from pyfoam.io.foam_format_convert import (
+    FoamFormatConverter,
+    convert_file,
+    convert_directory,
+)
+from pyfoam.io.foam_units import (
+    DimensionSet,
+    UnitSystem,
+    convert_dimensions,
+    parse_dimensions,
+    DIMENSIONLESS,
+    DIM_LENGTH,
+    DIM_AREA,
+    DIM_VOLUME,
+    DIM_TIME,
+    DIM_VELOCITY,
+    DIM_ACCELERATION,
+    DIM_FORCE,
+    DIM_PRESSURE,
+    DIM_KINEMATIC_VISCOSITY,
+    DIM_DYNAMIC_VISCOSITY,
+    DIM_DENSITY,
+    DIM_ENERGY,
+    DIM_TEMPERATURE,
+    DIM_SPECIFIC_HEAT,
+)
 
 __all__ = [
     # Binary I/O
@@ -165,4 +191,28 @@ __all__ = [
     "write_vtk_unstructured",
     "write_vtu_unstructured",
     "foam_to_vtk",
+    # Format conversion
+    "FoamFormatConverter",
+    "convert_file",
+    "convert_directory",
+    # Unit system
+    "DimensionSet",
+    "UnitSystem",
+    "convert_dimensions",
+    "parse_dimensions",
+    "DIMENSIONLESS",
+    "DIM_LENGTH",
+    "DIM_AREA",
+    "DIM_VOLUME",
+    "DIM_TIME",
+    "DIM_VELOCITY",
+    "DIM_ACCELERATION",
+    "DIM_FORCE",
+    "DIM_PRESSURE",
+    "DIM_KINEMATIC_VISCOSITY",
+    "DIM_DYNAMIC_VISCOSITY",
+    "DIM_DENSITY",
+    "DIM_ENERGY",
+    "DIM_TEMPERATURE",
+    "DIM_SPECIFIC_HEAT",
 ]

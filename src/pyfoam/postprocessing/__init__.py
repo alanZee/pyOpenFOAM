@@ -26,6 +26,9 @@ from pyfoam.postprocessing.y_plus import YPlus
 from pyfoam.postprocessing.field_operations import FieldOperations
 from pyfoam.postprocessing.sampling import Probes, LineSample, SurfaceSample
 from pyfoam.postprocessing.vtk_output import VTKWriter, FoamToVTK
+from pyfoam.postprocessing.noise import Noise
+from pyfoam.postprocessing.temporal_interpolate import TemporalInterpolate
+from pyfoam.postprocessing.particle_tracks import ParticleTracks
 
 __all__ = [
     # Framework
@@ -46,4 +49,10 @@ __all__ = [
     # VTK output
     "VTKWriter",
     "FoamToVTK",
+    # Acoustic analysis
+    "Noise",
+    # Temporal interpolation
+    "TemporalInterpolate",
+    # Particle tracking
+    "ParticleTracks",
 ]

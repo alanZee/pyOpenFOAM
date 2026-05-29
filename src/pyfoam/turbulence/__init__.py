@@ -167,6 +167,9 @@ from pyfoam.turbulence.turbulence_2 import (
 from pyfoam.turbulence.wall_functions import (
     compute_nut_wall,
     compute_nut_low_re_wall,
+    compute_nut_u_wall,
+    compute_nut_u_rough_wall,
+    compute_nut_u_spalding_wall,
     compute_k_wall,
     compute_omega_wall,
     compute_epsilon_wall,
@@ -202,6 +205,7 @@ from pyfoam.turbulence.les_deltas import (
     CubeRootVolDelta,
     MaxDeltaXYZ,
     VanDriestDelta,
+    SmoothDelta,
 )
 
 # LES spatial filters
@@ -209,6 +213,7 @@ from pyfoam.turbulence.les_filters import (
     LESFilter,
     SimpleFilter,
     LaplaceFilter,
+    AnisotropicFilter,
 )
 
 # Wall distance calculators

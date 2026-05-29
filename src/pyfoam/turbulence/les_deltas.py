@@ -38,6 +38,7 @@ __all__ = [
     "CubeRootVolDelta",
     "MaxDeltaXYZ",
     "VanDriestDelta",
+    "SmoothDelta",
 ]
 
 
@@ -214,3 +215,70 @@ class VanDriestDelta(LESDelta):
             return delta0 * damping
 
         return delta0
+
+
+@LESDelta.register("smoothDelta")
+class SmoothDelta(LESDelta):
+    """Smoothed filter-width delta.
+
+    Computes the cube-root-volume delta and then smooths it across the
+    mesh by averaging each cell's value with its face-neighbours:
+
+        delta_smooth[c] = (delta[c] + sum(delta[nb])) / (1 + n_neighbours)
+
+    Multiple smoothing passes can be applied via ``n_passes``.
+
+    This is used by OpenFOAM's ``smoothDelta`` model to reduce
+    sharp jumps in filter width at mesh refinement interfaces.
+
+    Parameters
+    ----------
+    n_passes : int
+        Number of smoothing passes.  Default 1.
+    """
+
+    def __init__(self, n_passes: int = 1) -> None:
+        self.n_passes = max(1, n_passes)
+
+    def __call__(self, mesh: Any) -> torch.Tensor:
+        """Compute smoothed delta.
+
+        Args:
+            mesh: FvMesh with ``cell_volumes``, ``owner``, ``neighbour``,
+                ``n_cells``, ``n_internal_faces``.
+
+        Returns:
+            ``(n_cells,)`` tensor.
+        """
+        device = get_device()
+        dtype = get_default_dtype()
+
+        V = mesh.cell_volumes.to(device=device, dtype=dtype).clamp(min=1e-30)
+        delta = V.pow(1.0 / 3.0)
+
+        if not hasattr(mesh, "owner") or not hasattr(mesh, "neighbour"):
+            return delta
+
+        owner = mesh.owner.to(device=device)
+        neighbour = mesh.neighbour.to(device=device)
+        n_cells = mesh.n_cells
+        n_internal = int(mesh.n_internal_faces) if hasattr(mesh, "n_internal_faces") else len(neighbour)
+
+        for _ in range(self.n_passes):
+            sum_delta = delta.clone()
+            count = torch.ones(n_cells, device=device, dtype=dtype)
+
+            o = owner[:n_internal]
+            n = neighbour[:n_internal]
+
+            # 每个面将 owner 值累加到 neighbour、neighbour 值累加到 owner
+            sum_delta.scatter_add_(0, n, delta[o])
+            sum_delta.scatter_add_(0, o, delta[n])
+
+            ones = torch.ones(n_internal, device=device, dtype=dtype)
+            count.scatter_add_(0, n, ones)
+            count.scatter_add_(0, o, ones)
+
+            delta = sum_delta / count.clamp(min=1.0)
+
+        return delta

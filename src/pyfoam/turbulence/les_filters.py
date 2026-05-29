@@ -46,6 +46,7 @@ __all__ = [
     "LESFilter",
     "SimpleFilter",
     "LaplaceFilter",
+    "AnisotropicFilter",
 ]
 
 
@@ -301,5 +302,142 @@ class LaplaceFilter(LESFilter):
                 laplacian.scatter_add_(0, n, diff_no)
                 laplacian.scatter_add_(0, o, diff_on)
                 result = result + coeff * laplacian
+
+        return result
+
+
+@LESFilter.register("anisotropicFilter")
+class AnisotropicFilter(LESFilter):
+    """Anisotropic (directional) filter for LES.
+
+    Applies a weighted Laplacian smoothing where the diffusion weight
+    depends on the alignment of each internal face with the cell
+    aspect-ratio axes.  Faces perpendicular to long cell axes receive
+    stronger diffusion, producing directionally dependent filtering.
+
+    The effective filter width in each direction scales with the local
+    cell dimension, which is estimated from the cube-root-volume
+    baseline and the per-cell direction vectors between owner and
+    neighbour cell centres.
+
+    Parameters
+    ----------
+    n_iterations : int
+        Number of smoothing iterations.  Default: 1.
+    """
+
+    def __init__(self, n_iterations: int = 1) -> None:
+        self._n_iterations = max(1, n_iterations)
+
+    @property
+    def n_iterations(self) -> int:
+        """Number of smoothing iterations."""
+        return self._n_iterations
+
+    def apply_filter(
+        self,
+        field: torch.Tensor,
+        mesh: Any,
+    ) -> torch.Tensor:
+        """Apply the anisotropic filter.
+
+        Parameters
+        ----------
+        field : torch.Tensor
+            Field to filter.  Shape ``(n_cells,)`` or ``(n_cells, 3)``.
+        mesh : Any
+            The finite volume mesh.
+
+        Returns
+        -------
+        torch.Tensor
+            Filtered field.
+        """
+        device = get_device()
+        dtype = get_default_dtype()
+
+        result = field.to(device=device, dtype=dtype)
+
+        if not hasattr(mesh, "owner") or not hasattr(mesh, "neighbour"):
+            return result
+
+        owner = mesh.owner.to(device=device)
+        neighbour = mesh.neighbour.to(device=device)
+        n_cells = mesh.n_cells
+        n_internal = int(mesh.n_internal_faces) if hasattr(mesh, "n_internal_faces") else len(neighbour)
+
+        # 基础过滤宽度（每单元）
+        if hasattr(mesh, "cell_volumes"):
+            V = mesh.cell_volumes.to(device=device, dtype=dtype).clamp(min=1e-30)
+            delta_base = V.pow(1.0 / 3.0)
+        else:
+            delta_base = torch.ones(n_cells, device=device, dtype=dtype)
+
+        is_vector = field.dim() >= 2 and field.shape[-1] == 3
+
+        # 获取单元中心
+        if hasattr(mesh, "cell_centres"):
+            cc = mesh.cell_centres.to(device=device, dtype=dtype)
+        else:
+            cc = torch.zeros(n_cells, 3, device=device, dtype=dtype)
+
+        o = owner[:n_internal]
+        n = neighbour[:n_internal]
+
+        # 面方向向量（owner -> neighbour）
+        d_vec = cc[n] - cc[o]  # (n_internal, 3)
+        d_mag = torch.sqrt((d_vec * d_vec).sum(dim=-1, keepdim=True)).clamp(min=1e-30)
+        d_hat = d_vec / d_mag  # 单位方向向量
+
+        # 各向异性权重：沿面法线方向的 delta 分量
+        # 使用方向 delta（delta_base 在各方向取不同值近似）
+        # 对于各向异性网格：delta_vec[c] 可从 cell_deltas 获取
+        if hasattr(mesh, "cell_deltas"):
+            delta_vec = mesh.cell_deltas.to(device=device, dtype=dtype)
+        else:
+            # 各向同性回退
+            delta_vec = delta_base.unsqueeze(-1).expand(-1, 3)
+
+        # owner 和 neighbour 的方向 delta
+        delta_o = delta_vec[o]  # (n_internal, 3)
+        delta_n = delta_vec[n]
+
+        # 沿面方向的最大 delta 分量
+        w_o = (delta_o * d_hat.abs()).sum(dim=-1).clamp(min=1e-10)  # (n_internal,)
+        w_n = (delta_n * d_hat.abs()).sum(dim=-1).clamp(min=1e-10)
+
+        # 权重 = 平均方向 delta / 基础 delta（归一化）
+        avg_w = 0.5 * (w_o + w_n)
+        base_o = delta_base[o].clamp(min=1e-10)
+        base_n = delta_base[n].clamp(min=1e-10)
+
+        # 面权重：沿面方向的过滤宽度与基础宽度之比
+        face_w = avg_w / (0.5 * (base_o + base_n)).clamp(min=1e-10)
+
+        # Laplacian 系数
+        coeff = delta_base.pow(2) / 24.0
+
+        for _ in range(self._n_iterations):
+            # 加权 Laplacian
+            weighted_laplacian = torch.zeros_like(result)
+
+            if is_vector:
+                diff_on = result[n] - result[o]
+                diff_no = result[o] - result[n]
+                # 扩展权重
+                fw = face_w.unsqueeze(-1)
+                weighted_laplacian.scatter_add_(
+                    0, o.unsqueeze(1).expand_as(diff_on), diff_on * fw
+                )
+                weighted_laplacian.scatter_add_(
+                    0, n.unsqueeze(1).expand_as(diff_no), diff_no * fw
+                )
+                result = result + coeff.unsqueeze(-1) * weighted_laplacian
+            else:
+                diff_on = result[n] - result[o]
+                diff_no = result[o] - result[n]
+                weighted_laplacian.scatter_add_(0, o, diff_on * face_w)
+                weighted_laplacian.scatter_add_(0, n, diff_no * face_w)
+                result = result + coeff * weighted_laplacian
 
         return result

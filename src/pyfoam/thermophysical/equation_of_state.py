@@ -6,6 +6,11 @@ and temperature:
 
 - **PerfectGas**: p = ρRT (ideal gas law)
 - **IncompressiblePerfectGas**: ρ = p_ref/(RT) (density depends only on T)
+- **CubicEOS**: generic cubic EOS base with Z-factor computation
+- **PengRobinsonEOS**: Peng-Robinson cubic EOS
+- **RedlichKwongEOS**: Redlich-Kwong cubic EOS
+- **VanDerWaalsEOS**: van der Waals cubic EOS
+- **IcoTabulatedEOS**: incompressible tabulated (p, rho) interpolation
 
 These models are used by compressible solvers (rhoSimpleFoam, rhoPimpleFoam)
 to close the system of equations.
@@ -23,7 +28,8 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Any
+from bisect import bisect_right
+from typing import Any, Sequence
 
 import torch
 
@@ -33,6 +39,11 @@ __all__ = [
     "EquationOfState",
     "PerfectGas",
     "IncompressiblePerfectGas",
+    "CubicEOS",
+    "PengRobinsonEOS",
+    "RedlichKwongEOS",
+    "VanDerWaalsEOS",
+    "IcoTabulatedEOS",
 ]
 
 logger = logging.getLogger(__name__)

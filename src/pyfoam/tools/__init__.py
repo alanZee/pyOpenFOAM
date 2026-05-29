@@ -32,6 +32,19 @@ from pyfoam.tools.create_patch import create_patch
 from pyfoam.tools.transform_points_2 import transform_points_enhanced
 from pyfoam.tools.mirror_mesh import mirror_mesh
 from pyfoam.tools.flatten_mesh import flatten_mesh
+from pyfoam.tools.surface_features import SurfaceFeaturesResult, surface_features
+from pyfoam.tools.surface_check import SurfaceCheckResult, surface_check
+from pyfoam.tools.surface_auto_patch import SurfaceAutoPatchResult, surface_auto_patch
+from pyfoam.tools.surface_split_by_patch import SurfaceSplitResult, surface_split_by_patch
+from pyfoam.tools.set_waves import WaveProperties, set_waves
+from pyfoam.tools.set_atm_boundary_layer import ABLProperties, set_atm_boundary_layer
+from pyfoam.tools.apply_boundary_layer import BoundaryLayerProperties, apply_boundary_layer
+from pyfoam.tools.ideas_unv_to_foam import ideas_unv_to_foam
+from pyfoam.tools.ansys_to_foam import ansys_to_foam
+from pyfoam.tools.star_to_foam import star_to_foam
+from pyfoam.tools.tetgen_to_foam import tetgen_to_foam
+from pyfoam.tools.foam_to_star_mesh import foam_to_star_mesh
+from pyfoam.tools.foam_to_fluent_mesh import foam_to_fluent_mesh
 __all__ = [
     "box_turb", "CheckMeshResult", "check_mesh", "CellQuality", "QualityReport", "check_mesh_quality",
     "BoxRegion", "CylinderRegion", "set_fields",
@@ -48,4 +61,13 @@ __all__ = [
     "ReconstructParResult", "reconstruct_par",
     "stitch_mesh", "create_baffles", "create_patch",
     "transform_points_enhanced", "mirror_mesh", "flatten_mesh",
+    "SurfaceFeaturesResult", "surface_features",
+    "SurfaceCheckResult", "surface_check",
+    "SurfaceAutoPatchResult", "surface_auto_patch",
+    "SurfaceSplitResult", "surface_split_by_patch",
+    "WaveProperties", "set_waves",
+    "ABLProperties", "set_atm_boundary_layer",
+    "BoundaryLayerProperties", "apply_boundary_layer",
+    "ideas_unv_to_foam", "ansys_to_foam", "star_to_foam", "tetgen_to_foam",
+    "foam_to_star_mesh", "foam_to_fluent_mesh",
 ]

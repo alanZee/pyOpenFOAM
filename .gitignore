@@ -19,7 +19,6 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-000.txt
 
 # Virtual environments
 .venv/
@@ -52,3 +51,8 @@ processor*/
 AGENTS.md
 .opencode/
 .sisyphus/
+
+# User
+000.txt
+CLAUDE.md
+.claude/

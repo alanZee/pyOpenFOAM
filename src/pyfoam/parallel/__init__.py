@@ -28,6 +28,8 @@ from pyfoam.parallel.processor_patch import ProcessorPatch, HaloExchange
 from pyfoam.parallel.parallel_field import ParallelField
 from pyfoam.parallel.parallel_io import ParallelReader, ParallelWriter
 from pyfoam.parallel.parallel_solver import ParallelSolver, ParallelSolverConfig
+from pyfoam.parallel.reconstruct_par import ReconstructPar, ReconstructResult
+from pyfoam.parallel.redistribute_par import RedistributePar, RedistributeResult
 
 __all__ = [
     # Decomposition
@@ -48,4 +50,10 @@ __all__ = [
     # Parallel solver
     "ParallelSolver",
     "ParallelSolverConfig",
+    # Reconstruction
+    "ReconstructPar",
+    "ReconstructResult",
+    # Redistribution
+    "RedistributePar",
+    "RedistributeResult",
 ]

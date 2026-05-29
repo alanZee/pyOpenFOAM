@@ -11,10 +11,15 @@ Provides:
 - :class:`ConstantViscosity` — constant dynamic viscosity
 - :class:`Sutherland` — Sutherland's law for temperature-dependent viscosity
 - :class:`PolynomialTransport` — polynomial viscosity model
+- :class:`ConstantTransport` — constant viscosity + optional constant kappa
+- :class:`SutherlandTransport` — Sutherland viscosity + optional polynomial kappa
 
 **Thermodynamic Models:**
 - :class:`JanafThermo` — JANAF polynomial Cp model
-- :class:`HConstThermo` — constant specific heat model
+- :class:`HConstThermo` — constant specific heat model (enthalpy-based)
+- :class:`EConstThermo` — constant specific heat model (energy-based)
+- :class:`HPowerThermo` — power-law Cp model
+- :class:`JanafMultiThermo` — multi-phase JANAF model
 
 **Combined Thermo:**
 - :class:`BasicThermo` — basic combined model (EOS + transport)
@@ -51,8 +56,13 @@ from pyfoam.thermophysical.transport_model import (
     Sutherland,
 )
 from pyfoam.thermophysical.polynomial_transport import PolynomialTransport
+from pyfoam.thermophysical.constant_transport import ConstantTransport
+from pyfoam.thermophysical.sutherland_transport import SutherlandTransport
 from pyfoam.thermophysical.janaf_thermo import JanafThermo
 from pyfoam.thermophysical.hconst_thermo import HConstThermo
+from pyfoam.thermophysical.econst_thermo import EConstThermo
+from pyfoam.thermophysical.hpower_thermo import HPowerThermo
+from pyfoam.thermophysical.janaf_multi_thermo import JanafMultiThermo, JanafPhase
 from pyfoam.thermophysical.he_psi_thermo import HePsiThermo
 from pyfoam.thermophysical.he_rho_thermo import HeRhoThermo
 from pyfoam.thermophysical.thermo import (
@@ -86,9 +96,15 @@ __all__ = [
     "ConstantViscosity",
     "Sutherland",
     "PolynomialTransport",
+    "ConstantTransport",
+    "SutherlandTransport",
     # Thermodynamic models
     "JanafThermo",
     "HConstThermo",
+    "EConstThermo",
+    "HPowerThermo",
+    "JanafMultiThermo",
+    "JanafPhase",
     # Combined thermo
     "BasicThermo",
     "HePsiThermo",

@@ -69,6 +69,11 @@ Provides:
 - pressureDirectedInletVelocity: Velocity inlet driven by pressure gradient (Bernoulli)
 - swirlFlowRateInletVelocity: Flow rate inlet with superimposed swirl component
 - mappedConvectiveHeatTransfer: Mapped conjugate heat transfer with coupled patch temperature
+- uniformTotalPressure: Uniform total pressure BC (p_total = p + 0.5*rho*|U|^2)
+- directedInletOutlet: Inlet/outlet with directed velocity direction
+- externalCoupled: Coupled with external solver via file-based data exchange
+- mixedTemperature: Mixed (Robin) temperature BC blending fixed value and gradient
+- turbulentTemperatureCoupled: Coupled temperature with turbulent thermal diffusivity
 """
 
 # Import base and collection first
@@ -288,6 +293,14 @@ from pyfoam.boundary.pressure_directed_inlet_velocity import PressureDirectedInl
 from pyfoam.boundary.swirl_flow_rate_inlet_velocity import SwirlFlowRateInletVelocityBC
 from pyfoam.boundary.mapped_convective_heat_transfer import MappedConvectiveHeatTransferBC
 
+# Phase 21: Uniform total pressure / directed inlet-outlet / external coupled /
+#           mixed temperature / turbulent temperature coupled BCs
+from pyfoam.boundary.uniform_total_pressure import UniformTotalPressureBC
+from pyfoam.boundary.directed_inlet_outlet import DirectedInletOutletBC
+from pyfoam.boundary.external_coupled import ExternalCoupledBC
+from pyfoam.boundary.mixed_temperature import MixedTemperatureBC
+from pyfoam.boundary.turbulent_temperature_coupled import TurbulentTemperatureCoupledBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -448,4 +461,11 @@ __all__ = [
     "PressureDirectedInletVelocityBC",
     "SwirlFlowRateInletVelocityBC",
     "MappedConvectiveHeatTransferBC",
+    # Phase 21: Uniform total pressure / directed inlet-outlet / external coupled /
+    #           mixed temperature / turbulent temperature coupled BCs
+    "UniformTotalPressureBC",
+    "DirectedInletOutletBC",
+    "ExternalCoupledBC",
+    "MixedTemperatureBC",
+    "TurbulentTemperatureCoupledBC",
 ]

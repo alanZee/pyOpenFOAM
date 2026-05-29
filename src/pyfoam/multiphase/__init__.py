@@ -45,6 +45,13 @@ Provides:
 - :class:`ConstantVirtualMass` — Constant virtual mass coefficient
 - :class:`LambVirtualMass` — Lamb's inviscid virtual mass (C_vm = 0.5)
 - :class:`KatoLaunderDamping2` — Enhanced Kato-Launder damping with alpha-dependent and gradient damping
+- :class:`IncompressibleDriftFlux` — Incompressible drift-flux mixture model
+- :class:`DenseParticleFluid` — Dense particle-laden Eulerian flow model
+- :class:`FilmModel` — Thin film flow model
+- :class:`XiFluid` — B-Xi two-equation premixed combustion model
+- :class:`PLICReconstructionStandalone` — Enhanced standalone PLIC (mesh-free)
+- Contact angle models: ContactAngleModel, ConstantContactAngle,
+  DynamicContactAngle, KistlerContactAngle
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -155,6 +162,29 @@ from pyfoam.multiphase.virtual_mass_models import (
 # Phase 7: Enhanced Kato-Launder damping for multiphase
 from pyfoam.multiphase.turbulence_kato_launder_2 import KatoLaunderDamping2
 
+# Phase 8: Incompressible drift-flux mixture model
+from pyfoam.multiphase.incompressible_drift_flux import IncompressibleDriftFlux
+
+# Phase 8: Dense particle-laden flow model
+from pyfoam.multiphase.dense_particle_fluid import DenseParticleFluid
+
+# Phase 8: Thin film flow model
+from pyfoam.multiphase.film_model import FilmModel
+
+# Phase 8: Xi premixed combustion model
+from pyfoam.multiphase.xi_fluid import XiFluid
+
+# Phase 8: Enhanced PLIC interface reconstruction (standalone)
+from pyfoam.multiphase.pllic import PLICReconstruction as PLICReconstructionStandalone
+
+# Phase 8: Contact angle models
+from pyfoam.multiphase.contact_angle_models import (
+    ContactAngleModel,
+    ConstantContactAngle,
+    DynamicContactAngle,
+    KistlerContactAngle,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -235,4 +265,19 @@ __all__ = [
     "LambVirtualMass",
     # Phase 7: Enhanced Kato-Launder damping
     "KatoLaunderDamping2",
+    # Phase 8: Incompressible drift-flux mixture model
+    "IncompressibleDriftFlux",
+    # Phase 8: Dense particle-laden flow model
+    "DenseParticleFluid",
+    # Phase 8: Thin film flow model
+    "FilmModel",
+    # Phase 8: Xi premixed combustion model
+    "XiFluid",
+    # Phase 8: Enhanced PLIC (standalone)
+    "PLICReconstructionStandalone",
+    # Phase 8: Contact angle models
+    "ContactAngleModel",
+    "ConstantContactAngle",
+    "DynamicContactAngle",
+    "KistlerContactAngle",
 ]
