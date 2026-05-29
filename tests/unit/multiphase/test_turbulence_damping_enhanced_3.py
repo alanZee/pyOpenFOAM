@@ -143,12 +143,19 @@ class TestBlendedWallInterfaceDamping:
         assert float(k_damped[0].item()) < 1.0
 
     def test_near_wall_stronger_damping(self):
-        model = BlendedWallInterfaceDamping(d_ref=1e-3)
-        alpha = torch.tensor([0.5, 0.5], dtype=torch.float64)
+        """Near-wall damping should increase total damping compared to no wall info.
+
+        At alpha=0.05 (low interface damping), the wall damping component
+        should make near-wall cells more damped than far-from-wall cells.
+        """
+        model = BlendedWallInterfaceDamping(d_ref=1e-3, wall_damping_coeff=8.0)
+        # Use low alpha to minimize interface damping, isolate wall effect
+        alpha = torch.tensor([0.05, 0.05], dtype=torch.float64)
         k = torch.tensor([1.0, 1.0], dtype=torch.float64)
         d_wall = torch.tensor([1e-5, 1.0], dtype=torch.float64)
         k_damped = model.damp_k(alpha, k, wall_distance=d_wall)
-        # Closer to wall -> more damping
+        # Near-wall (d=1e-5): strong wall damping
+        # Far-from-wall (d=1.0): negligible wall damping
         assert float(k_damped[0].item()) < float(k_damped[1].item())
 
     def test_with_grad_alpha(self):
