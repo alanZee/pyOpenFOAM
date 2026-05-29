@@ -41,6 +41,9 @@ Provides:
 - :class:`WolfhardtDamping` — Wolfhardt model for near-wall turbulence damping
 - :class:`TurbulenceWallDampingModel` — Abstract wall damping model for VOF with RTS registry
 - :class:`BrackbillDamping` — Brackbill near-wall damping for VOF simulations
+- :class:`VirtualMassModel` — Abstract virtual mass force model with RTS registry
+- :class:`ConstantVirtualMass` — Constant virtual mass coefficient
+- :class:`LambVirtualMass` — Lamb's inviscid virtual mass (C_vm = 0.5)
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -141,6 +144,13 @@ from pyfoam.multiphase.turbulence_wall_damping import (
     BrackbillDamping,
 )
 
+# Phase 7: Virtual mass models
+from pyfoam.multiphase.virtual_mass_models import (
+    VirtualMassModel,
+    ConstantVirtualMass,
+    LambVirtualMass,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -215,4 +225,8 @@ __all__ = [
     # Phase 7: Wall damping models for VOF
     "TurbulenceWallDampingModel",
     "BrackbillDamping",
+    # Phase 7: Virtual mass models
+    "VirtualMassModel",
+    "ConstantVirtualMass",
+    "LambVirtualMass",
 ]
