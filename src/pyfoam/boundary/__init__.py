@@ -7,6 +7,7 @@ Provides:
 - :class:`BoundaryField` — collection of BCs for a field
 - Concrete BCs: fixedValue, zeroGradient, noSlip, fixedGradient,
   symmetry, symmetryPlane, cyclic, nutkWallFunction, nutLowReWallFunction,
+  nutUWallFunction, nutURoughWallFunction, nutUSpaldingWallFunction,
   kqRWallFunction, epsilonWallFunction, omegaWallFunction, inletOutlet,
   alphaContactAngle, constantAlphaContactAngle
 - Velocity BCs: flowRateInletVelocity, pressureInletOutletVelocity,
@@ -318,6 +319,9 @@ __all__ = [
     "CyclicBC",
     "NutkWallFunctionBC",
     "NutLowReWallFunctionBC",
+    "NutUWallFunctionBC",
+    "NutURoughWallFunctionBC",
+    "NutUSpaldingWallFunctionBC",
     "KqRWallFunctionBC",
     "EpsilonWallFunctionBC",
     "OmegaWallFunctionBC",

@@ -4,6 +4,9 @@ Tests cover:
 - nutLowReWallFunction
 - epsilonWallFunction
 - omegaWallFunction
+- nutUWallFunction
+- nutURoughWallFunction
+- nutUSpaldingWallFunction
 """
 
 import pytest
@@ -15,6 +18,9 @@ from pyfoam.boundary.wall_function import (
     OmegaWallFunctionBC,
     NutkWallFunctionBC,
     KqRWallFunctionBC,
+    NutUWallFunctionBC,
+    NutURoughWallFunctionBC,
+    NutUSpaldingWallFunctionBC,
 )
 
 from tests.unit.turbulence.conftest import make_fv_mesh
