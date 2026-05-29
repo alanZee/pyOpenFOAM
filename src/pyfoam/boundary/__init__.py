@@ -60,6 +60,8 @@ Provides:
 - turbulentInlet2: Enhanced turbulent inlet with digital filter method
 - mappedVelocityInternal: Maps velocity from internal field to boundary
 - variableHeight2: Enhanced variable height with momentum-consistent velocity correction
+- tomiyamaWallLubrication2: Enhanced Tomiyama Eo-dependent + distance-dependent wall lubrication
+- interfacialHeatTransfer: Interfacial heat transfer for boiling/condensation at interfaces
 """
 
 # Import base and collection first
@@ -262,6 +264,10 @@ from pyfoam.boundary.turbulent_inlet_2 import TurbulentInlet2BC
 from pyfoam.boundary.mapped_velocity_internal import MappedVelocityInternalBC
 from pyfoam.boundary.variable_height_2 import VariableHeight2BC
 
+# Phase 4-7: Enhanced Tomiyama wall lubrication and interfacial heat transfer BCs
+from pyfoam.boundary.wall_lubrication_tomiyama import TomiyamaWallLubrication2BC
+from pyfoam.boundary.interfacial_heat_transfer import InterfacialHeatTransferBC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -409,4 +415,7 @@ __all__ = [
     # Phase 5: Mapped velocity internal / enhanced variable height BCs
     "MappedVelocityInternalBC",
     "VariableHeight2BC",
+    # Phase 4-7: Enhanced Tomiyama and interfacial HT BCs
+    "TomiyamaWallLubrication2BC",
+    "InterfacialHeatTransferBC",
 ]
