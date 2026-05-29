@@ -72,8 +72,8 @@ class TestCreateBafflesEnhanced2:
         assert r.n_baffles == 0
         assert r.n_filtered > 0
 
-    def test_source_patches(self):
+    def test_source_patches_raises_for_boundary(self):
         m = _two_cell_mesh()
-        r = create_baffles_enhanced_2(m, source_patches=["left"])
-        # left has 1 boundary face; baffles need internal faces, so this may be empty
-        assert isinstance(r, BaffleEnhanced2Result)
+        # source_patches selects boundary faces which are not internal
+        with pytest.raises(ValueError, match="not an internal face"):
+            create_baffles_enhanced_2(m, source_patches=["left"])

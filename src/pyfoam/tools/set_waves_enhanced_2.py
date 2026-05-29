@@ -312,7 +312,8 @@ def _jonswap_spectrum(f, fp, Hs, gamma, g):
     r = np.exp(-((f - fp) ** 2) / (2 * sigma ** 2 * fp ** 2))
     S = alpha_s * g ** 2 / (2 * np.pi * f ** 5) * np.exp(-1.25 * (fp / f) ** 4) * gamma ** r
     # Scale to match Hs
-    m0 = np.trapz(S, f) if len(f) > 1 else S[0] * (f[-1] - f[0])
+    # Trapezoidal integration (numpy version safe)
+    m0 = float(np.sum((S[:-1] + S[1:]) * np.diff(f)) / 2.0) if len(f) > 1 else float(S[0] * (f[-1] - f[0]))
     Hs_ref = 4 * math.sqrt(max(m0, 1e-30))
     if Hs_ref > 1e-30:
         S = S * (Hs / Hs_ref) ** 2

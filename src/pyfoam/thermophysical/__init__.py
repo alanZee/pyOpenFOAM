@@ -166,6 +166,18 @@ from pyfoam.thermophysical.chemistry import (
     SRMChemistrySolver,
 )
 
+# Phase 12: Enhanced models v3/v4
+from pyfoam.thermophysical.janaf_multi_thermo_enhanced_4 import JanafMultiThermoEnhanced4
+from pyfoam.thermophysical.tabulated_transport_enhanced_3 import TabulatedTransportEnhanced3
+from pyfoam.thermophysical.wilke_transport_enhanced_3 import WilkeTransportEnhanced3
+from pyfoam.thermophysical.constant_transport_enhanced_3 import ConstantTransportEnhanced3
+from pyfoam.thermophysical.sutherland_transport_enhanced_3 import SutherlandTransportEnhanced3
+from pyfoam.thermophysical.equation_of_state_enhanced_2 import (
+    PatelTejaEOS,
+    VolumeTranslatedPR,
+    PatelTejaValderramaEOS,
+)
+
 __all__ = [
     # Equation of state
     "EquationOfState",
@@ -231,6 +243,15 @@ __all__ = [
     "MathiasCopemanPR",
     "VirialEOS",
     "SoaveRedlichKwongEOS",
+    # Phase 12: Enhanced models v3/v4
+    "JanafMultiThermoEnhanced4",
+    "TabulatedTransportEnhanced3",
+    "WilkeTransportEnhanced3",
+    "ConstantTransportEnhanced3",
+    "SutherlandTransportEnhanced3",
+    "PatelTejaEOS",
+    "VolumeTranslatedPR",
+    "PatelTejaValderramaEOS",
     # Chemistry models
     "ChemistryModel",
     "ODEChemistrySolver",

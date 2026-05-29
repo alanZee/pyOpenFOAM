@@ -217,7 +217,8 @@ class SpalartAllmarasEnhanced3Model(SpalartAllmarasEnhanced2Model):
 
         nuTilde = self._nuTilde.clamp(min=0.0)
         chi = nuTilde / max(nu, 1e-30)
-        fv1 = chi.pow(3) / (chi.pow(3) + C.Cv1.pow(3))
+        Cv1_3 = C.Cv1 ** 3
+        fv1 = chi.pow(3) / (chi.pow(3) + Cv1_3)
         fv2 = 1.0 - chi / (1.0 + chi * fv1)
 
         # Strain rate
@@ -230,7 +231,8 @@ class SpalartAllmarasEnhanced3Model(SpalartAllmarasEnhanced2Model):
         # Modified strain rate with wall distance correction
         y = self._y.clamp(min=1e-10)
         d2 = y.pow(2)
-        Stilde = S_bar + nuTilde * fv2 / (C.kappa.pow(2) * d2)
+        kappa_sq = C.kappa ** 2
+        Stilde = S_bar + nuTilde * fv2 / (kappa_sq * d2)
         Stilde = Stilde.clamp(min=1e-16)
 
         # Adaptive production
@@ -243,10 +245,13 @@ class SpalartAllmarasEnhanced3Model(SpalartAllmarasEnhanced2Model):
 
         # Destruction with length-scale correction
         sep_corr = self._sep_length_correction()
-        r = (nuTilde / (Stilde * C.kappa.pow(2) * d2)).clamp(min=0.0, max=10.0)
+        r = (nuTilde / (Stilde * kappa_sq * d2)).clamp(min=0.0, max=10.0)
         g = r + C.Cw2 * (r.pow(6) - r)
-        fw = g * ((1.0 + C.Cw3.pow(6)) / (g.pow(6) + C.Cw3.pow(6))).pow(1.0 / 6.0)
-        D_nu = C.Cw1 * fw * (nuTilde / y).pow(2) / sep_corr
+        Cw3_6 = C.Cw3 ** 6
+        fw = g * ((1.0 + Cw3_6) / (g.pow(6) + Cw3_6)).pow(1.0 / 6.0)
+        # Cw1 = Cb1/kappa^2 + (1 + Cb2)/sigma (derived, not a field)
+        Cw1 = C.Cb1 / (C.kappa ** 2) + (1.0 + C.Cb2) / C.sigma
+        D_nu = Cw1 * fw * (nuTilde / y).pow(2) / sep_corr
 
         # SARC correction
         sark = self._rotational_correction()

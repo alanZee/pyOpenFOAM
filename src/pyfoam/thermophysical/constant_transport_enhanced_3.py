@@ -93,18 +93,33 @@ class ConstantTransportEnhanced3(ConstantTransportEnhanced2):
         wlf_C1: float = 17.44,
         wlf_C2: float = 51.6,
     ) -> None:
+        # Validate correction model early
+        valid_models = ("polynomial", "exponential", "piecewise", "vft", "wlf")
+        if correction_model not in valid_models:
+            raise ValueError(
+                f"correction_model must be one of {valid_models}, "
+                f"got '{correction_model}'"
+            )
+
+        # Parent only accepts polynomial/exponential/piecewise
+        parent_model = correction_model if correction_model in ("polynomial", "exponential", "piecewise") else "polynomial"
+
         super().__init__(
             mu=mu,
             kappa=kappa,
             T_ref=T_ref,
-            correction_model=correction_model,
+            correction_model=parent_model,
             mu_activation_energy=mu_activation_energy,
             piecewise_ranges=piecewise_ranges,
-            kappa_correction_model=kappa_correction_model,
+            kappa_correction_model=kappa_correction_model or parent_model,
             mu_temp_coeff=mu_temp_coeff,
             mu_temp_coeff2=mu_temp_coeff2,
             kappa_temp_coeff=kappa_temp_coeff,
         )
+
+        # Override to store actual model name
+        self._correction_model = correction_model
+        self._kappa_correction_model = kappa_correction_model or correction_model
 
         self._vft_B = vft_B
         self._vft_Tinf = vft_Tinf
