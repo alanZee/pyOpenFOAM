@@ -209,6 +209,13 @@ from pyfoam.discretisation.schemes.filtered_linear_5 import FilteredLinear5Inter
 from pyfoam.discretisation.schemes.van_leer_v_4 import VanLeerV4Interpolation
 from pyfoam.discretisation.schemes.muscl_v_4 import MUSCLV4Interpolation
 from pyfoam.discretisation.schemes.gamma_v_4 import GammaV4Interpolation
+from pyfoam.discretisation.schemes.linear_upwind_fit_5 import LinearUpwindFit5Interpolation
+from pyfoam.discretisation.schemes.upwind_fit_5 import UpwindFit5Interpolation
+from pyfoam.discretisation.schemes.cubic_upwind_fit_5 import CubicUpwindFit5Interpolation
+from pyfoam.discretisation.schemes.filtered_linear_6 import FilteredLinear6Interpolation
+from pyfoam.discretisation.schemes.van_leer_v_5 import VanLeerV5Interpolation
+from pyfoam.discretisation.schemes.muscl_v_5 import MUSCLV5Interpolation
+from pyfoam.discretisation.schemes.gamma_v_5 import GammaV5Interpolation
 from pyfoam.discretisation.ddt import (
     DdtScheme,
     EulerDdt,
@@ -218,10 +225,12 @@ from pyfoam.discretisation.ddt import (
     BackwardDdt2,
     BackwardDdt3,
     BackwardDdt4,
+    BackwardDdt5,
     BoundedDdt,
     BoundedDdt2,
     BoundedDdt3,
     BoundedDdt4,
+    BoundedDdt5,
     DDT_REGISTRY,
     create_ddt_scheme,
 )
@@ -241,6 +250,9 @@ from pyfoam.discretisation.grad import (
     FaceLimitedGrad2,
     FaceLimitedGrad3,
     FaceLimitedGrad4,
+    FourthGrad5,
+    CellLimitedGrad5,
+    FaceLimitedGrad5,
     GaussLinearCorrectedGrad,
     resolve_grad_scheme,
 )
@@ -261,6 +273,9 @@ from pyfoam.discretisation.sn_grad import (
     BoundedSnGrad4,
     OrthogonalSnGrad4,
     OverRelaxedSnGrad4,
+    OrthogonalSnGrad5,
+    OverRelaxedSnGrad5,
+    BoundedSnGrad5,
     sn_grad_from_name,
 )
 
@@ -323,6 +338,13 @@ __all__ = [
     "VanLeerV4Interpolation",
     "MUSCLV4Interpolation",
     "GammaV4Interpolation",
+    "LinearUpwindFit5Interpolation",
+    "UpwindFit5Interpolation",
+    "CubicUpwindFit5Interpolation",
+    "FilteredLinear6Interpolation",
+    "VanLeerV5Interpolation",
+    "MUSCLV5Interpolation",
+    "GammaV5Interpolation",
     # Time derivative (ddt) schemes
     "DdtScheme",
     "EulerDdt",
@@ -332,10 +354,12 @@ __all__ = [
     "BackwardDdt2",
     "BackwardDdt3",
     "BackwardDdt4",
+    "BackwardDdt5",
     "BoundedDdt",
     "BoundedDdt2",
     "BoundedDdt3",
     "BoundedDdt4",
+    "BoundedDdt5",
     "DDT_REGISTRY",
     "create_ddt_scheme",
     # Gradient schemes
@@ -346,14 +370,17 @@ __all__ = [
     "FourthGrad2",
     "FourthGrad3",
     "FourthGrad4",
+    "FourthGrad5",
     "CellLimitedGrad",
     "CellLimitedGrad2",
     "CellLimitedGrad3",
     "CellLimitedGrad4",
+    "CellLimitedGrad5",
     "FaceLimitedGrad",
     "FaceLimitedGrad2",
     "FaceLimitedGrad3",
     "FaceLimitedGrad4",
+    "FaceLimitedGrad5",
     "GaussLinearCorrectedGrad",
     "resolve_grad_scheme",
     # Surface-normal gradient schemes
@@ -365,13 +392,16 @@ __all__ = [
     "OrthogonalSnGrad2",
     "OrthogonalSnGrad3",
     "OrthogonalSnGrad4",
+    "OrthogonalSnGrad5",
     "OverRelaxedSnGrad",
     "OverRelaxedSnGrad2",
     "OverRelaxedSnGrad3",
     "OverRelaxedSnGrad4",
+    "OverRelaxedSnGrad5",
     "BoundedSnGrad",
     "BoundedSnGrad2",
     "BoundedSnGrad3",
     "BoundedSnGrad4",
+    "BoundedSnGrad5",
     "sn_grad_from_name",
 ]

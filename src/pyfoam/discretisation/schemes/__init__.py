@@ -59,6 +59,13 @@ from pyfoam.discretisation.schemes.filtered_linear_5 import FilteredLinear5Inter
 from pyfoam.discretisation.schemes.van_leer_v_4 import VanLeerV4Interpolation
 from pyfoam.discretisation.schemes.muscl_v_4 import MUSCLV4Interpolation
 from pyfoam.discretisation.schemes.gamma_v_4 import GammaV4Interpolation
+from pyfoam.discretisation.schemes.linear_upwind_fit_5 import LinearUpwindFit5Interpolation
+from pyfoam.discretisation.schemes.upwind_fit_5 import UpwindFit5Interpolation
+from pyfoam.discretisation.schemes.cubic_upwind_fit_5 import CubicUpwindFit5Interpolation
+from pyfoam.discretisation.schemes.filtered_linear_6 import FilteredLinear6Interpolation
+from pyfoam.discretisation.schemes.van_leer_v_5 import VanLeerV5Interpolation
+from pyfoam.discretisation.schemes.muscl_v_5 import MUSCLV5Interpolation
+from pyfoam.discretisation.schemes.gamma_v_5 import GammaV5Interpolation
 
 __all__ = [
     "UpwindInterpolation",
@@ -112,4 +119,11 @@ __all__ = [
     "VanLeerV4Interpolation",
     "MUSCLV4Interpolation",
     "GammaV4Interpolation",
+    "LinearUpwindFit5Interpolation",
+    "UpwindFit5Interpolation",
+    "CubicUpwindFit5Interpolation",
+    "FilteredLinear6Interpolation",
+    "VanLeerV5Interpolation",
+    "MUSCLV5Interpolation",
+    "GammaV5Interpolation",
 ]
