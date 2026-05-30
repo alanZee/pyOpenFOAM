@@ -10,6 +10,9 @@ Provides:
 - :class:`FixedValueConstraint` — fix values at specified cell indices
 - :class:`LimitPressureConstraint` — enforce non-negative pressure
 - :class:`LimitTemperatureConstraint` — enforce physical temperature range
+- :class:`MinMaxConstraint` — independent min/max with cell restriction
+- :class:`RhoLimitsConstraint` — density bounds enforcement
+- :class:`VelocityLimitsConstraint` — velocity magnitude limits
 
 **fvModels** (pre-solution source term injection):
 
@@ -24,6 +27,15 @@ Provides:
 - :class:`SolidificationMeltingModel` — phase change in solids
 - :class:`RASourceModel` — radiation absorption heat source
 - :class:`GravitationalBodyForce` — gravitational body force
+- :class:`CellSetSemiImplicitSource` — cellSet-restricted semi-implicit source
+- :class:`PatchSemiImplicitSource` — patch-adjacent semi-implicit source
+- :class:`ExplicitSource` — purely explicit volumetric source
+- :class:`BuoyancyForce` — buoyancy force (rho - rho_ref) * g
+- :class:`BoussinesqBuoyancy` — Boussinesq approximation buoyancy
+- :class:`SRFForce` — single reference frame Coriolis + centrifugal force
+- :class:`FvDOMRadiationSource` — FvDOM radiation source
+- :class:`SolarLoadSource` — solar radiation heat load
+- :class:`InterPhaseChangeModel` — cavitation/boiling interphase mass transfer
 
 Usage::
 
@@ -66,6 +78,30 @@ from pyfoam.fv.fv_sources import (
     GravitationalBodyForce,
 )
 
+from pyfoam.fv.enhanced_2 import (
+    CellSetSemiImplicitSource,
+    PatchSemiImplicitSource,
+    ExplicitSource,
+)
+
+from pyfoam.fv.enhanced_3 import (
+    BuoyancyForce,
+    BoussinesqBuoyancy,
+    SRFForce,
+)
+
+from pyfoam.fv.enhanced_4 import (
+    MinMaxConstraint,
+    RhoLimitsConstraint,
+    VelocityLimitsConstraint,
+)
+
+from pyfoam.fv.enhanced_5 import (
+    FvDOMRadiationSource,
+    SolarLoadSource,
+    InterPhaseChangeModel,
+)
+
 __all__ = [
     # fvConstraints
     "FvConstraint",
@@ -88,4 +124,20 @@ __all__ = [
     "SolidificationMeltingModel",
     "RASourceModel",
     "GravitationalBodyForce",
+    # enhanced_2: SemiImplicitSource 变体
+    "CellSetSemiImplicitSource",
+    "PatchSemiImplicitSource",
+    "ExplicitSource",
+    # enhanced_3: 浮力与旋转参考系力
+    "BuoyancyForce",
+    "BoussinesqBuoyancy",
+    "SRFForce",
+    # enhanced_4: 约束变体
+    "MinMaxConstraint",
+    "RhoLimitsConstraint",
+    "VelocityLimitsConstraint",
+    # enhanced_5: 辐射与多相流
+    "FvDOMRadiationSource",
+    "SolarLoadSource",
+    "InterPhaseChangeModel",
 ]
