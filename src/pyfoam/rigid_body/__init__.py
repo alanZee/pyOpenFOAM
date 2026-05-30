@@ -165,6 +165,24 @@ from pyfoam.rigid_body.restraints_enhanced_8 import (
     InerterRestraint,
     QuasiZeroStiffnessRestraint,
 )
+from pyfoam.rigid_body.six_dof_solver_enhanced_9 import (
+    EnhancedSixDoFSolver9,
+    ContactRestitutionConfig,
+    AdaptiveSubstepConfig,
+    ChartSwitchConfig,
+)
+from pyfoam.rigid_body.joints_enhanced_9 import (
+    ShapeMemoryCompositeJoint,
+    PneumaticArtificialMuscleJoint,
+    TwistedStringJoint,
+    HybridHydraulicJoint,
+)
+from pyfoam.rigid_body.restraints_enhanced_9 import (
+    TunedMassDamperRestraint,
+    MagnetorheologicalFluidRestraint,
+    FrictionPendulumIsolator,
+    ActiveTendonRestraint,
+)
 
 __all__ = [
     "SixDoFSolver",
@@ -278,4 +296,17 @@ __all__ = [
     "ElectrorheologicalRestraint",
     "InerterRestraint",
     "QuasiZeroStiffnessRestraint",
+    # V9 enhanced
+    "EnhancedSixDoFSolver9",
+    "ContactRestitutionConfig",
+    "AdaptiveSubstepConfig",
+    "ChartSwitchConfig",
+    "ShapeMemoryCompositeJoint",
+    "PneumaticArtificialMuscleJoint",
+    "TwistedStringJoint",
+    "HybridHydraulicJoint",
+    "TunedMassDamperRestraint",
+    "MagnetorheologicalFluidRestraint",
+    "FrictionPendulumIsolator",
+    "ActiveTendonRestraint",
 ]

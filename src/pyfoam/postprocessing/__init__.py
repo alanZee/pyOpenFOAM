@@ -307,6 +307,33 @@ from pyfoam.postprocessing.y_plus_enhanced_9 import (
     CellHeightSuggestion,
 )
 
+# Phase 19: Enhanced postprocessing models
+from pyfoam.postprocessing.field_min_max_enhanced_10 import (
+    FieldMinMaxEnhanced10,
+    TopologicalExtreme,
+    MultiFieldCorrelation,
+)
+from pyfoam.postprocessing.probes_enhanced_10 import (
+    ProbesEnhanced10,
+    ProbeCorrelation,
+    SpectralEntropy,
+)
+from pyfoam.postprocessing.forces_enhanced_9 import (
+    ForcesEnhanced9,
+    LoadCycle,
+    FatigueDamage,
+)
+from pyfoam.postprocessing.wall_shear_stress_enhanced_9 import (
+    WallShearStressEnhanced9,
+    AveragedTopology,
+    StreakDynamics,
+)
+from pyfoam.postprocessing.y_plus_enhanced_10 import (
+    YPlusEnhanced10,
+    WallFunctionConsistency,
+    MeshConvergenceIndicator,
+)
+
 __all__ = [
     # Framework
     "FunctionObject",
@@ -494,4 +521,20 @@ __all__ = [
     "PatchComparison",
     "TBLClassification",
     "CellHeightSuggestion",
+    # Phase 19: Enhanced postprocessing models
+    "FieldMinMaxEnhanced10",
+    "TopologicalExtreme",
+    "MultiFieldCorrelation",
+    "ProbesEnhanced10",
+    "ProbeCorrelation",
+    "SpectralEntropy",
+    "ForcesEnhanced9",
+    "LoadCycle",
+    "FatigueDamage",
+    "WallShearStressEnhanced9",
+    "AveragedTopology",
+    "StreakDynamics",
+    "YPlusEnhanced10",
+    "WallFunctionConsistency",
+    "MeshConvergenceIndicator",
 ]

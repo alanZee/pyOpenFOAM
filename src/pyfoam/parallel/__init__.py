@@ -187,6 +187,27 @@ from pyfoam.parallel.processor_patch_enhanced_9 import (
     CoalescingConfig,
     CheckpointConfig,
 )
+from pyfoam.parallel.reconstruct_par_enhanced_10 import (
+    ReconstructParEnhanced10,
+    V10ReconstructResult,
+    SpectralAnalysisConfig,
+    CompressionConfig,
+    ProvenanceEntry,
+)
+from pyfoam.parallel.redistribute_par_enhanced_10 import (
+    RedistributeParEnhanced10,
+    V10RedistributeResult,
+    ParetoConfig,
+    MultiLevelConfig,
+    StabilityMetrics,
+)
+from pyfoam.parallel.processor_patch_enhanced_10 import (
+    HierarchicalPatch10,
+    EnhancedHaloExchange10,
+    HierarchyConfig,
+    CacheLayoutConfig,
+    PriorityConfig,
+)
 
 __all__ = [
     # Decomposition
@@ -343,4 +364,22 @@ __all__ = [
     "TopologyRoutingConfig",
     "CoalescingConfig",
     "CheckpointConfig",
+    # V10 enhanced reconstruction
+    "ReconstructParEnhanced10",
+    "V10ReconstructResult",
+    "SpectralAnalysisConfig",
+    "CompressionConfig",
+    "ProvenanceEntry",
+    # V10 enhanced redistribution
+    "RedistributeParEnhanced10",
+    "V10RedistributeResult",
+    "ParetoConfig",
+    "MultiLevelConfig",
+    "StabilityMetrics",
+    # V10 enhanced processor patches
+    "HierarchicalPatch10",
+    "EnhancedHaloExchange10",
+    "HierarchyConfig",
+    "CacheLayoutConfig",
+    "PriorityConfig",
 ]

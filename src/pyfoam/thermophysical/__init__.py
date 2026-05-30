@@ -288,6 +288,18 @@ from pyfoam.thermophysical.equation_of_state_enhanced_7 import (
     VdWOneFluidMixing,
 )
 
+# Phase 19: Enhanced models v9/v10
+from pyfoam.thermophysical.janaf_multi_thermo_enhanced_10 import JanafMultiThermoEnhanced10
+from pyfoam.thermophysical.tabulated_transport_enhanced_9 import TabulatedTransportEnhanced9
+from pyfoam.thermophysical.wilke_transport_enhanced_9 import WilkeTransportEnhanced9
+from pyfoam.thermophysical.constant_transport_enhanced_9 import ConstantTransportEnhanced9
+from pyfoam.thermophysical.sutherland_transport_enhanced_9 import SutherlandTransportEnhanced9
+from pyfoam.thermophysical.equation_of_state_enhanced_8 import (
+    CriticalScalingEOS,
+    MultiComponentDepartureEOS,
+    RobustDensityInitEOS,
+)
+
 __all__ = [
     # Equation of state
     "EquationOfState",
@@ -407,6 +419,15 @@ __all__ = [
     "CubicRootSelector",
     "FugacityCoefficientEOS",
     "VdWOneFluidMixing",
+    # Phase 19: Enhanced models v9/v10
+    "JanafMultiThermoEnhanced10",
+    "TabulatedTransportEnhanced9",
+    "WilkeTransportEnhanced9",
+    "ConstantTransportEnhanced9",
+    "SutherlandTransportEnhanced9",
+    "CriticalScalingEOS",
+    "MultiComponentDepartureEOS",
+    "RobustDensityInitEOS",
     # Chemistry models
     "ChemistryModel",
     "ODEChemistrySolver",

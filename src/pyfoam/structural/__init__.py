@@ -139,6 +139,23 @@ from pyfoam.structural.displacement_solver_enhanced_8 import (
     MultiMaterialResult,
     ConstrainedTopologyResult,
 )
+from pyfoam.structural.elastic_model_enhanced_9 import (
+    FunctionallyGradedModel,
+    CoupledPoromechanicsModel,
+    ElectroMechanicalModel,
+)
+from pyfoam.structural.stress_solver_enhanced_9 import (
+    EnhancedStressSolver9,
+    MultiScaleResult,
+    ErrorEstimatorResult,
+    KrigingResult,
+)
+from pyfoam.structural.displacement_solver_enhanced_9 import (
+    EnhancedDisplacementSolver9,
+    IsogeometricResult,
+    MeshlessResult,
+    RefinementResult9,
+)
 
 __all__ = [
     "LinearElasticModel",
@@ -227,4 +244,16 @@ __all__ = [
     "LevelSetResult",
     "MultiMaterialResult",
     "ConstrainedTopologyResult",
+    # V9 enhanced
+    "FunctionallyGradedModel",
+    "CoupledPoromechanicsModel",
+    "ElectroMechanicalModel",
+    "EnhancedStressSolver9",
+    "MultiScaleResult",
+    "ErrorEstimatorResult",
+    "KrigingResult",
+    "EnhancedDisplacementSolver9",
+    "IsogeometricResult",
+    "MeshlessResult",
+    "RefinementResult9",
 ]

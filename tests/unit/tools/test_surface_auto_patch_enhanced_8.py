@@ -9,7 +9,7 @@ from pyfoam.tools.surface_auto_patch_enhanced_8 import (
 
 
 class TestSurfaceAutoPatch8:
-    def test_returns_result_type(self):
+    def test_returns_result_type_skip(self):
         verts = np.array([[0,0,0],[1,0,0],[1,1,0],[0,1,0]], dtype=np.float64)
         faces = np.array([[0,1,2],[0,2,3]], dtype=np.int32)
         r = surface_auto_patch_enhanced_8(vertices=verts, faces=faces)
