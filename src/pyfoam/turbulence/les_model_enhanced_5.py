@@ -113,14 +113,15 @@ class DynamicLagrangianSGS(LESModel):
         S_test_mag = S_mag  # Simplified: assume test filter ~ grid filter
 
         # Germano identity approximate: L_ij M_ij ~ delta^2 * (S_test^2 - alpha^2 * S^2)
-        L_M = delta.pow(2) * (S_test_mag.pow(2) - alpha.pow(2) * S_mag.pow(2))
-        M_M = delta.pow(2) * alpha.pow(2) * S_mag.pow(2) * (alpha.pow(2) - 1.0)
+        alpha_sq = alpha * alpha  # scalar
+        L_M = delta.pow(2) * (S_test_mag.pow(2) - alpha_sq * S_mag.pow(2))
+        M_M = delta.pow(2) * alpha_sq * S_mag.pow(2) * (alpha_sq - 1.0)
         M_M = M_M.clamp(min=1e-30)
 
         # Lagrangian averaging (simplified: exponential moving average)
         dt_eff = 0.01  # Effective time step
         weight = dt_eff / self._T_L
-        weight = weight.clamp(min=0.0, max=1.0)
+        weight = max(0.0, min(weight, 1.0))
 
         self._L_avg = (1.0 - weight) * self._L_avg + weight * L_M
         self._M_avg = (1.0 - weight) * self._M_avg + weight * M_M
