@@ -204,8 +204,10 @@ class ReconstructParEnhanced6(ReconstructParEnhanced5):
                     continue
 
                 # 方向感知的加权平均
-                total_weight = 0.0
-                weighted_sum = 0.0
+                # 标准显式扩散：f_new = f + sum(d_dir_j * (f_j - f)) / n_valid
+                # 其中 d_dir_j 是沿 j 方向的扩散系数，n_valid 是有效邻居数
+                n_valid = 0
+                diff_sum = 0.0
                 for j_idx in valid.tolist():
                     j = int(j_idx)
                     direction = centres[j] - centres[i]
@@ -213,17 +215,17 @@ class ReconstructParEnhanced6(ReconstructParEnhanced5):
                     if dir_norm < 1e-30:
                         continue
                     dir_unit = direction / dir_norm
-                    # 加权：沿每个方向的扩散系数
-                    w = (
+                    # 方向特定的扩散系数
+                    d_dir = (
                         diffusion_coeffs[0] * dir_unit[0].abs()
                         + diffusion_coeffs[1] * dir_unit[1].abs()
                         + diffusion_coeffs[2] * dir_unit[2].abs()
                     )
-                    weighted_sum += w * (field[j] - field[i]).item()
-                    total_weight += w
+                    diff_sum += d_dir * (field[j] - field[i]).item()
+                    n_valid += 1
 
-                if total_weight > 1e-30:
-                    new_field[i] = field[i] + weighted_sum / total_weight
+                if n_valid > 0:
+                    new_field[i] = field[i] + diff_sum / n_valid
             field = new_field
 
         return field
