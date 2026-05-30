@@ -115,8 +115,8 @@ class SpalartAllmarasEnhanced8Model(SpalartAllmarasEnhanced7Model):
         chi = nuTilde / nu
         d_safe = self._y.clamp(min=1e-6)
 
-        # Standard ft2
-        ft2_base = self._ft2_separation()
+        # Use ft1 as base separation detection
+        ft2_base = self._ft1_separation()
 
         # Strain-based enhancement
         if self._grad_U is not None:

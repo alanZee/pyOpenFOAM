@@ -279,6 +279,34 @@ from pyfoam.postprocessing.y_plus_enhanced_8 import (
     MeshAdaptationCriterion,
 )
 
+# Phase 18: Enhanced postprocessing models
+from pyfoam.postprocessing.field_min_max_enhanced_9 import (
+    FieldMinMaxEnhanced9,
+    SpatialCluster,
+    SPCLimit,
+)
+from pyfoam.postprocessing.probes_enhanced_9 import (
+    ProbesEnhanced9,
+    ReconstructedSignal,
+    NetworkTopology,
+)
+from pyfoam.postprocessing.forces_enhanced_8 import (
+    ForcesEnhanced8,
+    PODMode,
+    FrequencyDomainResult,
+)
+from pyfoam.postprocessing.wall_shear_stress_enhanced_8 import (
+    WallShearStressEnhanced8,
+    StreakSpacing,
+    SkinFrictionTopology,
+)
+from pyfoam.postprocessing.y_plus_enhanced_9 import (
+    YPlusEnhanced9,
+    PatchComparison,
+    TBLClassification,
+    CellHeightSuggestion,
+)
+
 __all__ = [
     # Framework
     "FunctionObject",
@@ -449,4 +477,21 @@ __all__ = [
     "YPlusEnhanced8",
     "YPlusSpectrum",
     "MeshAdaptationCriterion",
+    # Phase 18: Enhanced postprocessing v9
+    "FieldMinMaxEnhanced9",
+    "SpatialCluster",
+    "SPCLimit",
+    "ProbesEnhanced9",
+    "ReconstructedSignal",
+    "NetworkTopology",
+    "ForcesEnhanced8",
+    "PODMode",
+    "FrequencyDomainResult",
+    "WallShearStressEnhanced8",
+    "StreakSpacing",
+    "SkinFrictionTopology",
+    "YPlusEnhanced9",
+    "PatchComparison",
+    "TBLClassification",
+    "CellHeightSuggestion",
 ]

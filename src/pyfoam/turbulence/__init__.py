@@ -441,6 +441,14 @@ from pyfoam.turbulence.spalart_allmaras_enhanced_7 import SpalartAllmarasEnhance
 from pyfoam.turbulence.les_model_enhanced_7 import AnisotropicMDModel, StructureFunctionSGS
 from pyfoam.turbulence.wall_treatment_enhanced_6 import EnhancedWallTreatment6, RoughnessCorrelation
 
+# Enhanced RANS/LES models (Phase 18)
+from pyfoam.turbulence.k_epsilon_enhanced_8 import KEpsilonEnhanced8Model, KEpsilonEnhanced8Constants
+from pyfoam.turbulence.k_omega_enhanced_8 import KOmegaEnhanced8Model, KOmegaEnhanced8Constants
+from pyfoam.turbulence.k_omega_sst_enhanced_8 import KOmegaSSTEnhanced8Model, KOmegaSSTEnhanced8Constants
+from pyfoam.turbulence.spalart_allmaras_enhanced_8 import SpalartAllmarasEnhanced8Model, SpalartAllmarasEnhanced8Constants
+from pyfoam.turbulence.les_model_enhanced_8 import MixedTimeScaleSGS, WallAdaptiveWALE, DynamicTensorSGS
+from pyfoam.turbulence.wall_treatment_enhanced_7 import EnhancedWallTreatment7, HeatFluxDecomposition
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -680,4 +688,18 @@ __all__ = [
     "StructureFunctionSGS",
     "EnhancedWallTreatment6",
     "RoughnessCorrelation",
+    # Enhanced RANS/LES models (Phase 18)
+    "KEpsilonEnhanced8Model",
+    "KEpsilonEnhanced8Constants",
+    "KOmegaEnhanced8Model",
+    "KOmegaEnhanced8Constants",
+    "KOmegaSSTEnhanced8Model",
+    "KOmegaSSTEnhanced8Constants",
+    "SpalartAllmarasEnhanced8Model",
+    "SpalartAllmarasEnhanced8Constants",
+    "MixedTimeScaleSGS",
+    "WallAdaptiveWALE",
+    "DynamicTensorSGS",
+    "EnhancedWallTreatment7",
+    "HeatFluxDecomposition",
 ]

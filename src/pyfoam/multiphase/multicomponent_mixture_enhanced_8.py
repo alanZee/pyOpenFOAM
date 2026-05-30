@@ -15,6 +15,7 @@ Usage::
 
 from __future__ import annotations
 import logging
+import math
 from typing import Sequence
 import torch
 from pyfoam.core.device import get_device, get_default_dtype

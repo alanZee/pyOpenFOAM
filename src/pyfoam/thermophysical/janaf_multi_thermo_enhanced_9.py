@@ -130,7 +130,7 @@ class JanafMultiThermoEnhanced9(JanafMultiThermoEnhanced8):
         """
         if self._radiation_emissivity < 1e-15:
             return 0.0
-        T_amb = max(self._T_ref, 1.0)
+        T_amb = max(getattr(self, '_T_ref_entropy', 298.15), 1.0)
         T_safe = max(T, 1.0)
         return (
             self._radiation_emissivity

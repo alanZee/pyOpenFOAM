@@ -497,6 +497,37 @@ from pyfoam.multiphase.turbulence_damping_enhanced_9 import (
     StratifiedFlowDamping,
 )
 
+# Phase 18: Enhanced incompressible N-phase VOF v9
+from pyfoam.multiphase.incompressible_multiphase_vof_enhanced_8 import (
+    IncompressibleMultiphaseVoFEnhanced8,
+)
+
+# Phase 18: Enhanced compressible N-phase VOF v9
+from pyfoam.multiphase.compressible_multiphase_vof_enhanced_8 import (
+    CompressibleMultiphaseVoFEnhanced8,
+)
+
+# Phase 18: Enhanced multicomponent mixture v9
+from pyfoam.multiphase.multicomponent_mixture_enhanced_8 import (
+    MulticomponentMixtureEnhanced8,
+)
+
+# Phase 18: Enhanced interfacial area v10
+from pyfoam.multiphase.interfacial_area_enhanced_9 import (
+    InterfacialArea9Model,
+    FractalInterfaceArea,
+    TurbulenceIntensityArea,
+    PBECoupledArea,
+)
+
+# Phase 18: Enhanced turbulence damping v10
+from pyfoam.multiphase.turbulence_damping_enhanced_10 import (
+    TurbulenceDamping10EnhancedModel,
+    DistanceWeightedDamping,
+    TKEBudgetCorrectionDamping,
+    InterfaceTurbulenceFeedbackDamping,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -723,4 +754,20 @@ __all__ = [
     "AdaptiveCoefficientDamping",
     "TKEProductionDamping",
     "StratifiedFlowDamping",
+    # Phase 18: Enhanced incompressible N-phase VOF v9
+    "IncompressibleMultiphaseVoFEnhanced8",
+    # Phase 18: Enhanced compressible N-phase VOF v9
+    "CompressibleMultiphaseVoFEnhanced8",
+    # Phase 18: Enhanced multicomponent mixture v9
+    "MulticomponentMixtureEnhanced8",
+    # Phase 18: Enhanced interfacial area v10
+    "InterfacialArea9Model",
+    "FractalInterfaceArea",
+    "TurbulenceIntensityArea",
+    "PBECoupledArea",
+    # Phase 18: Enhanced turbulence damping v10
+    "TurbulenceDamping10EnhancedModel",
+    "DistanceWeightedDamping",
+    "TKEBudgetCorrectionDamping",
+    "InterfaceTurbulenceFeedbackDamping",
 ]

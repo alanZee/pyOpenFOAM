@@ -253,7 +253,7 @@ class ConstantTransportEnhanced8(ConstantTransportEnhanced7):
         """
         Cv_trans = self._Cv_trans
         Cv_rot = self._Cv_rot
-        Mw = max(self._Mw * 1e-3, 1e-10)  # g/mol -> kg/mol
+        Mw = max(self._Mw_kappa * 1e-3, 1e-10)  # g/mol -> kg/mol
         mu = self.mu_model(T)
 
         # Eucken with internal degrees of freedom

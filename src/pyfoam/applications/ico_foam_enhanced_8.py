@@ -135,25 +135,27 @@ class IcoFoamEnhanced8(IcoFoamEnhanced7):
 
         p_O = gather(p, owner)
         p_N = gather(p, neigh)
-        grad_face = ((p_N - p_O) * delta_coeffs).unsqueeze(-1)
 
-        # Simplified diagonal Hessian from gradient differences
-        hess_diag = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        # Face pressure difference (scalar)
+        dp_face = (p_N - p_O).abs() * delta_coeffs
         weight = self.hessian_weight
-        hess_diag.index_add_(0, owner, grad_face.squeeze(-1).abs() * weight)
-        hess_diag.index_add_(0, neigh, grad_face.squeeze(-1).abs() * weight)
+
+        # Scatter face values to cells
+        hess_scalar = torch.zeros(n_cells, dtype=dtype, device=device)
+        hess_scalar = hess_scalar + scatter_add(dp_face * weight, owner, n_cells)
+        hess_scalar = hess_scalar + scatter_add(dp_face * weight, neigh, n_cells)
         n_contrib = scatter_add(
             torch.ones(n_internal, dtype=dtype, device=device), owner, n_cells,
         ) + scatter_add(
             torch.ones(n_internal, dtype=dtype, device=device), neigh, n_cells,
         )
-        hess_diag = hess_diag / n_contrib.clamp(min=1.0).unsqueeze(-1)
+        hess_scalar = hess_scalar / n_contrib.clamp(min=1.0)
 
         # Build diagonal metric tensor
         metric = torch.zeros(n_cells, 3, 3, dtype=dtype, device=device)
-        metric[:, 0, 0] = hess_diag[:, 0].abs() + 1e-10
-        metric[:, 1, 1] = hess_diag[:, 1].abs() + 1e-10
-        metric[:, 2, 2] = hess_diag[:, 2].abs() + 1e-10
+        metric[:, 0, 0] = hess_scalar.abs() + 1e-10
+        metric[:, 1, 1] = hess_scalar.abs() + 1e-10
+        metric[:, 2, 2] = hess_scalar.abs() + 1e-10
 
         return metric
 

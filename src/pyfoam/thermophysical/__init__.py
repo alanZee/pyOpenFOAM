@@ -125,6 +125,16 @@ Provides:
 - :class:`SRKVolumeTranslated` — SRK EOS with volume translation for liquid density
 - :class:`MultiFluidDeparture` — Multi-fluid EOS with departure function
 - :class:`ExtendedCSPShapeFactors` — Extended Corresponding States with shape factors
+
+**Phase 18 — Enhanced v8/v9 Models:**
+- :class:`JanafMultiThermoEnhanced9` — JANAF v9 with radiation coupling, flash calculation, activity coefficients
+- :class:`TabulatedTransportEnhanced8` — tabulated transport v8 with uncertainty quantification and table merging
+- :class:`WilkeTransportEnhanced8` — Wilke v8 with T-dependent diffusion, mixture validation, bulk viscosity
+- :class:`ConstantTransportEnhanced8` — constant transport v8 with viscosity blending, T-dependent regions, enhanced Eucken
+- :class:`SutherlandTransportEnhanced8` — Sutherland v8 with multi-regime blending, sensitivity analysis, extrapolation guardrails
+- :class:`CubicRootSelector` — PR EOS with intelligent cubic root selection
+- :class:`FugacityCoefficientEOS` — PR EOS with fugacity coefficient computation
+- :class:`VdWOneFluidMixing` — PR EOS with Van der Waals one-fluid mixing rules
 """
 
 from pyfoam.thermophysical.equation_of_state import (
@@ -266,6 +276,18 @@ from pyfoam.thermophysical.equation_of_state_enhanced_6 import (
     ExtendedCSPShapeFactors,
 )
 
+# Phase 18: Enhanced models v8/v9
+from pyfoam.thermophysical.janaf_multi_thermo_enhanced_9 import JanafMultiThermoEnhanced9
+from pyfoam.thermophysical.tabulated_transport_enhanced_8 import TabulatedTransportEnhanced8
+from pyfoam.thermophysical.wilke_transport_enhanced_8 import WilkeTransportEnhanced8
+from pyfoam.thermophysical.constant_transport_enhanced_8 import ConstantTransportEnhanced8
+from pyfoam.thermophysical.sutherland_transport_enhanced_8 import SutherlandTransportEnhanced8
+from pyfoam.thermophysical.equation_of_state_enhanced_7 import (
+    CubicRootSelector,
+    FugacityCoefficientEOS,
+    VdWOneFluidMixing,
+)
+
 __all__ = [
     # Equation of state
     "EquationOfState",
@@ -376,6 +398,15 @@ __all__ = [
     "SRKVolumeTranslated",
     "MultiFluidDeparture",
     "ExtendedCSPShapeFactors",
+    # Phase 18: Enhanced models v8/v9
+    "JanafMultiThermoEnhanced9",
+    "TabulatedTransportEnhanced8",
+    "WilkeTransportEnhanced8",
+    "ConstantTransportEnhanced8",
+    "SutherlandTransportEnhanced8",
+    "CubicRootSelector",
+    "FugacityCoefficientEOS",
+    "VdWOneFluidMixing",
     # Chemistry models
     "ChemistryModel",
     "ODEChemistrySolver",

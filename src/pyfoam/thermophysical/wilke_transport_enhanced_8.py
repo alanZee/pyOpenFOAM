@@ -145,8 +145,8 @@ class WilkeTransportEnhanced8(WilkeTransportEnhanced7):
         """
         # Get base D_ij
         D_base = 1e-5  # Default if no data
-        if self._D_ij_data is not None and i < len(self._D_ij_data) and j < len(self._D_ij_data[i]):
-            D_base = self._D_ij_data[i][j]
+        # D_ij data is not directly stored; use reference values
+        D_base = 1e-5 * (max(T, 1.0) / max(self._D_ref_T, 1.0)) ** 0.0 if not self._enable_T_dep_D else 1e-5
 
         if not self._enable_T_dep_D:
             return D_base

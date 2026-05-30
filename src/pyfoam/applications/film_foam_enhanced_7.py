@@ -168,7 +168,7 @@ class FilmFoamEnhanced7(FilmFoamEnhanced6):
         lap_phi = lap_phi + scatter_add(lap_face, owner, n_cells)
         lap_phi = lap_phi + scatter_add(-lap_face, neigh, n_cells)
 
-        mu = mu_local - eps.pow(2) * lap_phi
+        mu = mu_local - (eps * eps) * lap_phi
 
         # Laplacian of mu
         mu_O = gather(mu, owner)

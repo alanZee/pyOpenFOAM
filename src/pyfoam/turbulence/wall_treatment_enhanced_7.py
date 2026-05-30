@@ -93,6 +93,7 @@ class EnhancedWallTreatment7(EnhancedWallTreatment6):
         self._heat_flux_decomp = heat_flux_decomposition
         self._adaptive_switching = adaptive_switching
         self._current_regime: str = "unknown"
+        self._hysteresis_width_val = max(0.0, hysteresis_width)
 
     @property
     def heat_flux_decomposition_enabled(self) -> bool:
@@ -120,7 +121,7 @@ class EnhancedWallTreatment7(EnhancedWallTreatment6):
             Dimensionless velocity u+.
         """
         y_p = max(y_plus, 0.01)
-        y_blend = (self._y_plus_low + self._y_plus_high) / 2.0
+        y_blend = (self.y_plus_low + self.y_plus_high) / 2.0
         Gamma = (y_p / max(y_blend, 1.0)) ** self._blend_exp
 
         exp_neg_G = math.exp(-min(Gamma, 50.0))
@@ -158,7 +159,7 @@ class EnhancedWallTreatment7(EnhancedWallTreatment6):
         nu_log = kappa * y * u_tau
 
         # Blend
-        y_blend = (self._y_plus_low + self._y_plus_high) / 2.0
+        y_blend = (self.y_plus_low + self.y_plus_high) / 2.0
         w = 1.0 / (1.0 + math.exp(-self._blend_exp * (y_p - y_blend) / max(y_blend, 1.0)))
         return (1.0 - w) * nu_visc + w * nu_log
 
@@ -228,29 +229,29 @@ class EnhancedWallTreatment7(EnhancedWallTreatment6):
             Regime: "viscous", "buffer", or "log_law".
         """
         if not self._adaptive_switching:
-            if y_plus < self._y_plus_low:
+            if y_plus < self.y_plus_low:
                 return "viscous"
-            elif y_plus < self._y_plus_high:
+            elif y_plus < self.y_plus_high:
                 return "buffer"
             else:
                 return "log_law"
 
-        hw = self._hysteresis_width
+        hw = self._hysteresis_width_val
         regime = self._current_regime
 
-        if regime == "viscous" and y_plus > self._y_plus_low + hw:
+        if regime == "viscous" and y_plus > self.y_plus_low + hw:
             regime = "buffer"
         elif regime == "buffer":
-            if y_plus < self._y_plus_low:
+            if y_plus < self.y_plus_low:
                 regime = "viscous"
-            elif y_plus > self._y_plus_high:
+            elif y_plus > self.y_plus_high:
                 regime = "log_law"
-        elif regime == "log_law" and y_plus < self._y_plus_high - hw:
+        elif regime == "log_law" and y_plus < self.y_plus_high - hw:
             regime = "buffer"
         elif regime == "unknown":
-            if y_plus < self._y_plus_low:
+            if y_plus < self.y_plus_low:
                 regime = "viscous"
-            elif y_plus < self._y_plus_high:
+            elif y_plus < self.y_plus_high:
                 regime = "buffer"
             else:
                 regime = "log_law"
