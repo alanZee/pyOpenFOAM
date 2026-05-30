@@ -388,7 +388,7 @@ class PimpleFoamEnhanced4(PimpleFoamEnhanced3):
 
             # Adaptive inner-outer ratio
             n_inner, n_outer = self._adaptive_inner_outer_ratio(
-                self.max_piso_correctors, max_outer,
+                self.n_outer_correctors, max_outer,
             )
 
             # PIMPLE solve

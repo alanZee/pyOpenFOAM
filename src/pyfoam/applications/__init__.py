@@ -204,6 +204,18 @@ from pyfoam.applications.solid_foam_enhanced_2 import SolidFoamEnhanced2
 from pyfoam.applications.film_foam_enhanced_2 import FilmFoamEnhanced2
 from pyfoam.applications.spray_foam_enhanced_2 import SprayFoamEnhanced2
 from pyfoam.applications.multiphase_euler_foam_enhanced_3 import MultiphaseEulerFoamEnhanced3
+from pyfoam.applications.ico_foam_enhanced_4 import IcoFoamEnhanced4
+from pyfoam.applications.simple_foam_enhanced_4 import SimpleFoamEnhanced4
+from pyfoam.applications.piso_foam_enhanced_4 import PisoFoamEnhanced4
+from pyfoam.applications.pimple_foam_enhanced_4 import PimpleFoamEnhanced4
+from pyfoam.applications.rho_pimple_foam_enhanced_4 import RhoPimpleFoamEnhanced4
+from pyfoam.applications.buoyant_simple_foam_enhanced_4 import BuoyantSimpleFoamEnhanced4
+from pyfoam.applications.buoyant_pimple_foam_enhanced_4 import BuoyantPimpleFoamEnhanced4
+from pyfoam.applications.reacting_foam_enhanced_6 import ReactingFoamEnhanced6
+from pyfoam.applications.solid_foam_enhanced_3 import SolidFoamEnhanced3
+from pyfoam.applications.film_foam_enhanced_3 import FilmFoamEnhanced3
+from pyfoam.applications.spray_foam_enhanced_3 import SprayFoamEnhanced3
+from pyfoam.applications.multiphase_euler_foam_enhanced_4 import MultiphaseEulerFoamEnhanced4
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -310,6 +322,18 @@ __all__ = [
     "FilmFoamEnhanced2",
     "SprayFoamEnhanced2",
     "MultiphaseEulerFoamEnhanced3",
+    "IcoFoamEnhanced4",
+    "SimpleFoamEnhanced4",
+    "PisoFoamEnhanced4",
+    "PimpleFoamEnhanced4",
+    "RhoPimpleFoamEnhanced4",
+    "BuoyantSimpleFoamEnhanced4",
+    "BuoyantPimpleFoamEnhanced4",
+    "ReactingFoamEnhanced6",
+    "SolidFoamEnhanced3",
+    "FilmFoamEnhanced3",
+    "SprayFoamEnhanced3",
+    "MultiphaseEulerFoamEnhanced4",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
