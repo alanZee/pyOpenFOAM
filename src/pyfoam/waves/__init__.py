@@ -15,6 +15,11 @@ Enhanced wave models:
 - :mod:`~pyfoam.waves.enhanced_3` — StreamFunctionWave, BoussinesqWave, MildSlopeWave.
 - :mod:`~pyfoam.waves.enhanced_4` — SpectralWave, WaveTrain, RogueWave.
 - :mod:`~pyfoam.waves.enhanced_5` — ReflectedWave, DiffractedWave, AbsorptionModel.
+- :mod:`~pyfoam.waves.enhanced_6` — ActiveAbsorption, PassiveAbsorption.
+- :mod:`~pyfoam.waves.enhanced_7` — RelaxationZone, WaveGenerationModel.
+- :mod:`~pyfoam.waves.enhanced_8` — PistonType, FlapType.
+- :mod:`~pyfoam.waves.enhanced_9` — PressureType, IrregularGeneration.
+- :mod:`~pyfoam.waves.enhanced_10` — AbsorptionGeneration, FlapDiffraction.
 """
 
 from pyfoam.waves.wave_model import WaveModel
@@ -28,6 +33,11 @@ from pyfoam.waves.enhanced_2 import IrregularWave, DirectionalWave, SolitaryWave
 from pyfoam.waves.enhanced_3 import StreamFunctionWave, BoussinesqWave, MildSlopeWave
 from pyfoam.waves.enhanced_4 import SpectralWave, WaveTrain, RogueWave
 from pyfoam.waves.enhanced_5 import ReflectedWave, DiffractedWave, AbsorptionModel
+from pyfoam.waves.enhanced_6 import ActiveAbsorption, PassiveAbsorption
+from pyfoam.waves.enhanced_7 import RelaxationZone, WaveGenerationModel
+from pyfoam.waves.enhanced_8 import PistonType, FlapType
+from pyfoam.waves.enhanced_9 import PressureType, IrregularGeneration
+from pyfoam.waves.enhanced_10 import AbsorptionGeneration, FlapDiffraction
 
 __all__ = [
     "WaveModel",
@@ -51,4 +61,19 @@ __all__ = [
     "ReflectedWave",
     "DiffractedWave",
     "AbsorptionModel",
+    # enhanced_6
+    "ActiveAbsorption",
+    "PassiveAbsorption",
+    # enhanced_7
+    "RelaxationZone",
+    "WaveGenerationModel",
+    # enhanced_8
+    "PistonType",
+    "FlapType",
+    # enhanced_9
+    "PressureType",
+    "IrregularGeneration",
+    # enhanced_10
+    "AbsorptionGeneration",
+    "FlapDiffraction",
 ]
