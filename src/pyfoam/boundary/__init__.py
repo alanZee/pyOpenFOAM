@@ -117,6 +117,16 @@ Provides:
 - turbulentFrequencyInlet4: v4 enhanced omega inlet with adaptive blending and clamping
 - turbulentDissipationInlet5: v5 enhanced epsilon inlet with two-layer buffer/log-law model
 - turbulentFrequencyInlet5: v5 enhanced omega inlet with two-layer buffer/log-law model
+- mappedFlowRate4: Enhanced mapped flow rate with thermal expansion and swirl correction
+- pressureWaveTransmissive4: Enhanced wave transmissive with frequency-dependent damping
+- turbulentViscosityInlet4: Enhanced turbulent viscosity inlet with pressure-gradient correction
+- turbulentLengthScaleInlet4: Enhanced turbulent length scale inlet with adaptive blending
+- turbulentIntensityInlet4: Enhanced turbulent intensity inlet with transition model
+- turbulentDissipationInlet6: v6 enhanced epsilon inlet with production limiter
+- turbulentFrequencyInlet6: v6 enhanced omega inlet with production limiter
+- turbulentKineticEnergyInlet5: v5 enhanced k inlet with buoyancy production
+- turbulentDissipationInlet7: v7 enhanced epsilon inlet with strain-rate production limiter
+- turbulentFrequencyInlet7: v7 enhanced omega inlet with strain-rate production limiter
 """
 
 # Import base and collection first
@@ -405,6 +415,18 @@ from pyfoam.boundary.turbulent_frequency_inlet_4 import TurbulentFrequencyInlet4
 from pyfoam.boundary.turbulent_dissipation_inlet_5 import TurbulentDissipationInlet5BC
 from pyfoam.boundary.turbulent_frequency_inlet_5 import TurbulentFrequencyInlet5BC
 
+# Phase 27: Enhanced v4 mapped/wave/turbulent inlets + v5-v7 epsilon/omega/k variants
+from pyfoam.boundary.mapped_flow_rate_4 import MappedFlowRate4BC
+from pyfoam.boundary.pressure_wave_transmissive_4 import PressureWaveTransmissive4BC
+from pyfoam.boundary.turbulent_viscosity_inlet_4 import TurbulentViscosityInlet4BC
+from pyfoam.boundary.turbulent_length_scale_inlet_4 import TurbulentLengthScaleInlet4BC
+from pyfoam.boundary.turbulent_intensity_inlet_4 import TurbulentIntensityInlet4BC
+from pyfoam.boundary.turbulent_dissipation_inlet_6 import TurbulentDissipationInlet6BC
+from pyfoam.boundary.turbulent_frequency_inlet_6 import TurbulentFrequencyInlet6BC
+from pyfoam.boundary.turbulent_kinetic_energy_inlet_5 import TurbulentKineticEnergyInlet5BC
+from pyfoam.boundary.turbulent_dissipation_inlet_7 import TurbulentDissipationInlet7BC
+from pyfoam.boundary.turbulent_frequency_inlet_7 import TurbulentFrequencyInlet7BC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -626,4 +648,15 @@ __all__ = [
     "TurbulentFrequencyInlet4BC",
     "TurbulentDissipationInlet5BC",
     "TurbulentFrequencyInlet5BC",
+    # Phase 27: Enhanced v4 mapped/wave/turbulent inlets + v5-v7 variants
+    "MappedFlowRate4BC",
+    "PressureWaveTransmissive4BC",
+    "TurbulentViscosityInlet4BC",
+    "TurbulentLengthScaleInlet4BC",
+    "TurbulentIntensityInlet4BC",
+    "TurbulentDissipationInlet6BC",
+    "TurbulentFrequencyInlet6BC",
+    "TurbulentKineticEnergyInlet5BC",
+    "TurbulentDissipationInlet7BC",
+    "TurbulentFrequencyInlet7BC",
 ]
