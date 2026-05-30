@@ -53,6 +53,12 @@ Provides:
 - :class:`WallShearStressEnhanced6` — enhanced wall shear stress v6 with WMLES interface and pressure-strain coupling
 - :class:`YPlusEnhanced7` — enhanced y+ v7 with uncertainty quantification and ensemble analysis
 
+- :class:`FieldMinMaxEnhanced8` — enhanced field min/max v8 with temporal clustering and alert rules
+- :class:`ProbesEnhanced8` — enhanced probes v8 with streaming data processing and health monitoring
+- :class:`ForcesEnhanced7` — enhanced forces v7 with wavelet analysis and coefficient statistics
+- :class:`WallShearStressEnhanced7` — enhanced wall shear stress v7 with drag decomposition and wall turbulence stats
+- :class:`YPlusEnhanced8` — enhanced y+ v8 with spectral analysis and mesh adaptation criteria
+
 All function objects follow OpenFOAM's function object API and can be
 configured via dictionary entries in ``system/controlDict``.
 """
@@ -244,6 +250,35 @@ from pyfoam.postprocessing.y_plus_enhanced_7 import (
     WallFunctionEnsemble,
 )
 
+# Phase 17: Enhanced postprocessing models
+from pyfoam.postprocessing.field_min_max_enhanced_8 import (
+    FieldMinMaxEnhanced8,
+    TemporalCluster,
+    CrossFieldCorrelation,
+    AlertRule,
+)
+from pyfoam.postprocessing.probes_enhanced_8 import (
+    ProbesEnhanced8,
+    StreamingStats,
+    ProbeHealth,
+)
+from pyfoam.postprocessing.forces_enhanced_7 import (
+    ForcesEnhanced7,
+    WaveletDecomposition,
+    MultiBodyForce,
+    CoefficientStats,
+)
+from pyfoam.postprocessing.wall_shear_stress_enhanced_7 import (
+    WallShearStressEnhanced7,
+    DragDecomposition,
+    WallTurbulenceStats,
+)
+from pyfoam.postprocessing.y_plus_enhanced_8 import (
+    YPlusEnhanced8,
+    YPlusSpectrum,
+    MeshAdaptationCriterion,
+)
+
 __all__ = [
     # Framework
     "FunctionObject",
@@ -396,4 +431,22 @@ __all__ = [
     "YPlusEnhanced7",
     "YPlusUncertainty",
     "WallFunctionEnsemble",
+    # Phase 17: Enhanced postprocessing v8
+    "FieldMinMaxEnhanced8",
+    "TemporalCluster",
+    "CrossFieldCorrelation",
+    "AlertRule",
+    "ProbesEnhanced8",
+    "StreamingStats",
+    "ProbeHealth",
+    "ForcesEnhanced7",
+    "WaveletDecomposition",
+    "MultiBodyForce",
+    "CoefficientStats",
+    "WallShearStressEnhanced7",
+    "DragDecomposition",
+    "WallTurbulenceStats",
+    "YPlusEnhanced8",
+    "YPlusSpectrum",
+    "MeshAdaptationCriterion",
 ]

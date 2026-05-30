@@ -367,6 +367,15 @@ __all__ = [
     "LatticeGasEOS",
     "CPASAFT",
     "TemperatureDependentPR",
+    # Phase 17: Enhanced models v7/v8
+    "JanafMultiThermoEnhanced8",
+    "TabulatedTransportEnhanced7",
+    "WilkeTransportEnhanced7",
+    "ConstantTransportEnhanced7",
+    "SutherlandTransportEnhanced7",
+    "SRKVolumeTranslated",
+    "MultiFluidDeparture",
+    "ExtendedCSPShapeFactors",
     # Chemistry models
     "ChemistryModel",
     "ODEChemistrySolver",

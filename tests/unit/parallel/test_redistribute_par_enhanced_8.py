@@ -112,12 +112,12 @@ class TestV8Redistribution:
     """Test v8 redistribution method."""
 
     def test_returns_v8_result(self):
-        redist = RedistributeParEnhanced8("/tmp/nonexistent", target_n_procs=4)
+        redist = RedistributeParEnhanced8("/tmp/test_nonexist", target_n_procs=4)
         result = redist.redistribute_v8()
         assert isinstance(result, V8RedistributeResult)
 
     def test_incremental_flag(self):
-        redist = RedistributeParEnhanced8("/tmp/nonexistent", target_n_procs=4)
+        redist = RedistributeParEnhanced8("/tmp/test_nonexist", target_n_procs=4)
         old = torch.tensor([0, 0, 1, 1])
         new = torch.tensor([0, 1, 1, 1])
         redist._previous_mapping = old

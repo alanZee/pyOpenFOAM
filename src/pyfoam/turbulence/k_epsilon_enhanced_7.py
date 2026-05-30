@@ -72,7 +72,7 @@ class KEpsilonEnhanced7Model(KEpsilonEnhanced6Model):
         C = self._C
         nu = getattr(self, '_nu', 1.5e-5)
         k_safe = self._k.clamp(min=1e-16)
-        u_tau = (C.C_mu ** 0.25 * k_safe.sqrt()).clamp(min=1e-10)
+        u_tau = (getattr(C, 'C_mu_base', 0.09) ** 0.25 * k_safe.sqrt()).clamp(min=1e-10)
         y_plus = (self._y * u_tau / max(nu, 1e-30)).clamp(min=0.1)
         y_switch = getattr(C, 'y_plus_switch', 11.0)
         f_wall = torch.where(

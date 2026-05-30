@@ -172,7 +172,8 @@ class SutherlandTransportEnhanced7(SutherlandTransportEnhanced6):
 
         mu_mix = 0.0
         for i, y_i in enumerate(Y):
-            mu_i = self._models[i].mu(T) if i < len(self._models) else self._mu_ref
+            name = self._species_names[i] if i < len(self._species_names) else str(i)
+            mu_i = float(self.species_mu(name, T).item()) if hasattr(self.species_mu(name, T), 'item') else float(self.species_mu(name, T))
             mu_mix += y_i * mu_i
         return max(mu_mix, 1e-30)
 
@@ -197,8 +198,10 @@ class SutherlandTransportEnhanced7(SutherlandTransportEnhanced6):
             return [1.0]
 
         mu_values = []
-        for model in self._models:
-            mu_values.append(model.mu(T))
+        for i in range(self._n_species):
+            name = self._species_names[i] if i < len(self._species_names) else str(i)
+            mu_val = self.species_mu(name, T)
+            mu_values.append(float(mu_val.item()) if hasattr(mu_val, 'item') else float(mu_val))
         mu_mean = sum(mu_values) / max(len(mu_values), 1)
         return [m / max(mu_mean, 1e-30) for m in mu_values]
 

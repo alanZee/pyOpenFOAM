@@ -102,6 +102,16 @@ Provides:
   HamakerCorrectedArea, CoalescenceBreakupEquilibrium, PolydispersePBETArea
 - Enhanced turbulence damping v8: TurbulenceDamping8EnhancedModel,
   InterfaceAwareLESDamping, TurbulenceInterfaceCoupledDamping, MultiScaleCascadeDamping
+- Enhanced incompressible N-phase VOF v8: IncompressibleMultiphaseVoFEnhanced7
+  (interface topology analysis, momentum correction, adaptive compression)
+- Enhanced compressible N-phase VOF v8: CompressibleMultiphaseVoFEnhanced7
+  (acoustic impedance matching, energy source coupling)
+- Enhanced multicomponent mixture v8: MulticomponentMixtureEnhanced7
+  (Margules activity, reaction progress, mixing enthalpy)
+- Enhanced interfacial area v9: InterfacialArea8Model,
+  TurbulentEnhancedArea, SizeDependentBreakupArea, TimeRelaxationArea
+- Enhanced turbulence damping v9: TurbulenceDamping9EnhancedModel,
+  AdaptiveCoefficientDamping, TKEProductionDamping, StratifiedFlowDamping
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -456,6 +466,37 @@ from pyfoam.multiphase.turbulence_damping_enhanced_8 import (
     MultiScaleCascadeDamping,
 )
 
+# Phase 17: Enhanced incompressible N-phase VOF v8
+from pyfoam.multiphase.incompressible_multiphase_vof_enhanced_7 import (
+    IncompressibleMultiphaseVoFEnhanced7,
+)
+
+# Phase 17: Enhanced compressible N-phase VOF v8
+from pyfoam.multiphase.compressible_multiphase_vof_enhanced_7 import (
+    CompressibleMultiphaseVoFEnhanced7,
+)
+
+# Phase 17: Enhanced multicomponent mixture v8
+from pyfoam.multiphase.multicomponent_mixture_enhanced_7 import (
+    MulticomponentMixtureEnhanced7,
+)
+
+# Phase 17: Enhanced interfacial area v9
+from pyfoam.multiphase.interfacial_area_enhanced_8 import (
+    InterfacialArea8Model,
+    TurbulentEnhancedArea,
+    SizeDependentBreakupArea,
+    TimeRelaxationArea,
+)
+
+# Phase 17: Enhanced turbulence damping v9
+from pyfoam.multiphase.turbulence_damping_enhanced_9 import (
+    TurbulenceDamping9EnhancedModel,
+    AdaptiveCoefficientDamping,
+    TKEProductionDamping,
+    StratifiedFlowDamping,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -666,4 +707,20 @@ __all__ = [
     "InterfaceAwareLESDamping",
     "TurbulenceInterfaceCoupledDamping",
     "MultiScaleCascadeDamping",
+    # Phase 17: Enhanced incompressible N-phase VOF v8
+    "IncompressibleMultiphaseVoFEnhanced7",
+    # Phase 17: Enhanced compressible N-phase VOF v8
+    "CompressibleMultiphaseVoFEnhanced7",
+    # Phase 17: Enhanced multicomponent mixture v8
+    "MulticomponentMixtureEnhanced7",
+    # Phase 17: Enhanced interfacial area v9
+    "InterfacialArea8Model",
+    "TurbulentEnhancedArea",
+    "SizeDependentBreakupArea",
+    "TimeRelaxationArea",
+    # Phase 17: Enhanced turbulence damping v9
+    "TurbulenceDamping9EnhancedModel",
+    "AdaptiveCoefficientDamping",
+    "TKEProductionDamping",
+    "StratifiedFlowDamping",
 ]

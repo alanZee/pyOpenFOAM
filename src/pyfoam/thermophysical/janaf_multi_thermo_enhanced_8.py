@@ -190,7 +190,7 @@ class JanafMultiThermoEnhanced8(JanafMultiThermoEnhanced7):
             s_i = model.S_ref_at_T(T)
             # Add ideal gas entropy contribution: R * ln(T/T_ref)
             T_safe = max(T, 1.0)
-            T_ref_safe = max(model._T_ref, 1.0)
+            T_ref_safe = max(getattr(model, '_T_ref_entropy', getattr(model, '_T_ref', 298.15)), 1.0)
             s_i += model._R * math.log(T_safe / T_ref_safe)
             s_mix += y_i * s_i
         return s_mix

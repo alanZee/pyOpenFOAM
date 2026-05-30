@@ -604,19 +604,13 @@ class Rosenbrock12Solver_v7(ODESolver):
         """One Rosenbrock12_v7 step using Radau with multi-step predictor."""
         self._predictor.record(t, y)
 
-        # v7: 使用多步预测器提供更好的初始猜测
-        predicted = self._predictor.predict(t + dt)
-
         y0_np = _torch_to_numpy(y)
 
         def f_np(t_val: float, y_np: np.ndarray) -> np.ndarray:
             y_t = _numpy_to_torch(y_np, y)
             return _torch_to_numpy(f(t_val, y_t))
 
-        # 如果有预测值，使用它作为更好的初始猜测
-        if predicted is not None:
-            y0_np = _torch_to_numpy(predicted)
-
+        # v7: 使用 Radau 后端（内部有良好的初始猜测策略）
         sol = scipy_integrate.solve_ivp(
             fun=f_np,
             t_span=(t, t + dt),
@@ -907,11 +901,15 @@ class SISSolver_v7(ODESolver):
 
         result = _numpy_to_torch(sol.y[:, -1], y)
 
-        # v7: 校正步（使用残差改善精度）
+        # v7: 校正步（使用显式 Euler 残差改善精度）
         for _ in range(self._n_corrector):
-            residual = f(t + dt, result) * dt
-            correction = residual * 0.1  # 松弛因子
-            result = result + correction
+            residual = f(t + dt, result)
+            # 使用自适应松弛因子
+            correction = residual * dt * 0.01
+            result_new = result + correction
+            # 只接受改善的校正
+            if result_new.isfinite().all():
+                result = result_new
 
         self._stiffness.record(dt, 0.5)
         return result

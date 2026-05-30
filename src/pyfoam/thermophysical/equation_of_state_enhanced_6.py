@@ -73,10 +73,9 @@ class SRKVolumeTranslated(RedlichKwongEOS):
         Tc: float,
         Pc: float,
         Cp: float,
-        accentric: float = 0.0,
         c_shift: float = 0.0,
     ) -> None:
-        super().__init__(Mw=Mw, Tc=Tc, Pc=Pc, Cp=Cp, accentric=accentric)
+        super().__init__(Mw=Mw, Tc=Tc, Pc=Pc, Cp=Cp)
         self._c_shift = c_shift
 
     @property
@@ -158,7 +157,8 @@ class MultiFluidDeparture(PengRobinsonEOS):
         """Density with departure function correction."""
         rho_base = super().rho(p, T)
         # Simplified departure: small correction based on reduced density
-        rho_c = self._Pc / max(self._R_specific * self._Tc, 1e-10) * self._Mw * 1e-3
+        R_specific = 8.314462618 / max(self._Mw * 1e-3, 1e-10)
+        rho_c = self._Pc / max(R_specific * self._Tc, 1e-10) * self._Mw * 1e-3
         delta = rho_base / max(rho_c, 1e-10)
         correction = 1.0
         for n_i, t_i, d_i, r_i, l_i in self._coeffs:

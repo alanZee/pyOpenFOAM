@@ -163,6 +163,16 @@ Provides:
 - :class:`EnhancedWallTreatment5` — Enhanced wall treatment v5 with conjugate HT and adaptive y+ tracking
 - :class:`ConjugateHeatTransfer` — Conjugate heat transfer calculator
 
+**Enhanced RANS/LES Models (Phase 17):**
+- :class:`KEpsilonEnhanced7Model` — Realizable k-epsilon v7 with wall-integrated epsilon and dynamic near-wall correction
+- :class:`KOmegaEnhanced7Model` — k-omega v7 with buoyancy production and density-gradient cross-diffusion
+- :class:`KOmegaSSTEnhanced7Model` — SST v7 with shock-capturing, Sarkar compressibility, and adaptive blending
+- :class:`SpalartAllmarasEnhanced7Model` — SA v7 with trip-free formulation and vorticity amplification
+- :class:`AnisotropicMDModel` — Anisotropic Minimum Dissipation SGS model
+- :class:`StructureFunctionSGS` — Structure-Function SGS model
+- :class:`EnhancedWallTreatment6` — Enhanced wall treatment v6 with species transport and Colebrook-White roughness
+- :class:`RoughnessCorrelation` — Standalone roughness correlation calculator
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -423,6 +433,14 @@ from pyfoam.turbulence.spalart_allmaras_enhanced_6 import SpalartAllmarasEnhance
 from pyfoam.turbulence.les_model_enhanced_6 import WMLEModel, TensorViscositySGS
 from pyfoam.turbulence.wall_treatment_enhanced_5 import EnhancedWallTreatment5, ConjugateHeatTransfer
 
+# Enhanced RANS/LES models (Phase 17)
+from pyfoam.turbulence.k_epsilon_enhanced_7 import KEpsilonEnhanced7Model, KEpsilonEnhanced7Constants
+from pyfoam.turbulence.k_omega_enhanced_7 import KOmegaEnhanced7Model, KOmegaEnhanced7Constants
+from pyfoam.turbulence.k_omega_sst_enhanced_7 import KOmegaSSTEnhanced7Model, KOmegaSSTEnhanced7Constants
+from pyfoam.turbulence.spalart_allmaras_enhanced_7 import SpalartAllmarasEnhanced7Model, SpalartAllmarasEnhanced7Constants
+from pyfoam.turbulence.les_model_enhanced_7 import AnisotropicMDModel, StructureFunctionSGS
+from pyfoam.turbulence.wall_treatment_enhanced_6 import EnhancedWallTreatment6, RoughnessCorrelation
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -649,4 +667,17 @@ __all__ = [
     "TensorViscositySGS",
     "EnhancedWallTreatment5",
     "ConjugateHeatTransfer",
+    # Enhanced RANS/LES models (Phase 17)
+    "KEpsilonEnhanced7Model",
+    "KEpsilonEnhanced7Constants",
+    "KOmegaEnhanced7Model",
+    "KOmegaEnhanced7Constants",
+    "KOmegaSSTEnhanced7Model",
+    "KOmegaSSTEnhanced7Constants",
+    "SpalartAllmarasEnhanced7Model",
+    "SpalartAllmarasEnhanced7Constants",
+    "AnisotropicMDModel",
+    "StructureFunctionSGS",
+    "EnhancedWallTreatment6",
+    "RoughnessCorrelation",
 ]

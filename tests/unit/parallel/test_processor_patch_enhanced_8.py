@@ -48,13 +48,20 @@ class TestSparseAwarePatch:
         patch = SparseAwarePatch8(
             name="test",
             neighbour_rank=1,
+            local_ghost_cells=torch.tensor([0, 1, 2]),
+            remote_cells=torch.tensor([3, 4, 5]),
         )
         field = torch.zeros(100)
         sparsity = patch.compute_sparsity(field)
         assert sparsity == pytest.approx(1.0)
 
     def test_sparsity_none(self):
-        patch = SparseAwarePatch8(name="test", neighbour_rank=1)
+        patch = SparseAwarePatch8(
+            name="test",
+            neighbour_rank=1,
+            local_ghost_cells=torch.tensor([0, 1]),
+            remote_cells=torch.tensor([2, 3]),
+        )
         field = torch.ones(100)
         sparsity = patch.compute_sparsity(field)
         assert sparsity == pytest.approx(0.0)
@@ -63,6 +70,8 @@ class TestSparseAwarePatch:
         patch = SparseAwarePatch8(
             name="test",
             neighbour_rank=1,
+            local_ghost_cells=torch.tensor([0, 1]),
+            remote_cells=torch.tensor([2, 3]),
             sparsity_threshold=0.5,
         )
         patch.compute_sparsity(torch.zeros(100))

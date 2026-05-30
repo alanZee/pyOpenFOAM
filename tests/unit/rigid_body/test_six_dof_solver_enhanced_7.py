@@ -70,6 +70,13 @@ class TestSLERP:
         assert torch.allclose(result0, q0, atol=1e-10)
         assert torch.allclose(result1, q1, atol=1e-10)
 
+    def test_short_path(self):
+        """Should take shortest path even with negative dot product."""
+        q0 = torch.tensor([1.0, 0.0, 0.0, 0.0], dtype=torch.float64)
+        q1 = -torch.tensor([0.0, 1.0, 0.0, 0.0], dtype=torch.float64)
+        result = _slerp(q0, q1, 0.5)
+        assert abs(float(result.norm()) - 1.0) < 1e-10
+
 
 class TestContactCoupling:
     """Test contact-aware coupling."""

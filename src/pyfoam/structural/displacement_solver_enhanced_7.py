@@ -222,7 +222,7 @@ class EnhancedDisplacementSolver7(EnhancedDisplacementSolver6):
 
             for e in range(n_elements):
                 i, j = e, e + 1
-                u_e = torch.tensor([u[i] if i > 0 else 0.0, u[j]], dtype=torch.float64)
+                u_e = torch.tensor([0.0 if e == 0 else u[e - 1], u[e]], dtype=torch.float64)
                 # dc/drho_e = -p * rho^(p-1) * u_e^T * k_e * u_e
                 sens = -penalisation * rho[e] ** (penalisation - 1) * float(
                     (u_e @ k_local_base @ u_e).item()

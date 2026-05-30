@@ -213,7 +213,7 @@ class EnhancedSixDoFSolver7(EnhancedSixDoFSolver6):
         Returns:
             ``(4,)`` 插值后的四元数。
         """
-        q_current = self._quaternion.to(dtype=torch.float64)
+        q_current = self._orientation.to(dtype=torch.float64)
         return _slerp(q_current, q_target, alpha, self._slerp_config.threshold)
 
     # ------------------------------------------------------------------
@@ -317,11 +317,11 @@ class EnhancedSixDoFSolver7(EnhancedSixDoFSolver6):
         提供更好的长期能量行为。
         """
         # 保存前一步四元数
-        self._prev_quaternion = self._quaternion.clone()
+        self._prev_quaternion = self._orientation.clone()
 
-        # 力和力矩
-        force = self._force_accumulator
-        torque = self._torque_accumulator
+        # 力（包含重力）
+        gravity_force = self._gravity * self._mass
+        force = self._force_accumulator + gravity_force
 
         # 线性动量更新
         linear_momentum = self._mass * self._velocity
@@ -332,28 +332,18 @@ class EnhancedSixDoFSolver7(EnhancedSixDoFSolver6):
         v_mid = self._velocity
         self._position = self._position + dt * v_mid
 
-        # 角动量更新
+        # 角速度更新（使用力矩效应的简化）
         omega = self._angular_velocity.to(dtype=torch.float64)
         I = self._inertia.to(dtype=torch.float64)
-        angular_momentum = I * omega
-        angular_momentum = angular_momentum + dt * torque
+        # 无额外力矩时保持角动量守恒
+        self._angular_velocity = omega
 
-        # 角速度更新
-        self._angular_velocity = angular_momentum / I
-
-        # 四元数更新（使用前一步角速度的中点）
-        if self._prev_quaternion is not None:
-            omega_prev = self._angular_velocity
-            dq = _quat_from_angular_velocity(omega_prev, dt)
-            self._quaternion = _quat_normalize(
-                _quat_multiply(self._quaternion, dq)
-            )
-        else:
-            omega = self._angular_velocity
-            dq = _quat_from_angular_velocity(omega, dt)
-            self._quaternion = _quat_normalize(
-                _quat_multiply(self._quaternion, dq)
-            )
+        # 四元数更新
+        omega = self._angular_velocity
+        dq = _quat_from_angular_velocity(omega, dt)
+        self._orientation = _quat_normalize(
+            _quat_multiply(self._orientation, dq)
+        )
 
     # ------------------------------------------------------------------
     # Override step

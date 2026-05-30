@@ -123,10 +123,10 @@ class EnhancedWallTreatment6(EnhancedWallTreatment5):
         Sc = self._Sc
         if y_plus < 5.0:
             # Viscous sublayer: linear
-            k_species = self._nu / (Sc * max(y_plus * self._nu / max(u_tau, 1e-10), 1e-10))
+            k_species = self.nu / (Sc * max(y_plus * self.nu / max(u_tau, 1e-10), 1e-10))
         else:
             # Log-law region
-            E_s = max(self._E, 1.0) ** (1.0 / Sc)
+            E_s = max(self.E, 1.0) ** (1.0 / Sc)
             k_species = u_tau / (2.5 * math.log(max(y_plus, 1.1) * E_s))
         return max(k_species, 0.0)
 
