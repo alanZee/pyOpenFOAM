@@ -37,10 +37,13 @@ class TestRefinementResult9:
 
 class TestBSplineBasis:
     def test_zeroth_order(self):
-        knots = [0.0, 0.0, 0.5, 1.0, 1.0]
+        # 使用无重复的均匀节点向量
+        knots = [0.0, 0.25, 0.5, 0.75, 1.0]
         assert _bspline_basis(0, 0, knots, 0.1) == 1.0
         assert _bspline_basis(1, 0, knots, 0.3) == 1.0
         assert _bspline_basis(2, 0, knots, 0.7) == 1.0
+        # 不在任何区间内的值
+        assert _bspline_basis(0, 0, knots, 0.3) == 0.0
 
     def test_partition_of_unity(self):
         knots = [0.0, 0.0, 0.0, 1.0, 1.0, 1.0]

@@ -281,7 +281,7 @@ class EnhancedSixDoFSolver9(EnhancedSixDoFSolver8):
 
         # 角动量（无外力矩，仅陀螺力矩）
         omega = self._angular_velocity.to(dtype=torch.float64)
-        omega_new = omega + dt * (-torch.cross(omega, I * omega)) / I
+        omega_new = omega + dt * (-torch.linalg.cross(omega, I * omega)) / I
         self._angular_velocity = omega_new
 
         # 四元数更新

@@ -192,8 +192,19 @@ class _SpectralErrorAnalyser:
             return False
 
         data = np.array(list(self._history))
-        # 去趋势
-        data_detrended = data - np.mean(data)
+        # 线性去趋势（而非仅去均值）
+        n = len(data)
+        if n >= 2:
+            x = np.arange(n, dtype=float)
+            # 线性回归
+            slope = (n * np.sum(x * data) - np.sum(x) * np.sum(data)) / max(
+                n * np.sum(x ** 2) - np.sum(x) ** 2, 1e-30
+            )
+            intercept = (np.sum(data) - slope * np.sum(x)) / n
+            trend = slope * x + intercept
+            data_detrended = data - trend
+        else:
+            data_detrended = data - np.mean(data)
 
         if np.max(np.abs(data_detrended)) < 1e-30:
             self._oscillation_detected = False

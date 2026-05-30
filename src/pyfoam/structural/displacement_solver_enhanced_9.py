@@ -150,13 +150,13 @@ def _bspline_basis(
     if p == 0:
         if i < 0 or i >= n:
             return 0.0
-        # 特殊情况：最后一个节点区间包含右端点
-        if i == n - 1 and knots[i] <= xi <= knots[i + 1]:
+        # 克拉默节点向量：前 p+1 个相同，xi=0 时第一个基函数为 1
+        if i == 0 and knots[0] == knots[1] and xi == knots[0]:
+            return 1.0
+        # 右端点
+        if i == n - 1 and knots[i] == knots[i + 1] and xi == knots[-1]:
             return 1.0
         if knots[i] <= xi < knots[i + 1]:
-            return 1.0
-        # 克拉默节点向量：前 p+1 个相同，xi=0 时第一个基函数为 1
-        if i == 0 and xi == knots[0] and knots[0] == knots[1]:
             return 1.0
         return 0.0
 
