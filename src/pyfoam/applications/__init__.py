@@ -205,6 +205,15 @@ Available solvers:
 - :class:`CompressibleInterFoamEnhanced12` — Enhanced compressible VOF v12 (adaptive under-relaxation, Aitken correction, field-based relaxation)
 - :class:`SprayFoamEnhanced12` — Enhanced spray solver v12 (adaptive under-relaxation, Aitken correction, field-based relaxation)
 - :class:`MultiphaseEulerFoamEnhanced12` — Enhanced multiphase Euler v12 (adaptive under-relaxation, Aitken phase correction, field-based relaxation)
+- :class:`SimpleFoamEnhanced13` — Enhanced SIMPLE solver v13 (SIMPLEC coupling, SIMPLEC-consistent flux, coupled pressure-velocity)
+- :class:`PimpleFoamEnhanced13` — Enhanced PIMPLE solver v13 (SIMPLEC coupling, SIMPLEC-consistent flux, coupled pressure-velocity)
+- :class:`PisoFoamEnhanced13` — Enhanced PISO solver v13 (SIMPLEC coupling, SIMPLEC-consistent flux, coupled pressure-velocity)
+- :class:`IcoFoamEnhanced13` — Enhanced ICO solver v13 (SIMPLEC coupling, SIMPLEC-consistent flux, coupled pressure-velocity)
+- :class:`BuoyantPimpleFoamEnhanced13` — Enhanced buoyant PIMPLE v13 (SIMPLEC coupling, coupled buoyancy solve)
+- :class:`BuoyantSimpleFoamEnhanced13` — Enhanced buoyant SIMPLE v13 (SIMPLEC coupling, coupled buoyancy solve)
+- :class:`CompressibleInterFoamEnhanced13` — Enhanced compressible VOF v13 (SIMPLEC coupling, coupled solve)
+- :class:`SprayFoamEnhanced13` — Enhanced spray solver v13 (SIMPLEC coupling, coupled pressure-velocity)
+- :class:`MultiphaseEulerFoamEnhanced13` — Enhanced multiphase Euler v13 (SIMPLEC phase correction, coupled multiphase solve)
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -410,6 +419,15 @@ from pyfoam.applications.buoyant_simple_foam_enhanced_12 import BuoyantSimpleFoa
 from pyfoam.applications.compressible_inter_foam_enhanced_12 import CompressibleInterFoamEnhanced12
 from pyfoam.applications.spray_foam_enhanced_12 import SprayFoamEnhanced12
 from pyfoam.applications.multiphase_euler_foam_enhanced_12 import MultiphaseEulerFoamEnhanced12
+from pyfoam.applications.simple_foam_enhanced_13 import SimpleFoamEnhanced13
+from pyfoam.applications.pimple_foam_enhanced_13 import PimpleFoamEnhanced13
+from pyfoam.applications.piso_foam_enhanced_13 import PisoFoamEnhanced13
+from pyfoam.applications.ico_foam_enhanced_13 import IcoFoamEnhanced13
+from pyfoam.applications.buoyant_pimple_foam_enhanced_13 import BuoyantPimpleFoamEnhanced13
+from pyfoam.applications.buoyant_simple_foam_enhanced_13 import BuoyantSimpleFoamEnhanced13
+from pyfoam.applications.compressible_inter_foam_enhanced_13 import CompressibleInterFoamEnhanced13
+from pyfoam.applications.spray_foam_enhanced_13 import SprayFoamEnhanced13
+from pyfoam.applications.multiphase_euler_foam_enhanced_13 import MultiphaseEulerFoamEnhanced13
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -619,6 +637,15 @@ __all__ = [
     "CompressibleInterFoamEnhanced12",
     "SprayFoamEnhanced12",
     "MultiphaseEulerFoamEnhanced12",
+    "SimpleFoamEnhanced13",
+    "PimpleFoamEnhanced13",
+    "PisoFoamEnhanced13",
+    "IcoFoamEnhanced13",
+    "BuoyantPimpleFoamEnhanced13",
+    "BuoyantSimpleFoamEnhanced13",
+    "CompressibleInterFoamEnhanced13",
+    "SprayFoamEnhanced13",
+    "MultiphaseEulerFoamEnhanced13",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
