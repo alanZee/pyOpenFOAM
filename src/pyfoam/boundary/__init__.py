@@ -565,6 +565,121 @@ from pyfoam.boundary.turbulent_frequency_inlet_13 import TurbulentFrequencyInlet
 from pyfoam.boundary.outlet_phase_mean_velocity_7 import OutletPhaseMeanVelocity7BC
 from pyfoam.boundary.scaled_heat_flux_7 import ScaledHeatFlux7BC
 
+# Phase 34: Enhanced BCs (v14-v16 existing + v2-v10 new)
+from pyfoam.boundary.mapped_flow_rate_11 import MappedFlowRate11BC
+from pyfoam.boundary.mapped_flow_rate_12 import MappedFlowRate12BC
+from pyfoam.boundary.mapped_flow_rate_13 import MappedFlowRate13BC
+from pyfoam.boundary.mapped_flow_rate_14 import MappedFlowRate14BC
+from pyfoam.boundary.mapped_flow_rate_15 import MappedFlowRate15BC
+from pyfoam.boundary.mapped_flow_rate_16 import MappedFlowRate16BC
+from pyfoam.boundary.pressure_wave_transmissive_11 import PressureWaveTransmissive11BC
+from pyfoam.boundary.pressure_wave_transmissive_12 import PressureWaveTransmissive12BC
+from pyfoam.boundary.pressure_wave_transmissive_13 import PressureWaveTransmissive13BC
+from pyfoam.boundary.pressure_wave_transmissive_14 import PressureWaveTransmissive14BC
+from pyfoam.boundary.pressure_wave_transmissive_15 import PressureWaveTransmissive15BC
+from pyfoam.boundary.pressure_wave_transmissive_16 import PressureWaveTransmissive16BC
+from pyfoam.boundary.turbulent_intensity_inlet_11 import TurbulentIntensityInlet11BC
+from pyfoam.boundary.turbulent_intensity_inlet_12 import TurbulentIntensityInlet12BC
+from pyfoam.boundary.turbulent_intensity_inlet_13 import TurbulentIntensityInlet13BC
+from pyfoam.boundary.turbulent_intensity_inlet_14 import TurbulentIntensityInlet14BC
+from pyfoam.boundary.turbulent_intensity_inlet_15 import TurbulentIntensityInlet15BC
+from pyfoam.boundary.turbulent_intensity_inlet_16 import TurbulentIntensityInlet16BC
+from pyfoam.boundary.turbulent_viscosity_inlet_11 import TurbulentViscosityInlet11BC
+from pyfoam.boundary.turbulent_viscosity_inlet_12 import TurbulentViscosityInlet12BC
+from pyfoam.boundary.turbulent_viscosity_inlet_13 import TurbulentViscosityInlet13BC
+from pyfoam.boundary.turbulent_viscosity_inlet_14 import TurbulentViscosityInlet14BC
+from pyfoam.boundary.turbulent_viscosity_inlet_15 import TurbulentViscosityInlet15BC
+from pyfoam.boundary.turbulent_viscosity_inlet_16 import TurbulentViscosityInlet16BC
+from pyfoam.boundary.turbulent_length_scale_inlet_11 import TurbulentLengthScaleInlet11BC
+from pyfoam.boundary.turbulent_length_scale_inlet_12 import TurbulentLengthScaleInlet12BC
+from pyfoam.boundary.turbulent_length_scale_inlet_13 import TurbulentLengthScaleInlet13BC
+from pyfoam.boundary.turbulent_length_scale_inlet_14 import TurbulentLengthScaleInlet14BC
+from pyfoam.boundary.turbulent_length_scale_inlet_15 import TurbulentLengthScaleInlet15BC
+from pyfoam.boundary.turbulent_length_scale_inlet_16 import TurbulentLengthScaleInlet16BC
+from pyfoam.boundary.turbulent_dissipation_inlet_14 import TurbulentDissipationInlet14BC
+from pyfoam.boundary.turbulent_dissipation_inlet_15 import TurbulentDissipationInlet15BC
+from pyfoam.boundary.turbulent_dissipation_inlet_16 import TurbulentDissipationInlet16BC
+from pyfoam.boundary.turbulent_frequency_inlet_14 import TurbulentFrequencyInlet14BC
+from pyfoam.boundary.turbulent_frequency_inlet_15 import TurbulentFrequencyInlet15BC
+from pyfoam.boundary.turbulent_frequency_inlet_16 import TurbulentFrequencyInlet16BC
+from pyfoam.boundary.outlet_phase_mean_velocity_8 import OutletPhaseMeanVelocity8BC
+from pyfoam.boundary.outlet_phase_mean_velocity_9 import OutletPhaseMeanVelocity9BC
+from pyfoam.boundary.outlet_phase_mean_velocity_10 import OutletPhaseMeanVelocity10BC
+from pyfoam.boundary.outlet_phase_mean_velocity_11 import OutletPhaseMeanVelocity11BC
+from pyfoam.boundary.outlet_phase_mean_velocity_12 import OutletPhaseMeanVelocity12BC
+from pyfoam.boundary.outlet_phase_mean_velocity_13 import OutletPhaseMeanVelocity13BC
+from pyfoam.boundary.outlet_phase_mean_velocity_14 import OutletPhaseMeanVelocity14BC
+from pyfoam.boundary.outlet_phase_mean_velocity_15 import OutletPhaseMeanVelocity15BC
+from pyfoam.boundary.outlet_phase_mean_velocity_16 import OutletPhaseMeanVelocity16BC
+from pyfoam.boundary.scaled_heat_flux_8 import ScaledHeatFlux8BC
+from pyfoam.boundary.scaled_heat_flux_9 import ScaledHeatFlux9BC
+from pyfoam.boundary.scaled_heat_flux_10 import ScaledHeatFlux10BC
+from pyfoam.boundary.scaled_heat_flux_11 import ScaledHeatFlux11BC
+from pyfoam.boundary.scaled_heat_flux_12 import ScaledHeatFlux12BC
+from pyfoam.boundary.scaled_heat_flux_13 import ScaledHeatFlux13BC
+from pyfoam.boundary.scaled_heat_flux_14 import ScaledHeatFlux14BC
+from pyfoam.boundary.scaled_heat_flux_15 import ScaledHeatFlux15BC
+from pyfoam.boundary.scaled_heat_flux_16 import ScaledHeatFlux16BC
+from pyfoam.boundary.turbulent_kinetic_energy_inlet_12 import TurbulentKineticEnergyInlet12BC
+from pyfoam.boundary.turbulent_kinetic_energy_inlet_13 import TurbulentKineticEnergyInlet13BC
+from pyfoam.boundary.turbulent_kinetic_energy_inlet_14 import TurbulentKineticEnergyInlet14BC
+from pyfoam.boundary.turbulent_kinetic_energy_inlet_15 import TurbulentKineticEnergyInlet15BC
+from pyfoam.boundary.turbulent_kinetic_energy_inlet_16 import TurbulentKineticEnergyInlet16BC
+from pyfoam.boundary.non_conformal_couple_2 import NonConformalCouple2BC
+from pyfoam.boundary.non_conformal_couple_3 import NonConformalCouple3BC
+from pyfoam.boundary.non_conformal_couple_4 import NonConformalCouple4BC
+from pyfoam.boundary.non_conformal_couple_5 import NonConformalCouple5BC
+from pyfoam.boundary.non_conformal_couple_6 import NonConformalCouple6BC
+from pyfoam.boundary.non_conformal_couple_7 import NonConformalCouple7BC
+from pyfoam.boundary.non_conformal_couple_8 import NonConformalCouple8BC
+from pyfoam.boundary.non_conformal_couple_9 import NonConformalCouple9BC
+from pyfoam.boundary.non_conformal_couple_10 import NonConformalCouple10BC
+from pyfoam.boundary.processor_cyclic_2 import ProcessorCyclic2BC
+from pyfoam.boundary.processor_cyclic_3 import ProcessorCyclic3BC
+from pyfoam.boundary.processor_cyclic_4 import ProcessorCyclic4BC
+from pyfoam.boundary.processor_cyclic_5 import ProcessorCyclic5BC
+from pyfoam.boundary.processor_cyclic_6 import ProcessorCyclic6BC
+from pyfoam.boundary.processor_cyclic_7 import ProcessorCyclic7BC
+from pyfoam.boundary.processor_cyclic_8 import ProcessorCyclic8BC
+from pyfoam.boundary.processor_cyclic_9 import ProcessorCyclic9BC
+from pyfoam.boundary.processor_cyclic_10 import ProcessorCyclic10BC
+from pyfoam.boundary.wedge_bc_2 import Wedge2BC
+from pyfoam.boundary.wedge_bc_3 import Wedge3BC
+from pyfoam.boundary.wedge_bc_4 import Wedge4BC
+from pyfoam.boundary.wedge_bc_5 import Wedge5BC
+from pyfoam.boundary.wedge_bc_6 import Wedge6BC
+from pyfoam.boundary.wedge_bc_7 import Wedge7BC
+from pyfoam.boundary.wedge_bc_8 import Wedge8BC
+from pyfoam.boundary.wedge_bc_9 import Wedge9BC
+from pyfoam.boundary.wedge_bc_10 import Wedge10BC
+from pyfoam.boundary.slip_wall_bc_2 import Slip2BC
+from pyfoam.boundary.slip_wall_bc_3 import Slip3BC
+from pyfoam.boundary.slip_wall_bc_4 import Slip4BC
+from pyfoam.boundary.slip_wall_bc_5 import Slip5BC
+from pyfoam.boundary.slip_wall_bc_6 import Slip6BC
+from pyfoam.boundary.slip_wall_bc_7 import Slip7BC
+from pyfoam.boundary.slip_wall_bc_8 import Slip8BC
+from pyfoam.boundary.slip_wall_bc_9 import Slip9BC
+from pyfoam.boundary.slip_wall_bc_10 import Slip10BC
+from pyfoam.boundary.phase_mean_velocity_2 import PhaseMeanVelocity2BC
+from pyfoam.boundary.phase_mean_velocity_3 import PhaseMeanVelocity3BC
+from pyfoam.boundary.phase_mean_velocity_4 import PhaseMeanVelocity4BC
+from pyfoam.boundary.phase_mean_velocity_5 import PhaseMeanVelocity5BC
+from pyfoam.boundary.phase_mean_velocity_6 import PhaseMeanVelocity6BC
+from pyfoam.boundary.phase_mean_velocity_7 import PhaseMeanVelocity7BC
+from pyfoam.boundary.phase_mean_velocity_8 import PhaseMeanVelocity8BC
+from pyfoam.boundary.phase_mean_velocity_9 import PhaseMeanVelocity9BC
+from pyfoam.boundary.phase_mean_velocity_10 import PhaseMeanVelocity10BC
+from pyfoam.boundary.coupled_thermal_bc_2 import CoupledTemperature2BC
+from pyfoam.boundary.coupled_thermal_bc_3 import CoupledTemperature3BC
+from pyfoam.boundary.coupled_thermal_bc_4 import CoupledTemperature4BC
+from pyfoam.boundary.coupled_thermal_bc_5 import CoupledTemperature5BC
+from pyfoam.boundary.coupled_thermal_bc_6 import CoupledTemperature6BC
+from pyfoam.boundary.coupled_thermal_bc_7 import CoupledTemperature7BC
+from pyfoam.boundary.coupled_thermal_bc_8 import CoupledTemperature8BC
+from pyfoam.boundary.coupled_thermal_bc_9 import CoupledTemperature9BC
+from pyfoam.boundary.coupled_thermal_bc_10 import CoupledTemperature10BC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -869,4 +984,117 @@ __all__ = [
     "TurbulentFrequencyInlet13BC",
     "OutletPhaseMeanVelocity7BC",
     "ScaledHeatFlux7BC",
+    "CoupledTemperature10BC",
+    "CoupledTemperature9BC",
+    "CoupledTemperature8BC",
+    "CoupledTemperature7BC",
+    "CoupledTemperature6BC",
+    "CoupledTemperature5BC",
+    "CoupledTemperature4BC",
+    "CoupledTemperature3BC",
+    "CoupledTemperature2BC",
+    "PhaseMeanVelocity10BC",
+    "PhaseMeanVelocity9BC",
+    "PhaseMeanVelocity8BC",
+    "PhaseMeanVelocity7BC",
+    "PhaseMeanVelocity6BC",
+    "PhaseMeanVelocity5BC",
+    "PhaseMeanVelocity4BC",
+    "PhaseMeanVelocity3BC",
+    "PhaseMeanVelocity2BC",
+    "Slip10BC",
+    "Slip9BC",
+    "Slip8BC",
+    "Slip7BC",
+    "Slip6BC",
+    "Slip5BC",
+    "Slip4BC",
+    "Slip3BC",
+    "Slip2BC",
+    "Wedge10BC",
+    "Wedge9BC",
+    "Wedge8BC",
+    "Wedge7BC",
+    "Wedge6BC",
+    "Wedge5BC",
+    "Wedge4BC",
+    "Wedge3BC",
+    "Wedge2BC",
+    "ProcessorCyclic10BC",
+    "ProcessorCyclic9BC",
+    "ProcessorCyclic8BC",
+    "ProcessorCyclic7BC",
+    "ProcessorCyclic6BC",
+    "ProcessorCyclic5BC",
+    "ProcessorCyclic4BC",
+    "ProcessorCyclic3BC",
+    "ProcessorCyclic2BC",
+    "NonConformalCouple10BC",
+    "NonConformalCouple9BC",
+    "NonConformalCouple8BC",
+    "NonConformalCouple7BC",
+    "NonConformalCouple6BC",
+    "NonConformalCouple5BC",
+    "NonConformalCouple4BC",
+    "NonConformalCouple3BC",
+    "NonConformalCouple2BC",
+    "TurbulentKineticEnergyInlet16BC",
+    "TurbulentKineticEnergyInlet15BC",
+    "TurbulentKineticEnergyInlet14BC",
+    "TurbulentKineticEnergyInlet13BC",
+    "TurbulentKineticEnergyInlet12BC",
+    "ScaledHeatFlux16BC",
+    "ScaledHeatFlux15BC",
+    "ScaledHeatFlux14BC",
+    "ScaledHeatFlux13BC",
+    "ScaledHeatFlux12BC",
+    "ScaledHeatFlux11BC",
+    "ScaledHeatFlux10BC",
+    "ScaledHeatFlux9BC",
+    "ScaledHeatFlux8BC",
+    "OutletPhaseMeanVelocity16BC",
+    "OutletPhaseMeanVelocity15BC",
+    "OutletPhaseMeanVelocity14BC",
+    "OutletPhaseMeanVelocity13BC",
+    "OutletPhaseMeanVelocity12BC",
+    "OutletPhaseMeanVelocity11BC",
+    "OutletPhaseMeanVelocity10BC",
+    "OutletPhaseMeanVelocity9BC",
+    "OutletPhaseMeanVelocity8BC",
+    "TurbulentFrequencyInlet16BC",
+    "TurbulentFrequencyInlet15BC",
+    "TurbulentFrequencyInlet14BC",
+    "TurbulentDissipationInlet16BC",
+    "TurbulentDissipationInlet15BC",
+    "TurbulentDissipationInlet14BC",
+    "TurbulentLengthScaleInlet16BC",
+    "TurbulentLengthScaleInlet15BC",
+    "TurbulentLengthScaleInlet14BC",
+    "TurbulentLengthScaleInlet13BC",
+    "TurbulentLengthScaleInlet12BC",
+    "TurbulentLengthScaleInlet11BC",
+    "TurbulentViscosityInlet16BC",
+    "TurbulentViscosityInlet15BC",
+    "TurbulentViscosityInlet14BC",
+    "TurbulentViscosityInlet13BC",
+    "TurbulentViscosityInlet12BC",
+    "TurbulentViscosityInlet11BC",
+    "TurbulentIntensityInlet16BC",
+    "TurbulentIntensityInlet15BC",
+    "TurbulentIntensityInlet14BC",
+    "TurbulentIntensityInlet13BC",
+    "TurbulentIntensityInlet12BC",
+    "TurbulentIntensityInlet11BC",
+    "PressureWaveTransmissive16BC",
+    "PressureWaveTransmissive15BC",
+    "PressureWaveTransmissive14BC",
+    "PressureWaveTransmissive13BC",
+    "PressureWaveTransmissive12BC",
+    "PressureWaveTransmissive11BC",
+    "MappedFlowRate16BC",
+    "MappedFlowRate15BC",
+    "MappedFlowRate14BC",
+    "MappedFlowRate13BC",
+    "MappedFlowRate12BC",
+    "MappedFlowRate11BC",
 ]
