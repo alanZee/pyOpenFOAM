@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import logging
 import math
+from collections import deque
 from dataclasses import dataclass, field as dc_field
 from typing import Dict, List, Optional
 

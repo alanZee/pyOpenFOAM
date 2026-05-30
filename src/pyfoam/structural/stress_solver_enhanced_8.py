@@ -210,7 +210,8 @@ def _gauss_points_1d(n_points: int) -> List[float]:
             0.5 + 0.5 * math.sqrt(3.0 / 5.0),
         ]
     else:
-        return [0.5]
+        # 等间距点作为回退
+        return [i / max(n_points - 1, 1) for i in range(n_points)]
 
 
 # ---------------------------------------------------------------------------

@@ -399,7 +399,9 @@ class EnhancedDisplacementSolver8(EnhancedDisplacementSolver7):
             for m_idx in range(n_materials):
                 # 使用 softmax 归一化
                 grad = sensitivity * E_tensor[m_idx]
-                mat_dist[:, m_idx] += 0.1 * grad
+                # 限幅更新防止数值爆炸
+                update = torch.clamp(0.01 * grad, min=-0.1, max=0.1)
+                mat_dist[:, m_idx] = torch.clamp(mat_dist[:, m_idx] + update, min=1e-10)
 
             # 归一化确保总和 = 1
             mat_sum = mat_dist.sum(dim=1, keepdim=True).clamp(min=1e-30)
