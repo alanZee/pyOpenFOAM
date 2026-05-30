@@ -559,6 +559,37 @@ from pyfoam.multiphase.turbulence_damping_enhanced_11 import (
     AdaptiveMonitoringDamping,
 )
 
+# Phase 20: Enhanced incompressible N-phase VOF v11
+from pyfoam.multiphase.incompressible_multiphase_vof_enhanced_10 import (
+    IncompressibleMultiphaseVoFEnhanced10,
+)
+
+# Phase 20: Enhanced compressible N-phase VOF v11
+from pyfoam.multiphase.compressible_multiphase_vof_enhanced_10 import (
+    CompressibleMultiphaseVoFEnhanced10,
+)
+
+# Phase 20: Enhanced multicomponent mixture v11
+from pyfoam.multiphase.multicomponent_mixture_enhanced_10 import (
+    MulticomponentMixtureEnhanced10,
+)
+
+# Phase 20: Enhanced interfacial area v12
+from pyfoam.multiphase.interfacial_area_enhanced_11 import (
+    InterfacialArea11Model,
+    DynamicSauterDiameterModel,
+    PBECoupledTransportModel,
+    BudgetTrackingModel,
+)
+
+# Phase 20: Enhanced turbulence damping v13
+from pyfoam.multiphase.turbulence_damping_enhanced_12 import (
+    TurbulenceDamping12EnhancedModel,
+    InterfaceNormalDamping,
+    TKEBudgetDamping,
+    TimeAveragedDamping,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -817,4 +848,20 @@ __all__ = [
     "GradientAwareDamping",
     "ScaleDependentDamping",
     "AdaptiveMonitoringDamping",
+    # Phase 20: Enhanced incompressible N-phase VOF v11
+    "IncompressibleMultiphaseVoFEnhanced10",
+    # Phase 20: Enhanced compressible N-phase VOF v11
+    "CompressibleMultiphaseVoFEnhanced10",
+    # Phase 20: Enhanced multicomponent mixture v11
+    "MulticomponentMixtureEnhanced10",
+    # Phase 20: Enhanced interfacial area v12
+    "InterfacialArea11Model",
+    "DynamicSauterDiameterModel",
+    "PBECoupledTransportModel",
+    "BudgetTrackingModel",
+    # Phase 20: Enhanced turbulence damping v13
+    "TurbulenceDamping12EnhancedModel",
+    "InterfaceNormalDamping",
+    "TKEBudgetDamping",
+    "TimeAveragedDamping",
 ]

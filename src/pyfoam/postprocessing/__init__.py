@@ -334,6 +334,33 @@ from pyfoam.postprocessing.y_plus_enhanced_10 import (
     MeshConvergenceIndicator,
 )
 
+# Phase 20: Enhanced postprocessing models
+from pyfoam.postprocessing.field_min_max_enhanced_11 import (
+    FieldMinMaxEnhanced11,
+    PersistenceExtreme,
+    GradientAtExtreme,
+)
+from pyfoam.postprocessing.probes_enhanced_11 import (
+    ProbesEnhanced11,
+    TemporalCoherence,
+    ProbeCluster,
+)
+from pyfoam.postprocessing.forces_enhanced_10 import (
+    ForcesEnhanced10,
+    SpectralMoment,
+    SteadyStateIndicator,
+)
+from pyfoam.postprocessing.wall_shear_stress_enhanced_10 import (
+    WallShearStressEnhanced10,
+    ReynoldsAnalogyResult,
+    FrictionDecomposition,
+)
+from pyfoam.postprocessing.y_plus_enhanced_11 import (
+    YPlusEnhanced11,
+    WallHeatTransferCoeff,
+    PatchRanking,
+)
+
 __all__ = [
     # Framework
     "FunctionObject",
@@ -537,4 +564,20 @@ __all__ = [
     "YPlusEnhanced10",
     "WallFunctionConsistency",
     "MeshConvergenceIndicator",
+    # Phase 20: Enhanced postprocessing models
+    "FieldMinMaxEnhanced11",
+    "PersistenceExtreme",
+    "GradientAtExtreme",
+    "ProbesEnhanced11",
+    "TemporalCoherence",
+    "ProbeCluster",
+    "ForcesEnhanced10",
+    "SpectralMoment",
+    "SteadyStateIndicator",
+    "WallShearStressEnhanced10",
+    "ReynoldsAnalogyResult",
+    "FrictionDecomposition",
+    "YPlusEnhanced11",
+    "WallHeatTransferCoeff",
+    "PatchRanking",
 ]

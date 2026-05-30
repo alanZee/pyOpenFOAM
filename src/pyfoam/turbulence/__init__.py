@@ -457,6 +457,14 @@ from pyfoam.turbulence.spalart_allmaras_enhanced_9 import SpalartAllmarasEnhance
 from pyfoam.turbulence.les_model_enhanced_9 import AnisotropicMDv2, SpectralVanishingViscosity, HybridSGS
 from pyfoam.turbulence.wall_treatment_enhanced_8 import EnhancedWallTreatment8, ConjugateWallFunction
 
+# Enhanced RANS/LES models (Phase 20)
+from pyfoam.turbulence.k_epsilon_enhanced_10 import KEpsilonEnhanced10Model, KEpsilonEnhanced10Constants
+from pyfoam.turbulence.k_omega_enhanced_10 import KOmegaEnhanced10Model, KOmegaEnhanced10Constants
+from pyfoam.turbulence.k_omega_sst_enhanced_10 import KOmegaSSTEnhanced10Model, KOmegaSSTEnhanced10Constants
+from pyfoam.turbulence.spalart_allmaras_enhanced_10 import SpalartAllmarasEnhanced10Model, SpalartAllmarasEnhanced10Constants
+from pyfoam.turbulence.les_model_enhanced_10 import LocalizedDynamicSGS, TensorDiffusivitySGS, WallAdaptiveBlendedSGS
+from pyfoam.turbulence.wall_treatment_enhanced_9 import EnhancedWallTreatment9, ThermalWallFunction
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -724,4 +732,18 @@ __all__ = [
     "HybridSGS",
     "EnhancedWallTreatment8",
     "ConjugateWallFunction",
+    # Enhanced RANS/LES models (Phase 20)
+    "KEpsilonEnhanced10Model",
+    "KEpsilonEnhanced10Constants",
+    "KOmegaEnhanced10Model",
+    "KOmegaEnhanced10Constants",
+    "KOmegaSSTEnhanced10Model",
+    "KOmegaSSTEnhanced10Constants",
+    "SpalartAllmarasEnhanced10Model",
+    "SpalartAllmarasEnhanced10Constants",
+    "LocalizedDynamicSGS",
+    "TensorDiffusivitySGS",
+    "WallAdaptiveBlendedSGS",
+    "EnhancedWallTreatment9",
+    "ThermalWallFunction",
 ]
