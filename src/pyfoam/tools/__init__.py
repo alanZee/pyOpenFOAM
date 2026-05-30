@@ -143,6 +143,18 @@ from pyfoam.tools.set_waves_enhanced_7 import EnhancedWave7Properties, EnhancedW
 from pyfoam.tools.set_atm_boundary_layer_enhanced_7 import EnhancedABL7Properties, EnhancedABL7Result, set_atm_boundary_layer_enhanced_7
 from pyfoam.tools.apply_boundary_layer_enhanced_7 import EnhancedBL7Properties, EnhancedBL7Result, apply_boundary_layer_enhanced_7
 from pyfoam.tools.foam_to_ensight_enhanced_8 import EnSightV8Result, foam_to_ensight_enhanced_8
+from pyfoam.tools.merge_meshes_enhanced_8 import MergeEnhanced8Result, merge_meshes_enhanced_8
+from pyfoam.tools.stitch_mesh_enhanced_8 import StitchEnhanced8Result, stitch_mesh_enhanced_8
+from pyfoam.tools.create_baffles_enhanced_8 import BaffleEnhanced8Result, create_baffles_enhanced_8
+from pyfoam.tools.create_patch_enhanced_8 import PatchEnhanced8Result, create_patch_enhanced_8
+from pyfoam.tools.surface_features_enhanced_8 import SurfaceFeaturesEnhanced8Result, surface_features_enhanced_8
+from pyfoam.tools.surface_convert_enhanced_8 import ConvertEnhanced8Result, surface_convert_enhanced_8
+from pyfoam.tools.surface_check_enhanced_8 import SurfaceCheckEnhanced8Result, surface_check_enhanced_8
+from pyfoam.tools.surface_auto_patch_enhanced_8 import SurfaceAutoPatchEnhanced8Result, surface_auto_patch_enhanced_8
+from pyfoam.tools.set_waves_enhanced_8 import EnhancedWave8Properties, EnhancedWave8Result, set_waves_enhanced_8
+from pyfoam.tools.set_atm_boundary_layer_enhanced_8 import EnhancedABL8Properties, EnhancedABL8Result, set_atm_boundary_layer_enhanced_8
+from pyfoam.tools.apply_boundary_layer_enhanced_8 import EnhancedBL8Properties, EnhancedBL8Result, apply_boundary_layer_enhanced_8
+from pyfoam.tools.foam_to_ensight_enhanced_9 import EnSightV9Result, foam_to_ensight_enhanced_9
 __all__ = [
     "box_turb", "CheckMeshResult", "check_mesh", "CellQuality", "QualityReport", "check_mesh_quality",
     "BoxRegion", "CylinderRegion", "set_fields",
@@ -266,4 +278,16 @@ __all__ = [
     "EnhancedABL7Properties", "EnhancedABL7Result", "set_atm_boundary_layer_enhanced_7",
     "EnhancedBL7Properties", "EnhancedBL7Result", "apply_boundary_layer_enhanced_7",
     "EnSightV8Result", "foam_to_ensight_enhanced_8",
+    "MergeEnhanced8Result", "merge_meshes_enhanced_8",
+    "StitchEnhanced8Result", "stitch_mesh_enhanced_8",
+    "BaffleEnhanced8Result", "create_baffles_enhanced_8",
+    "PatchEnhanced8Result", "create_patch_enhanced_8",
+    "SurfaceFeaturesEnhanced8Result", "surface_features_enhanced_8",
+    "ConvertEnhanced8Result", "surface_convert_enhanced_8",
+    "SurfaceCheckEnhanced8Result", "surface_check_enhanced_8",
+    "SurfaceAutoPatchEnhanced8Result", "surface_auto_patch_enhanced_8",
+    "EnhancedWave8Properties", "EnhancedWave8Result", "set_waves_enhanced_8",
+    "EnhancedABL8Properties", "EnhancedABL8Result", "set_atm_boundary_layer_enhanced_8",
+    "EnhancedBL8Properties", "EnhancedBL8Result", "apply_boundary_layer_enhanced_8",
+    "EnSightV9Result", "foam_to_ensight_enhanced_9",
 ]
