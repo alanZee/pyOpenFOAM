@@ -36,6 +36,11 @@ Provides:
 - :class:`ForcesEnhanced3` — enhanced forces v3 with moment coefficients and spectral analysis
 - :class:`WallShearStressEnhanced3` — enhanced wall shear stress v3 with adaptive near-wall treatment
 - :class:`YPlusEnhanced4` — enhanced y+ v4 with improved wall distance and dt suggestion
+- :class:`FieldMinMaxEnhanced5` — enhanced field min/max v5 with anomaly detection and trend analysis
+- :class:`ProbesEnhanced5` — enhanced probes v5 with wavelet analysis and signal quality
+- :class:`ForcesEnhanced4` — enhanced forces v4 with aeroacoustic sources and unsteady stats
+- :class:`WallShearStressEnhanced4` — enhanced wall shear stress v4 with quadrant analysis and roughness
+- :class:`YPlusEnhanced5` — enhanced y+ v5 with AMR suggestions and budget analysis
 
 All function objects follow OpenFOAM's function object API and can be
 configured via dictionary entries in ``system/controlDict``.
@@ -141,6 +146,35 @@ from pyfoam.postprocessing.y_plus_enhanced_4 import (
     TimeStepSuggestion,
 )
 
+# Phase 14: Enhanced postprocessing models
+from pyfoam.postprocessing.field_min_max_enhanced_5 import (
+    FieldMinMaxEnhanced5,
+    AnomalyEvent,
+    TrendAnalysis,
+)
+from pyfoam.postprocessing.probes_enhanced_5 import (
+    ProbesEnhanced5,
+    WaveletResult,
+    SignalQuality,
+    AutoPlacementResult,
+)
+from pyfoam.postprocessing.forces_enhanced_4 import (
+    ForcesEnhanced4,
+    UnsteadyForceStats,
+    AeroacousticSource,
+)
+from pyfoam.postprocessing.wall_shear_stress_enhanced_4 import (
+    WallShearStressEnhanced4,
+    QuadrantEvent,
+    SpatialCorrelation,
+)
+from pyfoam.postprocessing.y_plus_enhanced_5 import (
+    YPlusEnhanced5,
+    AMRSuggestion,
+    YPlusBudget,
+    WallModelConsistency,
+)
+
 __all__ = [
     # Framework
     "FunctionObject",
@@ -239,4 +273,22 @@ __all__ = [
     "YPlusEnhanced4",
     "WallDistanceMetrics",
     "TimeStepSuggestion",
+    # Phase 14: Enhanced postprocessing v5
+    "FieldMinMaxEnhanced5",
+    "AnomalyEvent",
+    "TrendAnalysis",
+    "ProbesEnhanced5",
+    "WaveletResult",
+    "SignalQuality",
+    "AutoPlacementResult",
+    "ForcesEnhanced4",
+    "UnsteadyForceStats",
+    "AeroacousticSource",
+    "WallShearStressEnhanced4",
+    "QuadrantEvent",
+    "SpatialCorrelation",
+    "YPlusEnhanced5",
+    "AMRSuggestion",
+    "YPlusBudget",
+    "WallModelConsistency",
 ]
