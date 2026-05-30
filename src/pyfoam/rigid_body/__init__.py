@@ -77,6 +77,23 @@ from pyfoam.rigid_body.restraints_enhanced_3 import (
     ImpactRestraint,
     WindRestraint,
 )
+from pyfoam.rigid_body.six_dof_solver_enhanced_4 import (
+    EnhancedSixDoFSolver4,
+    ForceHistoryEntry,
+    StabilityInfo,
+)
+from pyfoam.rigid_body.joints_enhanced_4 import (
+    ElasticJoint,
+    ElectricalJoint,
+    TelescopicJoint,
+    PassiveJoint,
+)
+from pyfoam.rigid_body.restraints_enhanced_4 import (
+    AerodynamicRestraint,
+    ElasticFoundationRestraint,
+    PressureRestraint,
+    CentripetalRestraint,
+)
 
 __all__ = [
     "SixDoFSolver",
@@ -127,4 +144,16 @@ __all__ = [
     "BouyancyRestraint",
     "ImpactRestraint",
     "WindRestraint",
+    # V4 enhanced
+    "EnhancedSixDoFSolver4",
+    "ForceHistoryEntry",
+    "StabilityInfo",
+    "ElasticJoint",
+    "ElectricalJoint",
+    "TelescopicJoint",
+    "PassiveJoint",
+    "AerodynamicRestraint",
+    "ElasticFoundationRestraint",
+    "PressureRestraint",
+    "CentripetalRestraint",
 ]

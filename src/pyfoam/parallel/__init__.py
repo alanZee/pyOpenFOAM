@@ -91,6 +91,22 @@ from pyfoam.parallel.processor_patch_enhanced_4 import (
     EnhancedHaloExchange4,
     HigherOrderInterpolator,
 )
+from pyfoam.parallel.reconstruct_par_enhanced_5 import (
+    ReconstructParEnhanced5,
+    V5ReconstructResult,
+    SmoothingConfig,
+)
+from pyfoam.parallel.redistribute_par_enhanced_5 import (
+    RedistributeParEnhanced5,
+    V5RedistributeResult,
+    MigrationPlan,
+    CostEstimator,
+)
+from pyfoam.parallel.processor_patch_enhanced_5 import (
+    CoarsenablePatch5,
+    EnhancedHaloExchange5,
+    CompressionStats,
+)
 
 __all__ = [
     # Decomposition
@@ -166,4 +182,17 @@ __all__ = [
     "NonConformalPatch4",
     "EnhancedHaloExchange4",
     "HigherOrderInterpolator",
+    # V5 enhanced reconstruction
+    "ReconstructParEnhanced5",
+    "V5ReconstructResult",
+    "SmoothingConfig",
+    # V5 enhanced redistribution
+    "RedistributeParEnhanced5",
+    "V5RedistributeResult",
+    "MigrationPlan",
+    "CostEstimator",
+    # V5 enhanced processor patches
+    "CoarsenablePatch5",
+    "EnhancedHaloExchange5",
+    "CompressionStats",
 ]

@@ -57,6 +57,21 @@ from pyfoam.structural.displacement_solver_enhanced_3 import (
     EnhancedDisplacementSolver3,
     LargeDeformationResult,
 )
+from pyfoam.structural.elastic_model_enhanced_4 import (
+    GursonDamageModel,
+    CrystalPlasticityModel,
+    PhaseFieldFractureModel,
+)
+from pyfoam.structural.stress_solver_enhanced_4 import (
+    EnhancedStressSolver4,
+    SmoothedStressResult,
+    ThermalCoupling,
+)
+from pyfoam.structural.displacement_solver_enhanced_4 import (
+    EnhancedDisplacementSolver4,
+    ContactResult,
+    RefinementIndicator,
+)
 
 __all__ = [
     "LinearElasticModel",
@@ -88,4 +103,14 @@ __all__ = [
     "NonlinearStressResult",
     "EnhancedDisplacementSolver3",
     "LargeDeformationResult",
+    # V4 enhanced
+    "GursonDamageModel",
+    "CrystalPlasticityModel",
+    "PhaseFieldFractureModel",
+    "EnhancedStressSolver4",
+    "SmoothedStressResult",
+    "ThermalCoupling",
+    "EnhancedDisplacementSolver4",
+    "ContactResult",
+    "RefinementIndicator",
 ]
