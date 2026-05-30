@@ -129,6 +129,24 @@ from pyfoam.rigid_body.restraints_enhanced_6 import (
     ThermalExpansionRestraint,
     CreepRestraint,
 )
+from pyfoam.rigid_body.six_dof_solver_enhanced_7 import (
+    EnhancedSixDoFSolver7,
+    ContactCouplingConfig,
+    SensorModel,
+    SLERPConfig,
+)
+from pyfoam.rigid_body.joints_enhanced_7 import (
+    ShapeMemoryAlloyJoint,
+    HydraulicJoint,
+    SuperelasticJoint,
+    TendonDrivenJoint,
+)
+from pyfoam.rigid_body.restraints_enhanced_7 import (
+    MagnetorheologicalRestraint,
+    FrictionPendulumRestraint,
+    ParticleDamperRestraint,
+    NegativeStiffnessRestraint,
+)
 
 __all__ = [
     "SixDoFSolver",
@@ -216,4 +234,17 @@ __all__ = [
     "BistableSpringRestraint",
     "ThermalExpansionRestraint",
     "CreepRestraint",
+    # V7 enhanced
+    "EnhancedSixDoFSolver7",
+    "ContactCouplingConfig",
+    "SensorModel",
+    "SLERPConfig",
+    "ShapeMemoryAlloyJoint",
+    "HydraulicJoint",
+    "SuperelasticJoint",
+    "TendonDrivenJoint",
+    "MagnetorheologicalRestraint",
+    "FrictionPendulumRestraint",
+    "ParticleDamperRestraint",
+    "NegativeStiffnessRestraint",
 ]

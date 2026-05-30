@@ -105,6 +105,23 @@ from pyfoam.structural.displacement_solver_enhanced_6 import (
     ContactResult6,
     GeometricNonlinearResult,
 )
+from pyfoam.structural.elastic_model_enhanced_7 import (
+    ThermomechanicalCouplingModel,
+    PorousElasticModel,
+    FatigueDamageModel,
+)
+from pyfoam.structural.stress_solver_enhanced_7 import (
+    EnhancedStressSolver7,
+    XFEMResult,
+    ThermalStressResult,
+    HomogenisationResult,
+)
+from pyfoam.structural.displacement_solver_enhanced_7 import (
+    EnhancedDisplacementSolver7,
+    TopologyResult,
+    RefinementResult7,
+    SubstructureResult,
+)
 
 __all__ = [
     "LinearElasticModel",
@@ -169,4 +186,16 @@ __all__ = [
     "BucklingResult",
     "ContactResult6",
     "GeometricNonlinearResult",
+    # V7 enhanced
+    "ThermomechanicalCouplingModel",
+    "PorousElasticModel",
+    "FatigueDamageModel",
+    "EnhancedStressSolver7",
+    "XFEMResult",
+    "ThermalStressResult",
+    "HomogenisationResult",
+    "EnhancedDisplacementSolver7",
+    "TopologyResult",
+    "RefinementResult7",
+    "SubstructureResult",
 ]

@@ -115,6 +115,16 @@ Provides:
 - :class:`LatticeGasEOS` — Lattice-gas EOS for confined fluids
 - :class:`CPASAFT` — CPA-SAFT hybrid EOS
 - :class:`TemperatureDependentPR` — PR EOS with T-dependent binary interaction parameter
+
+**Phase 17 — Enhanced v7/v8 Models:**
+- :class:`JanafMultiThermoEnhanced8` — JANAF v8 with Gibbs minimisation, S_ref(T) interpolation, mixture entropy
+- :class:`TabulatedTransportEnhanced7` — tabulated transport v7 with multi-variable lookup, pressure correction, data smoothing
+- :class:`WilkeTransportEnhanced7` — Wilke v7 with adaptive LFU caching, composition monitoring
+- :class:`ConstantTransportEnhanced7` — constant transport v7 with runtime viscosity switching, multi-region, thermal diffusivity
+- :class:`SutherlandTransportEnhanced7` — Sutherland v7 with adaptive blending, mass-weighted mixing, viscosity diagnostics
+- :class:`SRKVolumeTranslated` — SRK EOS with volume translation for liquid density
+- :class:`MultiFluidDeparture` — Multi-fluid EOS with departure function
+- :class:`ExtendedCSPShapeFactors` — Extended Corresponding States with shape factors
 """
 
 from pyfoam.thermophysical.equation_of_state import (
@@ -242,6 +252,18 @@ from pyfoam.thermophysical.equation_of_state_enhanced_5 import (
     LatticeGasEOS,
     CPASAFT,
     TemperatureDependentPR,
+)
+
+# Phase 17: Enhanced models v7/v8
+from pyfoam.thermophysical.janaf_multi_thermo_enhanced_8 import JanafMultiThermoEnhanced8
+from pyfoam.thermophysical.tabulated_transport_enhanced_7 import TabulatedTransportEnhanced7
+from pyfoam.thermophysical.wilke_transport_enhanced_7 import WilkeTransportEnhanced7
+from pyfoam.thermophysical.constant_transport_enhanced_7 import ConstantTransportEnhanced7
+from pyfoam.thermophysical.sutherland_transport_enhanced_7 import SutherlandTransportEnhanced7
+from pyfoam.thermophysical.equation_of_state_enhanced_6 import (
+    SRKVolumeTranslated,
+    MultiFluidDeparture,
+    ExtendedCSPShapeFactors,
 )
 
 __all__ = [

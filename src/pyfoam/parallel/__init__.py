@@ -145,6 +145,27 @@ from pyfoam.parallel.processor_patch_enhanced_7 import (
     AsyncScheduleConfig,
     PrefetchStats,
 )
+from pyfoam.parallel.reconstruct_par_enhanced_8 import (
+    ReconstructParEnhanced8,
+    V8ReconstructResult,
+    StreamingConfig,
+    EntropyConfig,
+    FieldCorrelation,
+)
+from pyfoam.parallel.redistribute_par_enhanced_8 import (
+    RedistributeParEnhanced8,
+    V8RedistributeResult,
+    MultiObjectiveConfig,
+    PartitionFingerprint,
+    IncrementalPlan,
+)
+from pyfoam.parallel.processor_patch_enhanced_8 import (
+    SparseAwarePatch8,
+    EnhancedHaloExchange8,
+    BatchedExchangeConfig,
+    LatencyProfile,
+    FaultToleranceConfig,
+)
 
 __all__ = [
     # Decomposition
@@ -265,4 +286,22 @@ __all__ = [
     "EnhancedHaloExchange7",
     "AsyncScheduleConfig",
     "PrefetchStats",
+    # V8 enhanced reconstruction
+    "ReconstructParEnhanced8",
+    "V8ReconstructResult",
+    "StreamingConfig",
+    "EntropyConfig",
+    "FieldCorrelation",
+    # V8 enhanced redistribution
+    "RedistributeParEnhanced8",
+    "V8RedistributeResult",
+    "MultiObjectiveConfig",
+    "PartitionFingerprint",
+    "IncrementalPlan",
+    # V8 enhanced processor patches
+    "SparseAwarePatch8",
+    "EnhancedHaloExchange8",
+    "BatchedExchangeConfig",
+    "LatencyProfile",
+    "FaultToleranceConfig",
 ]
