@@ -252,7 +252,7 @@ class RhoPimpleFoamEnhanced7(RhoPimpleFoamEnhanced6):
         # Supersonic: use total energy form (more accurate)
         mask_subsonic = Ma < self.mach_switch_threshold
 
-        Cv = R_spec / (gamma - 1.0)
+        Cv = torch.tensor(R_spec / (gamma - 1.0), dtype=T.dtype, device=T.device)
         KE = 0.5 * U_mag.pow(2)
 
         # Enthalpy temperature (without kinetic energy)

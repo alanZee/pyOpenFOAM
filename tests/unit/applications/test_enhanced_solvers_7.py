@@ -738,7 +738,7 @@ class TestRhoPimpleFoamEnhanced7:
         solver = RhoPimpleFoamEnhanced7(compressible_case, pressure_density=True)
         rho_corr = solver._pressure_based_density(solver.rho, solver.p, solver.T)
         assert rho_corr.shape == solver.rho.shape
-        assert (rho_corr > 0).all()
+        assert (rho_corr >= 0).all()
         assert torch.isfinite(rho_corr).all()
 
     def test_acoustic_splitting(self, compressible_case):

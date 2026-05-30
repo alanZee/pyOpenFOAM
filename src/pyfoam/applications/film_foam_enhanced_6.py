@@ -144,7 +144,8 @@ class FilmFoamEnhanced6(FilmFoamEnhanced5):
         h_ratio = (h / h_ref).clamp(min=0.01, max=100.0)
 
         # EHD pressure (simplified)
-        p_ehd = eps_0 * (eps_r - 1.0) * E.pow(2) / (2.0 * (1.0 + (eps_r - 1.0) * h_ratio).pow(2))
+        E_tensor = torch.tensor(E, dtype=h.dtype, device=h.device) if isinstance(E, (int, float)) else E
+        p_ehd = eps_0 * (eps_r - 1.0) * E_tensor.pow(2) / (2.0 * (1.0 + (eps_r - 1.0) * h_ratio).pow(2))
 
         return p_ehd
 
