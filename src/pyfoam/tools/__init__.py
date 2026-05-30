@@ -242,6 +242,57 @@ from pyfoam.tools.renumber_mesh_enhanced_2 import RenumberEnhanced2Result, renum
 from pyfoam.tools.renumber_mesh_enhanced_3 import RenumberEnhanced3Result, renumber_mesh_enhanced_3
 from pyfoam.tools.renumber_mesh_enhanced_4 import RenumberEnhanced4Result, renumber_mesh_enhanced_4
 from pyfoam.tools.renumber_mesh_enhanced_5 import RenumberEnhanced5Result, renumber_mesh_enhanced_5
+# Batch 3: enhanced v6-v10 for batch 2 tools
+from pyfoam.tools.check_mesh_enhanced_6 import CheckMeshEnhanced6Result, check_mesh_enhanced_6
+from pyfoam.tools.check_mesh_enhanced_7 import CheckMeshEnhanced7Result, check_mesh_enhanced_7
+from pyfoam.tools.check_mesh_enhanced_8 import CheckMeshEnhanced8Result, check_mesh_enhanced_8
+from pyfoam.tools.check_mesh_enhanced_9 import CheckMeshEnhanced9Result, check_mesh_enhanced_9
+from pyfoam.tools.check_mesh_enhanced_10 import CheckMeshEnhanced10Result, check_mesh_enhanced_10
+from pyfoam.tools.transform_points_enhanced_6 import TransformEnhanced6Result, transform_points_enhanced_6
+from pyfoam.tools.transform_points_enhanced_7 import TransformEnhanced7Result, transform_points_enhanced_7
+from pyfoam.tools.transform_points_enhanced_8 import TransformEnhanced8Result, transform_points_enhanced_8
+from pyfoam.tools.transform_points_enhanced_9 import TransformEnhanced9Result, transform_points_enhanced_9
+from pyfoam.tools.transform_points_enhanced_10 import TransformEnhanced10Result, transform_points_enhanced_10
+from pyfoam.tools.set_fields_enhanced_6 import SetFieldsEnhanced6Result, set_fields_enhanced_6
+from pyfoam.tools.set_fields_enhanced_7 import SetFieldsEnhanced7Result, set_fields_enhanced_7
+from pyfoam.tools.set_fields_enhanced_8 import SetFieldsEnhanced8Result, set_fields_enhanced_8
+from pyfoam.tools.set_fields_enhanced_9 import SetFieldsEnhanced9Result, set_fields_enhanced_9
+from pyfoam.tools.set_fields_enhanced_10 import SetFieldsEnhanced10Result, set_fields_enhanced_10
+from pyfoam.tools.map_fields_enhanced_6 import MapFieldsEnhanced6Result, map_fields_enhanced_6
+from pyfoam.tools.map_fields_enhanced_7 import MapFieldsEnhanced7Result, map_fields_enhanced_7
+from pyfoam.tools.map_fields_enhanced_8 import MapFieldsEnhanced8Result, map_fields_enhanced_8
+from pyfoam.tools.map_fields_enhanced_9 import MapFieldsEnhanced9Result, map_fields_enhanced_9
+from pyfoam.tools.map_fields_enhanced_10 import MapFieldsEnhanced10Result, map_fields_enhanced_10
+from pyfoam.tools.decompose_par_enhanced_6 import DecomposeParEnhanced6Result, decompose_par_enhanced_6
+from pyfoam.tools.decompose_par_enhanced_7 import DecomposeParEnhanced7Result, decompose_par_enhanced_7
+from pyfoam.tools.decompose_par_enhanced_8 import DecomposeParEnhanced8Result, decompose_par_enhanced_8
+from pyfoam.tools.decompose_par_enhanced_9 import DecomposeParEnhanced9Result, decompose_par_enhanced_9
+from pyfoam.tools.decompose_par_enhanced_10 import DecomposeParEnhanced10Result, decompose_par_enhanced_10
+from pyfoam.tools.foam_dictionary_enhanced_6 import FoamDictEnhanced6Result, foam_dictionary_enhanced_6
+from pyfoam.tools.foam_dictionary_enhanced_7 import FoamDictEnhanced7Result, foam_dictionary_enhanced_7
+from pyfoam.tools.foam_dictionary_enhanced_8 import FoamDictEnhanced8Result, foam_dictionary_enhanced_8
+from pyfoam.tools.foam_dictionary_enhanced_9 import FoamDictEnhanced9Result, foam_dictionary_enhanced_9
+from pyfoam.tools.foam_dictionary_enhanced_10 import FoamDictEnhanced10Result, foam_dictionary_enhanced_10
+from pyfoam.tools.foam_to_vtk_enhanced_6 import VtkEnhanced6Result, foam_to_vtk_enhanced_6
+from pyfoam.tools.foam_to_vtk_enhanced_7 import VtkEnhanced7Result, foam_to_vtk_enhanced_7
+from pyfoam.tools.foam_to_vtk_enhanced_8 import VtkEnhanced8Result, foam_to_vtk_enhanced_8
+from pyfoam.tools.foam_to_vtk_enhanced_9 import VtkEnhanced9Result, foam_to_vtk_enhanced_9
+from pyfoam.tools.foam_to_vtk_enhanced_10 import VtkEnhanced10Result, foam_to_vtk_enhanced_10
+from pyfoam.tools.subset_mesh_enhanced_6 import SubsetEnhanced6Result, subset_mesh_enhanced_6
+from pyfoam.tools.subset_mesh_enhanced_7 import SubsetEnhanced7Result, subset_mesh_enhanced_7
+from pyfoam.tools.subset_mesh_enhanced_8 import SubsetEnhanced8Result, subset_mesh_enhanced_8
+from pyfoam.tools.subset_mesh_enhanced_9 import SubsetEnhanced9Result, subset_mesh_enhanced_9
+from pyfoam.tools.subset_mesh_enhanced_10 import SubsetEnhanced10Result, subset_mesh_enhanced_10
+from pyfoam.tools.refine_mesh_enhanced_6 import RefineEnhanced6Result, refine_mesh_enhanced_6
+from pyfoam.tools.refine_mesh_enhanced_7 import RefineEnhanced7Result, refine_mesh_enhanced_7
+from pyfoam.tools.refine_mesh_enhanced_8 import RefineEnhanced8Result, refine_mesh_enhanced_8
+from pyfoam.tools.refine_mesh_enhanced_9 import RefineEnhanced9Result, refine_mesh_enhanced_9
+from pyfoam.tools.refine_mesh_enhanced_10 import RefineEnhanced10Result, refine_mesh_enhanced_10
+from pyfoam.tools.renumber_mesh_enhanced_6 import RenumberEnhanced6Result, renumber_mesh_enhanced_6
+from pyfoam.tools.renumber_mesh_enhanced_7 import RenumberEnhanced7Result, renumber_mesh_enhanced_7
+from pyfoam.tools.renumber_mesh_enhanced_8 import RenumberEnhanced8Result, renumber_mesh_enhanced_8
+from pyfoam.tools.renumber_mesh_enhanced_9 import RenumberEnhanced9Result, renumber_mesh_enhanced_9
+from pyfoam.tools.renumber_mesh_enhanced_10 import RenumberEnhanced10Result, renumber_mesh_enhanced_10
 __all__ = [
     "box_turb", "CheckMeshResult", "check_mesh", "CellQuality", "QualityReport", "check_mesh_quality",
     "BoxRegion", "CylinderRegion", "set_fields",
@@ -464,4 +515,55 @@ __all__ = [
     "RenumberEnhanced3Result", "renumber_mesh_enhanced_3",
     "RenumberEnhanced4Result", "renumber_mesh_enhanced_4",
     "RenumberEnhanced5Result", "renumber_mesh_enhanced_5",
+    # Batch 3 exports
+    "CheckMeshEnhanced6Result", "check_mesh_enhanced_6",
+    "CheckMeshEnhanced7Result", "check_mesh_enhanced_7",
+    "CheckMeshEnhanced8Result", "check_mesh_enhanced_8",
+    "CheckMeshEnhanced9Result", "check_mesh_enhanced_9",
+    "CheckMeshEnhanced10Result", "check_mesh_enhanced_10",
+    "TransformEnhanced6Result", "transform_points_enhanced_6",
+    "TransformEnhanced7Result", "transform_points_enhanced_7",
+    "TransformEnhanced8Result", "transform_points_enhanced_8",
+    "TransformEnhanced9Result", "transform_points_enhanced_9",
+    "TransformEnhanced10Result", "transform_points_enhanced_10",
+    "SetFieldsEnhanced6Result", "set_fields_enhanced_6",
+    "SetFieldsEnhanced7Result", "set_fields_enhanced_7",
+    "SetFieldsEnhanced8Result", "set_fields_enhanced_8",
+    "SetFieldsEnhanced9Result", "set_fields_enhanced_9",
+    "SetFieldsEnhanced10Result", "set_fields_enhanced_10",
+    "MapFieldsEnhanced6Result", "map_fields_enhanced_6",
+    "MapFieldsEnhanced7Result", "map_fields_enhanced_7",
+    "MapFieldsEnhanced8Result", "map_fields_enhanced_8",
+    "MapFieldsEnhanced9Result", "map_fields_enhanced_9",
+    "MapFieldsEnhanced10Result", "map_fields_enhanced_10",
+    "DecomposeParEnhanced6Result", "decompose_par_enhanced_6",
+    "DecomposeParEnhanced7Result", "decompose_par_enhanced_7",
+    "DecomposeParEnhanced8Result", "decompose_par_enhanced_8",
+    "DecomposeParEnhanced9Result", "decompose_par_enhanced_9",
+    "DecomposeParEnhanced10Result", "decompose_par_enhanced_10",
+    "FoamDictEnhanced6Result", "foam_dictionary_enhanced_6",
+    "FoamDictEnhanced7Result", "foam_dictionary_enhanced_7",
+    "FoamDictEnhanced8Result", "foam_dictionary_enhanced_8",
+    "FoamDictEnhanced9Result", "foam_dictionary_enhanced_9",
+    "FoamDictEnhanced10Result", "foam_dictionary_enhanced_10",
+    "VtkEnhanced6Result", "foam_to_vtk_enhanced_6",
+    "VtkEnhanced7Result", "foam_to_vtk_enhanced_7",
+    "VtkEnhanced8Result", "foam_to_vtk_enhanced_8",
+    "VtkEnhanced9Result", "foam_to_vtk_enhanced_9",
+    "VtkEnhanced10Result", "foam_to_vtk_enhanced_10",
+    "SubsetEnhanced6Result", "subset_mesh_enhanced_6",
+    "SubsetEnhanced7Result", "subset_mesh_enhanced_7",
+    "SubsetEnhanced8Result", "subset_mesh_enhanced_8",
+    "SubsetEnhanced9Result", "subset_mesh_enhanced_9",
+    "SubsetEnhanced10Result", "subset_mesh_enhanced_10",
+    "RefineEnhanced6Result", "refine_mesh_enhanced_6",
+    "RefineEnhanced7Result", "refine_mesh_enhanced_7",
+    "RefineEnhanced8Result", "refine_mesh_enhanced_8",
+    "RefineEnhanced9Result", "refine_mesh_enhanced_9",
+    "RefineEnhanced10Result", "refine_mesh_enhanced_10",
+    "RenumberEnhanced6Result", "renumber_mesh_enhanced_6",
+    "RenumberEnhanced7Result", "renumber_mesh_enhanced_7",
+    "RenumberEnhanced8Result", "renumber_mesh_enhanced_8",
+    "RenumberEnhanced9Result", "renumber_mesh_enhanced_9",
+    "RenumberEnhanced10Result", "renumber_mesh_enhanced_10",
 ]
