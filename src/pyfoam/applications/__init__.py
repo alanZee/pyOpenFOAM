@@ -174,6 +174,18 @@ Available solvers:
 - :class:`FilmFoamEnhanced8` — Enhanced film solver v8 (slip BC, surfactant dynamics, film AMR)
 - :class:`SprayFoamEnhanced8` — Enhanced spray solver v8 (multicomponent evaporation, CT coalescence, LES coupling)
 - :class:`MultiphaseEulerFoamEnhanced9` — Enhanced multiphase Euler v9 (QMOM population balance, Antal wall-lub, turb modulation)
+- :class:`IcoFoamEnhanced10` — Enhanced ICO solver v10 (h-multigrid preconditioner, space-time Galerkin, adaptive artificial compressibility)
+- :class:`SimpleFoamEnhanced10` — Enhanced SIMPLE solver v10 (operator-learning pressure, spectral viscosity, data-driven under-relaxation)
+- :class:`PisoFoamEnhanced10` — Enhanced PISO solver v10 (ILES-MPDATA, pressure-Hodge projection, multirate time stepping)
+- :class:`PimpleFoamEnhanced10` — Enhanced PIMPLE solver v10 (VMS pressure, OINN corrector, energy-budget preservation)
+- :class:`RhoPimpleFoamEnhanced10` — Enhanced compressible PIMPLE v10 (hybrid RANS-DES, thermodynamic consistency, acoustic-hybrid)
+- :class:`BuoyantSimpleFoamEnhanced10` — Enhanced buoyant SIMPLE v10 (non-Boussinesq, shell HTC, Richardson damping)
+- :class:`BuoyantPimpleFoamEnhanced10` — Enhanced buoyant PIMPLE v10 (CBPVS block solve, RBTIM triple coupling, temporal filtering)
+- :class:`ReactingFoamEnhanced12` — Enhanced reacting solver v12 (MLRC autoencoder, FGM tabulation, MOM soot)
+- :class:`SolidFoamEnhanced9` — Enhanced solid mechanics v9 (peridynamics, crystal plasticity, natural element interpolation)
+- :class:`FilmFoamEnhanced9` — Enhanced film solver v9 (inertial lubrication, wetting-drying precursor, Marangoni instability)
+- :class:`SprayFoamEnhanced9` — Enhanced spray solver v9 (APMS parcel management, DNS-informed drag, Langevin-memory dispersion)
+- :class:`MultiphaseEulerFoamEnhanced10` — Enhanced multiphase Euler v10 (MUSIG size classes, BIRS Reynolds stress, IATE interfacial area)
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -348,6 +360,18 @@ from pyfoam.applications.solid_foam_enhanced_8 import SolidFoamEnhanced8
 from pyfoam.applications.film_foam_enhanced_8 import FilmFoamEnhanced8
 from pyfoam.applications.spray_foam_enhanced_8 import SprayFoamEnhanced8
 from pyfoam.applications.multiphase_euler_foam_enhanced_9 import MultiphaseEulerFoamEnhanced9
+from pyfoam.applications.ico_foam_enhanced_10 import IcoFoamEnhanced10
+from pyfoam.applications.simple_foam_enhanced_10 import SimpleFoamEnhanced10
+from pyfoam.applications.piso_foam_enhanced_10 import PisoFoamEnhanced10
+from pyfoam.applications.pimple_foam_enhanced_10 import PimpleFoamEnhanced10
+from pyfoam.applications.rho_pimple_foam_enhanced_10 import RhoPimpleFoamEnhanced10
+from pyfoam.applications.buoyant_simple_foam_enhanced_10 import BuoyantSimpleFoamEnhanced10
+from pyfoam.applications.buoyant_pimple_foam_enhanced_10 import BuoyantPimpleFoamEnhanced10
+from pyfoam.applications.reacting_foam_enhanced_12 import ReactingFoamEnhanced12
+from pyfoam.applications.solid_foam_enhanced_9 import SolidFoamEnhanced9
+from pyfoam.applications.film_foam_enhanced_9 import FilmFoamEnhanced9
+from pyfoam.applications.spray_foam_enhanced_9 import SprayFoamEnhanced9
+from pyfoam.applications.multiphase_euler_foam_enhanced_10 import MultiphaseEulerFoamEnhanced10
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -526,6 +550,18 @@ __all__ = [
     "FilmFoamEnhanced8",
     "SprayFoamEnhanced8",
     "MultiphaseEulerFoamEnhanced9",
+    "IcoFoamEnhanced10",
+    "SimpleFoamEnhanced10",
+    "PisoFoamEnhanced10",
+    "PimpleFoamEnhanced10",
+    "RhoPimpleFoamEnhanced10",
+    "BuoyantSimpleFoamEnhanced10",
+    "BuoyantPimpleFoamEnhanced10",
+    "ReactingFoamEnhanced12",
+    "SolidFoamEnhanced9",
+    "FilmFoamEnhanced9",
+    "SprayFoamEnhanced9",
+    "MultiphaseEulerFoamEnhanced10",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
