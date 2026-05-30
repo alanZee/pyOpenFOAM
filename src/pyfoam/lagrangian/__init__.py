@@ -148,6 +148,73 @@ from pyfoam.lagrangian.reacting_enhanced_3 import ReactingMultiphaseCloud, TwoPh
 from pyfoam.lagrangian.reacting_enhanced_4 import HeterogeneousReacting, CatalyticReacting
 from pyfoam.lagrangian.reacting_enhanced_5 import DevolatilisationModel, CharBurnoutModel
 
+# --- Enhanced variants v6-v10 ---
+from pyfoam.lagrangian.injection_enhanced_6 import InjectionFromFile, ResettableInjector
+from pyfoam.lagrangian.injection_enhanced_7 import SurfaceFluxInjector, VolumeSourceInjector
+from pyfoam.lagrangian.injection_enhanced_8 import RateControlledInjector, DistributionInjector
+from pyfoam.lagrangian.injection_enhanced_9 import TemporalInjector, ProbabilisticInjector
+from pyfoam.lagrangian.injection_enhanced_10 import MultiPointInjector, AdaptiveInjector
+
+from pyfoam.lagrangian.forces_enhanced_6 import ChargedParticleForce, BassetForce
+from pyfoam.lagrangian.forces_enhanced_7 import FaxenForce, HistoryForce
+from pyfoam.lagrangian.forces_enhanced_8 import OseenDragForce, HadamardRybczynskiDrag
+from pyfoam.lagrangian.forces_enhanced_9 import CoriolisForce, CentrifugalForce
+from pyfoam.lagrangian.forces_enhanced_10 import ElectrostaticForce, AcousticRadiationForce
+
+from pyfoam.lagrangian.breakup_enhanced_6 import LISABreakup, SchmehlBreakup
+from pyfoam.lagrangian.breakup_enhanced_7 import WAVEBreakup, MadabhushiBreakup
+from pyfoam.lagrangian.breakup_enhanced_8 import CascadeBreakup, PowerLawBreakup
+from pyfoam.lagrangian.breakup_enhanced_9 import FractalBreakup, RosinRammlerBreakup
+from pyfoam.lagrangian.breakup_enhanced_10 import FragBreakup, UniformBreakup
+
+from pyfoam.lagrangian.collision_enhanced_6 import DeterministicCollision, NTCollision
+from pyfoam.lagrangian.collision_enhanced_7 import AdaptiveCollision, MultiParticleCollision
+from pyfoam.lagrangian.collision_enhanced_8 import SphereCollision, CellCollision
+from pyfoam.lagrangian.collision_enhanced_9 import ReversibleCollision, InelasticCoalescence
+from pyfoam.lagrangian.collision_enhanced_10 import DEMCollision, PSCollision
+
+from pyfoam.lagrangian.dispersion_enhanced_6 import LangevinDispersion, FilteredDispersion
+from pyfoam.lagrangian.dispersion_enhanced_7 import TensorDispersion, SchmidtDispersion
+from pyfoam.lagrangian.dispersion_enhanced_8 import EddyInteractionDispersion, CrossDispersion
+from pyfoam.lagrangian.dispersion_enhanced_9 import DiffusionDispersion, DriftDispersion
+from pyfoam.lagrangian.dispersion_enhanced_10 import FilteredDNSDispersion, ScaleSimilarityDispersion
+
+from pyfoam.lagrangian.evaporation_enhanced_6 import SkinEvaporation, HomogeneousEvaporation
+from pyfoam.lagrangian.evaporation_enhanced_7 import ShellEvaporation, KnudsenEvaporation
+from pyfoam.lagrangian.evaporation_enhanced_8 import FuelEvaporation, FilmEvaporation
+from pyfoam.lagrangian.evaporation_enhanced_9 import FlashEvaporation, ConvectiveEvaporation
+from pyfoam.lagrangian.evaporation_enhanced_10 import EquilibriumEvaporation, NonEquilibriumEvaporation
+
+from pyfoam.lagrangian.mppic_models_enhanced_6 import JohnsonJacksonFriction, KTGFStress
+from pyfoam.lagrangian.mppic_models_enhanced_7 import LunSavageFriction, GranularTemperatureModel
+from pyfoam.lagrangian.mppic_models_enhanced_8 import ImplicitDamping, ExplicitDamping
+from pyfoam.lagrangian.mppic_models_enhanced_9 import MaximumVelocityLimiter, MinimumDiameterLimiter
+from pyfoam.lagrangian.mppic_models_enhanced_10 import PackingLimiter, VolumeFractionSmooth
+
+from pyfoam.lagrangian.oxidation_enhanced_6 import LangmuirHinshelwoodOxidation, MarsMaesoneOxidation
+from pyfoam.lagrangian.oxidation_enhanced_7 import PowerLawOxidation, NthOrderOxidation
+from pyfoam.lagrangian.oxidation_enhanced_8 import BidisperseOxidation, RandomPoreV2
+from pyfoam.lagrangian.oxidation_enhanced_9 import GrainModel, VolumeReactionModel
+from pyfoam.lagrangian.oxidation_enhanced_10 import KineticDiffusionV2, MultipleReactionOxidation
+
+from pyfoam.lagrangian.spray_models_enhanced_6 import WaveAtomization, FIPAAtomization
+from pyfoam.lagrangian.spray_models_enhanced_7 import BlobsheetAtomization, FilmAtomization
+from pyfoam.lagrangian.spray_models_enhanced_8 import CascadeAtomization, StochasticAtomization
+from pyfoam.lagrangian.spray_models_enhanced_9 import RTAtomization, MultimodeAtomization
+from pyfoam.lagrangian.spray_models_enhanced_10 import HybridAtomization, CalibratedAtomization
+
+from pyfoam.lagrangian.wall_interaction_enhanced_6 import MomentumTransferWall, HeatTransferWall
+from pyfoam.lagrangian.wall_interaction_enhanced_7 import BounceFrictionWall, AbsorptionWall
+from pyfoam.lagrangian.wall_interaction_enhanced_8 import SplashFragmentWall, SplashCoalescence
+from pyfoam.lagrangian.wall_interaction_enhanced_9 import TemperatureDependentWall, MaterialPropertyWall
+from pyfoam.lagrangian.wall_interaction_enhanced_10 import ProbabilisticWall, AdaptiveWall
+
+from pyfoam.lagrangian.reacting_models_enhanced_6 import KineticReacting, DiffusionReacting
+from pyfoam.lagrangian.reacting_models_enhanced_7 import ArrheniusReacting, EquilibriumReacting
+from pyfoam.lagrangian.reacting_models_enhanced_8 import ShrinkingCoreReacting, UniformConversionReacting
+from pyfoam.lagrangian.reacting_models_enhanced_9 import GlobalReactionModel, DetailedReactionModel
+from pyfoam.lagrangian.reacting_models_enhanced_10 import CharGasificationModel, PyrolysisModel
+
 __all__ = [
     "Particle",
     "Cloud",
@@ -251,4 +318,60 @@ __all__ = [
     "ReactingMultiphaseCloud", "TwoPhaseReacting",
     "HeterogeneousReacting", "CatalyticReacting",
     "DevolatilisationModel", "CharBurnoutModel",
+    # --- Enhanced variants v6-v10 ---
+    "InjectionFromFile", "ResettableInjector",
+    "SurfaceFluxInjector", "VolumeSourceInjector",
+    "RateControlledInjector", "DistributionInjector",
+    "TemporalInjector", "ProbabilisticInjector",
+    "MultiPointInjector", "AdaptiveInjector",
+    "ChargedParticleForce", "BassetForce",
+    "FaxenForce", "HistoryForce",
+    "OseenDragForce", "HadamardRybczynskiDrag",
+    "CoriolisForce", "CentrifugalForce",
+    "ElectrostaticForce", "AcousticRadiationForce",
+    "LISABreakup", "SchmehlBreakup",
+    "WAVEBreakup", "MadabhushiBreakup",
+    "CascadeBreakup", "PowerLawBreakup",
+    "FractalBreakup", "RosinRammlerBreakup",
+    "FragBreakup", "UniformBreakup",
+    "DeterministicCollision", "NTCollision",
+    "AdaptiveCollision", "MultiParticleCollision",
+    "SphereCollision", "CellCollision",
+    "ReversibleCollision", "InelasticCoalescence",
+    "DEMCollision", "PSCollision",
+    "LangevinDispersion", "FilteredDispersion",
+    "TensorDispersion", "SchmidtDispersion",
+    "EddyInteractionDispersion", "CrossDispersion",
+    "DiffusionDispersion", "DriftDispersion",
+    "FilteredDNSDispersion", "ScaleSimilarityDispersion",
+    "SkinEvaporation", "HomogeneousEvaporation",
+    "ShellEvaporation", "KnudsenEvaporation",
+    "FuelEvaporation", "FilmEvaporation",
+    "FlashEvaporation", "ConvectiveEvaporation",
+    "EquilibriumEvaporation", "NonEquilibriumEvaporation",
+    "JohnsonJacksonFriction", "KTGFStress",
+    "LunSavageFriction", "GranularTemperatureModel",
+    "ImplicitDamping", "ExplicitDamping",
+    "MaximumVelocityLimiter", "MinimumDiameterLimiter",
+    "PackingLimiter", "VolumeFractionSmooth",
+    "LangmuirHinshelwoodOxidation", "MarsMaesoneOxidation",
+    "PowerLawOxidation", "NthOrderOxidation",
+    "BidisperseOxidation", "RandomPoreV2",
+    "GrainModel", "VolumeReactionModel",
+    "KineticDiffusionV2", "MultipleReactionOxidation",
+    "WaveAtomization", "FIPAAtomization",
+    "BlobsheetAtomization", "FilmAtomization",
+    "CascadeAtomization", "StochasticAtomization",
+    "RTAtomization", "MultimodeAtomization",
+    "HybridAtomization", "CalibratedAtomization",
+    "MomentumTransferWall", "HeatTransferWall",
+    "BounceFrictionWall", "AbsorptionWall",
+    "SplashFragmentWall", "SplashCoalescence",
+    "TemperatureDependentWall", "MaterialPropertyWall",
+    "ProbabilisticWall", "AdaptiveWall",
+    "KineticReacting", "DiffusionReacting",
+    "ArrheniusReacting", "EquilibriumReacting",
+    "ShrinkingCoreReacting", "UniformConversionReacting",
+    "GlobalReactionModel", "DetailedReactionModel",
+    "CharGasificationModel", "PyrolysisModel",
 ]
