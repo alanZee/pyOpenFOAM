@@ -157,6 +157,16 @@ Provides:
 - turbulentFrequencyInlet10: v10 enhanced omega inlet with dynamic correction and SST CD term
 - outletPhaseMeanVelocity4: Enhanced outlet phase mean velocity with TKE coupling
 - scaledHeatFlux4: Enhanced scaled heat flux with conjugate interface coupling
+- mappedFlowRate8: Enhanced mapped flow rate with radial swirl decay and time-averaged correction
+- pressureWaveTransmissive8: Enhanced wave transmissive with entropy wave correction
+- turbulentViscosityInlet8: Enhanced turbulent viscosity inlet with anisotropy correction
+- turbulentLengthScaleInlet8: Enhanced turbulent length scale inlet with wake-function correction
+- turbulentIntensityInlet8: Enhanced turbulent intensity inlet with anisotropy and strain-rate coupling
+- turbulentKineticEnergyInlet9: v9 enhanced k inlet with spectral energy correction
+- turbulentDissipationInlet11: v11 enhanced epsilon inlet with anisotropic dissipation and cascade model
+- turbulentFrequencyInlet11: v11 enhanced omega inlet with frequency-dependent blending
+- outletPhaseMeanVelocity5: Enhanced outlet phase mean velocity with turbulent Prandtl correction
+- scaledHeatFlux5: Enhanced scaled heat flux with temperature-dependent emissivity
 """
 
 # Import base and collection first
@@ -496,6 +506,19 @@ from pyfoam.boundary.turbulent_frequency_inlet_10 import TurbulentFrequencyInlet
 from pyfoam.boundary.outlet_phase_mean_velocity_4 import OutletPhaseMeanVelocity4BC
 from pyfoam.boundary.scaled_heat_flux_4 import ScaledHeatFlux4BC
 
+# Phase 31: Enhanced v8 mapped/wave/turbulent inlets + v9 k + v11 epsilon/omega +
+#          enhanced v5 outlet phase mean velocity + enhanced v5 scaled heat flux
+from pyfoam.boundary.mapped_flow_rate_8 import MappedFlowRate8BC
+from pyfoam.boundary.pressure_wave_transmissive_8 import PressureWaveTransmissive8BC
+from pyfoam.boundary.turbulent_viscosity_inlet_8 import TurbulentViscosityInlet8BC
+from pyfoam.boundary.turbulent_length_scale_inlet_8 import TurbulentLengthScaleInlet8BC
+from pyfoam.boundary.turbulent_intensity_inlet_8 import TurbulentIntensityInlet8BC
+from pyfoam.boundary.turbulent_kinetic_energy_inlet_9 import TurbulentKineticEnergyInlet9BC
+from pyfoam.boundary.turbulent_dissipation_inlet_11 import TurbulentDissipationInlet11BC
+from pyfoam.boundary.turbulent_frequency_inlet_11 import TurbulentFrequencyInlet11BC
+from pyfoam.boundary.outlet_phase_mean_velocity_5 import OutletPhaseMeanVelocity5BC
+from pyfoam.boundary.scaled_heat_flux_5 import ScaledHeatFlux5BC
+
 __all__ = [
     # Base
     "BoundaryCondition",
@@ -764,4 +787,16 @@ __all__ = [
     "TurbulentFrequencyInlet10BC",
     "OutletPhaseMeanVelocity4BC",
     "ScaledHeatFlux4BC",
+    # Phase 31: Enhanced v8 mapped/wave/turbulent inlets + v9 k + v11 epsilon/omega +
+    #          enhanced v5 outlet phase mean velocity + enhanced v5 scaled heat flux
+    "MappedFlowRate8BC",
+    "PressureWaveTransmissive8BC",
+    "TurbulentViscosityInlet8BC",
+    "TurbulentLengthScaleInlet8BC",
+    "TurbulentIntensityInlet8BC",
+    "TurbulentKineticEnergyInlet9BC",
+    "TurbulentDissipationInlet11BC",
+    "TurbulentFrequencyInlet11BC",
+    "OutletPhaseMeanVelocity5BC",
+    "ScaledHeatFlux5BC",
 ]
