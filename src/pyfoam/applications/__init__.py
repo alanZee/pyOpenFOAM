@@ -186,6 +186,16 @@ Available solvers:
 - :class:`FilmFoamEnhanced9` — Enhanced film solver v9 (inertial lubrication, wetting-drying precursor, Marangoni instability)
 - :class:`SprayFoamEnhanced9` — Enhanced spray solver v9 (APMS parcel management, DNS-informed drag, Langevin-memory dispersion)
 - :class:`MultiphaseEulerFoamEnhanced10` — Enhanced multiphase Euler v10 (MUSIG size classes, BIRS Reynolds stress, IATE interfacial area)
+- :class:`SimpleFoamEnhanced11` — Enhanced SIMPLE solver v11 (extended non-orthogonal correction, consistent non-orthogonal correction, over-relaxed stabilisation)
+- :class:`PimpleFoamEnhanced11` — Enhanced PIMPLE solver v11 (extended non-orthogonal pressure, consistent non-orthogonal momentum, over-relaxed stabilisation)
+- :class:`PisoFoamEnhanced11` — Enhanced PISO solver v11 (extended non-orthogonal projection, consistent Rhie-Chow, over-relaxed stabilisation)
+- :class:`IcoFoamEnhanced11` — Enhanced ICO solver v11 (extended non-orthogonal Poisson, consistent velocity-pressure coupling, over-relaxed stabilisation)
+- :class:`BuoyantPimpleFoamEnhanced11` — Enhanced buoyant PIMPLE v11 (extended buoyancy-pressure correction, consistent thermal-momentum, over-relaxed stabilisation)
+- :class:`BuoyantSimpleFoamEnhanced11` — Enhanced buoyant SIMPLE v11 (extended buoyant-pressure correction, consistent buoyant-momentum, over-relaxed stabilisation)
+- :class:`CompressibleInterFoamEnhanced11` — Enhanced compressible VOF v11 (extended VOF pressure correction, consistent phase-fraction, over-relaxed stabilisation)
+- :class:`SprayFoamEnhanced11` — Enhanced spray solver v11 (extended spray-pressure correction, consistent parcel-velocity, over-relaxed stabilisation)
+- :class:`MultiphaseEulerFoamEnhanced11` — Enhanced multiphase Euler v11 (extended multi-phase pressure, consistent phase-momentum, over-relaxed stabilisation)
+- :class:`ReactingFoamEnhanced13` — Enhanced reacting solver v13 (SIMPLEC-consistent coupling, coupled reacting system, pressure-velocity-chemistry coupling)
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -372,6 +382,16 @@ from pyfoam.applications.solid_foam_enhanced_9 import SolidFoamEnhanced9
 from pyfoam.applications.film_foam_enhanced_9 import FilmFoamEnhanced9
 from pyfoam.applications.spray_foam_enhanced_9 import SprayFoamEnhanced9
 from pyfoam.applications.multiphase_euler_foam_enhanced_10 import MultiphaseEulerFoamEnhanced10
+from pyfoam.applications.simple_foam_enhanced_11 import SimpleFoamEnhanced11
+from pyfoam.applications.pimple_foam_enhanced_11 import PimpleFoamEnhanced11
+from pyfoam.applications.piso_foam_enhanced_11 import PisoFoamEnhanced11
+from pyfoam.applications.ico_foam_enhanced_11 import IcoFoamEnhanced11
+from pyfoam.applications.buoyant_pimple_foam_enhanced_11 import BuoyantPimpleFoamEnhanced11
+from pyfoam.applications.buoyant_simple_foam_enhanced_11 import BuoyantSimpleFoamEnhanced11
+from pyfoam.applications.compressible_inter_foam_enhanced_11 import CompressibleInterFoamEnhanced11
+from pyfoam.applications.spray_foam_enhanced_11 import SprayFoamEnhanced11
+from pyfoam.applications.multiphase_euler_foam_enhanced_11 import MultiphaseEulerFoamEnhanced11
+from pyfoam.applications.reacting_foam_enhanced_13 import ReactingFoamEnhanced13
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -562,6 +582,16 @@ __all__ = [
     "FilmFoamEnhanced9",
     "SprayFoamEnhanced9",
     "MultiphaseEulerFoamEnhanced10",
+    "SimpleFoamEnhanced11",
+    "PimpleFoamEnhanced11",
+    "PisoFoamEnhanced11",
+    "IcoFoamEnhanced11",
+    "BuoyantPimpleFoamEnhanced11",
+    "BuoyantSimpleFoamEnhanced11",
+    "CompressibleInterFoamEnhanced11",
+    "SprayFoamEnhanced11",
+    "MultiphaseEulerFoamEnhanced11",
+    "ReactingFoamEnhanced13",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
