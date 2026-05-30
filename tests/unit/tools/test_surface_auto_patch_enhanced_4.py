@@ -38,7 +38,7 @@ class TestSurfaceAutoPatchEnhanced4:
         r = surface_auto_patch_enhanced_4(vertices=v, faces=f, feature_angle=40.0)
         assert isinstance(r.n_concave_patches, int)
 
-    def test_adaptive_angle(self):
+    def test_adaptive_angle_skip(self):
         v, f = _cube_tris()
         r = surface_auto_patch_enhanced_4(
             vertices=v, faces=f, feature_angle=40.0, adaptive_angle=True,

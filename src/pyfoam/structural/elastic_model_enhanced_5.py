@@ -135,8 +135,8 @@ class GradientPlasticityModel:
         Returns:
             True if yielding occurs.
         """
-        yield_criterion = VonMisesYield(sigma_y=self.effective_yield_stress(strain_gradient_norm))
-        return yield_criterion.yield_function(stress) > 0
+        yield_criterion = VonMisesYield(yield_stress=self.effective_yield_stress(strain_gradient_norm))
+        return yield_criterion.is_yielding(stress).item()
 
     def update_hardening(
         self,

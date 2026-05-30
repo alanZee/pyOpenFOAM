@@ -214,13 +214,13 @@ class ReconstructParEnhanced6(ReconstructParEnhanced5):
                         continue
                     dir_unit = direction / dir_norm
                     # 加权：沿每个方向的扩散系数
-                    weight = (
+                    w = (
                         diffusion_coeffs[0] * dir_unit[0].abs()
                         + diffusion_coeffs[1] * dir_unit[1].abs()
                         + diffusion_coeffs[2] * dir_unit[2].abs()
                     )
-                    weighted_sum += weight * (field[j] - field[i]).item()
-                    total_weight += weight
+                    weighted_sum += w * (field[j] - field[i]).item()
+                    total_weight += w
 
                 if total_weight > 1e-30:
                     new_field[i] = field[i] + weighted_sum / total_weight

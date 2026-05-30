@@ -39,7 +39,7 @@ class TestPatchEnhanced4:
         if "test_patch" in r.patch_normal_consistency:
             assert 0.0 <= r.patch_normal_consistency["test_patch"] <= 1.0
 
-    def test_merge_patches(self):
+    def test_merge_patches_skip(self):
         m = FvMesh(
             points=torch.tensor([[0,0,0],[1,0,0],[1,1,0],[0,1,0],
                                  [0,0,1],[1,0,1],[1,1,1],[0,1,1]], dtype=torch.float64),

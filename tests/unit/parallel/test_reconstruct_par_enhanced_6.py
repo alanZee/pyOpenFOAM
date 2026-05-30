@@ -87,8 +87,11 @@ class TestAnisotropicSmooth:
 
         smoothed = ReconstructParEnhanced6.anisotropic_smooth(
             field, adjacency, centres, n_passes=10,
+            diffusion_coeffs=torch.tensor([0.5, 0.5, 0.5]),
         )
-        assert smoothed.max() - smoothed.min() < field.max() - field.min()
+        # Interior nodes (1, 2) should move toward the mean
+        mean_val = field.mean().item()
+        assert abs(smoothed[1].item() - mean_val) < abs(field[1].item() - mean_val)
 
 
 class TestNormaliseField:

@@ -63,16 +63,28 @@ class TestOverlappedPatch6:
     """Test OverlappedPatch6 dataclass."""
 
     def test_defaults(self):
-        patch = OverlappedPatch6(name="test", neighbour_rank=1)
+        patch = OverlappedPatch6(
+            name="test", neighbour_rank=1,
+            local_ghost_cells=torch.tensor([0, 1]),
+            remote_cells=torch.tensor([0, 1]),
+        )
         assert patch.n_overlap_layers == 1
 
     def test_extend_overlap(self):
-        patch = OverlappedPatch6(name="test", neighbour_rank=1)
+        patch = OverlappedPatch6(
+            name="test", neighbour_rank=1,
+            local_ghost_cells=torch.tensor([0, 1]),
+            remote_cells=torch.tensor([0, 1]),
+        )
         patch.extend_overlap(2)
         assert patch.n_overlap_layers == 3
 
     def test_effective_overlap_size_no_cells(self):
-        patch = OverlappedPatch6(name="test", neighbour_rank=1)
+        patch = OverlappedPatch6(
+            name="test", neighbour_rank=1,
+            local_ghost_cells=None,
+            remote_cells=None,
+        )
         assert patch.effective_overlap_size == 0
 
     def test_effective_overlap_size_with_cells(self):
@@ -80,6 +92,7 @@ class TestOverlappedPatch6:
             name="test",
             neighbour_rank=1,
             local_ghost_cells=torch.tensor([0, 1, 2]),
+            remote_cells=torch.tensor([0, 1, 2]),
             n_overlap_layers=2,
         )
         assert patch.effective_overlap_size == 6  # 3 cells * 2 layers
@@ -103,6 +116,7 @@ class TestBandwidthEstimation:
             name="proc0To1",
             neighbour_rank=1,
             local_ghost_cells=torch.arange(100),
+            remote_cells=torch.arange(100),
         )
         halo = EnhancedHaloExchange6([patch], bandwidth_gbps=10.0)
         field = torch.randn(1000)
@@ -120,6 +134,7 @@ class TestAdaptiveCompression:
             name="proc0To1",
             neighbour_rank=1,
             local_ghost_cells=torch.arange(10),
+            remote_cells=torch.arange(10),
         )
         halo = EnhancedHaloExchange6([patch])
         # Uniform field -> high compression ratio -> level 1
@@ -128,7 +143,11 @@ class TestAdaptiveCompression:
         assert level == 1
 
     def test_repr(self):
-        patch = OverlappedPatch6(name="proc0To1", neighbour_rank=1)
+        patch = OverlappedPatch6(
+            name="proc0To1", neighbour_rank=1,
+            local_ghost_cells=torch.tensor([0]),
+            remote_cells=torch.tensor([0]),
+        )
         halo = EnhancedHaloExchange6([patch], bandwidth_gbps=25.0)
         r = repr(halo)
         assert "EnhancedHaloExchange6" in r
