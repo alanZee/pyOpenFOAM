@@ -122,6 +122,23 @@ from pyfoam.structural.displacement_solver_enhanced_7 import (
     RefinementResult7,
     SubstructureResult,
 )
+from pyfoam.structural.elastic_model_enhanced_8 import (
+    MicromechanicalModel,
+    ThermoelasticDamageModel,
+    PhaseFieldBrittleFracture,
+)
+from pyfoam.structural.stress_solver_enhanced_8 import (
+    EnhancedStressSolver8,
+    PhaseFieldFatigueResult,
+    StressRecoveryResult,
+    MultiPhysicsStressResult,
+)
+from pyfoam.structural.displacement_solver_enhanced_8 import (
+    EnhancedDisplacementSolver8,
+    LevelSetResult,
+    MultiMaterialResult,
+    ConstrainedTopologyResult,
+)
 
 __all__ = [
     "LinearElasticModel",
@@ -198,4 +215,16 @@ __all__ = [
     "TopologyResult",
     "RefinementResult7",
     "SubstructureResult",
+    # V8 enhanced
+    "MicromechanicalModel",
+    "ThermoelasticDamageModel",
+    "PhaseFieldBrittleFracture",
+    "EnhancedStressSolver8",
+    "PhaseFieldFatigueResult",
+    "StressRecoveryResult",
+    "MultiPhysicsStressResult",
+    "EnhancedDisplacementSolver8",
+    "LevelSetResult",
+    "MultiMaterialResult",
+    "ConstrainedTopologyResult",
 ]

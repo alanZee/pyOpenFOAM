@@ -166,6 +166,27 @@ from pyfoam.parallel.processor_patch_enhanced_8 import (
     LatencyProfile,
     FaultToleranceConfig,
 )
+from pyfoam.parallel.reconstruct_par_enhanced_9 import (
+    ReconstructParEnhanced9,
+    V9ReconstructResult,
+    ProgressiveConfig,
+    FieldDependency,
+    DistributedHash,
+)
+from pyfoam.parallel.redistribute_par_enhanced_9 import (
+    RedistributeParEnhanced9,
+    V9RedistributeResult,
+    BandwidthScheduleConfig,
+    OnlineCostPrediction,
+    PartitionQualityMetrics,
+)
+from pyfoam.parallel.processor_patch_enhanced_9 import (
+    TopologyAwarePatch9,
+    EnhancedHaloExchange9,
+    TopologyRoutingConfig,
+    CoalescingConfig,
+    CheckpointConfig,
+)
 
 __all__ = [
     # Decomposition
@@ -304,4 +325,22 @@ __all__ = [
     "BatchedExchangeConfig",
     "LatencyProfile",
     "FaultToleranceConfig",
+    # V9 enhanced reconstruction
+    "ReconstructParEnhanced9",
+    "V9ReconstructResult",
+    "ProgressiveConfig",
+    "FieldDependency",
+    "DistributedHash",
+    # V9 enhanced redistribution
+    "RedistributeParEnhanced9",
+    "V9RedistributeResult",
+    "BandwidthScheduleConfig",
+    "OnlineCostPrediction",
+    "PartitionQualityMetrics",
+    # V9 enhanced processor patches
+    "TopologyAwarePatch9",
+    "EnhancedHaloExchange9",
+    "TopologyRoutingConfig",
+    "CoalescingConfig",
+    "CheckpointConfig",
 ]

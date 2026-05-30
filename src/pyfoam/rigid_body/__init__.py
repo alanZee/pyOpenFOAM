@@ -147,6 +147,24 @@ from pyfoam.rigid_body.restraints_enhanced_7 import (
     ParticleDamperRestraint,
     NegativeStiffnessRestraint,
 )
+from pyfoam.rigid_body.six_dof_solver_enhanced_8 import (
+    EnhancedSixDoFSolver8,
+    MultiRateConfig,
+    EnergyDriftConfig,
+    ConstraintRelaxationConfig,
+)
+from pyfoam.rigid_body.joints_enhanced_8 import (
+    MagnetostrictiveJoint,
+    ElectroactivePolymerJoint,
+    RotaryLinearJoint,
+    GearedHarmonicJoint,
+)
+from pyfoam.rigid_body.restraints_enhanced_8 import (
+    PneumaticHybridRestraint,
+    ElectrorheologicalRestraint,
+    InerterRestraint,
+    QuasiZeroStiffnessRestraint,
+)
 
 __all__ = [
     "SixDoFSolver",
@@ -247,4 +265,17 @@ __all__ = [
     "FrictionPendulumRestraint",
     "ParticleDamperRestraint",
     "NegativeStiffnessRestraint",
+    # V8 enhanced
+    "EnhancedSixDoFSolver8",
+    "MultiRateConfig",
+    "EnergyDriftConfig",
+    "ConstraintRelaxationConfig",
+    "MagnetostrictiveJoint",
+    "ElectroactivePolymerJoint",
+    "RotaryLinearJoint",
+    "GearedHarmonicJoint",
+    "PneumaticHybridRestraint",
+    "ElectrorheologicalRestraint",
+    "InerterRestraint",
+    "QuasiZeroStiffnessRestraint",
 ]

@@ -150,6 +150,18 @@ Available solvers:
 - :class:`FilmFoamEnhanced6` — Enhanced film solver v6 (EHD destabilisation, phase-change, viscoelastic rheology)
 - :class:`SprayFoamEnhanced6` — Enhanced spray solver v6 (stochastic breakup, electrostatic charging, wall film)
 - :class:`MultiphaseEulerFoamEnhanced7` — Enhanced multiphase Euler v7 (poly-dispersed IAC, DES turbulence, coupled PV)
+- :class:`IcoFoamEnhanced8` — Enhanced ICO solver v8 (metric adaptation, BFBt preconditioner, semi-Lagrangian)
+- :class:`SimpleFoamEnhanced8` — Enhanced SIMPLE solver v8 (JFNK acceleration, spectral preconditioner, Armijo line search)
+- :class:`PisoFoamEnhanced8` — Enhanced PISO solver v8 (embedded RK, skew-symmetric advection, GMRES pressure)
+- :class:`PimpleFoamEnhanced8` — Enhanced PIMPLE solver v8 (OIF stepping, adaptive AMG, SIMPLENGA)
+- :class:`RhoPimpleFoamEnhanced8` — Enhanced compressible PIMPLE v8 (JST dissipation, dual-time, mixture-averaged)
+- :class:`BuoyantSimpleFoamEnhanced8` — Enhanced buoyant SIMPLE v8 (variable Boussinesq, conjugate HTC, Rossby switching)
+- :class:`BuoyantPimpleFoamEnhanced8` — Enhanced buoyant PIMPLE v8 (density precondition, entropy-stable thermal, GW CFL)
+- :class:`ReactingFoamEnhanced10` — Enhanced reacting solver v10 (HAK hierarchy, IMEX integration, ML combustion)
+- :class:`SolidFoamEnhanced7` — Enhanced solid mechanics v7 (spectral damage, topology optimisation, implicit contact)
+- :class:`FilmFoamEnhanced7` — Enhanced film solver v7 (Cahn-Hilliard, Marangoni, DLVO disjoining pressure)
+- :class:`SprayFoamEnhanced7` — Enhanced spray solver v7 (spray AMR, DNS-calibrated breakup, Langevin dispersion)
+- :class:`MultiphaseEulerFoamEnhanced8` — Enhanced multiphase Euler v8 (hyperbolic moments, filtered LES forces, implicit coupling)
 """
 
 from pyfoam.applications.solver_base import SolverBase
@@ -300,6 +312,18 @@ from pyfoam.applications.solid_foam_enhanced_6 import SolidFoamEnhanced6
 from pyfoam.applications.film_foam_enhanced_6 import FilmFoamEnhanced6
 from pyfoam.applications.spray_foam_enhanced_6 import SprayFoamEnhanced6
 from pyfoam.applications.multiphase_euler_foam_enhanced_7 import MultiphaseEulerFoamEnhanced7
+from pyfoam.applications.ico_foam_enhanced_8 import IcoFoamEnhanced8
+from pyfoam.applications.simple_foam_enhanced_8 import SimpleFoamEnhanced8
+from pyfoam.applications.piso_foam_enhanced_8 import PisoFoamEnhanced8
+from pyfoam.applications.pimple_foam_enhanced_8 import PimpleFoamEnhanced8
+from pyfoam.applications.rho_pimple_foam_enhanced_8 import RhoPimpleFoamEnhanced8
+from pyfoam.applications.buoyant_simple_foam_enhanced_8 import BuoyantSimpleFoamEnhanced8
+from pyfoam.applications.buoyant_pimple_foam_enhanced_8 import BuoyantPimpleFoamEnhanced8
+from pyfoam.applications.reacting_foam_enhanced_10 import ReactingFoamEnhanced10
+from pyfoam.applications.solid_foam_enhanced_7 import SolidFoamEnhanced7
+from pyfoam.applications.film_foam_enhanced_7 import FilmFoamEnhanced7
+from pyfoam.applications.spray_foam_enhanced_7 import SprayFoamEnhanced7
+from pyfoam.applications.multiphase_euler_foam_enhanced_8 import MultiphaseEulerFoamEnhanced8
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -454,6 +478,18 @@ __all__ = [
     "FilmFoamEnhanced6",
     "SprayFoamEnhanced6",
     "MultiphaseEulerFoamEnhanced7",
+    "IcoFoamEnhanced8",
+    "SimpleFoamEnhanced8",
+    "PisoFoamEnhanced8",
+    "PimpleFoamEnhanced8",
+    "RhoPimpleFoamEnhanced8",
+    "BuoyantSimpleFoamEnhanced8",
+    "BuoyantPimpleFoamEnhanced8",
+    "ReactingFoamEnhanced10",
+    "SolidFoamEnhanced7",
+    "FilmFoamEnhanced7",
+    "SprayFoamEnhanced7",
+    "MultiphaseEulerFoamEnhanced8",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
