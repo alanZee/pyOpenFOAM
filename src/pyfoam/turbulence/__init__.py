@@ -369,6 +369,14 @@ from pyfoam.turbulence.spalart_allmaras_enhanced_3 import SpalartAllmarasEnhance
 from pyfoam.turbulence.les_model_enhanced_3 import WallAdaptiveSmagorinskyModel, ImprovedWALE3Model
 from pyfoam.turbulence.wall_treatment_enhanced_2 import EnhancedWallTreatment2, FourLayerWallTreatment
 
+# Enhanced RANS/LES models (Phase 13)
+from pyfoam.turbulence.k_epsilon_enhanced_4 import KEpsilonEnhanced4Model, KEpsilonEnhanced4Constants
+from pyfoam.turbulence.k_omega_enhanced_4 import KOmegaEnhanced4Model, KOmegaEnhanced4Constants
+from pyfoam.turbulence.k_omega_sst_enhanced_4 import KOmegaSSTEnhanced4Model, KOmegaSSTEnhanced4Constants
+from pyfoam.turbulence.spalart_allmaras_enhanced_4 import SpalartAllmarasEnhanced4Model, SpalartAllmarasEnhanced4Constants
+from pyfoam.turbulence.les_model_enhanced_4 import VremanModel, SigmaModel
+from pyfoam.turbulence.wall_treatment_enhanced_3 import EnhancedWallTreatment3, AdaptiveWallTreatment
+
 __all__ = [
     # Base
     "TurbulenceModel",

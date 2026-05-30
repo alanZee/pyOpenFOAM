@@ -85,6 +85,16 @@ Provides:
 - :class:`PatelTejaEOS` — Patel-Teja three-parameter cubic EOS
 - :class:`VolumeTranslatedPR` — Peng-Robinson with volume translation
 - :class:`PatelTejaValderramaEOS` — Patel-Teja-Valderrama variant for polar fluids
+
+**Phase 13 — Enhanced v4/v5 Models:**
+- :class:`JanafMultiThermoEnhanced5` — JANAF v5 with reaction enthalpy, entropy, Gibbs energy
+- :class:`TabulatedTransportEnhanced4` — tabulated transport v4 with adaptive grid refinement and Pr(T)
+- :class:`WilkeTransportEnhanced4` — Wilke v4 with Soret thermal diffusion and dilution correction
+- :class:`ConstantTransportEnhanced4` — constant transport v4 with Barus and free-volume pressure models
+- :class:`SutherlandTransportEnhanced4` — Sutherland v4 with Lennard-Jones collision integral
+- :class:`SAFTVRSimplified` — Simplified SAFT-VR EOS for associating fluids
+- :class:`CPAEOS` — Cubic-Plus-Association EOS
+- :class:`GeneralizedAlphaEOS` — PR with selectable alpha (Soave/Twu/Mathias-Copeman)
 """
 
 from pyfoam.thermophysical.equation_of_state import (
@@ -178,6 +188,18 @@ from pyfoam.thermophysical.equation_of_state_enhanced_2 import (
     PatelTejaValderramaEOS,
 )
 
+# Phase 13: Enhanced models v4/v5
+from pyfoam.thermophysical.janaf_multi_thermo_enhanced_5 import JanafMultiThermoEnhanced5
+from pyfoam.thermophysical.tabulated_transport_enhanced_4 import TabulatedTransportEnhanced4
+from pyfoam.thermophysical.wilke_transport_enhanced_4 import WilkeTransportEnhanced4
+from pyfoam.thermophysical.constant_transport_enhanced_4 import ConstantTransportEnhanced4
+from pyfoam.thermophysical.sutherland_transport_enhanced_4 import SutherlandTransportEnhanced4
+from pyfoam.thermophysical.equation_of_state_enhanced_3 import (
+    SAFTVRSimplified,
+    CPAEOS,
+    GeneralizedAlphaEOS,
+)
+
 __all__ = [
     # Equation of state
     "EquationOfState",
@@ -252,6 +274,15 @@ __all__ = [
     "PatelTejaEOS",
     "VolumeTranslatedPR",
     "PatelTejaValderramaEOS",
+    # Phase 13: Enhanced models v4/v5
+    "JanafMultiThermoEnhanced5",
+    "TabulatedTransportEnhanced4",
+    "WilkeTransportEnhanced4",
+    "ConstantTransportEnhanced4",
+    "SutherlandTransportEnhanced4",
+    "SAFTVRSimplified",
+    "CPAEOS",
+    "GeneralizedAlphaEOS",
     # Chemistry models
     "ChemistryModel",
     "ODEChemistrySolver",
