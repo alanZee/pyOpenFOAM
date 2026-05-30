@@ -13,6 +13,9 @@ Provides:
 - :class:`MinMaxConstraint` — independent min/max with cell restriction
 - :class:`RhoLimitsConstraint` — density bounds enforcement
 - :class:`VelocityLimitsConstraint` — velocity magnitude limits
+- :class:`MinTemperatureConstraint` — minimum temperature enforcement
+- :class:`MaxTemperatureConstraint` — maximum temperature enforcement
+- :class:`MassFractionLimitsConstraint` — species mass fraction bounds
 
 **fvModels** (pre-solution source term injection):
 
@@ -36,6 +39,18 @@ Provides:
 - :class:`FvDOMRadiationSource` — FvDOM radiation source
 - :class:`SolarLoadSource` — solar radiation heat load
 - :class:`InterPhaseChangeModel` — cavitation/boiling interphase mass transfer
+- :class:`XiEqModel` — equilibrium flame wrinkling model
+- :class:`PaSRSource` — Partially Stirred Reactor combustion source
+- :class:`EDCSource` — Eddy Dissipation Concept combustion source
+- :class:`MRFSource` — Multiple Reference Frame momentum source
+- :class:`MRFSolidBody` — MRF solid body rotation penalty source
+- :class:`InterRegionHeatTransfer` — inter-region heat transfer source
+- :class:`DispersionRASource` — radiation dispersion source
+- :class:`TurbulentDispersionSource` — turbulent dispersion force
+- :class:`ExplicitPorositySource` — explicit porosity resistance
+- :class:`RotatingDiskSource` — rotating disk momentum source
+- :class:`RotatingConeSource` — rotating cone momentum source
+- :class:`CodedSource` — user-coded source term
 
 Usage::
 
@@ -102,6 +117,36 @@ from pyfoam.fv.enhanced_5 import (
     InterPhaseChangeModel,
 )
 
+from pyfoam.fv.enhanced_6 import (
+    XiEqModel,
+    PaSRSource,
+    EDCSource,
+)
+
+from pyfoam.fv.enhanced_7 import (
+    MRFSource,
+    MRFSolidBody,
+    InterRegionHeatTransfer,
+)
+
+from pyfoam.fv.enhanced_8 import (
+    MinTemperatureConstraint,
+    MaxTemperatureConstraint,
+    MassFractionLimitsConstraint,
+)
+
+from pyfoam.fv.enhanced_9 import (
+    DispersionRASource,
+    TurbulentDispersionSource,
+    ExplicitPorositySource,
+)
+
+from pyfoam.fv.enhanced_10 import (
+    RotatingDiskSource,
+    RotatingConeSource,
+    CodedSource,
+)
+
 __all__ = [
     # fvConstraints
     "FvConstraint",
@@ -140,4 +185,24 @@ __all__ = [
     "FvDOMRadiationSource",
     "SolarLoadSource",
     "InterPhaseChangeModel",
+    # enhanced_6: 燃烧与反应
+    "XiEqModel",
+    "PaSRSource",
+    "EDCSource",
+    # enhanced_7: MRF 与区域间传热
+    "MRFSource",
+    "MRFSolidBody",
+    "InterRegionHeatTransfer",
+    # enhanced_8: 温度/物种约束
+    "MinTemperatureConstraint",
+    "MaxTemperatureConstraint",
+    "MassFractionLimitsConstraint",
+    # enhanced_9: 颗粒色散与多孔介质
+    "DispersionRASource",
+    "TurbulentDispersionSource",
+    "ExplicitPorositySource",
+    # enhanced_10: 旋转体与用户编码源项
+    "RotatingDiskSource",
+    "RotatingConeSource",
+    "CodedSource",
 ]
