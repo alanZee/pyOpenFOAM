@@ -133,6 +133,16 @@ Provides:
 - :class:`EnhancedWallTreatment2` — Enhanced wall treatment v2 with roughness support
 - :class:`FourLayerWallTreatment` — Four-layer (viscous/buffer/transition/log-law) wall treatment
 
+**Enhanced RANS/LES Models (Phase 13):**
+- :class:`KEpsilonEnhanced4Model` — Realizable k-epsilon v4 with v2-f, Yap correction, anisotropy-aware C_mu
+- :class:`KOmegaEnhanced4Model` — k-omega v4 with low-Re damping (Wilcox 2008) and viscosity-dependent cross-diffusion
+- :class:`KOmegaSSTEnhanced4Model` — SST v4 with intermittency transition, Spalart-Shur curvature correction
+- :class:`SpalartAllmarasEnhanced4Model` — SA v4 with QCR2013, curvature correction, improved ft2
+- :class:`VremanModel` — Vreman SGS model (zero viscosity in laminar, no wall damping needed)
+- :class:`SigmaModel` — Sigma SGS model (singular values of velocity gradient, Nicoud et al. 2011)
+- :class:`EnhancedWallTreatment3` — Enhanced wall treatment v3 with Jayatilleke blending and heat transfer
+- :class:`AdaptiveWallTreatment` — Adaptive wall treatment with hysteresis-based regime switching
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -564,4 +574,17 @@ __all__ = [
     "ImprovedWALE3Model",
     "EnhancedWallTreatment2",
     "FourLayerWallTreatment",
+    # Enhanced RANS/LES models (Phase 13)
+    "KEpsilonEnhanced4Model",
+    "KEpsilonEnhanced4Constants",
+    "KOmegaEnhanced4Model",
+    "KOmegaEnhanced4Constants",
+    "KOmegaSSTEnhanced4Model",
+    "KOmegaSSTEnhanced4Constants",
+    "SpalartAllmarasEnhanced4Model",
+    "SpalartAllmarasEnhanced4Constants",
+    "VremanModel",
+    "SigmaModel",
+    "EnhancedWallTreatment3",
+    "AdaptiveWallTreatment",
 ]
