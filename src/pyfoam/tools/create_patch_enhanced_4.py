@@ -392,6 +392,8 @@ def create_patch_enhanced_4(
 
 def _merge_existing_patches(mesh, patch_names, merged_name, merged_type, dev):
     """Merge multiple existing boundary patches into one."""
+    from pyfoam.mesh.fv_mesh import FvMesh
+
     name_set = set(patch_names)
     collected_faces: list = []
     collected_owner: list = []

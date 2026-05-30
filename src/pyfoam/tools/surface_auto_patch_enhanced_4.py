@@ -143,9 +143,13 @@ def surface_auto_patch_enhanced_4(
 
     # Adaptive angle: compute local curvature at each edge
     mean_angle_used = feature_angle
+    local_curvatures = {}
     if adaptive_angle:
-        local_angles = _compute_local_curvature(verts, facs, norms, edge_faces)
-        mean_angle_used = float(np.mean(local_angles)) if local_angles else feature_angle
+        local_curvatures = _compute_local_curvature(verts, facs, norms, edge_faces)
+        if local_curvatures:
+            mean_angle_used = float(np.mean(list(local_curvatures.values())))
+        else:
+            mean_angle_used = feature_angle
 
     # Build face adjacency
     cos_thresh = np.cos(np.radians(feature_angle))
@@ -154,19 +158,17 @@ def surface_auto_patch_enhanced_4(
         if len(adj) == 2:
             f0, f1 = adj
             dot = np.clip(np.dot(norms[f0], norms[f1]), -1.0, 1.0)
-            if adaptive_angle:
-                # Use the maximum of global and local thresholds
+            if adaptive_angle and local_curvatures:
                 local_key = (min(f0, f1), max(f0, f1))
-                local_thresh = cos_thresh
-                if local_key in local_angles if isinstance(local_angles, dict) else False:
-                    local_thresh = np.cos(np.radians(local_angles[local_key]))
-                if dot >= -local_thresh:
-                    face_neighbours[f0].append(f1)
-                    face_neighbours[f1].append(f0)
-            else:
-                if dot >= -cos_thresh:
-                    face_neighbours[f0].append(f1)
-                    face_neighbours[f1].append(f0)
+                if local_key in local_curvatures:
+                    local_thresh = np.cos(np.radians(local_curvatures[local_key]))
+                    if dot >= -local_thresh:
+                        face_neighbours[f0].append(f1)
+                        face_neighbours[f1].append(f0)
+                    continue
+            if dot >= -cos_thresh:
+                face_neighbours[f0].append(f1)
+                face_neighbours[f1].append(f0)
 
     # Per-region processing
     regions = np.asarray(region_ids, dtype=np.int32) if region_ids is not None else None
