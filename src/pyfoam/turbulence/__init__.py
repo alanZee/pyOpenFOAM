@@ -143,6 +143,16 @@ Provides:
 - :class:`EnhancedWallTreatment3` — Enhanced wall treatment v3 with Jayatilleke blending and heat transfer
 - :class:`AdaptiveWallTreatment` — Adaptive wall treatment with hysteresis-based regime switching
 
+**Enhanced RANS/LES Models (Phase 14):**
+- :class:`KEpsilonEnhanced5Model` — Realizable k-epsilon v5 with elliptic blending and RNG correction
+- :class:`KOmegaEnhanced5Model` — k-omega v5 with shear-layer adapted beta and SST-like blending
+- :class:`KOmegaSSTEnhanced5Model` — SST v5 with amplification factor and improved rotation-curvature
+- :class:`SpalartAllmarasEnhanced5Model` — SA v5 with hybrid RANS-LES and controlled decay
+- :class:`DynamicLagrangianSGS` — Dynamic Smagorinsky with Lagrangian averaging (Meneveau et al. 1996)
+- :class:`AMDModel` — Anisotropic Minimum Dissipation model (Rozema et al. 2015)
+- :class:`EnhancedWallTreatment4` — Enhanced wall treatment v4 with Lewis number and Van Driest damping
+- :class:`CompressibleWallTreatment` — Compressible wall treatment with Van Driest damping
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -387,6 +397,14 @@ from pyfoam.turbulence.spalart_allmaras_enhanced_4 import SpalartAllmarasEnhance
 from pyfoam.turbulence.les_model_enhanced_4 import VremanModel, SigmaModel
 from pyfoam.turbulence.wall_treatment_enhanced_3 import EnhancedWallTreatment3, AdaptiveWallTreatment
 
+# Enhanced RANS/LES models (Phase 14)
+from pyfoam.turbulence.k_epsilon_enhanced_5 import KEpsilonEnhanced5Model, KEpsilonEnhanced5Constants
+from pyfoam.turbulence.k_omega_enhanced_5 import KOmegaEnhanced5Model, KOmegaEnhanced5Constants
+from pyfoam.turbulence.k_omega_sst_enhanced_5 import KOmegaSSTEnhanced5Model, KOmegaSSTEnhanced5Constants
+from pyfoam.turbulence.spalart_allmaras_enhanced_5 import SpalartAllmarasEnhanced5Model, SpalartAllmarasEnhanced5Constants
+from pyfoam.turbulence.les_model_enhanced_5 import DynamicLagrangianSGS, AMDModel
+from pyfoam.turbulence.wall_treatment_enhanced_4 import EnhancedWallTreatment4, CompressibleWallTreatment
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -587,4 +605,17 @@ __all__ = [
     "SigmaModel",
     "EnhancedWallTreatment3",
     "AdaptiveWallTreatment",
+    # Enhanced RANS/LES models (Phase 14)
+    "KEpsilonEnhanced5Model",
+    "KEpsilonEnhanced5Constants",
+    "KOmegaEnhanced5Model",
+    "KOmegaEnhanced5Constants",
+    "KOmegaSSTEnhanced5Model",
+    "KOmegaSSTEnhanced5Constants",
+    "SpalartAllmarasEnhanced5Model",
+    "SpalartAllmarasEnhanced5Constants",
+    "DynamicLagrangianSGS",
+    "AMDModel",
+    "EnhancedWallTreatment4",
+    "CompressibleWallTreatment",
 ]

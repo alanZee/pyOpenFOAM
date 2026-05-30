@@ -107,6 +107,24 @@ from pyfoam.parallel.processor_patch_enhanced_5 import (
     EnhancedHaloExchange5,
     CompressionStats,
 )
+from pyfoam.parallel.reconstruct_par_enhanced_6 import (
+    ReconstructParEnhanced6,
+    V6ReconstructResult,
+    AnisotropicSmoothingConfig,
+    CheckpointInfo,
+)
+from pyfoam.parallel.redistribute_par_enhanced_6 import (
+    RedistributeParEnhanced6,
+    V6RedistributeResult,
+    HierarchicalPartitionConfig,
+    PartitionMetrics,
+)
+from pyfoam.parallel.processor_patch_enhanced_6 import (
+    OverlappedPatch6,
+    EnhancedHaloExchange6,
+    WeightedInterpolation,
+    BandwidthStats,
+)
 
 __all__ = [
     # Decomposition
@@ -195,4 +213,19 @@ __all__ = [
     "CoarsenablePatch5",
     "EnhancedHaloExchange5",
     "CompressionStats",
+    # V6 enhanced reconstruction
+    "ReconstructParEnhanced6",
+    "V6ReconstructResult",
+    "AnisotropicSmoothingConfig",
+    "CheckpointInfo",
+    # V6 enhanced redistribution
+    "RedistributeParEnhanced6",
+    "V6RedistributeResult",
+    "HierarchicalPartitionConfig",
+    "PartitionMetrics",
+    # V6 enhanced processor patches
+    "OverlappedPatch6",
+    "EnhancedHaloExchange6",
+    "WeightedInterpolation",
+    "BandwidthStats",
 ]

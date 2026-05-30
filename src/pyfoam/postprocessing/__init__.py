@@ -41,6 +41,11 @@ Provides:
 - :class:`ForcesEnhanced4` — enhanced forces v4 with aeroacoustic sources and unsteady stats
 - :class:`WallShearStressEnhanced4` — enhanced wall shear stress v4 with quadrant analysis and roughness
 - :class:`YPlusEnhanced5` — enhanced y+ v5 with AMR suggestions and budget analysis
+- :class:`FieldMinMaxEnhanced6` — enhanced field min/max v6 with SPC and predictive monitoring
+- :class:`ProbesEnhanced6` — enhanced probes v6 with POD and Lagrangian tracking
+- :class:`ForcesEnhanced5` — enhanced forces v5 with FSI coupling and fatigue estimation
+- :class:`WallShearStressEnhanced5` — enhanced wall shear stress v5 with anisotropy and coherent structures
+- :class:`YPlusEnhanced6` — enhanced y+ v6 with wall heat transfer and adaptive wall function selection
 
 All function objects follow OpenFOAM's function object API and can be
 configured via dictionary entries in ``system/controlDict``.
@@ -175,6 +180,36 @@ from pyfoam.postprocessing.y_plus_enhanced_5 import (
     WallModelConsistency,
 )
 
+# Phase 15: Enhanced postprocessing models
+from pyfoam.postprocessing.field_min_max_enhanced_6 import (
+    FieldMinMaxEnhanced6,
+    FieldCorrelation,
+    SPCControlChart,
+    PredictiveAlert,
+)
+from pyfoam.postprocessing.probes_enhanced_6 import (
+    ProbesEnhanced6,
+    PODResult,
+    LagrangianTrack,
+)
+from pyfoam.postprocessing.forces_enhanced_5 import (
+    ForcesEnhanced5,
+    FSIForceData,
+    FatigueSpectrum,
+    MomentPSD,
+)
+from pyfoam.postprocessing.wall_shear_stress_enhanced_5 import (
+    WallShearStressEnhanced5,
+    AnisotropyTensor,
+    CoherentStructure,
+)
+from pyfoam.postprocessing.y_plus_enhanced_6 import (
+    YPlusEnhanced6,
+    WallHeatTransfer,
+    AdaptiveWallFunction,
+    YPlusPrediction,
+)
+
 __all__ = [
     # Framework
     "FunctionObject",
@@ -291,4 +326,23 @@ __all__ = [
     "AMRSuggestion",
     "YPlusBudget",
     "WallModelConsistency",
+    # Phase 15: Enhanced postprocessing v6
+    "FieldMinMaxEnhanced6",
+    "FieldCorrelation",
+    "SPCControlChart",
+    "PredictiveAlert",
+    "ProbesEnhanced6",
+    "PODResult",
+    "LagrangianTrack",
+    "ForcesEnhanced5",
+    "FSIForceData",
+    "FatigueSpectrum",
+    "MomentPSD",
+    "WallShearStressEnhanced5",
+    "AnisotropyTensor",
+    "CoherentStructure",
+    "YPlusEnhanced6",
+    "WallHeatTransfer",
+    "AdaptiveWallFunction",
+    "YPlusPrediction",
 ]

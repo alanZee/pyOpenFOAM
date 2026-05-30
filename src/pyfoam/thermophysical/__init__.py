@@ -95,6 +95,16 @@ Provides:
 - :class:`SAFTVRSimplified` — Simplified SAFT-VR EOS for associating fluids
 - :class:`CPAEOS` — Cubic-Plus-Association EOS
 - :class:`GeneralizedAlphaEOS` — PR with selectable alpha (Soave/Twu/Mathias-Copeman)
+
+**Phase 14 — Enhanced v5/v6 Models:**
+- :class:`JanafMultiThermoEnhanced6` — JANAF v6 with Cp moments, reaction network, S_ref(T) table
+- :class:`TabulatedTransportEnhanced5` — tabulated transport v5 with multi-property, error estimation, grid quality
+- :class:`WilkeTransportEnhanced5` — Wilke v5 with Stockmayer collision integrals, virial correction
+- :class:`ConstantTransportEnhanced5` — constant transport v5 with Ree-Eyring shear-thinning, viscosity index
+- :class:`SutherlandTransportEnhanced5` — Sutherland v5 with Stockmayer potential, Sonine polynomials
+- :class:`PCSAFTSimplified` — Simplified PC-SAFT EOS with dispersion contribution
+- :class:`MultiFluidEOS` — Multi-fluid EOS with departure function
+- :class:`ExtendedCorrespondingStatesEOS` — Extended Corresponding States EOS with shape factors
 """
 
 from pyfoam.thermophysical.equation_of_state import (
@@ -200,6 +210,18 @@ from pyfoam.thermophysical.equation_of_state_enhanced_3 import (
     GeneralizedAlphaEOS,
 )
 
+# Phase 14: Enhanced models v5/v6
+from pyfoam.thermophysical.janaf_multi_thermo_enhanced_6 import JanafMultiThermoEnhanced6
+from pyfoam.thermophysical.tabulated_transport_enhanced_5 import TabulatedTransportEnhanced5
+from pyfoam.thermophysical.wilke_transport_enhanced_5 import WilkeTransportEnhanced5
+from pyfoam.thermophysical.constant_transport_enhanced_5 import ConstantTransportEnhanced5
+from pyfoam.thermophysical.sutherland_transport_enhanced_5 import SutherlandTransportEnhanced5
+from pyfoam.thermophysical.equation_of_state_enhanced_4 import (
+    PCSAFTSimplified,
+    MultiFluidEOS,
+    ExtendedCorrespondingStatesEOS,
+)
+
 __all__ = [
     # Equation of state
     "EquationOfState",
@@ -283,6 +305,15 @@ __all__ = [
     "SAFTVRSimplified",
     "CPAEOS",
     "GeneralizedAlphaEOS",
+    # Phase 14: Enhanced models v5/v6
+    "JanafMultiThermoEnhanced6",
+    "TabulatedTransportEnhanced5",
+    "WilkeTransportEnhanced5",
+    "ConstantTransportEnhanced5",
+    "SutherlandTransportEnhanced5",
+    "PCSAFTSimplified",
+    "MultiFluidEOS",
+    "ExtendedCorrespondingStatesEOS",
     # Chemistry models
     "ChemistryModel",
     "ODEChemistrySolver",

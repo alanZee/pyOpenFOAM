@@ -79,6 +79,15 @@ from pyfoam.ode.ode_solvers_v4 import (
     SISSolver_v4,
     SEulexSolver_v4,
 )
+from pyfoam.ode.ode_solvers_v5 import (
+    RKCK45Solver_v5,
+    RKDP45Solver_v5,
+    Rosenbrock12Solver_v5,
+    Rosenbrock23Solver_v5,
+    Rosenbrock34Solver_v5,
+    SISSolver_v5,
+    SEulexSolver_v5,
+)
 
 __all__ = [
     # Base
@@ -130,4 +139,14 @@ __all__ = [
     # Semi-implicit / extrapolation v4
     "SISSolver_v4",
     "SEulexSolver_v4",
+    # Explicit v5
+    "RKCK45Solver_v5",
+    "RKDP45Solver_v5",
+    # Implicit / stiff v5
+    "Rosenbrock12Solver_v5",
+    "Rosenbrock23Solver_v5",
+    "Rosenbrock34Solver_v5",
+    # Semi-implicit / extrapolation v5
+    "SISSolver_v5",
+    "SEulexSolver_v5",
 ]

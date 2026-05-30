@@ -94,6 +94,23 @@ from pyfoam.rigid_body.restraints_enhanced_4 import (
     PressureRestraint,
     CentripetalRestraint,
 )
+from pyfoam.rigid_body.six_dof_solver_enhanced_5 import (
+    EnhancedSixDoFSolver5,
+    EnergyTrackingState,
+    AdaptiveSubstepConfig,
+)
+from pyfoam.rigid_body.joints_enhanced_5 import (
+    MagnetorheologicalJoint,
+    PneumaticJoint,
+    HarmonicDriveJoint,
+    RollingContactJoint,
+)
+from pyfoam.rigid_body.restraints_enhanced_5 import (
+    ShapeMemoryAlloyRestraint,
+    ElectrostaticRestraint,
+    GeometricStiffnessRestraint,
+    FluidInertiaRestraint,
+)
 
 __all__ = [
     "SixDoFSolver",
@@ -156,4 +173,16 @@ __all__ = [
     "ElasticFoundationRestraint",
     "PressureRestraint",
     "CentripetalRestraint",
+    # V5 enhanced
+    "EnhancedSixDoFSolver5",
+    "EnergyTrackingState",
+    "AdaptiveSubstepConfig",
+    "MagnetorheologicalJoint",
+    "PneumaticJoint",
+    "HarmonicDriveJoint",
+    "RollingContactJoint",
+    "ShapeMemoryAlloyRestraint",
+    "ElectrostaticRestraint",
+    "GeometricStiffnessRestraint",
+    "FluidInertiaRestraint",
 ]

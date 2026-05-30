@@ -82,6 +82,16 @@ Provides:
   TopologicalInterfaceArea, FractalDimensionArea, PhaseAwareAreaTransport
 - Enhanced turbulence damping v6: TurbulenceDamping6EnhancedModel,
   LESAwareDamping, DynamicCoefficientDamping, TopologyAwareDamping
+- Enhanced incompressible N-phase VOF v6: IncompressibleMultiphaseVoFEnhanced5
+  (surface tension reconstruction, adaptive interface refinement, phase-aware Courant)
+- Enhanced compressible N-phase VOF v6: CompressibleMultiphaseVoFEnhanced5
+  (energy coupling, non-equilibrium phase change thermal coupling)
+- Enhanced multicomponent mixture v6: MulticomponentMixtureEnhanced5
+  (Stefan-Maxwell diffusion, NRTL activity coefficients, mixture enthalpy)
+- Enhanced interfacial area v7: InterfacialArea6Model,
+  StochasticInterfacialArea, WeberCorrectedArea, NucleationAreaGeneration
+- Enhanced turbulence damping v7: TurbulenceDamping7EnhancedModel,
+  MLAssistedDamping, AnisotropicTensorDamping, ShearLayerDamping
 """
 
 from pyfoam.multiphase.volume_of_fluid import VOFAdvection
@@ -374,6 +384,37 @@ from pyfoam.multiphase.turbulence_damping_enhanced_6 import (
     TopologyAwareDamping,
 )
 
+# Phase 15: Enhanced incompressible N-phase VOF v6
+from pyfoam.multiphase.incompressible_multiphase_vof_enhanced_5 import (
+    IncompressibleMultiphaseVoFEnhanced5,
+)
+
+# Phase 15: Enhanced compressible N-phase VOF v6
+from pyfoam.multiphase.compressible_multiphase_vof_enhanced_5 import (
+    CompressibleMultiphaseVoFEnhanced5,
+)
+
+# Phase 15: Enhanced multicomponent mixture v6
+from pyfoam.multiphase.multicomponent_mixture_enhanced_5 import (
+    MulticomponentMixtureEnhanced5,
+)
+
+# Phase 15: Enhanced interfacial area v7
+from pyfoam.multiphase.interfacial_area_enhanced_6 import (
+    InterfacialArea6Model,
+    StochasticInterfacialArea,
+    WeberCorrectedArea,
+    NucleationAreaGeneration,
+)
+
+# Phase 15: Enhanced turbulence damping v7
+from pyfoam.multiphase.turbulence_damping_enhanced_7 import (
+    TurbulenceDamping7EnhancedModel,
+    MLAssistedDamping,
+    AnisotropicTensorDamping,
+    ShearLayerDamping,
+)
+
 __all__ = [
     "VOFAdvection",
     "MULESLimiter",
@@ -552,4 +593,20 @@ __all__ = [
     "LESAwareDamping",
     "DynamicCoefficientDamping",
     "TopologyAwareDamping",
+    # Phase 15: Enhanced incompressible N-phase VOF v6
+    "IncompressibleMultiphaseVoFEnhanced5",
+    # Phase 15: Enhanced compressible N-phase VOF v6
+    "CompressibleMultiphaseVoFEnhanced5",
+    # Phase 15: Enhanced multicomponent mixture v6
+    "MulticomponentMixtureEnhanced5",
+    # Phase 15: Enhanced interfacial area v7
+    "InterfacialArea6Model",
+    "StochasticInterfacialArea",
+    "WeberCorrectedArea",
+    "NucleationAreaGeneration",
+    # Phase 15: Enhanced turbulence damping v7
+    "TurbulenceDamping7EnhancedModel",
+    "MLAssistedDamping",
+    "AnisotropicTensorDamping",
+    "ShearLayerDamping",
 ]

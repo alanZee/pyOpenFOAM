@@ -72,6 +72,22 @@ from pyfoam.structural.displacement_solver_enhanced_4 import (
     ContactResult,
     RefinementIndicator,
 )
+from pyfoam.structural.elastic_model_enhanced_5 import (
+    GradientPlasticityModel,
+    CoupledDamagePlasticityModel,
+    HyperelasticOgdenModel,
+)
+from pyfoam.structural.stress_solver_enhanced_5 import (
+    EnhancedStressSolver5,
+    FailureAssessment,
+    StressInvariants,
+)
+from pyfoam.structural.displacement_solver_enhanced_5 import (
+    EnhancedDisplacementSolver5,
+    ModalResult,
+    NewmarkResult,
+    RayleighDamping,
+)
 
 __all__ = [
     "LinearElasticModel",
@@ -113,4 +129,15 @@ __all__ = [
     "EnhancedDisplacementSolver4",
     "ContactResult",
     "RefinementIndicator",
+    # V5 enhanced
+    "GradientPlasticityModel",
+    "CoupledDamagePlasticityModel",
+    "HyperelasticOgdenModel",
+    "EnhancedStressSolver5",
+    "FailureAssessment",
+    "StressInvariants",
+    "EnhancedDisplacementSolver5",
+    "ModalResult",
+    "NewmarkResult",
+    "RayleighDamping",
 ]
