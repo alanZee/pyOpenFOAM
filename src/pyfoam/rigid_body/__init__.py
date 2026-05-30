@@ -183,6 +183,24 @@ from pyfoam.rigid_body.restraints_enhanced_9 import (
     FrictionPendulumIsolator,
     ActiveTendonRestraint,
 )
+from pyfoam.rigid_body.six_dof_solver_enhanced_10 import (
+    EnhancedSixDoFSolver10,
+    GeometricExactConfig,
+    MultiRateConfig10,
+    EnergyMomentumConfig,
+)
+from pyfoam.rigid_body.joints_enhanced_10 import (
+    MagnetorheologicalCompositeJoint,
+    ElectroactiveHydrogelJoint,
+    DielectricElastomerJoint,
+    ThermoplasticMemoryJoint,
+)
+from pyfoam.rigid_body.restraints_enhanced_10 import (
+    ParticleImpactDamperRestraint,
+    ElectrorheologicalFluidRestraint,
+    NegativeStiffnessIsolator,
+    ActiveMassDamperRestraint,
+)
 
 __all__ = [
     "SixDoFSolver",
@@ -309,4 +327,17 @@ __all__ = [
     "MagnetorheologicalFluidRestraint",
     "FrictionPendulumIsolator",
     "ActiveTendonRestraint",
+    # V10 enhanced
+    "EnhancedSixDoFSolver10",
+    "GeometricExactConfig",
+    "MultiRateConfig10",
+    "EnergyMomentumConfig",
+    "MagnetorheologicalCompositeJoint",
+    "ElectroactiveHydrogelJoint",
+    "DielectricElastomerJoint",
+    "ThermoplasticMemoryJoint",
+    "ParticleImpactDamperRestraint",
+    "ElectrorheologicalFluidRestraint",
+    "NegativeStiffnessIsolator",
+    "ActiveMassDamperRestraint",
 ]

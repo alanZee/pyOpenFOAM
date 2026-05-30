@@ -156,6 +156,23 @@ from pyfoam.structural.displacement_solver_enhanced_9 import (
     MeshlessResult,
     RefinementResult9,
 )
+from pyfoam.structural.elastic_model_enhanced_10 import (
+    TopologyOptimisationModel,
+    MagnetostrictiveModel,
+    FlexoelectricModel,
+)
+from pyfoam.structural.stress_solver_enhanced_10 import (
+    EnhancedStressSolver10,
+    SpectralDecompositionResult,
+    AdaptiveQuadratureResult,
+    WilliamsExpansionResult,
+)
+from pyfoam.structural.displacement_solver_enhanced_10 import (
+    EnhancedDisplacementSolver10,
+    XFEM1DResult,
+    PUMResult,
+    DWRRefinementResult,
+)
 
 __all__ = [
     "LinearElasticModel",
@@ -256,4 +273,16 @@ __all__ = [
     "IsogeometricResult",
     "MeshlessResult",
     "RefinementResult9",
+    # V10 enhanced
+    "TopologyOptimisationModel",
+    "MagnetostrictiveModel",
+    "FlexoelectricModel",
+    "EnhancedStressSolver10",
+    "SpectralDecompositionResult",
+    "AdaptiveQuadratureResult",
+    "WilliamsExpansionResult",
+    "EnhancedDisplacementSolver10",
+    "XFEM1DResult",
+    "PUMResult",
+    "DWRRefinementResult",
 ]

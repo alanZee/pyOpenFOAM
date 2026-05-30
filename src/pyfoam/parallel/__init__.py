@@ -208,6 +208,27 @@ from pyfoam.parallel.processor_patch_enhanced_10 import (
     CacheLayoutConfig,
     PriorityConfig,
 )
+from pyfoam.parallel.reconstruct_par_enhanced_11 import (
+    ReconstructParEnhanced11,
+    V11ReconstructResult,
+    WaveletAnalysisConfig,
+    CheckpointAdaptConfig,
+    FieldCorrelationResult,
+)
+from pyfoam.parallel.redistribute_par_enhanced_11 import (
+    RedistributeParEnhanced11,
+    V11RedistributeResult,
+    GraphRefineConfig,
+    CommunicationCostConfig,
+    QualityCertificate,
+)
+from pyfoam.parallel.processor_patch_enhanced_11 import (
+    AdaptivePatch11,
+    EnhancedHaloExchange11,
+    CompressionAdaptConfig,
+    PipelineConfig,
+    ErrorResilienceConfig,
+)
 
 __all__ = [
     # Decomposition
@@ -382,4 +403,22 @@ __all__ = [
     "HierarchyConfig",
     "CacheLayoutConfig",
     "PriorityConfig",
+    # V11 enhanced reconstruction
+    "ReconstructParEnhanced11",
+    "V11ReconstructResult",
+    "WaveletAnalysisConfig",
+    "CheckpointAdaptConfig",
+    "FieldCorrelationResult",
+    # V11 enhanced redistribution
+    "RedistributeParEnhanced11",
+    "V11RedistributeResult",
+    "GraphRefineConfig",
+    "CommunicationCostConfig",
+    "QualityCertificate",
+    # V11 enhanced processor patches
+    "AdaptivePatch11",
+    "EnhancedHaloExchange11",
+    "CompressionAdaptConfig",
+    "PipelineConfig",
+    "ErrorResilienceConfig",
 ]
