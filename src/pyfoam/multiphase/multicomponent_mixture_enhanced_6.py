@@ -192,7 +192,7 @@ class MulticomponentMixtureEnhanced6(MulticomponentMixtureEnhanced5):
         mu_reference: float,
     ) -> dict[str, float]:
         """Compare computed mixture viscosity against reference."""
-        mu_computed = self.mixture_viscosity_linear(Y)
+        mu_computed = self.mixture_viscosity(Y)
         rel_err = abs(mu_computed.mean().item() - mu_reference) / max(abs(mu_reference), _EPS)
         return {
             "mu_computed": mu_computed.mean().item(),
