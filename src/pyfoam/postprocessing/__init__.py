@@ -47,6 +47,12 @@ Provides:
 - :class:`WallShearStressEnhanced5` — enhanced wall shear stress v5 with anisotropy and coherent structures
 - :class:`YPlusEnhanced6` — enhanced y+ v6 with wall heat transfer and adaptive wall function selection
 
+- :class:`FieldMinMaxEnhanced7` — enhanced field min/max v7 with multivariate anomaly detection and adaptive thresholds
+- :class:`ProbesEnhanced7` — enhanced probes v7 with compressed sensing recovery and ROM
+- :class:`ForcesEnhanced6` — enhanced forces v6 with DMD mode decomposition and frequency tracking
+- :class:`WallShearStressEnhanced6` — enhanced wall shear stress v6 with WMLES interface and pressure-strain coupling
+- :class:`YPlusEnhanced7` — enhanced y+ v7 with uncertainty quantification and ensemble analysis
+
 All function objects follow OpenFOAM's function object API and can be
 configured via dictionary entries in ``system/controlDict``.
 """
@@ -210,6 +216,34 @@ from pyfoam.postprocessing.y_plus_enhanced_6 import (
     YPlusPrediction,
 )
 
+# Phase 16: Enhanced postprocessing models
+from pyfoam.postprocessing.field_min_max_enhanced_7 import (
+    FieldMinMaxEnhanced7,
+    MultivariateAnomaly,
+    AdaptiveThreshold,
+)
+from pyfoam.postprocessing.probes_enhanced_7 import (
+    ProbesEnhanced7,
+    CompressedSensingResult,
+    SensorPlacementResult,
+)
+from pyfoam.postprocessing.forces_enhanced_6 import (
+    ForcesEnhanced6,
+    DMDMode,
+    FrequencyTracker,
+    ReferenceFrameTransform,
+)
+from pyfoam.postprocessing.wall_shear_stress_enhanced_6 import (
+    WallShearStressEnhanced6,
+    WMLESInterface,
+    PressureStrainCorrelation,
+)
+from pyfoam.postprocessing.y_plus_enhanced_7 import (
+    YPlusEnhanced7,
+    YPlusUncertainty,
+    WallFunctionEnsemble,
+)
+
 __all__ = [
     # Framework
     "FunctionObject",
@@ -345,4 +379,21 @@ __all__ = [
     "WallHeatTransfer",
     "AdaptiveWallFunction",
     "YPlusPrediction",
+    # Phase 16: Enhanced postprocessing v7
+    "FieldMinMaxEnhanced7",
+    "MultivariateAnomaly",
+    "AdaptiveThreshold",
+    "ProbesEnhanced7",
+    "CompressedSensingResult",
+    "SensorPlacementResult",
+    "ForcesEnhanced6",
+    "DMDMode",
+    "FrequencyTracker",
+    "ReferenceFrameTransform",
+    "WallShearStressEnhanced6",
+    "WMLESInterface",
+    "PressureStrainCorrelation",
+    "YPlusEnhanced7",
+    "YPlusUncertainty",
+    "WallFunctionEnsemble",
 ]

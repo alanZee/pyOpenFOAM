@@ -88,6 +88,23 @@ from pyfoam.structural.displacement_solver_enhanced_5 import (
     NewmarkResult,
     RayleighDamping,
 )
+from pyfoam.structural.elastic_model_enhanced_6 import (
+    ChabocheKinematicHardening,
+    JohnsonCookModel,
+    ConcreteDamagedPlasticityModel,
+)
+from pyfoam.structural.stress_solver_enhanced_6 import (
+    EnhancedStressSolver6,
+    CrackResult,
+    FatigueResult,
+    CreepResult,
+)
+from pyfoam.structural.displacement_solver_enhanced_6 import (
+    EnhancedDisplacementSolver6,
+    BucklingResult,
+    ContactResult6,
+    GeometricNonlinearResult,
+)
 
 __all__ = [
     "LinearElasticModel",
@@ -140,4 +157,16 @@ __all__ = [
     "ModalResult",
     "NewmarkResult",
     "RayleighDamping",
+    # V6 enhanced
+    "ChabocheKinematicHardening",
+    "JohnsonCookModel",
+    "ConcreteDamagedPlasticityModel",
+    "EnhancedStressSolver6",
+    "CrackResult",
+    "FatigueResult",
+    "CreepResult",
+    "EnhancedDisplacementSolver6",
+    "BucklingResult",
+    "ContactResult6",
+    "GeometricNonlinearResult",
 ]

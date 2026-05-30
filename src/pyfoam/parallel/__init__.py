@@ -125,6 +125,26 @@ from pyfoam.parallel.processor_patch_enhanced_6 import (
     WeightedInterpolation,
     BandwidthStats,
 )
+from pyfoam.parallel.reconstruct_par_enhanced_7 import (
+    ReconstructParEnhanced7,
+    V7ReconstructResult,
+    WaveletCompressionConfig,
+    FieldQualityMetrics,
+    AMRLevelInfo,
+)
+from pyfoam.parallel.redistribute_par_enhanced_7 import (
+    RedistributeParEnhanced7,
+    V7RedistributeResult,
+    SpectralPartitionConfig,
+    LoadPrediction,
+    CommunicationMetrics,
+)
+from pyfoam.parallel.processor_patch_enhanced_7 import (
+    PrefetchablePatch7,
+    EnhancedHaloExchange7,
+    AsyncScheduleConfig,
+    PrefetchStats,
+)
 
 __all__ = [
     # Decomposition
@@ -228,4 +248,21 @@ __all__ = [
     "EnhancedHaloExchange6",
     "WeightedInterpolation",
     "BandwidthStats",
+    # V7 enhanced reconstruction
+    "ReconstructParEnhanced7",
+    "V7ReconstructResult",
+    "WaveletCompressionConfig",
+    "FieldQualityMetrics",
+    "AMRLevelInfo",
+    # V7 enhanced redistribution
+    "RedistributeParEnhanced7",
+    "V7RedistributeResult",
+    "SpectralPartitionConfig",
+    "LoadPrediction",
+    "CommunicationMetrics",
+    # V7 enhanced processor patches
+    "PrefetchablePatch7",
+    "EnhancedHaloExchange7",
+    "AsyncScheduleConfig",
+    "PrefetchStats",
 ]

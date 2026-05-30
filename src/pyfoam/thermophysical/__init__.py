@@ -105,6 +105,16 @@ Provides:
 - :class:`PCSAFTSimplified` — Simplified PC-SAFT EOS with dispersion contribution
 - :class:`MultiFluidEOS` — Multi-fluid EOS with departure function
 - :class:`ExtendedCorrespondingStatesEOS` — Extended Corresponding States EOS with shape factors
+
+**Phase 16 — Enhanced v6/v7 Models:**
+- :class:`JanafMultiThermoEnhanced7` — JANAF v7 with equilibrium constant, Cp extrapolation, mixture Cp
+- :class:`TabulatedTransportEnhanced6` — tabulated transport v6 with Cp-coupled Pr, bounded extrapolation, table merging
+- :class:`WilkeTransportEnhanced6` — Wilke v6 with diffusion cache, mixture validation, extreme-condition correction
+- :class:`ConstantTransportEnhanced6` — constant transport v6 with Eucken kappa, thermal conductivity models
+- :class:`SutherlandTransportEnhanced6` — Sutherland v6 with high-order mixing, Sutherland-LJ blending
+- :class:`LatticeGasEOS` — Lattice-gas EOS for confined fluids
+- :class:`CPASAFT` — CPA-SAFT hybrid EOS
+- :class:`TemperatureDependentPR` — PR EOS with T-dependent binary interaction parameter
 """
 
 from pyfoam.thermophysical.equation_of_state import (
@@ -222,6 +232,18 @@ from pyfoam.thermophysical.equation_of_state_enhanced_4 import (
     ExtendedCorrespondingStatesEOS,
 )
 
+# Phase 16: Enhanced models v6/v7
+from pyfoam.thermophysical.janaf_multi_thermo_enhanced_7 import JanafMultiThermoEnhanced7
+from pyfoam.thermophysical.tabulated_transport_enhanced_6 import TabulatedTransportEnhanced6
+from pyfoam.thermophysical.wilke_transport_enhanced_6 import WilkeTransportEnhanced6
+from pyfoam.thermophysical.constant_transport_enhanced_6 import ConstantTransportEnhanced6
+from pyfoam.thermophysical.sutherland_transport_enhanced_6 import SutherlandTransportEnhanced6
+from pyfoam.thermophysical.equation_of_state_enhanced_5 import (
+    LatticeGasEOS,
+    CPASAFT,
+    TemperatureDependentPR,
+)
+
 __all__ = [
     # Equation of state
     "EquationOfState",
@@ -314,6 +336,15 @@ __all__ = [
     "PCSAFTSimplified",
     "MultiFluidEOS",
     "ExtendedCorrespondingStatesEOS",
+    # Phase 16: Enhanced models v6/v7
+    "JanafMultiThermoEnhanced7",
+    "TabulatedTransportEnhanced6",
+    "WilkeTransportEnhanced6",
+    "ConstantTransportEnhanced6",
+    "SutherlandTransportEnhanced6",
+    "LatticeGasEOS",
+    "CPASAFT",
+    "TemperatureDependentPR",
     # Chemistry models
     "ChemistryModel",
     "ODEChemistrySolver",

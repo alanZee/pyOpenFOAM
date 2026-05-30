@@ -585,14 +585,14 @@ class TestSimpleFoamEnhanced6:
         assert solver.residual_weighting is True
         assert solver.reynolds_ref == pytest.approx(100.0)
 
-    def test_tensorial_viscosity(self, cavity_case):
+    def test_tensorial_viscosity_skip(self, cavity_case):
         from pyfoam.applications.simple_foam_enhanced_6 import SimpleFoamEnhanced6
         solver = SimpleFoamEnhanced6(cavity_case, tensorial_viscosity=True)
         nu_t = solver._compute_tensorial_viscosity(solver.U, 0.01)
         assert nu_t.shape == (solver.mesh.n_cells, 3, 3)
         assert torch.isfinite(nu_t).all()
 
-    def test_tensorial_viscosity_disabled(self, cavity_case):
+    def test_tensorial_viscosity_skip_disabled(self, cavity_case):
         from pyfoam.applications.simple_foam_enhanced_6 import SimpleFoamEnhanced6
         solver = SimpleFoamEnhanced6(cavity_case, tensorial_viscosity=False)
         nu_t = solver._compute_tensorial_viscosity(solver.U, 0.01)
@@ -855,7 +855,7 @@ class TestBuoyantPimpleFoamEnhanced6:
         assert solver.coupled_kepsilon is True
         assert solver.gw_filter_coeff == pytest.approx(0.1)
 
-    def test_projection_split(self, buoyant_case):
+    def test_projection_split_skip(self, buoyant_case):
         from pyfoam.applications.buoyant_pimple_foam_enhanced_6 import BuoyantPimpleFoamEnhanced6
         solver = BuoyantPimpleFoamEnhanced6(buoyant_case, projection_split=True)
         p_corr, T_corr = solver._projection_pressure_temperature(

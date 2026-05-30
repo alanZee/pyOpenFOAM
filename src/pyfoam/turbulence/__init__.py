@@ -153,6 +153,16 @@ Provides:
 - :class:`EnhancedWallTreatment4` — Enhanced wall treatment v4 with Lewis number and Van Driest damping
 - :class:`CompressibleWallTreatment` — Compressible wall treatment with Van Driest damping
 
+**Enhanced RANS/LES Models (Phase 16):**
+- :class:`KEpsilonEnhanced6Model` — Realizable k-epsilon v6 with anisotropy-aware C_mu and curvature limiter
+- :class:`KOmegaEnhanced6Model` — k-omega v6 with compressible cross-diffusion and adaptive beta
+- :class:`KOmegaSSTEnhanced6Model` — SST v6 with roughness, SAS, and adaptive sigma
+- :class:`SpalartAllmarasEnhanced6Model` — SA v6 with separated-flow correction and adaptive cv1
+- :class:`WMLEModel` — Wall-Modeled LES SGS model
+- :class:`TensorViscositySGS` — Tensor-viscosity SGS model
+- :class:`EnhancedWallTreatment5` — Enhanced wall treatment v5 with conjugate HT and adaptive y+ tracking
+- :class:`ConjugateHeatTransfer` — Conjugate heat transfer calculator
+
 All RANS/DES models register themselves via ``@TurbulenceModel.register(name)``
 and can be instantiated at run-time via ``TurbulenceModel.create(name, ...)``.
 
@@ -405,6 +415,14 @@ from pyfoam.turbulence.spalart_allmaras_enhanced_5 import SpalartAllmarasEnhance
 from pyfoam.turbulence.les_model_enhanced_5 import DynamicLagrangianSGS, AMDModel
 from pyfoam.turbulence.wall_treatment_enhanced_4 import EnhancedWallTreatment4, CompressibleWallTreatment
 
+# Enhanced RANS/LES models (Phase 16)
+from pyfoam.turbulence.k_epsilon_enhanced_6 import KEpsilonEnhanced6Model, KEpsilonEnhanced6Constants
+from pyfoam.turbulence.k_omega_enhanced_6 import KOmegaEnhanced6Model, KOmegaEnhanced6Constants
+from pyfoam.turbulence.k_omega_sst_enhanced_6 import KOmegaSSTEnhanced6Model, KOmegaSSTEnhanced6Constants
+from pyfoam.turbulence.spalart_allmaras_enhanced_6 import SpalartAllmarasEnhanced6Model, SpalartAllmarasEnhanced6Constants
+from pyfoam.turbulence.les_model_enhanced_6 import WMLEModel, TensorViscositySGS
+from pyfoam.turbulence.wall_treatment_enhanced_5 import EnhancedWallTreatment5, ConjugateHeatTransfer
+
 __all__ = [
     # Base
     "TurbulenceModel",
@@ -618,4 +636,17 @@ __all__ = [
     "AMDModel",
     "EnhancedWallTreatment4",
     "CompressibleWallTreatment",
+    # Enhanced RANS/LES models (Phase 16)
+    "KEpsilonEnhanced6Model",
+    "KEpsilonEnhanced6Constants",
+    "KOmegaEnhanced6Model",
+    "KOmegaEnhanced6Constants",
+    "KOmegaSSTEnhanced6Model",
+    "KOmegaSSTEnhanced6Constants",
+    "SpalartAllmarasEnhanced6Model",
+    "SpalartAllmarasEnhanced6Constants",
+    "WMLEModel",
+    "TensorViscositySGS",
+    "EnhancedWallTreatment5",
+    "ConjugateHeatTransfer",
 ]
