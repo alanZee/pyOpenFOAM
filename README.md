@@ -28,9 +28,15 @@
 - **Differentiable CFD** — `torch.autograd` support through custom autograd functions
 - **OpenFOAM Compatible** — Read/write existing OpenFOAM cases natively
 - **20+ Boundary Conditions** — Velocity, pressure, turbulence, VOF, thermal
-- **Full Turbulence Library** — RANS (k-ε, k-ω SST, S-A, v2f), LES (Smagorinsky, WALE), DES
+- **Full Turbulence Library** — RANS (k-epsilon, k-omega SST, S-A, v2f), LES (Smagorinsky, WALE), DES
 - **Mesh Tools** — blockMesh, snappyHexMesh, gmsh/fluent/VTK converters
 - **MPI Parallel** — Domain decomposition, halo exchange, parallel I/O
+- **Lagrangian Particle Tracking** — Injection, collision, breakup, evaporation models
+- **Multiphase VOF/MULES** — Interface compression, cavitation models, interfacial forces
+- **Structural Mechanics** — Displacement solver, elastic models
+- **Rigid Body Dynamics** — Joints, restraints, motion solvers
+- **Wave Models** — Airy, Stokes, Cnoidal wave theories
+- **Comprehensive Tools** — checkMesh, setFields, renumberMesh, foamToVTK, and more
 
 ---
 
@@ -105,21 +111,28 @@ x = DifferentiableLinearSolve.apply(A, b, tol, max_iter)
 ```
 pyfoam/
 ├── core/               # Device management, LDU/FvMatrix, sparse ops, multi-GPU
+├── io/                 # OpenFOAM file format I/O (ASCII + binary), VTK/Gmsh/Fluent
 ├── mesh/               # PolyMesh, FvMesh, mesh generation (blockMesh, snappyHexMesh)
 ├── fields/             # volScalarField, volVectorField, surfaceScalarField
-├── boundary/           # 20+ BC types (velocity, pressure, turbulence, VOF, thermal)
-├── io/                 # OpenFOAM file format I/O (ASCII + binary)
+├── boundary/           # 30+ BC types (velocity, pressure, turbulence, VOF, thermal)
 ├── discretisation/     # fvm/fvc operators, interpolation schemes
 ├── solvers/            # PCG, PBiCGSTAB, GAMG, SIMPLE/SIMPLEC/PISO/PIMPLE
-├── turbulence/         # RANS, LES, DES models + wall functions
-├── thermophysical/     # Perfect gas, Sutherland, JANAF, ψ/ρ-based thermo
+├── turbulence/         # RANS, LES, DES models + wall functions (100+ variants)
+├── thermophysical/     # Perfect gas, Sutherland, JANAF, psi/rho-based thermo
 ├── multiphase/         # VOF + MULES, interFoam, Euler-Euler, cavitation
 ├── parallel/           # MPI decomposition, halo exchange, parallel I/O
-├── applications/       # 30+ solvers (incompressible, compressible, multiphase, thermal)
+├── applications/       # 35+ solvers (incompressible, compressible, multiphase, thermal)
+├── tools/              # checkMesh, setFields, renumberMesh, foamToVTK, etc.
 ├── postprocessing/     # FunctionObject framework, forces, y+, VTK output
 ├── differentiable/     # Differentiable operators, linear solver, SIMPLE
-├── mesh_generation/    # blockMesh, snappyHexMesh
-└── mesh_conversion/    # gmshToFoam, fluentMeshToFoam, foamToVTK
+├── lagrangian/         # Particle tracking, injection, collision, breakup, evaporation
+├── waves/              # Airy, Stokes, Cnoidal wave models
+├── fv/                 # fvModels (sources) + fvConstraints
+├── ode/                # ODE solvers (Euler, RK4, RKF45, Rosenbrock)
+├── rigid_body/         # Rigid body dynamics, joints, restraints
+├── structural/         # Structural mechanics (displacement solver, elastic models)
+├── models/             # Physical models (radiation)
+└── utils/              # Shared utilities
 ```
 
 ---
@@ -134,16 +147,30 @@ pyfoam/
 | **Thermal** | laplacianFoam, chtMultiRegionFoam |
 | **Multiphase** | interFoam, multiphaseInterFoam, compressibleInterFoam, twoPhaseEulerFoam, multiphaseEulerFoam, cavitatingFoam |
 | **Other** | potentialFoam, scalarTransportFoam, reactingFoam, solidDisplacementFoam |
+| **Optimization** | adjointFoam, adjointShapeOptimizationFoam, adjointTurbulenceFoam |
+| **Acoustics** | acousticFoam |
 
 ---
 
 ## Validation
 
-| Case | Solver | L2 Error | Reference |
-|------|--------|----------|-----------|
-| Couette Flow | simpleFoam | 0.013% | Analytical |
-| Poiseuille Flow | simpleFoam | 0.13% | Analytical |
-| Lid-Driven Cavity (Re=100) | simpleFoam | ~15% | Ghia et al. 1982 |
+13 benchmark cases defined against analytical solutions and published experimental/numerical data:
+
+| Case | Solver | Reference |
+|------|--------|-----------|
+| Couette Flow | icoFoam | Couette analytical solution |
+| Poiseuille Flow | icoFoam | Hagen-Poiseuille analytical solution |
+| Lid-Driven Cavity (Re=100) | icoFoam | Ghia et al. 1982 |
+| Taylor-Green Vortex | icoFoam | Taylor & Green 1937 |
+| Backward Facing Step | simpleFoam | Driver & Seegmiller 1985 |
+| Sod Shock Tube | rhoCentralFoam | Sod 1978 |
+| Natural Convection (Ra=10^5) | buoyantBoussinesqSimpleFoam | de Vahl Davis 1983 |
+| Dam Break | interFoam | Martin & Moyce 1952 |
+| Turbulent Channel (Re_tau=180) | simpleFoam + kOmegaSST | Moser, Kim & Mansour 1999 |
+| Compressible Nozzle | rhoCentralFoam | Isentropic nozzle theory |
+| Laminar Cylinder (Re=20) | icoFoam | Dennis & Chang 1970 |
+| Cylinder Flow (Re=100) | pisoFoam | Williamson 1996 |
+| Turbulent Duct (Re=10000) | simpleFoam + kOmegaSST | Petukhov 1970 |
 
 ```bash
 python validation/run_all.py
@@ -169,11 +196,17 @@ pytest tests/unit/solvers/ -q
 
 | Document | Description |
 |----------|-------------|
+| [API Index](docs/api/README.md) | 24 modules overview, class counts, usage examples, RTS pattern |
+| [Module API Reference](docs/api/modules.md) | Detailed API for all public classes and functions |
+| [Getting Started (en)](docs/en/getting_started.md) | Installation, quick start, GPU guide |
+| [Getting Started (zh)](docs/user_guide/getting_started.md) | Installation, quick start, GPU guide (Chinese) |
+| [Migration Guide](docs/migration_guide.md) | OpenFOAM to pyOpenFOAM mapping (Chinese) |
+| [Migration Guide (en)](docs/en/migration_guide.md) | OpenFOAM to pyOpenFOAM mapping (English) |
+| [Architecture](docs/en/architecture.md) | Top-level architecture and design decisions |
+| [GPU Guide](docs/en/gpu_guide.md) | GPU acceleration and multi-GPU usage |
 | [PROPOSAL.md](docs/PROPOSAL.md) | Requirements, goals, benchmarks, solver list |
 | [DESIGN.md](docs/DESIGN.md) | Top-level architecture and design decisions |
 | [ROADMAP.md](docs/ROADMAP.md) | Future plans and remaining work |
-| [English Docs](docs/en/) | Getting started, API reference, architecture, GPU guide, migration guide |
-| [中文文档](docs/zh/) | 入门指南、API 参考、架构设计、GPU 指南、迁移指南 |
 
 ---
 
