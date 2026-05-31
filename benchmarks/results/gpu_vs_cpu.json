@@ -1,0 +1,142 @@
+{
+  "metadata": {
+    "pytorch_version": "2.12.0+cu130",
+    "gpu_available": true,
+    "gpu_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "cuda_version": "13.0",
+    "mesh_sizes": [
+      32,
+      64
+    ],
+    "warmup_runs": 1,
+    "benchmark_runs": 3
+  },
+  "simple_iteration_results": [
+    {
+      "n_cells_per_dim": 32,
+      "n_cells": 32768,
+      "device": "cpu",
+      "assembly_time_s": 0.001704,
+      "solve_time_s": 0.599396,
+      "full_iteration_time_s": 0.601231,
+      "momentum_iters": 500,
+      "pressure_iters": 500,
+      "momentum_residual": 1168051.4447259048,
+      "pressure_residual": 0.0037300562281628977
+    },
+    {
+      "n_cells_per_dim": 64,
+      "n_cells": 262144,
+      "device": "cpu",
+      "assembly_time_s": 0.0114,
+      "solve_time_s": 4.878108,
+      "full_iteration_time_s": 4.893463,
+      "momentum_iters": 500,
+      "pressure_iters": 500,
+      "momentum_residual": 1886872.776566915,
+      "pressure_residual": 20871.35710005096
+    },
+    {
+      "n_cells_per_dim": 32,
+      "n_cells": 32768,
+      "device": "cuda",
+      "assembly_time_s": 0.000633,
+      "solve_time_s": 0.376424,
+      "full_iteration_time_s": 0.37715,
+      "momentum_iters": 500,
+      "pressure_iters": 500,
+      "momentum_residual": 1161628.2289840234,
+      "pressure_residual": 6.887747488546168
+    },
+    {
+      "n_cells_per_dim": 64,
+      "n_cells": 262144,
+      "device": "cuda",
+      "assembly_time_s": 0.000452,
+      "solve_time_s": 0.335302,
+      "full_iteration_time_s": 0.335876,
+      "momentum_iters": 500,
+      "pressure_iters": 500,
+      "momentum_residual": 1877475.5015675677,
+      "pressure_residual": 1721.8963291379332
+    }
+  ],
+  "pcg_solver_results": [
+    {
+      "n_cells_per_dim": 32,
+      "n_cells": 32768,
+      "device": "cpu",
+      "pcg_solver_time_s": 0.001031,
+      "iterations": 1,
+      "residual": 0.0
+    },
+    {
+      "n_cells_per_dim": 64,
+      "n_cells": 262144,
+      "device": "cpu",
+      "pcg_solver_time_s": 0.00455,
+      "iterations": 1,
+      "residual": 0.0
+    },
+    {
+      "n_cells_per_dim": 32,
+      "n_cells": 32768,
+      "device": "cuda",
+      "pcg_solver_time_s": 0.000331,
+      "iterations": 1,
+      "residual": 0.0
+    },
+    {
+      "n_cells_per_dim": 64,
+      "n_cells": 262144,
+      "device": "cuda",
+      "pcg_solver_time_s": 0.000306,
+      "iterations": 1,
+      "residual": 0.0
+    }
+  ],
+  "speedup_comparison": [
+    {
+      "n_cells_per_dim": 32,
+      "n_cells": 32768,
+      "gpu_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "assembly_speedup": 2.692,
+      "solve_speedup": 1.592,
+      "full_iteration_speedup": 1.594,
+      "pcg_solver_speedup": 3.115,
+      "cpu_times": {
+        "assembly": 0.001704,
+        "solve": 0.599396,
+        "full_iteration": 0.601231,
+        "pcg_solver": 0.001031
+      },
+      "gpu_times": {
+        "assembly": 0.000633,
+        "solve": 0.376424,
+        "full_iteration": 0.37715,
+        "pcg_solver": 0.000331
+      }
+    },
+    {
+      "n_cells_per_dim": 64,
+      "n_cells": 262144,
+      "gpu_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "assembly_speedup": 25.221,
+      "solve_speedup": 14.548,
+      "full_iteration_speedup": 14.569,
+      "pcg_solver_speedup": 14.869,
+      "cpu_times": {
+        "assembly": 0.0114,
+        "solve": 4.878108,
+        "full_iteration": 4.893463,
+        "pcg_solver": 0.00455
+      },
+      "gpu_times": {
+        "assembly": 0.000452,
+        "solve": 0.335302,
+        "full_iteration": 0.335876,
+        "pcg_solver": 0.000306
+      }
+    }
+  ]
+}

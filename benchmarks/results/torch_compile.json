@@ -1,0 +1,96 @@
+{
+  "metadata": {
+    "pytorch_version": "2.12.0+cu130",
+    "device": "cuda",
+    "mesh_sizes": [
+      32,
+      64,
+      128
+    ],
+    "warmup_runs": 2,
+    "benchmark_runs": 5
+  },
+  "results_by_mesh": [
+    {
+      "n_cells_per_dim": 32,
+      "n_cells": 32768,
+      "operations": [
+        {
+          "operation": "ldu_ax (SpMV)",
+          "eager_time_s": 9.844e-05,
+          "compile_time_s": 0.00012785,
+          "speedup": 0.77,
+          "category": "spmv"
+        },
+        {
+          "operation": "compute_residual",
+          "eager_time_s": 0.00013001,
+          "compile_time_s": 0.00015336,
+          "speedup": 0.848,
+          "category": "gradient"
+        },
+        {
+          "operation": "face_interpolation",
+          "eager_time_s": 7.715e-05,
+          "compile_time_s": 0.0001005,
+          "speedup": 0.768,
+          "category": "interpolation"
+        }
+      ]
+    },
+    {
+      "n_cells_per_dim": 64,
+      "n_cells": 262144,
+      "operations": [
+        {
+          "operation": "ldu_ax (SpMV)",
+          "eager_time_s": 0.00012898,
+          "compile_time_s": 0.00013535,
+          "speedup": 0.953,
+          "category": "spmv"
+        },
+        {
+          "operation": "compute_residual",
+          "eager_time_s": 0.00014908,
+          "compile_time_s": 0.00017506,
+          "speedup": 0.852,
+          "category": "gradient"
+        },
+        {
+          "operation": "face_interpolation",
+          "eager_time_s": 7.146e-05,
+          "compile_time_s": 9.525e-05,
+          "speedup": 0.75,
+          "category": "interpolation"
+        }
+      ]
+    },
+    {
+      "n_cells_per_dim": 128,
+      "n_cells": 2097152,
+      "operations": [
+        {
+          "operation": "ldu_ax (SpMV)",
+          "eager_time_s": 0.0032322,
+          "compile_time_s": 0.00231393,
+          "speedup": 1.397,
+          "category": "spmv"
+        },
+        {
+          "operation": "compute_residual",
+          "eager_time_s": 0.00322799,
+          "compile_time_s": 0.00252788,
+          "speedup": 1.277,
+          "category": "gradient"
+        },
+        {
+          "operation": "face_interpolation",
+          "eager_time_s": 0.0019196,
+          "compile_time_s": 0.00081658,
+          "speedup": 2.351,
+          "category": "interpolation"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "metadata": {
+    "pytorch_version": "2.12.0+cu130",
+    "device": "cuda",
+    "gpu_available": true,
+    "gpu_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "mesh_sizes": [
+      40,
+      50,
+      64,
+      80
+    ],
+    "benchmark_runs": 3
+  },
+  "mesh_results": [
+    {
+      "n_cells_per_dim": 40,
+      "n_cells": 64000,
+      "n_internal_faces": 187200,
+      "device": "cuda",
+      "mesh_generation_time_s": 0.046182,
+      "assembly_time_s": 0.020005,
+      "solve_time_s": 0.000973,
+      "iterations": 1,
+      "residual": 6.697650454199109e-11,
+      "time_per_cell_us": 0.0152,
+      "peak_memory_mb": 16.31
+    },
+    {
+      "n_cells_per_dim": 50,
+      "n_cells": 125000,
+      "n_internal_faces": 367500,
+      "device": "cuda",
+      "mesh_generation_time_s": 0.089672,
+      "assembly_time_s": 0.000882,
+      "solve_time_s": 0.000308,
+      "iterations": 1,
+      "residual": 0.0,
+      "time_per_cell_us": 0.0025,
+      "peak_memory_mb": 32.35
+    },
+    {
+      "n_cells_per_dim": 64,
+      "n_cells": 262144,
+      "n_internal_faces": 774144,
+      "device": "cuda",
+      "mesh_generation_time_s": 0.184058,
+      "assembly_time_s": 0.001255,
+      "solve_time_s": 0.000426,
+      "iterations": 1,
+      "residual": 0.0,
+      "time_per_cell_us": 0.0016,
+      "peak_memory_mb": 67.91
+    },
+    {
+      "n_cells_per_dim": 80,
+      "n_cells": 512000,
+      "n_internal_faces": 1516800,
+      "device": "cuda",
+      "mesh_generation_time_s": 0.3409,
+      "assembly_time_s": 0.001992,
+      "solve_time_s": 0.000426,
+      "iterations": 1,
+      "residual": 5.496908028872986e-10,
+      "time_per_cell_us": 0.0008,
+      "peak_memory_mb": 135.57
+    }
+  ],
+  "scaling_analysis": [
+    {
+      "n_cells_per_dim": 40,
+      "n_cells": 64000,
+      "n_internal_faces": 187200,
+      "solve_time_s": 0.000973,
+      "time_per_cell_us": 0.0152,
+      "peak_memory_mb": 16.31,
+      "scaling_vs_smallest": "ref"
+    },
+    {
+      "n_cells_per_dim": 50,
+      "n_cells": 125000,
+      "n_internal_faces": 367500,
+      "solve_time_s": 0.000308,
+      "time_per_cell_us": 0.0025,
+      "peak_memory_mb": 32.35,
+      "scaling_vs_smallest": "0.16x"
+    },
+    {
+      "n_cells_per_dim": 64,
+      "n_cells": 262144,
+      "n_internal_faces": 774144,
+      "solve_time_s": 0.000426,
+      "time_per_cell_us": 0.0016,
+      "peak_memory_mb": 67.91,
+      "scaling_vs_smallest": "0.11x"
+    },
+    {
+      "n_cells_per_dim": 80,
+      "n_cells": 512000,
+      "n_internal_faces": 1516800,
+      "solve_time_s": 0.000426,
+      "time_per_cell_us": 0.0008,
+      "peak_memory_mb": 135.57,
+      "scaling_vs_smallest": "0.05x"
+    }
+  ]
+}
