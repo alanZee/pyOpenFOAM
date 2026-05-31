@@ -1,0 +1,46 @@
+{
+  "benchmark": "Ghia et al. (1982) Re=100",
+  "solver": "SIMPLE",
+  "convection_scheme": "first-order upwind",
+  "target_l2_error": 0.05,
+  "mesh_results": [
+    {
+      "mesh": "32x32",
+      "l2_relative_error": 0.13445674500140928,
+      "max_absolute_error": 0.10601629273504287,
+      "converged": true,
+      "iterations": 664,
+      "solve_time_s": 78.976777598,
+      "passed": false
+    },
+    {
+      "mesh": "64x64",
+      "l2_relative_error": 0.06251946168879012,
+      "max_absolute_error": 0.05300814636752138,
+      "converged": true,
+      "iterations": 1343,
+      "solve_time_s": 617.988083686,
+      "passed": false
+    }
+  ],
+  "convergence_rates": [
+    {
+      "from": "32x32",
+      "to": "64x64",
+      "error_ratio": 2.150638239188769,
+      "mesh_ratio": 2.0,
+      "order": 1.0753191195943845
+    }
+  ],
+  "analysis": {
+    "root_cause": "first-order upwind convection scheme introduces O(h) numerical diffusion",
+    "boundary_effect": "top-wall cells forced to u=U_lid at cell centre, but true value is lower due to boundary layer",
+    "best_mesh": "64x64",
+    "best_l2_error": 0.06251946168879012,
+    "improvement_options": [
+      "Use linearUpwind or QUICK convection scheme for O(h^2) spatial accuracy",
+      "Implement proper boundary treatment (interpolate face value, not cell-centre penalty)",
+      "Use SIMPLEC with appropriate relaxation for faster convergence"
+    ]
+  }
+}
