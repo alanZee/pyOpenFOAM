@@ -430,7 +430,7 @@ def _make_channel_case(
         "startFrom       startTime;\n"
         "startTime       0;\n"
         "stopAt          endTime;\n"
-        "endTime         5000;\n"
+        "endTime         100;\n"
         "deltaT          1;\n"
         "writeControl    timeStep;\n"
         "writeInterval   5000;\n"
