@@ -410,10 +410,34 @@ class SIMPLESolver(CoupledSolverBase):
             nu = config.nu
             diff_coeff = nu * S_mag * delta_f
 
-        # Convection (upwind)
+        # Convection — deferred-correction linearUpwind (2nd order)
+        # Implicit part: upwind (diagonally dominant)
+        # Explicit part: (φ_lu - φ_up) * flux as deferred correction source
         flux = phi[:n_internal]
         flux_pos = torch.where(flux >= 0, flux, torch.zeros_like(flux))
         flux_neg = torch.where(flux < 0, flux, torch.zeros_like(flux))
+
+        # Upwind cell index per face
+        upwind_cell = torch.where(flux >= 0, int_owner, int_neigh)
+
+        # Compute cell-centre gradient of U for linearUpwind correction
+        grad_U = self._compute_cell_gradient(U, mesh)
+        # grad_U: (n_cells, 3, 3) — grad_U[c, i, j] = dU_i/dx_j
+
+        # LinearUpwind correction: (grad_U_up · d) where d = face_centre - cell_centre
+        fc = mesh.face_centres[:n_internal]
+        cc = mesh.cell_centres
+        d_vec = fc - cc[upwind_cell]  # (n_internal, 3)
+        # Correction per component: grad_U_up[i, :] · d_vec
+        lu_correction = torch.einsum('fid,fd->fi', grad_U[upwind_cell], d_vec)  # (n_internal, 3)
+        # Zero correction at boundary-adjacent faces for safety
+        lu_correction = lu_correction * (upwind_cell < n_cells).unsqueeze(-1).float()
+
+        # Deferred correction source: Σ_f (φ_lu - φ_up) * flux_f = Σ_f correction * flux_f
+        dc_source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        dc_contrib = lu_correction * flux.unsqueeze(-1)  # (n_internal, 3)
+        dc_source.index_add_(0, int_owner, dc_contrib)
+        dc_source.index_add_(0, int_neigh, -dc_contrib)
 
         # Matrix coefficients (per unit volume)
         V_P = gather(cell_volumes_safe, int_owner)
@@ -449,8 +473,8 @@ class SIMPLESolver(CoupledSolverBase):
         grad_p.index_add_(0, int_neigh, -p_contrib)
         grad_p = grad_p / cell_volumes_safe.unsqueeze(-1)
 
-        # Source = -grad(p)  (NO H_old term)
-        source = -grad_p
+        # Source = -grad(p) + deferred correction (linearUpwind)
+        source = -grad_p + dc_source
 
         # ============================================
         # Boundary condition enforcement (implicit BC method)
@@ -681,3 +705,41 @@ class SIMPLESolver(CoupledSolverBase):
 
         # Return L1 norm (mean absolute divergence)
         return float(div_phi.abs().mean().item())
+
+    def _compute_cell_gradient(self, U, mesh):
+        """Compute cell-centre gradient of vector field U using Gauss theorem.
+
+        Args:
+            U: ``(n_cells, 3)`` — cell-centre velocity field.
+            mesh: PolyMesh object.
+
+        Returns:
+            grad_U: ``(n_cells, 3, 3)`` — gradient tensor, grad_U[c, i, j] = dU_i/dx_j.
+        """
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        owner = mesh.owner
+        neighbour = mesh.neighbour
+        face_areas = mesh.face_areas
+
+        int_owner = owner[:n_internal]
+        int_neigh = neighbour
+        w = mesh.face_weights[:n_internal]
+
+        # Face interpolation: U_f = w * U_P + (1-w) * U_N
+        U_P = U[int_owner]  # (n_internal, 3)
+        U_N = U[int_neigh]  # (n_internal, 3)
+        U_f = w.unsqueeze(-1) * U_P + (1.0 - w).unsqueeze(-1) * U_N
+
+        # Gauss: grad_U[c] = (1/V_c) * Σ_f (U_f ⊗ S_f)
+        S_f = face_areas[:n_internal]  # (n_internal, 3)
+        contrib = U_f.unsqueeze(2) * S_f.unsqueeze(1)  # (n_internal, 3, 3)
+
+        grad_U = torch.zeros(n_cells, 3, 3, dtype=U.dtype, device=U.device)
+        grad_U.index_add_(0, int_owner, contrib)
+        grad_U.index_add_(0, int_neigh, -contrib)
+
+        V = mesh.cell_volumes.clamp(min=1e-30)
+        grad_U = grad_U / V.unsqueeze(-1).unsqueeze(-1)
+
+        return grad_U
