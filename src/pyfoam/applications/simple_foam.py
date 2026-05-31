@@ -407,11 +407,15 @@ class SimpleFoam(SolverBase):
             # Update turbulence model (if active)
             nu_field = self._update_turbulence()
 
+            # Read body force from fvOptions (if present)
+            body_force = self._read_fv_options_body_force()
+
             # Run one SIMPLE outer iteration
             self.U, self.p, self.phi, conv = solver.solve(
                 self.U, self.p, self.phi,
                 U_bc=U_bc,
                 nu_field=nu_field,
+                body_force=body_force,
                 max_outer_iterations=self.max_outer_iterations,
                 tolerance=self.convergence_tolerance,
             )
@@ -467,6 +471,37 @@ class SimpleFoam(SolverBase):
         # Return effective viscosity: ν + ν_t
         nu_eff = self.ras.mu_eff()
         return nu_eff
+
+    def _read_fv_options_body_force(self) -> torch.Tensor | None:
+        """Read body force from constant/fvOptions file.
+
+        Returns:
+            ``(n_cells, 3)`` body force per unit volume, or ``None`` if no fvOptions.
+        """
+        fv_path = self.case_path / "constant" / "fvOptions"
+        if not fv_path.exists():
+            return None
+
+        try:
+            from pyfoam.io.dictionary import parse_dict_file
+            fv_data = parse_dict_file(fv_path)
+        except Exception:
+            return None
+
+        # Look for vectorSemiImplicitSource with U source
+        for key, block in fv_data.items():
+            if isinstance(block, dict) and block.get("type") == "vectorSemiImplicitSource":
+                sources = block.get("sources", {})
+                if "U" in sources:
+                    u_val = sources["U"]
+                    if isinstance(u_val, (list, tuple)) and len(u_val) >= 3:
+                        force = torch.tensor(
+                            [float(u_val[0]), float(u_val[1]), float(u_val[2])],
+                            dtype=self.U.dtype, device=self.U.device,
+                        )
+                        # Expand to (n_cells, 3)
+                        return force.unsqueeze(0).expand(self.mesh.n_cells, -1).clone()
+        return None
 
     # ------------------------------------------------------------------
     # Field writing

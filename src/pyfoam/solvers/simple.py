@@ -132,6 +132,7 @@ class SIMPLESolver(CoupledSolverBase):
         U_old: torch.Tensor | None = None,
         p_old: torch.Tensor | None = None,
         nu_field: torch.Tensor | None = None,
+        body_force: torch.Tensor | None = None,
         max_outer_iterations: int = 100,
         tolerance: float = 1e-4,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, ConvergenceData]:
@@ -181,7 +182,7 @@ class SIMPLESolver(CoupledSolverBase):
             # Step 1: Momentum predictor
             # ============================================
             U, A_p, H, mat_lower, mat_upper = self._momentum_predictor(
-                U, p, phi, U_bc=U_bc, nu_field=nu_field,
+                U, p, phi, U_bc=U_bc, nu_field=nu_field, body_force=body_force,
             )
 
             # ============================================
@@ -312,8 +313,8 @@ class SIMPLESolver(CoupledSolverBase):
                     HbyA[:, 0].min().item(), HbyA[:, 0].max().item(),
                 )
 
-            # Check convergence — use continuity error as primary criterion
-            if continuity_error < tolerance and outer > 0:
+            # Check convergence — require both continuity and U residual
+            if continuity_error < tolerance and U_residual < tolerance and outer > 0:
                 convergence.converged = True
                 logger.info(
                     "SIMPLE converged in %d iterations (continuity=%.6e, U_res=%.6e)",
@@ -345,6 +346,7 @@ class SIMPLESolver(CoupledSolverBase):
         phi: torch.Tensor,
         U_bc: torch.Tensor | None = None,
         nu_field: torch.Tensor | None = None,
+        body_force: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Solve the momentum equation with under-relaxation.
 
@@ -476,8 +478,10 @@ class SIMPLESolver(CoupledSolverBase):
         grad_p.index_add_(0, int_neigh, -p_contrib)
         grad_p = grad_p / cell_volumes_safe.unsqueeze(-1)
 
-        # Source = -grad(p) + deferred correction (linearUpwind)
+        # Source = -grad(p) + deferred correction (linearUpwind) + body force
         source = -grad_p + dc_source
+        if body_force is not None:
+            source = source + body_force.to(device=device, dtype=dtype)
 
         # ============================================
         # Boundary condition enforcement (implicit BC method)

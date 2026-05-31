@@ -496,6 +496,7 @@ def _make_channel_case(
         "}\n\n"
         "SIMPLE\n{\n"
         "    nNonOrthogonalCorrectors 0;\n"
+        "    maxOuterIterations 50;\n"
         "    residualControl\n    {\n"
         "        p               1e-4;\n"
         "        U               1e-4;\n"
@@ -508,10 +509,31 @@ def _make_channel_case(
         "        k               0.7;\n"
         "        omega           0.7;\n"
         "    }\n"
-        "    convergenceTolerance 1e-4;\n"
+        "    convergenceTolerance 1e-6;\n"
         "}\n"
     )
     write_foam_file(sys_dir / "fvSolution", fv_header, fv_body, overwrite=True)
+
+    # ---- constant/fvOptions (body force to drive flow) ----
+    const_dir = case_dir / "constant"
+    const_dir.mkdir(exist_ok=True)
+    fv_header = FoamFileHeader(
+        version="2.0", format=FileFormat.ASCII,
+        class_name="dictionary", location="constant", object="fvOptions",
+    )
+    fv_body = (
+        "momentumSource\n"
+        "{\n"
+        "    type            vectorSemiImplicitSource;\n"
+        "    selectionMode   all;\n"
+        "    volumeMode      specific;\n"
+        "    sources\n"
+        "    {\n"
+        "        U (0.001 0 0);  // Pressure gradient driving force\n"
+        "    }\n"
+        "}\n"
+    )
+    write_foam_file(const_dir / "fvOptions", fv_header, fv_body, overwrite=True)
 
 
 def _tanh_stretching(L: float, n: int, beta: float = 1.5) -> np.ndarray:
