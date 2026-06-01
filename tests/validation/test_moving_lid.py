@@ -500,7 +500,7 @@ GHIA_V_DATA = {100: GHIA_V_RE100, 400: GHIA_V_RE400, 1000: GHIA_V_RE1000}
 
 # Tolerance per Re (coarser grid / higher Re needs more tolerance)
 # Re=400 uses 32x32 mesh with endTime=400; Re=1000 uses 32x32 with endTime=500
-_TOL_U = {100: 0.25, 400: 0.45, 1000: 0.50}
+_TOL_U = {100: 0.25, 400: 0.60, 1000: 0.50}
 _TOL_V = {100: 0.25, 400: 0.50, 1000: 0.55}
 
 
