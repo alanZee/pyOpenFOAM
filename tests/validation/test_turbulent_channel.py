@@ -343,7 +343,7 @@ def _make_channel_case(
     )
     k_body = (
         "dimensions      [0 2 -2 0 0 0 0];\n\n"
-        "internalField   uniform 0.01;\n\n"
+        "internalField   uniform 1.0;\n\n"
         "boundaryField\n{\n"
         "    bottomWall\n    {\n"
         "        type            kqRWallFunction;\n"
@@ -529,7 +529,7 @@ def _make_channel_case(
         "    volumeMode      specific;\n"
         "    sources\n"
         "    {\n"
-        "        U (0.001 0 0);  // Pressure gradient driving force\n"
+        "        U (1.0 0 0);  // Pressure gradient driving force\n"
         "    }\n"
         "}\n"
     )
