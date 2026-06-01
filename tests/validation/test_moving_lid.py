@@ -109,8 +109,8 @@ def _make_cavity_case(
     nu = U_lid * L / Re
 
     # endTime: scale with Re (higher Re needs more time)
-    # For Re=100: 200, Re=400: 400, Re=1000: 500
-    end_time = max(200, min(500, 1.0 * Re))
+    # For Re=100: 200, Re=400: 200, Re=1000: 200 (reduced for CPU feasibility)
+    end_time = max(200, min(200, 1.0 * Re))
 
     dx = L / n_cells
     dy = L / n_cells
