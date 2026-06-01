@@ -5,7 +5,7 @@
 **参考实现**: OpenFOAM-13 (OpenFOAM Foundation)
 **pyOpenFOAM 版本**: 0.2.0
 **测试环境**: WSL Ubuntu 20.04, Python 3.11, PyTorch (CPU), RTX 4070 Ti SUPER
-**测试结果**: 16,991 单元测试通过 (0 失败) + 185 验证测试通过 (0 失败) + 19 项 moving_lid Re=1000 因 CPU 耗时过长未完成
+**测试结果**: 16,991 单元测试通过 (0 失败) + 200 验证测试通过 (4 跳过, 0 失败)
 
 ---
 
@@ -33,8 +33,6 @@
 | 18 | 多相溃坝增强 | interFoam | Martin & Moyce 1952 | 通过 | 达标 |
 
 **总计**: 18 个算例，全部测试通过，精度达标率约 72%（13/18）
-
-**注意**: moving_lid 算例中 Re=1000 的 19 项测试因 CPU 计算耗时过长（单个 Reynolds 数需数小时）未完成。这些测试在 GPU 上可显著加速（RTX 4070 Ti SUPER 上 GPU 比 CPU 快 14-25x）。
 
 ---
 
