@@ -127,11 +127,18 @@ def _make_cylinder_flow_case(
                 n_cells += 1
 
     # ---- 面/owner/neighbour 构建 ----
-    faces: list[tuple] = []
+    # OpenFOAM 要求：
+    # 1. owner 数组与 faces 数组严格对应
+    # 2. 内部面必须 owner < neighbour
+    # 3. 面顺序：内部面 → 圆柱边界面 → 计算域边界面
+    # 因此分别收集各类面，最后拼接。
+    internal_faces: list[tuple] = []
     internal_owner: list[int] = []
     internal_neighbour: list[int] = []
-    cylinder_owner: list[int] = []   # 圆柱壁面
-    domain_owner: list[int] = []     # 计算域边界面
+    cylinder_faces: list[tuple] = []
+    cylinder_owner: list[int] = []
+    boundary_faces: list[tuple] = []
+    boundary_owner: list[int] = []
 
     def _face4(p0: int, p1: int) -> tuple:
         """生成 z 方向四边形面 (底层→顶层顺序)。"""
@@ -142,88 +149,85 @@ def _make_cylinder_flow_case(
         for i in range(nx - 1):
             c0 = cell_id[j][i]
             c1 = cell_id[j][i + 1]
+            if c0 < 0 and c1 < 0:
+                continue
             p0 = j * (nx + 1) + i + 1
             p1 = p0 + nx + 1
             if c0 >= 0 and c1 >= 0:
-                # 两个流体单元之间的内部面
-                faces.append(_face4(p0, p1))
+                internal_faces.append(_face4(p0, p1))
                 internal_owner.append(min(c0, c1))
                 internal_neighbour.append(max(c0, c1))
-            elif c0 >= 0 or c1 >= 0:
-                # 一个流体单元邻接圆柱内空区域 → 圆柱壁面
-                faces.append(_face4(p0, p1))
+            else:
+                cylinder_faces.append(_face4(p0, p1))
                 cylinder_owner.append(c0 if c0 >= 0 else c1)
-            # 两个都在圆柱内 → 不创建面
 
     # --- 内部水平面 (y 方向相邻单元) ---
     for j in range(ny - 1):
         for i in range(nx):
             c0 = cell_id[j][i]
             c1 = cell_id[j + 1][i]
+            if c0 < 0 and c1 < 0:
+                continue
             p0 = (j + 1) * (nx + 1) + i
             p1 = p0 + 1
             if c0 >= 0 and c1 >= 0:
-                faces.append(_face4(p0, p1))
+                internal_faces.append(_face4(p0, p1))
                 internal_owner.append(min(c0, c1))
                 internal_neighbour.append(max(c0, c1))
-            elif c0 >= 0 or c1 >= 0:
-                faces.append(_face4(p0, p1))
+            else:
+                cylinder_faces.append(_face4(p0, p1))
                 cylinder_owner.append(c0 if c0 >= 0 else c1)
 
     n_internal = len(internal_neighbour)
-    neighbour = internal_neighbour
+    n_cylinder = len(cylinder_faces)
 
     # --- 外部边界面 ---
     # leftWall (x=0, 左, slip wall)
-    left_start = len(domain_owner)
+    left_start = len(boundary_owner)
     for j in range(ny):
         if inside[j][0]:
             continue
         p0 = j * (nx + 1)
         p1 = p0 + nx + 1
-        faces.append(_face4(p0, p1))
-        domain_owner.append(cell_id[j][0])
-
-    n_left = len(domain_owner) - left_start
+        boundary_faces.append(_face4(p0, p1))
+        boundary_owner.append(cell_id[j][0])
+    n_left = len(boundary_owner) - left_start
 
     # rightWall (x=L, 右, slip wall)
-    right_start = len(domain_owner)
+    right_start = len(boundary_owner)
     for j in range(ny):
         if inside[j][nx - 1]:
             continue
         p0 = j * (nx + 1) + nx
         p1 = p0 + nx + 1
-        faces.append(_face4(p0, p1))
-        domain_owner.append(cell_id[j][nx - 1])
-
-    n_right = len(domain_owner) - right_start
+        boundary_faces.append(_face4(p0, p1))
+        boundary_owner.append(cell_id[j][nx - 1])
+    n_right = len(boundary_owner) - right_start
 
     # topWall (y=H)
-    top_start = len(domain_owner)
+    top_start = len(boundary_owner)
     for i in range(nx):
         if inside[ny - 1][i]:
             continue
         p0 = ny * (nx + 1) + i
         p1 = p0 + 1
-        faces.append(_face4(p0, p1))
-        domain_owner.append(cell_id[ny - 1][i])
-
-    n_top = len(domain_owner) - top_start
+        boundary_faces.append(_face4(p0, p1))
+        boundary_owner.append(cell_id[ny - 1][i])
+    n_top = len(boundary_owner) - top_start
 
     # bottomWall (y=0)
-    bottom_start = len(domain_owner)
+    bottom_start = len(boundary_owner)
     for i in range(nx):
         if inside[0][i]:
             continue
         p0 = i
         p1 = i + 1
-        faces.append(_face4(p0, p1))
-        domain_owner.append(cell_id[0][i])
-
-    n_bottom = len(domain_owner) - bottom_start
+        boundary_faces.append(_face4(p0, p1))
+        boundary_owner.append(cell_id[0][i])
+    n_bottom = len(boundary_owner) - bottom_start
 
     # frontAndBack (empty, z 法向) — 仅流体单元
-    empty_start = len(domain_owner)
+    empty_start = len(boundary_owner)
     for j in range(ny):
         for i in range(nx):
             c = cell_id[j][i]
@@ -234,17 +238,17 @@ def _make_cylinder_flow_case(
             p1 = p0 + 1
             p2 = p1 + nx + 1
             p3 = p0 + nx + 1
-            faces.append((4, p0, p1, p2, p3))
-            domain_owner.append(c)
+            boundary_faces.append((4, p0, p1, p2, p3))
+            boundary_owner.append(c)
             # Back (z=dz)
-            faces.append((4, p3, p2, p1 + n_base, p0 + n_base))
-            domain_owner.append(c)
+            boundary_faces.append((4, p3, p2, p1 + n_base, p0 + n_base))
+            boundary_owner.append(c)
+    n_empty = len(boundary_owner) - empty_start
 
-    n_empty = len(domain_owner) - empty_start
-
-    # 合并 owner 列表：内部面 → 圆柱壁面 → 计算域边界面
-    owner = internal_owner + cylinder_owner + domain_owner
-    n_cylinder = len(cylinder_owner)
+    # 按 OpenFOAM 顺序拼接：内部面 → 圆柱面 → 边界面
+    faces = internal_faces + cylinder_faces + boundary_faces
+    owner = internal_owner + cylinder_owner + boundary_owner
+    neighbour = internal_neighbour
     n_faces = len(faces)
 
     # ---- 写网格文件 ----
