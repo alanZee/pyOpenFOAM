@@ -5,7 +5,7 @@
 **参考实现**: OpenFOAM-13 (OpenFOAM Foundation)
 **pyOpenFOAM 版本**: 0.2.0
 **测试环境**: WSL Ubuntu 20.04, Python 3.11, PyTorch (CPU), RTX 4070 Ti SUPER
-**测试结果**: 16,991 单元测试通过 (0 失败) + 200 验证测试通过 (4 跳过, 0 失败)
+**测试结果**: 17,001 单元测试通过 (0 失败) + 208 验证测试通过 (0 跳过, 0 失败)
 
 ---
 
