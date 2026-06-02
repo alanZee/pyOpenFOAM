@@ -7,7 +7,7 @@
 
 ## 一、项目概述
 
-pyOpenFOAM 是 OpenFOAM v2512 的纯 Python 重写版本，使用 PyTorch 作为张量后端实现 GPU 加速。项目目标是完全复刻 OpenFOAM 的有限体积法 (FVM) 求解器，同时利用 PyTorch 的自动微分能力实现可微分 CFD。
+pyOpenFOAM 是 OpenFOAM 13 (Foundation) 的纯 Python 重写版本，使用 PyTorch 作为张量后端实现 GPU 加速。项目目标是完全复刻 OpenFOAM 的有限体积法 (FVM) 求解器，同时利用 PyTorch 的自动微分能力实现可微分 CFD。
 
 ---
 
@@ -150,7 +150,6 @@ pyfoam/
 
 ## 五、参考资源
 
-- **OpenFOAM 源码**: https://github.com/OpenFOAM/OpenFOAM-dev
-- **API 文档**: https://api.openfoam.com/2512/
-- **用户指南**: https://www.openfoam.com/documentation/user-guide
-- **教程指南**: https://www.openfoam.com/documentation/tutorial-guide
+- **OpenFOAM 源码**: https://github.com/OpenFOAM/OpenFOAM-13
+- **用户指南**: https://www.openfoam.org/documentation/user-guide
+- **教程指南**: https://www.openfoam.org/documentation/tutorial-guide

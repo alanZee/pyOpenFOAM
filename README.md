@@ -4,7 +4,7 @@
 
 **Pure Python CFD Solver with PyTorch GPU Acceleration**
 
-*An open-source Python reimplementation of OpenFOAM v2512*
+*An open-source Python reimplementation of OpenFOAM 13 (Foundation)*
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -19,7 +19,7 @@
 
 ## Overview
 
-**pyOpenFOAM** is an open-source Python reimplementation of [OpenFOAM](https://www.openfoam.com/) v2512, the widely-used C++ computational fluid dynamics (CFD) toolbox. Our goal is to bring OpenFOAM's capabilities to the Python ecosystem while leveraging PyTorch for GPU acceleration and automatic differentiation.
+**pyOpenFOAM** is an open-source Python reimplementation of [OpenFOAM 13](https://openfoam.org/) (Foundation), the widely-used C++ computational fluid dynamics (CFD) toolbox. Our goal is to bring OpenFOAM's capabilities to the Python ecosystem while leveraging PyTorch for GPU acceleration and automatic differentiation.
 
 ### Key Features
 

@@ -1,7 +1,6 @@
-# OpenFOAM v2512 物理模型与数值方法完整目录
+# OpenFOAM 13 物理模型与数值方法完整目录
 
-> 来源：OpenFOAM Foundation GitHub (OpenFOAM-12/13)，代表 OpenFOAM 最新代码库结构。
-> ESI v2512 (2025年12月) 与 Foundation 版本在核心模型上高度一致。
+> 来源：OpenFOAM Foundation GitHub (OpenFOAM-13)。
 
 ---
 
@@ -1343,7 +1342,5 @@
 
 ---
 
-> **说明**：此目录基于 OpenFOAM Foundation (OpenFOAM-12/13) 的 GitHub 源码。
-> ESI v2512 (2025年12月) 版本的核心模型结构与 Foundation 版本高度一致，
-> 但可能在部分应用层求解器和 GUI 集成上有差异。
+> **说明**：此目录基于 OpenFOAM Foundation (OpenFOAM-13) GitHub 源码。
 > 具体模型的模板实例化组合远多于上述列出的独立模型数量。

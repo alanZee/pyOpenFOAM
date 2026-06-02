@@ -4,7 +4,7 @@
 
 **基于 PyTorch GPU 加速的纯 Python CFD 求解器**
 
-*OpenFOAM v2512 的开源 Python 重写版本*
+*OpenFOAM 13 (Foundation) 的开源 Python 重写版本*
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -19,7 +19,7 @@
 
 ## 概述
 
-**pyOpenFOAM** 是 [OpenFOAM](https://www.openfoam.com/) v2512 的开源 Python 重写版本。OpenFOAM 是广泛使用的 C++ 计算流体力学 (CFD) 工具箱。我们的目标是将 OpenFOAM 的能力带入 Python 生态系统，同时利用 PyTorch 实现 GPU 加速和自动微分。
+**pyOpenFOAM** 是 [OpenFOAM 13](https://openfoam.org/) (Foundation) 的开源 Python 重写版本。OpenFOAM 是广泛使用的 C++ 计算流体力学 (CFD) 工具箱。我们的目标是将 OpenFOAM 的能力带入 Python 生态系统，同时利用 PyTorch 实现 GPU 加速和自动微分。
 
 ### 核心特性
 

@@ -10,7 +10,7 @@
 
 ### 1.1 核心目标
 
-将 OpenFOAM v2512 完全用 Python 重写，使用 PyTorch 作为后端实现 GPU 加速：
+将 OpenFOAM 13 (Foundation) 完全用 Python 重写，使用 PyTorch 作为后端实现 GPU 加速：
 
 - **功能完整性**: OpenFOAM 能做的，pyOpenFOAM 都必须能做
 - **精度保证**: 所有 OpenFOAM 官方算例能正确运行并保证精度
@@ -111,7 +111,7 @@
 
 ---
 
-## 四、OpenFOAM v2512 求解器完整列表
+## 四、OpenFOAM 13 求解器完整列表
 
 ### 4.1 不可压缩流 (11 个)
 icoFoam, pisoFoam, pimpleFoam, simpleFoam, overSimpleFoam, overPimpleDyMFoam, porousSimpleFoam, SRFSimpleFoam, SRFPimpleFoam, boundaryFoam, adjointOptimisationFoam

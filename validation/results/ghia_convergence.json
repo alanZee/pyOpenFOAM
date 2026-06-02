@@ -6,20 +6,20 @@
   "mesh_results": [
     {
       "mesh": "32x32",
-      "l2_relative_error": 0.13445674500140928,
+      "l2_relative_error": 0.13437055329007166,
       "max_absolute_error": 0.10601629273504287,
       "converged": true,
-      "iterations": 664,
-      "solve_time_s": 78.976777598,
+      "iterations": 660,
+      "solve_time_s": 78.310568139,
       "passed": false
     },
     {
       "mesh": "64x64",
-      "l2_relative_error": 0.06251946168879012,
+      "l2_relative_error": 0.06238906372195824,
       "max_absolute_error": 0.05300814636752138,
       "converged": true,
-      "iterations": 1343,
-      "solve_time_s": 617.988083686,
+      "iterations": 1309,
+      "solve_time_s": 597.628300946,
       "passed": false
     }
   ],
@@ -27,16 +27,16 @@
     {
       "from": "32x32",
       "to": "64x64",
-      "error_ratio": 2.150638239188769,
+      "error_ratio": 2.1537517198351397,
       "mesh_ratio": 2.0,
-      "order": 1.0753191195943845
+      "order": 1.0768758599175698
     }
   ],
   "analysis": {
     "root_cause": "first-order upwind convection scheme introduces O(h) numerical diffusion",
     "boundary_effect": "top-wall cells forced to u=U_lid at cell centre, but true value is lower due to boundary layer",
     "best_mesh": "64x64",
-    "best_l2_error": 0.06251946168879012,
+    "best_l2_error": 0.06238906372195824,
     "improvement_options": [
       "Use linearUpwind or QUICK convection scheme for O(h^2) spatial accuracy",
       "Implement proper boundary treatment (interpolate face value, not cell-centre penalty)",
