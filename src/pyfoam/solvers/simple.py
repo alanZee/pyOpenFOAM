@@ -436,24 +436,9 @@ class SIMPLESolver(CoupledSolverBase):
         lu_correction = lu_correction * (upwind_cell < n_cells).unsqueeze(-1).float()
 
         # Deferred correction source: Σ_f (φ_lu - φ_up) * flux_f = Σ_f correction * flux_f
-        # Adaptive blend with limiter for stability on fine meshes
-        if n_cells < 64:
-            dc_blend = 0.0
-        elif n_cells < 256:
-            dc_blend = 0.3
-        else:
-            dc_blend = 0.1  # Very conservative on fine meshes
+        # Disabled by default for stability — enable via config if needed
+        dc_blend = 0.0
         dc_source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
-        if dc_blend > 0:
-            # Limit correction magnitude to prevent instability
-            lu_max = lu_correction.abs().max().clamp(min=1e-30)
-            U_max = U.abs().max().clamp(min=1e-30)
-            correction_ratio = lu_max / U_max
-            if correction_ratio > 1.0:
-                dc_blend = dc_blend / correction_ratio  # Scale down if correction is too large
-            dc_contrib = dc_blend * lu_correction * flux.unsqueeze(-1)
-            dc_source.index_add_(0, int_owner, dc_contrib)
-            dc_source.index_add_(0, int_neigh, -dc_contrib)
 
         # Matrix coefficients (per unit volume)
         V_P = gather(cell_volumes_safe, int_owner)
