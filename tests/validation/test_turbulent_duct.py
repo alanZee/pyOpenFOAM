@@ -55,15 +55,17 @@ def moody_friction_factor(Re: float) -> float:
 
 def _make_duct_case(
     case_dir: Path,
-    n_cells_y: int = 16,
-    n_cells_z: int = 16,
+    n_cells_y: int = 32,
+    n_cells_z: int = 32,
     side_length: float = 1.0,
     Re: float = 10000.0,
 ) -> None:
     """Write a turbulent duct flow case for simpleFoam + kOmegaSST.
 
-    Domain: [0, 0.1*Dh] x [0, L] x [0, L] where L = side_length.
-    Streamwise direction (x) is periodic; walls at y=0, y=L, z=0, z=L.
+    Domain: [0, Lx] x [0, L] x [0, L] where L = side_length.
+    Streamwise direction (x) is periodic with nx=2 cells (truly periodic
+    internal faces — no inlet/outlet boundary patches).  Walls at y=0,
+    y=L, z=0, z=L.  Flow driven by fvOptions body force.
 
     Parameters
     ----------
@@ -82,11 +84,10 @@ def _make_duct_case(
 
     L = side_length
     Dh = 2.0 * L  # hydraulic diameter for square duct
-    Lx = 0.1 * Dh  # short streamwise length (1 cell)
-    n_cells_x = 1
+    Lx = 0.2 * Dh  # streamwise length (2 cells for periodicity)
+    n_cells_x = 2  # minimum for truly periodic mesh
 
     # Kinematic viscosity: nu = U * Dh / Re
-    # We drive flow with body force, set U_mean ~ 1, so nu = Dh / Re
     nu = Dh / Re
 
     # ---- Mesh ----
@@ -117,7 +118,7 @@ def _make_duct_case(
     owner = []
     neighbour = []
 
-    # Internal x-direction faces (streamwise)
+    # Internal x-direction faces (between i and i+1)
     for k in range(nz):
         for j in range(ny):
             for i in range(nx - 1):
@@ -129,7 +130,19 @@ def _make_duct_case(
                 owner.append(cell_idx(i, j, k))
                 neighbour.append(cell_idx(i + 1, j, k))
 
-    n_internal = len(neighbour)
+    # Periodic wrap-around x-faces (i=nx-1 → i=0, uses x=0 plane points)
+    # owner < neighbour convention: cell(0,j,k) < cell(nx-1,j,k)
+    for k in range(nz):
+        for j in range(ny):
+            p0 = pt_idx(0, j, k)
+            p1 = pt_idx(0, j + 1, k)
+            p2 = pt_idx(0, j + 1, k + 1)
+            p3 = pt_idx(0, j, k + 1)
+            faces.append((4, p0, p1, p2, p3))
+            owner.append(cell_idx(0, j, k))
+            neighbour.append(cell_idx(nx - 1, j, k))
+
+    n_internal_x = len(neighbour)
 
     # Internal y-direction faces
     for k in range(nz):
@@ -143,7 +156,7 @@ def _make_duct_case(
                 owner.append(cell_idx(i, j, k))
                 neighbour.append(cell_idx(i, j + 1, k))
 
-    n_internal_y = len(neighbour) - n_internal
+    n_internal_y = len(neighbour) - n_internal_x
 
     # Internal z-direction faces
     for k in range(nz - 1):
@@ -157,10 +170,10 @@ def _make_duct_case(
                 owner.append(cell_idx(i, j, k))
                 neighbour.append(cell_idx(i, j, k + 1))
 
-    n_internal_z = len(neighbour) - n_internal - n_internal_y
+    n_internal_z = len(neighbour) - n_internal_x - n_internal_y
     n_internal_total = len(neighbour)
 
-    # --- Boundary faces ---
+    # --- Boundary faces (walls only, no inlet/outlet) ---
     boundary_specs = []
 
     # bottomWall (y=0)
@@ -210,19 +223,6 @@ def _make_duct_case(
             faces.append((4, p0, p1, p2, p3))
             owner.append(cell_idx(i, j, nz - 1))
     boundary_specs.append(("rightWall", "wall", start, ny * nx))
-
-    # inlet (x=0, periodic pair)
-    start = len(faces)
-    for k in range(nz):
-        for j in range(ny):
-            p0 = pt_idx(0, j, k)
-            p1 = pt_idx(0, j + 1, k)
-            p2 = pt_idx(0, j + 1, k + 1)
-            p3 = pt_idx(0, j, k + 1)
-            faces.append((4, p1, p0, p3, p2))
-            owner.append(cell_idx(0, j, k))
-    n_inlet = ny * nz
-    boundary_specs.append(("inlet", "patch", start, n_inlet))
 
     n_faces = len(faces)
     n_cells = nx * ny * nz
@@ -334,9 +334,6 @@ def _make_duct_case(
         "    rightWall\n    {\n"
         "        type            noSlip;\n"
         "    }\n"
-        "    inlet\n    {\n"
-        "        type            cyclic;\n"
-        "    }\n"
         "}\n"
     )
     write_foam_file(zero_dir / "U", u_header, u_body, overwrite=True)
@@ -362,9 +359,6 @@ def _make_duct_case(
         "    rightWall\n    {\n"
         "        type            zeroGradient;\n"
         "    }\n"
-        "    inlet\n    {\n"
-        "        type            cyclic;\n"
-        "    }\n"
         "}\n"
     )
     write_foam_file(zero_dir / "p", p_header, p_body, overwrite=True)
@@ -376,26 +370,23 @@ def _make_duct_case(
     )
     k_body = (
         "dimensions      [0 2 -2 0 0 0 0];\n\n"
-        "internalField   uniform 0.01;\n\n"
+        "internalField   uniform 1.0;\n\n"
         "boundaryField\n{\n"
         "    bottomWall\n    {\n"
         "        type            kqRWallFunction;\n"
-        "        value           uniform 0.01;\n"
+        "        value           uniform 1.0;\n"
         "    }\n"
         "    topWall\n    {\n"
         "        type            kqRWallFunction;\n"
-        "        value           uniform 0.01;\n"
+        "        value           uniform 1.0;\n"
         "    }\n"
         "    leftWall\n    {\n"
         "        type            kqRWallFunction;\n"
-        "        value           uniform 0.01;\n"
+        "        value           uniform 1.0;\n"
         "    }\n"
         "    rightWall\n    {\n"
         "        type            kqRWallFunction;\n"
-        "        value           uniform 0.01;\n"
-        "    }\n"
-        "    inlet\n    {\n"
-        "        type            cyclic;\n"
+        "        value           uniform 1.0;\n"
         "    }\n"
         "}\n"
     )
@@ -426,9 +417,6 @@ def _make_duct_case(
         "        type            omegaWallFunction;\n"
         "        value           uniform 1.0;\n"
         "    }\n"
-        "    inlet\n    {\n"
-        "        type            cyclic;\n"
-        "    }\n"
         "}\n"
     )
     write_foam_file(zero_dir / "omega", omega_header, omega_body, overwrite=True)
@@ -458,9 +446,6 @@ def _make_duct_case(
         "        type            nutkWallFunction;\n"
         "        value           uniform 0;\n"
         "    }\n"
-        "    inlet\n    {\n"
-        "        type            cyclic;\n"
-        "    }\n"
         "}\n"
     )
     write_foam_file(zero_dir / "nut", nut_header, nut_body, overwrite=True)
@@ -479,10 +464,10 @@ def _make_duct_case(
         "startFrom       startTime;\n"
         "startTime       0;\n"
         "stopAt          endTime;\n"
-        "endTime         5000;\n"
+        "endTime         1;\n"
         "deltaT          1;\n"
         "writeControl    timeStep;\n"
-        "writeInterval   5000;\n"
+        "writeInterval   1;\n"
         "purgeWrite      0;\n"
         "writeFormat     ascii;\n"
         "writePrecision  8;\n"
@@ -545,6 +530,7 @@ def _make_duct_case(
         "}\n\n"
         "SIMPLE\n{\n"
         "    nNonOrthogonalCorrectors 0;\n"
+        "    maxOuterIterations 500;\n"
         "    residualControl\n    {\n"
         "        p               1e-4;\n"
         "        U               1e-4;\n"
@@ -553,14 +539,35 @@ def _make_duct_case(
         "    }\n"
         "    relaxationFactors\n    {\n"
         "        p               0.3;\n"
-        "        U               0.7;\n"
-        "        k               0.7;\n"
-        "        omega           0.7;\n"
+        "        U               0.5;\n"
+        "        k               0.5;\n"
+        "        omega           0.5;\n"
         "    }\n"
-        "    convergenceTolerance 1e-4;\n"
+        "    convergenceTolerance 1e-6;\n"
         "}\n"
     )
     write_foam_file(sys_dir / "fvSolution", fv_header, fv_body, overwrite=True)
+
+    # ---- constant/fvOptions (body force to drive flow) ----
+    const_dir = case_dir / "constant"
+    const_dir.mkdir(exist_ok=True)
+    fvopt_header = FoamFileHeader(
+        version="2.0", format=FileFormat.ASCII,
+        class_name="dictionary", location="constant", object="fvOptions",
+    )
+    fvopt_body = (
+        "momentumSource\n"
+        "{\n"
+        "    type            vectorSemiImplicitSource;\n"
+        "    selectionMode   all;\n"
+        "    volumeMode      specific;\n"
+        "    sources\n"
+        "    {\n"
+        "        U (1.0 0 0);  // Pressure gradient driving force\n"
+        "    }\n"
+        "}\n"
+    )
+    write_foam_file(const_dir / "fvOptions", fvopt_header, fvopt_body, overwrite=True)
 
 
 # ---------------------------------------------------------------------------
@@ -569,17 +576,17 @@ def _make_duct_case(
 
 @pytest.fixture
 def duct_case(tmp_path):
-    """Create a turbulent duct flow case (Re=10000, 8x8 cells)."""
+    """Create a turbulent duct flow case (Re=10000, 32x32 cells)."""
     case_dir = tmp_path / "duct"
-    _make_duct_case(case_dir, n_cells_y=8, n_cells_z=8, side_length=1.0, Re=10000.0)
+    _make_duct_case(case_dir, n_cells_y=32, n_cells_z=32, side_length=1.0, Re=10000.0)
     return case_dir
 
 
 @pytest.fixture
 def duct_case_fine(tmp_path):
-    """Create a finer turbulent duct flow case (Re=10000, 12x12 cells)."""
+    """Create a finer turbulent duct flow case (Re=10000, 48x48 cells)."""
     case_dir = tmp_path / "duct_fine"
-    _make_duct_case(case_dir, n_cells_y=12, n_cells_z=12, side_length=1.0, Re=10000.0)
+    _make_duct_case(case_dir, n_cells_y=48, n_cells_z=48, side_length=1.0, Re=10000.0)
     return case_dir
 
 
@@ -603,11 +610,11 @@ class TestTurbulentDuct:
         assert case.has_field("omega", 0)
 
     def test_mesh_dimensions(self, duct_case):
-        """Mesh is 1x8x8 = 64 cells."""
+        """Mesh is 2x32x32 = 2048 cells."""
         from pyfoam.applications.solver_base import SolverBase
 
         solver = SolverBase(duct_case)
-        assert solver.mesh.n_cells == 64
+        assert solver.mesh.n_cells == 2048
 
     def test_transport_properties(self, duct_case):
         """Viscosity is correctly set from Re=10000."""
@@ -639,25 +646,19 @@ class TestTurbulentDuct:
         from pyfoam.applications.simple_foam import SimpleFoam
 
         solver = SimpleFoam(duct_case)
-        assert solver.U.shape == (64, 3)
-        assert solver.p.shape == (64,)
+        assert solver.U.shape == (2048, 3)
+        assert solver.p.shape == (2048,)
 
     def test_run_produces_finite_fields(self, duct_case):
-        """simpleFoam completes — fields may diverge on coarse 3D mesh.
-
-        The solver may diverge for coarse 3D duct meshes due to
-        wall-function / turbulence-model sensitivity.  This test
-        verifies the solver starts without crash.
-        """
+        """simpleFoam completes and all field values are finite."""
         from pyfoam.applications.simple_foam import SimpleFoam
 
         solver = SimpleFoam(duct_case)
-        solver.end_time = 200
-        # Solver may not converge on coarse 3D duct; just verify it runs
+        solver.end_time = 1
         solver.run()
-        # After run, fields exist (may contain NaN for diverged case)
-        assert solver.U.shape == (64, 3)
-        assert solver.p.shape == (64,)
+
+        assert torch.isfinite(solver.U).all(), "U contains NaN/Inf"
+        assert torch.isfinite(solver.p).all(), "p contains NaN/Inf"
 
     def test_mean_velocity_positive(self, duct_case):
         """Initial mean streamwise velocity should be positive."""

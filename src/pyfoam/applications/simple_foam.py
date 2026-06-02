@@ -296,20 +296,26 @@ class SimpleFoam(SolverBase):
 
         # Iterate over BoundaryPatch objects from the field file
         for patch in boundary_field:
-            if patch.patch_type == "fixedValue" and patch.value is not None:
+            # noSlip is equivalent to fixedValue uniform (0 0 0)
+            if patch.patch_type == "noSlip":
+                value = (0.0, 0.0, 0.0)
+            elif patch.patch_type == "fixedValue" and patch.value is not None:
                 value = self._parse_vector_value(patch.value)
-                if value is not None:
-                    # Get face range from mesh boundary info
-                    mesh_info = mesh_patches.get(patch.name)
-                    if mesh_info is not None:
-                        start_face = mesh_info["startFace"]
-                        n_faces = mesh_info["nFaces"]
-                        for i in range(n_faces):
-                            face_idx = start_face + i
-                            cell_idx = owner[face_idx].item()
-                            U_bc[cell_idx, 0] = value[0]
-                            U_bc[cell_idx, 1] = value[1]
-                            U_bc[cell_idx, 2] = value[2]
+            else:
+                value = None
+
+            if value is not None:
+                # Get face range from mesh boundary info
+                mesh_info = mesh_patches.get(patch.name)
+                if mesh_info is not None:
+                    start_face = mesh_info["startFace"]
+                    n_faces = mesh_info["nFaces"]
+                    for i in range(n_faces):
+                        face_idx = start_face + i
+                        cell_idx = owner[face_idx].item()
+                        U_bc[cell_idx, 0] = value[0]
+                        U_bc[cell_idx, 1] = value[1]
+                        U_bc[cell_idx, 2] = value[2]
 
         return U_bc
 
