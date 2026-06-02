@@ -436,8 +436,13 @@ class SIMPLESolver(CoupledSolverBase):
         lu_correction = lu_correction * (upwind_cell < n_cells).unsqueeze(-1).float()
 
         # Deferred correction source: Σ_f (φ_lu - φ_up) * flux_f = Σ_f correction * flux_f
-        # Disable on very coarse meshes (n_cells < 64) where gradient is inaccurate
-        dc_blend = 0.5 if n_cells >= 64 else 0.0
+        # Adaptive blend: smaller on fine meshes to prevent instability
+        if n_cells < 64:
+            dc_blend = 0.0
+        elif n_cells < 256:
+            dc_blend = 0.5
+        else:
+            dc_blend = 0.25  # Reduced on fine meshes for stability
         dc_source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
         if dc_blend > 0:
             dc_contrib = dc_blend * lu_correction * flux.unsqueeze(-1)
