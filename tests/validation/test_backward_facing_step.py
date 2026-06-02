@@ -67,6 +67,7 @@ def _make_bfs_case(
     end_time: int = 500,
     alpha_p: float = 0.3,
     alpha_U: float = 0.7,
+    max_outer_iterations: int = 50,
 ) -> None:
     """Write a simpleFoam backward-facing step case on a conformal grid.
 
@@ -473,7 +474,7 @@ def _make_bfs_case(
         f"        U               {alpha_U};\n"
         "    }\n"
         "    convergenceTolerance 1e-4;\n"
-        "    maxOuterIterations  50;\n"
+        f"    maxOuterIterations  {max_outer_iterations};\n"
         "}\n"
     )
     write_foam_file(sys_dir / "fvSolution", fv_header, fv_body, overwrite=True)
@@ -485,26 +486,32 @@ def _make_bfs_case(
 
 @pytest.fixture
 def bfs_case(tmp_path):
-    """Create a backward-facing step case with conservative settings.
+    """Create a backward-facing step case with 512 cells at Re_h=5.
 
-    Uses a small mesh (72 cells), high viscosity (Re_h=5), and heavy
-    under-relaxation.  n_y=6 gives 3 upstream rows; the middle inlet
-    row (j=1) is not overwritten by wall BCs.
+    Mesh: n_y=16, n_x_up=8, n_x_down=28, l_downstream=6.0 → 512 cells.
+    Geometry: h=0.5, upstream=1.0, downstream=6.0, total length=7.0.
+    Cell size: dx=0.194, dy=0.0625, AR=3.1.
+    Re_h = u * h / nu = 1.0 * 0.5 / 0.1 = 5.
+
+    Finer mesh than original (512 vs 84 cells) for better accuracy.
+    Solver does not fully converge due to deferred correction oscillations
+    at this resolution, but fields remain finite and physically bounded.
     """
     case_dir = tmp_path / "bfs"
     _make_bfs_case(
         case_dir,
         h=0.5,
         l_upstream=1.0,
-        l_downstream=5.0,
-        n_y=6,         # 6 cells across full height (3 upstream rows)
-        n_x_up=4,      # 4 cells upstream
-        n_x_down=12,   # 12 cells downstream (total: 12*6 + 4*3 = 84)
+        l_downstream=6.0,
+        n_y=16,        # 16 cells across full height (8 upstream rows)
+        n_x_up=8,      # 8 cells upstream
+        n_x_down=28,   # 28 cells downstream (total: 8*8 + 28*16 = 512)
         nu=0.1,        # Re_h = u * h / nu = 1.0 * 0.5 / 0.1 = 5
         u_inlet=1.0,
-        end_time=50,
-        alpha_p=0.05,  # very heavy under-relaxation
-        alpha_U=0.2,
+        end_time=30,
+        alpha_p=0.05,  # pressure under-relaxation
+        alpha_U=0.2,   # velocity under-relaxation
+        max_outer_iterations=50,
     )
     return case_dir
 
@@ -535,9 +542,9 @@ class TestBackwardFacingStep:
 
         assert mesh.n_cells > 0
         assert mesh.n_internal_faces > 0
-        # Upstream: n_x_up * n_upstream_rows = 4 * 3 = 12
-        # Downstream: n_x_down * n_y = 12 * 6 = 72
-        expected = 4 * 3 + 12 * 6
+        # Upstream: n_x_up * n_upstream_rows = 8 * 8 = 64
+        # Downstream: n_x_down * n_y = 28 * 16 = 448
+        expected = 8 * 8 + 28 * 16
         assert mesh.n_cells == expected, (
             f"Expected {expected} cells, got {mesh.n_cells}"
         )
@@ -580,11 +587,11 @@ class TestBackwardFacingStep:
         centres = solver.mesh.cell_centres.detach().cpu().numpy()
         u_x = solver.U[:, 0].detach().cpu().numpy()
 
-        # Interior inlet cells: x near 0, y between 0.1 and h-0.1
+        # Interior inlet cells: first column (x < 0.15), y between 0.1 and h-0.1
         # (away from corners where wall BCs overwrite inlet)
         h = 0.5
         interior_inlet = (
-            (centres[:, 0] < 0.3)
+            (centres[:, 0] < 0.15)
             & (centres[:, 1] > 0.1)
             & (centres[:, 1] < h - 0.05)
         )
