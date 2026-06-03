@@ -435,10 +435,46 @@ class SIMPLESolver(CoupledSolverBase):
         # Zero correction at boundary-adjacent faces for safety
         lu_correction = lu_correction * (upwind_cell < n_cells).unsqueeze(-1).float()
 
-        # Deferred correction source: Σ_f (φ_lu - φ_up) * flux_f = Σ_f correction * flux_f
-        # Disabled by default for stability — enable via config if needed
-        dc_blend = 0.0
+        # Deferred correction source: TVD-limited linearUpwind
+        # φ_f = φ_up + ψ(r) * (φ_dn - φ_up) / 2
+        # where r = (φ_up - φ_2up) / (φ_dn - φ_up), ψ = van Leer limiter
+        # This is always bounded and stable.
         dc_source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+
+        # Compute face values for upwind and downwind cells
+        upwind_cell = torch.where(flux >= 0, int_owner, int_neigh)
+        downwind_cell = torch.where(flux >= 0, int_neigh, int_owner)
+
+        U_up = U[upwind_cell]  # (n_internal, 3)
+        U_dn = U[downwind_cell]  # (n_internal, 3)
+
+        # phi_upwind - phi_downwind difference
+        dU = U_up - U_dn  # (n_internal, 3)
+
+        # For each component, compute r = (U_up - U_2up) / (U_dn - U_up)
+        # Use grad_U to estimate U_2up ≈ U_up - grad_U_up · d
+        d_vec = mesh.face_centres[:n_internal] - mesh.cell_centres[upwind_cell]
+        U_2up = U_up - torch.einsum('fid,fd->fi', grad_U[upwind_cell], d_vec)
+
+        # r = (U_up - U_2up) / (U_dn - U_up + eps)
+        eps = 1e-30
+        numerator = U_up - U_2up
+        denominator = U_dn - U_up
+        r = numerator / (denominator + eps * torch.sign(denominator + eps))
+
+        # Van Leer limiter: ψ(r) = (r + |r|) / (1 + |r|)
+        abs_r = r.abs()
+        psi = (abs_r + r) / (1.0 + abs_r + eps)
+        psi = psi.clamp(0.0, 2.0)  # Ensure bounded
+
+        # Correction: ψ * (φ_dn - φ_up) / 2 = -ψ * dU / 2
+        correction = -0.5 * psi * dU  # (n_internal, 3)
+
+        # Apply as deferred correction source (scaled by flux magnitude)
+        flux_mag = flux.abs().clamp(min=eps)
+        dc_contrib = correction * flux.unsqueeze(-1)
+        dc_source.index_add_(0, int_owner, dc_contrib)
+        dc_source.index_add_(0, int_neigh, -dc_contrib)
 
         # Matrix coefficients (per unit volume)
         V_P = gather(cell_volumes_safe, int_owner)
