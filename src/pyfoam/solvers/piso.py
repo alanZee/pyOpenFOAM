@@ -70,12 +70,15 @@ class PISOConfig(CoupledSolverConfig):
         Number of pressure correction steps per time step (default 2).
     nu : float
         Kinematic viscosity (default 1.0).
+    dt : float
+        Time step size (default 0.01).
     """
 
     def __init__(
         self,
         n_correctors: int = 2,
         nu: float = 1.0,
+        dt: float = 0.01,
         **kwargs,
     ) -> None:
         # PISO does not use under-relaxation by default
@@ -84,6 +87,7 @@ class PISOConfig(CoupledSolverConfig):
         super().__init__(**kwargs)
         self.n_correctors = n_correctors
         self.nu = nu
+        self.dt = dt
 
 
 class PISOSolver(CoupledSolverBase):
@@ -355,6 +359,15 @@ class PISOSolver(CoupledSolverBase):
 
         # H now includes off-diagonal product + BC source (no pressure gradient)
         H = H + source
+
+        # Time derivative term: V/dt * U_old added to source, V/dt added to diagonal
+        dt = self._piso_config.dt if hasattr(self._piso_config, 'dt') else 1.0
+        if U_old is not None and dt > 0:
+            V_over_dt = cell_volumes_safe / dt
+            # Add V/dt * U_old to source
+            H = H + V_over_dt.unsqueeze(-1) * U_old
+            # Add V/dt to diagonal
+            diag = diag + V_over_dt
 
         # Store BC source for _recompute_H
         self._bc_source = source.clone()

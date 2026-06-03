@@ -205,6 +205,7 @@ class IcoFoam(SolverBase):
         config = PISOConfig(
             n_correctors=self.n_piso_correctors,
             nu=self.nu,
+            dt=self.delta_t,
             p_solver=self.p_solver,
             U_solver=self.U_solver,
             p_tolerance=self.p_tolerance,
