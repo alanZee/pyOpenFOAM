@@ -185,8 +185,18 @@ class IcoFoam(SolverBase):
         p_tensor, _ = self.read_field_tensor("p", 0)
         p = p_tensor.to(device=device, dtype=dtype)
 
-        # Initialise flux to zero
+        # Compute initial flux from velocity field
+        n_internal = self.mesh.n_internal_faces
+        owner = self.mesh.owner[:n_internal]
+        neighbour = self.mesh.neighbour
+        w = self.mesh.face_weights[:n_internal]
+        fa = self.mesh.face_areas[:n_internal]
+
+        U_f = w.unsqueeze(-1) * U[owner] + (1 - w).unsqueeze(-1) * U[neighbour]
+        phi_internal = (U_f * fa).sum(dim=1)
+
         phi = torch.zeros(self.mesh.n_faces, dtype=dtype, device=device)
+        phi[:n_internal] = phi_internal
 
         return U, p, phi
 
