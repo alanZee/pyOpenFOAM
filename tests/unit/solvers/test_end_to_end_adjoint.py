@@ -1,157 +1,135 @@
-"""端到端可微分 CFD 求解器测试 — 通过实际 SIMPLE 求解器验证梯度。"""
+"""端到端可微分 SIMPLE 求解器测试 — 通过实际求解器验证梯度。"""
 
 import pytest
 import torch
 import numpy as np
-from pathlib import Path
 
 
-def _make_cavity_case(case_dir: Path, n: int = 4, nu: float = 0.01):
-    """创建简单的盖驱动方腔算例。"""
-    from pyfoam.io.foam_file import FoamFileHeader, FileFormat, write_foam_file
+def _make_simple_mesh(n: int = 8):
+    """创建简单的 2D 方腔网格。"""
+    n_cells = n * n
+    n_internal = 2 * n * (n - 1)
+    n_boundary = 4 * n
+    n_faces = n_internal + n_boundary
 
-    case_dir.mkdir(parents=True, exist_ok=True)
-    zero_dir = case_dir / "0"
-    zero_dir.mkdir(exist_ok=True)
-    const_dir = case_dir / "constant"
-    const_dir.mkdir(exist_ok=True)
-    sys_dir = case_dir / "system"
-    sys_dir.mkdir(exist_ok=True)
+    owner_list = []
+    neighbour_list = []
+    face_areas_list = []
+    cell_centres_list = []
+    cell_volumes_list = []
+    delta_coeffs_list = []
 
-    # 简化的 mesh 创建
     dx = 1.0 / n
     dy = 1.0 / n
 
-    # points
-    points = []
-    for j in range(n + 1):
-        for i in range(n + 1):
-            points.append((i * dx, j * dy, 0.0))
+    for j in range(n):
+        for i in range(n):
+            cell_centres_list.append([(i + 0.5) * dx, (j + 0.5) * dy, 0.0])
+            cell_volumes_list.append(dx * dy * 0.1)
 
-    # owner, neighbour, faces
-    owner = []
-    neighbour = []
-    faces = []
-
-    def cell_id(i, j):
-        return j * n + i
-
-    # x-internal faces
     for j in range(n):
         for i in range(n - 1):
-            c0 = cell_id(i, j)
-            c1 = cell_id(i + 1, j)
-            owner.append(c0)
-            neighbour.append(c1)
-            p0 = j * (n + 1) + i + 1
-            p1 = (j + 1) * (n + 1) + i + 1
-            faces.append((p0, p1))
+            c0, c1 = j * n + i, j * n + i + 1
+            owner_list.append(c0)
+            neighbour_list.append(c1)
+            face_areas_list.append([0.0, dy * 0.1, 0.0])
+            delta_coeffs_list.append(1.0 / dx)
 
-    # y-internal faces
     for j in range(n - 1):
         for i in range(n):
-            c0 = cell_id(i, j)
-            c1 = cell_id(i, j + 1)
-            owner.append(c0)
-            neighbour.append(c1)
-            p0 = (j + 1) * (n + 1) + i
-            p1 = (j + 1) * (n + 1) + i + 1
-            faces.append((p0, p1))
+            c0, c1 = j * n + i, (j + 1) * n + i
+            owner_list.append(c0)
+            neighbour_list.append(c1)
+            face_areas_list.append([dx * 0.1, 0.0, 0.0])
+            delta_coeffs_list.append(1.0 / dy)
 
-    n_internal = len(faces)
+    for i in range(n):
+        owner_list.append(i)
+        face_areas_list.append([0.0, -dy * 0.1, 0.0])
+        delta_coeffs_list.append(1.0 / (dy * 0.5))
+    for i in range(n):
+        owner_list.append((n - 1) * n + i)
+        face_areas_list.append([0.0, dy * 0.1, 0.0])
+        delta_coeffs_list.append(1.0 / (dy * 0.5))
+    for j in range(n):
+        owner_list.append(j * n)
+        face_areas_list.append([-dx * 0.1, 0.0, 0.0])
+        delta_coeffs_list.append(1.0 / (dx * 0.5))
+    for j in range(n):
+        owner_list.append(j * n + n - 1)
+        face_areas_list.append([dx * 0.1, 0.0, 0.0])
+        delta_coeffs_list.append(1.0 / (dx * 0.5))
 
-    # boundary faces
-    for i in range(n):  # bottom
-        p0 = i
-        p1 = i + 1
-        faces.append((p0, p1))
-        owner.append(cell_id(i, 0))
-    for i in range(n):  # top
-        p0 = n * (n + 1) + i
-        p1 = n * (n + 1) + i + 1
-        faces.append((p0, p1))
-        owner.append(cell_id(i, n - 1))
-    for j in range(n):  # left
-        p0 = j * (n + 1)
-        p1 = (j + 1) * (n + 1)
-        faces.append((p0, p1))
-        owner.append(cell_id(0, j))
-    for j in range(n):  # right
-        p0 = j * (n + 1) + n
-        p1 = (j + 1) * (n + 1) + n
-        faces.append((p0, p1))
-        owner.append(cell_id(n - 1, j))
+    class SimpleMesh:
+        def __init__(self):
+            self.n_cells = n_cells
+            self.n_internal_faces = n_internal
+            self.n_faces = n_faces
+            self.n_boundary_faces = n_boundary
+            self.owner = torch.tensor(owner_list, dtype=torch.long)
+            self.neighbour = torch.tensor(neighbour_list[:n_internal], dtype=torch.long)
+            self.face_areas = torch.tensor(face_areas_list, dtype=torch.float64)
+            self.face_centres = torch.zeros(n_faces, 3, dtype=torch.float64)
+            self.cell_centres = torch.tensor(cell_centres_list, dtype=torch.float64)
+            self.cell_volumes = torch.tensor(cell_volumes_list, dtype=torch.float64)
+            self.delta_coefficients = torch.tensor(delta_coeffs_list, dtype=torch.float64)
+            self.face_weights = torch.ones(n_internal, dtype=torch.float64) * 0.5
 
-    # Write mesh files
-    mesh_header = FoamFileHeader(
-        version="2.0", format=FileFormat.ASCII,
-        class_name="polyMesh", location="constant", object="mesh",
-    )
-    # ... (简化 - 使用已有的 _make_cavity_case 函数)
-    pass
+    return SimpleMesh()
 
 
 class TestEndToEndAdjoint:
-    """通过实际 CFD 求解器的端到端梯度验证。"""
+    """端到端可微分 SIMPLE 求解器测试。"""
 
-    def test_velocity_field_is_differentiable(self):
-        """验证速度场可以通过 PyTorch autograd 微分。"""
-        U = torch.randn(10, 3, dtype=torch.float64, requires_grad=True)
-        kinetic_energy = 0.5 * (U ** 2).sum()
-        kinetic_energy.backward()
-        assert U.grad is not None
-        assert torch.allclose(U.grad, U.detach(), atol=1e-10)
+    def test_gradient_through_simple_solver(self):
+        """验证梯度能通过实际 SIMPLE 求解器传播。"""
+        from pyfoam.solvers.adjoint import DifferentiableSIMPLE
 
-    def test_pressure_gradient_is_differentiable(self):
-        """验证压力梯度计算是可微分的。"""
-        # 模拟一个简单的压力梯度计算
-        n_cells = 16
-        n_internal = 24  # 4x4 网格的内部面数
+        mesh = _make_simple_mesh(8)
+        solver = DifferentiableSIMPLE(mesh, nu=0.01, alpha_U=0.3, alpha_p=0.1)
 
-        p = torch.randn(n_cells, dtype=torch.float64, requires_grad=True)
+        U_inlet = torch.tensor([1.0, 0.0, 0.0], dtype=torch.float64, requires_grad=True)
+        U, p, phi = solver.solve(U_inlet, max_iterations=100, tolerance=1e-4)
 
-        # 模拟面插值
-        owner = torch.randint(0, n_cells, (n_internal,))
-        neighbour = torch.randint(0, n_cells, (n_internal,))
-        face_areas = torch.randn(n_internal, 3, dtype=torch.float64)
-        cell_volumes = torch.ones(n_cells, dtype=torch.float64)
+        # 验证场是有限的
+        assert torch.isfinite(U).all(), "U contains NaN/Inf"
+        assert torch.isfinite(p).all(), "p contains NaN/Inf"
+        assert torch.isfinite(phi).all(), "phi contains NaN/Inf"
 
-        p_face = 0.5 * (p[owner] + p[neighbour])
-        p_contrib = p_face.unsqueeze(-1) * face_areas
+        # 目标函数
+        objective = (p ** 2).sum()
+        assert torch.isfinite(objective), "Objective is not finite"
 
-        grad_p = torch.zeros(n_cells, 3, dtype=torch.float64)
-        grad_p.index_add_(0, owner, p_contrib)
-        grad_p.index_add_(0, neighbour, -p_contrib)
-        grad_p = grad_p / cell_volumes.unsqueeze(-1)
-
-        objective = (grad_p ** 2).sum()
+        # 反向传播
         objective.backward()
 
-        assert p.grad is not None
-        assert not torch.all(p.grad == 0)
+        # 验证梯度
+        assert U_inlet.grad is not None, "梯度未计算"
+        assert torch.isfinite(U_inlet.grad).all(), "梯度包含 NaN/Inf"
+        assert not torch.all(U_inlet.grad == 0), "梯度全零"
+
+    def test_gradient_sensitivity_to_inlet_velocity(self):
+        """验证入口速度变化能正确影响目标函数。"""
+        from pyfoam.solvers.adjoint import DifferentiableSIMPLE
+
+        mesh = _make_simple_mesh(8)
+        solver = DifferentiableSIMPLE(mesh, nu=0.01, alpha_U=0.3, alpha_p=0.1)
+
+        U1 = torch.tensor([1.0, 0.0, 0.0], dtype=torch.float64, requires_grad=True)
+        U2 = torch.tensor([1.1, 0.0, 0.0], dtype=torch.float64, requires_grad=True)
+
+        _, p1, _ = solver.solve(U1, max_iterations=50, tolerance=1e-4)
+        _, p2, _ = solver.solve(U2, max_iterations=50, tolerance=1e-4)
+
+        obj1 = (p1 ** 2).sum()
+        obj2 = (p2 ** 2).sum()
+
+        assert abs(obj1.item() - obj2.item()) > 1e-10, "不同入口速度产生相同目标函数"
 
     def test_adjoint_solver_class_interface(self):
         """DifferentiableSolver 接口完整性。"""
-        from pyfoam.solvers.adjoint import DifferentiableSolver, ShapeOptimizer
+        from pyfoam.solvers.adjoint import DifferentiableSIMPLE, DifferentiableSolver, ShapeOptimizer
+        assert callable(getattr(DifferentiableSIMPLE, "solve", None))
         assert callable(getattr(DifferentiableSolver, "forward", None))
         assert callable(getattr(ShapeOptimizer, "optimize", None))
         assert hasattr(ShapeOptimizer, "history")
-
-    def test_gradient_flow_through_mesh_operations(self):
-        """验证梯度能通过网格操作正确传播。"""
-        # 创建一个简单的可微分计算图
-        x = torch.randn(5, 3, dtype=torch.float64, requires_grad=True)
-
-        # 模拟面插值
-        w = torch.tensor([0.5], dtype=torch.float64)
-        face_value = w * x[0] + (1 - w) * x[1]
-
-        # 模拟梯度计算
-        grad = face_value.sum()
-
-        # 反向传播
-        grad.backward()
-
-        assert x.grad is not None
-        assert x.grad[0].abs().sum() > 0
-        assert x.grad[1].abs().sum() > 0
