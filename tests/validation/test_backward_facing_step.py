@@ -451,10 +451,11 @@ def _make_bfs_case(
     fv_body = (
         "solvers\n{\n"
         "    p\n    {\n"
-        "        solver          PCG;\n"
-        "        preconditioner  DIC;\n"
+        "        solver          GAMG;\n"
+        "        smoother        DICGaussSeidel;\n"
         "        tolerance       1e-6;\n"
         "        relTol          0.01;\n"
+        "        minIter         1;\n"
         "    }\n"
         "    U\n    {\n"
         "        solver          PBiCGStab;\n"
@@ -512,6 +513,28 @@ def bfs_case(tmp_path):
         alpha_p=0.05,  # pressure under-relaxation
         alpha_U=0.2,   # velocity under-relaxation
         max_outer_iterations=50,
+    )
+    return case_dir
+
+
+@pytest.fixture
+def bfs_case_Re100(tmp_path):
+    """Create a backward-facing step case at Re_h=100 with conservative settings."""
+    case_dir = tmp_path / "bfs_Re100"
+    _make_bfs_case(
+        case_dir,
+        h=0.5,
+        l_upstream=1.0,
+        l_downstream=6.0,
+        n_y=16,
+        n_x_up=8,
+        n_x_down=28,
+        nu=0.005,       # Re_h = 1.0 * 0.5 / 0.005 = 100
+        u_inlet=1.0,
+        end_time=5,
+        alpha_p=0.005,  # Very conservative pressure relaxation
+        alpha_U=0.05,   # Very conservative velocity relaxation
+        max_outer_iterations=500,
     )
     return case_dir
 
@@ -694,3 +717,31 @@ class TestBackwardFacingStep:
                     f"Downstream/inlet velocity ratio = {ratio:.2f}, "
                     f"expected ~0.5 for 2:1 expansion"
                 )
+
+
+class TestBackwardFacingStepRe100:
+    """Validation: backward-facing step at Re_h=100 with conservative settings."""
+
+    def test_solver_stays_finite(self, bfs_case_Re100):
+        """Solver at Re_h=100 produces finite fields with conservative relaxation."""
+        from pyfoam.applications.simple_foam import SimpleFoam
+
+        solver = SimpleFoam(bfs_case_Re100)
+        solver.run()
+
+        assert torch.isfinite(solver.U).all(), "U contains NaN/Inf at Re_h=100"
+        assert torch.isfinite(solver.p).all(), "p contains NaN/Inf at Re_h=100"
+        assert torch.isfinite(solver.phi).all(), "phi contains NaN/Inf at Re_h=100"
+
+    def test_flow_is_bounded_Re100(self, bfs_case_Re100):
+        """Velocity magnitude at Re_h=100 remains physically bounded."""
+        from pyfoam.applications.simple_foam import SimpleFoam
+
+        solver = SimpleFoam(bfs_case_Re100)
+        solver.run()
+
+        U_mag = solver.U.norm(dim=1).detach().cpu().numpy()
+        # Velocity should not exceed inlet velocity by more than 10x
+        assert np.max(U_mag) < 10.0, (
+            f"Max velocity {np.max(U_mag):.2f} exceeds 10x inlet velocity"
+        )
