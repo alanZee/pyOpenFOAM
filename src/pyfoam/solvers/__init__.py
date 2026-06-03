@@ -88,7 +88,7 @@ from pyfoam.solvers.pressure_equation import (
 from pyfoam.solvers.simple import SIMPLESolver, SIMPLEConfig
 from pyfoam.solvers.piso import PISOSolver, PISOConfig
 from pyfoam.solvers.pimple import PIMPLESolver, PIMPLEConfig
-from pyfoam.solvers.adjoint import DifferentiableSolver, ShapeOptimizer
+from pyfoam.solvers.adjoint import DifferentiableSIMPLE, DifferentiableSolver, ShapeOptimizer
 
 __all__ = [
     # Linear solver classes
@@ -139,6 +139,7 @@ __all__ = [
     "PIMPLESolver",
     "PIMPLEConfig",
     # Adjoint / differentiable solver
+    "DifferentiableSIMPLE",
     "DifferentiableSolver",
     "ShapeOptimizer",
 ]
