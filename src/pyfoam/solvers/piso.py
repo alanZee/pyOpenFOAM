@@ -165,7 +165,7 @@ class PISOSolver(CoupledSolverBase):
         # ============================================
         # Step 1: Momentum predictor
         # ============================================
-        U, A_p, H = self._momentum_predictor(U, p, phi, U_old, U_bc=U_bc, body_force=body_force)
+        U_pred, A_p, H = self._momentum_predictor(U, p, phi, U_old, U_bc=U_bc, body_force=body_force)
 
         # ============================================
         # Pressure correction loop
@@ -195,17 +195,26 @@ class PISOSolver(CoupledSolverBase):
             adjust_phi(phiHbyA, mesh, closed=True)
 
             # Assemble and solve pressure equation
+            # NOTE: Force the pressure solver to converge to the absolute
+            # tolerance by temporarily disabling relative tolerance.  The
+            # default relTol=0.01 causes the solver to stop at ~1% of the
+            # initial residual, which is insufficient for the pressure
+            # correction to work correctly in closed domains.
             p_eqn = assemble_pressure_equation(
                 phiHbyA, A_p, mesh, mesh.face_weights,
             )
 
+            saved_rel_tol = self._p_solver._rel_tol
+            self._p_solver._rel_tol = 0.0
             p, p_iters, p_res = solve_pressure_equation(
                 p_eqn, p, self._p_solver,
                 tolerance=config.p_tolerance,
                 max_iter=config.p_max_iter,
             )
+            self._p_solver._rel_tol = saved_rel_tol
 
-            # Correct velocity
+            # Correct velocity: U = HbyA - (1/A_p) * grad(p')
+            # HbyA now includes the time derivative in H, so HbyA = U_pred.
             U = correct_velocity(U, HbyA, p, A_p, mesh)
 
             # Correct face flux
@@ -215,11 +224,11 @@ class PISOSolver(CoupledSolverBase):
             if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
                 self._fix_boundary_flux(phi, U_bc, mesh)
 
-            # Re-apply BCs after velocity correction
-            if U_bc is not None:
-                bc_mask = ~torch.isnan(U_bc[:, 0])
-                if bc_mask.any():
-                    U[bc_mask] = U_bc[bc_mask]
+            # Do NOT re-apply BCs here.  The cell penalty in the momentum
+            # predictor already drives wall cells toward the prescribed
+            # velocity.  Re-applying BCs forces cell velocities to the
+            # prescribed FACE values, which are incorrect for cell centres
+            # (e.g., u(face)=1.0 but u(cell)=0.875 for Couette flow).
 
             # Recompute H for subsequent corrections (not needed for last)
             if corr < config.n_correctors - 1:
@@ -317,66 +326,78 @@ class PISOSolver(CoupledSolverBase):
         diag = diag + scatter_add((diff_coeff - flux_neg) / V_P, int_owner, n_cells)
         diag = diag + scatter_add((diff_coeff + flux_pos) / V_N, int_neigh, n_cells)
 
-        # Source term
+        # Source term — no cell penalty for boundary conditions.
+        # Wall BCs are enforced through zero boundary flux and face-based
+        # diffusion only, NOT through cell-level penalty.
         source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
 
-        # ============================================
-        # Boundary condition enforcement (implicit BC method)
-        # For cells with fixedValue BCs: add face_diff_coeff to diagonal
-        # and face_diff_coeff * U_bc to source.
-        # ============================================
-        if U_bc is not None:
-            bc_mask = ~torch.isnan(U_bc[:, 0])
-            if bc_mask.any() and n_faces > n_internal:
-                bnd_owner = owner[n_internal:]
-                bnd_areas = mesh.face_areas[n_internal:]
-                bnd_face_centres = mesh.face_centres[n_internal:]
+        # Add face-based diffusion at ALL boundary faces.
+        # This is the discrete equivalent of the wall shear stress.
+        # For walls with U=0: adds face_coeff to diagonal (pulls velocity to 0)
+        # For moving walls: adds face_coeff*U_top to source (drives flow)
+        # Without this, the time derivative decays velocity to zero with
+        # no driving mechanism for Couette flow.
+        if n_faces > n_internal:
+            bnd_owner = owner[n_internal:]
+            bnd_areas = mesh.face_areas[n_internal:]
+            bnd_face_centres = mesh.face_centres[n_internal:]
 
-                owner_centres = mesh.cell_centres[bnd_owner]
-                d_P = bnd_face_centres - owner_centres
-                d_full = 2.0 * d_P
-                bnd_S_mag = bnd_areas.norm(dim=1)
-                safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
-                n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
-                d_dot_n = (d_full * n_hat).sum(dim=1).abs()
-                bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+            owner_centres = mesh.cell_centres[bnd_owner]
+            d_P = bnd_face_centres - owner_centres
+            bnd_S_mag = bnd_areas.norm(dim=1)
+            safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
+            n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
+            d_dot_n = (d_P * n_hat).sum(dim=1).abs()
+            bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
-                bnd_face_coeff = nu * bnd_S_mag * bnd_delta
+            bnd_face_coeff = nu * bnd_S_mag * bnd_delta
+            bnd_V = gather(cell_volumes_safe, bnd_owner)
+            bnd_face_coeff_pv = bnd_face_coeff / bnd_V
 
-                bnd_bc_mask = bc_mask[bnd_owner]
-                bnd_face_coeff_masked = bnd_face_coeff * bnd_bc_mask.float()
+            # Add to ALL boundary cells' diagonal (diffusion toward boundary)
+            diag = diag + scatter_add(bnd_face_coeff_pv, bnd_owner, n_cells)
 
-                bnd_V = gather(cell_volumes_safe, bnd_owner)
-                bnd_face_coeff_pv = bnd_face_coeff_masked / bnd_V
-
-                diag = diag + scatter_add(bnd_face_coeff_pv, bnd_owner, n_cells)
-
+            # Add boundary source: face_coeff * U_bc (for non-zero BCs only)
+            if U_bc is not None:
                 for comp in range(3):
                     u_bc_comp = U_bc[bnd_owner, comp].nan_to_num(0.0)
                     source_contrib = bnd_face_coeff_pv * u_bc_comp
                     source[:, comp] = source[:, comp] + scatter_add(source_contrib, bnd_owner, n_cells)
 
-        # Compute H(U): off-diagonal contributions
+        # Compute H(U): off-diagonal contributions (absolute form)
         H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
 
-        # Use direct indexing for 2D U tensor and index_add_ for 2D scatter
         U_neigh = U[int_neigh]  # (n_internal, 3)
         U_own = U[int_owner]  # (n_internal, 3)
 
-        # Owner receives from neighbour: lower * U_neigh * V_P
+        # lower * U_neigh * V_P = (-diff_coeff + flux_neg) * U_neigh (absolute)
         owner_contrib = lower.unsqueeze(-1) * U_neigh * V_P.unsqueeze(-1)
         H.index_add_(0, int_owner, owner_contrib)
 
-        # Neighbour receives from owner: upper * U_owner * V_N
+        # upper * U_own * V_N = (-diff_coeff - flux_pos) * U_own (absolute)
         neigh_contrib = upper.unsqueeze(-1) * U_own * V_N.unsqueeze(-1)
         H.index_add_(0, int_neigh, neigh_contrib)
 
-        # H now includes off-diagonal product + BC source (no pressure gradient)
-        H = H + source
+        # H = off-diagonal product + BC source (source is per-unit-volume,
+        # scaled to absolute form by multiplying by V)
+        H = H + source * cell_volumes_safe.unsqueeze(-1)
 
-        # Add body force contribution (per-unit-volume, matching matrix form)
+        # Add body force contribution (absolute form: F * V)
         if body_force is not None:
-            H = H + body_force.to(device=device, dtype=dtype)
+            H = H + body_force.to(device=device, dtype=dtype) * cell_volumes_safe.unsqueeze(-1)
+
+        # Add time derivative V/dt * U_old to H.
+        # This is critical: HbyA = H/A_p must equal U_pred for the
+        # pressure equation to work correctly.  Without the time derivative
+        # in H, HbyA is diluted by V/dt in A_p, causing the pressure
+        # equation to produce a spurious pressure field that destroys the
+        # velocity in closed domains (Couette, Poiseuille).
+        dt = self._piso_config.dt if hasattr(self._piso_config, 'dt') else 1.0
+        if U_old is not None and dt > 0:
+            V_over_dt = cell_volumes_safe / dt
+            H = H + V_over_dt.unsqueeze(-1) * U_old
+            # Also add V/dt to diagonal
+            diag = diag + V_over_dt
 
         # Store BC source for _recompute_H (spatial operator only, no time derivative)
         self._bc_source = source.clone()
@@ -392,18 +413,8 @@ class PISOSolver(CoupledSolverBase):
         grad_p.index_add_(0, int_owner, p_contrib)
         grad_p.index_add_(0, int_neigh, -p_contrib)
 
-        # Time derivative term: V/dt * U_old added to total_source, V/dt to diagonal
-        # NOTE: Do NOT add V/dt*U_old to H — that would dilute it by dividing
-        # by A_p (which includes V/dt) in HbyA, destroying the time accuracy.
-        dt = self._piso_config.dt if hasattr(self._piso_config, 'dt') else 1.0
-        time_source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
-        if U_old is not None and dt > 0:
-            V_over_dt = cell_volumes_safe / dt
-            time_source = V_over_dt.unsqueeze(-1) * U_old
-            diag = diag + V_over_dt
-
-        # Solve: A_p * U = H + time_source - grad(p)
-        total_source = H + time_source - grad_p
+        # Solve: A_p * U = H - grad(p)
+        total_source = H - grad_p
 
         diag_safe = diag.abs().clamp(min=1e-30)
         U_new = total_source / diag_safe.unsqueeze(-1)
@@ -468,7 +479,6 @@ class PISOSolver(CoupledSolverBase):
         upper = (-diff_coeff - flux_pos) / V_N
 
         H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
-        # Use direct indexing for 2D U tensor
         U_neigh = U[int_neigh]  # (n_internal, 3)
         U_own = U[int_owner]  # (n_internal, 3)
 
@@ -478,9 +488,9 @@ class PISOSolver(CoupledSolverBase):
         neigh_contrib = upper.unsqueeze(-1) * U_own * V_N.unsqueeze(-1)
         H.index_add_(0, int_neigh, neigh_contrib)
 
-        # Add stored BC source contributions
+        # Add stored BC source contributions (scale to absolute form)
         if hasattr(self, '_bc_source'):
-            H = H + self._bc_source
+            H = H + self._bc_source * cell_volumes_safe.unsqueeze(-1)
 
         return H
 
