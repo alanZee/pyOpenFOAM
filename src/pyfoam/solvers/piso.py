@@ -314,55 +314,36 @@ class PISOSolver(CoupledSolverBase):
         source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
 
         # ============================================
-        # Boundary condition enforcement via face-based diffusion.
-        #
-        # For ALL boundary faces (including walls): add face_diff_coeff
-        # to the owner cell's diagonal and face_diff_coeff * U_face to
-        # the source.  For walls with U=0, this creates implicit
-        # diffusion toward zero at the wall face WITHOUT forcing the
-        # entire cell velocity to zero.  For moving walls (U=U_top),
-        # the source drives the cell toward U_top.
-        #
-        # Do NOT use cell-based penalty for wall cells — that would
-        # force all wall-adjacent cells to zero, destroying the
-        # velocity gradient in closed domains (Couette, Poiseuille).
+        # Boundary condition enforcement (implicit BC method)
+        # For cells with fixedValue BCs: add face_diff_coeff to diagonal
+        # and face_diff_coeff * U_bc to source.
         # ============================================
-        if n_faces > n_internal:
-            bnd_owner = owner[n_internal:]
-            bnd_areas = mesh.face_areas[n_internal:]
-            bnd_face_centres = mesh.face_centres[n_internal:]
+        if U_bc is not None:
+            bc_mask = ~torch.isnan(U_bc[:, 0])
+            if bc_mask.any() and n_faces > n_internal:
+                bnd_owner = owner[n_internal:]
+                bnd_areas = mesh.face_areas[n_internal:]
+                bnd_face_centres = mesh.face_centres[n_internal:]
 
-            # Compute boundary delta using d_P (cell-to-face distance).
-            # For boundary faces, the correct delta is |d_P · n|, NOT
-            # 2×|d_P · n|.  Using 2×d_P makes wall diffusion twice as
-            # strong as internal diffusion, which overwhelms the solution
-            # and drives wall-adjacent cells to zero velocity.
-            owner_centres = mesh.cell_centres[bnd_owner]
-            d_P = bnd_face_centres - owner_centres
-            bnd_S_mag = bnd_areas.norm(dim=1)
-            safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
-            n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
-            d_dot_n = (d_P * n_hat).sum(dim=1).abs()
-            bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+                owner_centres = mesh.cell_centres[bnd_owner]
+                d_P = bnd_face_centres - owner_centres
+                d_full = 2.0 * d_P
+                bnd_S_mag = bnd_areas.norm(dim=1)
+                safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
+                n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
+                d_dot_n = (d_full * n_hat).sum(dim=1).abs()
+                bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
-            # Face diffusion coefficient: nu * |S_f| * delta_bnd
-            bnd_face_coeff = nu * bnd_S_mag * bnd_delta
+                bnd_face_coeff = nu * bnd_S_mag * bnd_delta
 
-            # Divide by cell volume to match per-unit-volume form
-            bnd_V = gather(cell_volumes_safe, bnd_owner)
-            bnd_face_coeff_pv = bnd_face_coeff / bnd_V
+                bnd_bc_mask = bc_mask[bnd_owner]
+                bnd_face_coeff_masked = bnd_face_coeff * bnd_bc_mask.float()
 
-            # Add face-based diffusion source for boundary faces.
-            # For stationary walls (U=0): source = 0 (no contribution)
-            # For moving walls (U=U_top): source = face_coeff * U_top / V
-            # For empty patches: face_area = 0, so contribution = 0
-            #
-            # Do NOT add to diagonal — that creates extra diffusion that
-            # pulls wall-adjacent cells toward the boundary value.  The
-            # boundary flux is already constrained to the prescribed value
-            # by _fix_boundary_flux, so the pressure equation handles the
-            # wall condition correctly without diagonal penalty.
-            if U_bc is not None:
+                bnd_V = gather(cell_volumes_safe, bnd_owner)
+                bnd_face_coeff_pv = bnd_face_coeff_masked / bnd_V
+
+                diag = diag + scatter_add(bnd_face_coeff_pv, bnd_owner, n_cells)
+
                 for comp in range(3):
                     u_bc_comp = U_bc[bnd_owner, comp].nan_to_num(0.0)
                     source_contrib = bnd_face_coeff_pv * u_bc_comp
