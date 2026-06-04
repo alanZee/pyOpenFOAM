@@ -51,6 +51,7 @@ from pyfoam.solvers.pressure_equation import (
     solve_pressure_equation,
     correct_velocity,
     correct_face_flux,
+    adjust_phi,
 )
 
 __all__ = ["PIMPLESolver", "PIMPLEConfig"]
@@ -189,6 +190,9 @@ class PIMPLESolver(CoupledSolverBase):
                 # Fix boundary face fluxes using prescribed BC velocities
                 if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
                     self._fix_boundary_flux(phiHbyA, U_bc, mesh)
+
+                # Adjust boundary fluxes for global conservation
+                adjust_phi(phiHbyA, mesh, closed=True)
 
                 # Assemble and solve pressure equation
                 p_eqn = assemble_pressure_equation(

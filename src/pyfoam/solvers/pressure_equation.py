@@ -42,6 +42,7 @@ __all__ = [
     "solve_pressure_equation",
     "correct_velocity",
     "correct_face_flux",
+    "adjust_phi",
 ]
 
 
@@ -323,3 +324,48 @@ def correct_face_flux(
     phi_corrected[:n_internal] = phi[:n_internal] + flux_correction
 
     return phi_corrected
+
+
+def adjust_phi(
+    phi: torch.Tensor,
+    mesh: Any,
+    closed: bool = True,
+) -> bool:
+    """Adjust face flux for global conservation on closed domains.
+
+    On closed domains (all boundaries are walls), the total boundary
+    flux must be zero.  If the discrete velocity field has a non-zero
+    net boundary flux due to numerical errors, this function corrects
+    the boundary fluxes by distributing the imbalance uniformly.
+
+    This is equivalent to OpenFOAM's ``adjustPhi`` function, which is
+    called in icoFoam/pisoFoam to ensure the pressure equation is
+    well-posed on closed domains.
+
+    Args:
+        phi: ``(n_faces,)`` — face flux (modified in-place).
+        mesh: The finite volume mesh.
+        closed: If True, enforce zero net boundary flux.
+
+    Returns:
+        True if adjustment was made.
+    """
+    n_internal = mesh.n_internal_faces
+    n_faces = mesh.n_faces
+
+    if n_faces <= n_internal or not closed:
+        return False
+
+    # Compute net boundary flux
+    bnd_phi = phi[n_internal:]
+    net_bnd_flux = bnd_phi.sum().item()
+
+    if abs(net_bnd_flux) < 1e-30:
+        return False
+
+    # Distribute the imbalance uniformly across boundary faces
+    n_bnd = n_faces - n_internal
+    correction = net_bnd_flux / n_bnd
+    phi[n_internal:] = phi[n_internal:] - correction
+
+    return True

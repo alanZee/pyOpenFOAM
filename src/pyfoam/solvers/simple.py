@@ -53,6 +53,7 @@ from pyfoam.solvers.pressure_equation import (
     solve_pressure_equation,
     correct_velocity,
     correct_face_flux,
+    adjust_phi,
 )
 
 __all__ = ["SIMPLESolver", "SIMPLEConfig"]
@@ -210,6 +211,9 @@ class SIMPLESolver(CoupledSolverBase):
             # faces, but fixedValue BCs prescribe the face velocity directly.
             if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
                 self._fix_boundary_flux(phiHbyA, U_bc, mesh)
+
+            # Adjust boundary fluxes for global conservation
+            adjust_phi(phiHbyA, mesh, closed=True)
 
             # ============================================
             # SIMPLEC modification (if enabled)
