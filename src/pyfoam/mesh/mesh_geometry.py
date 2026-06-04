@@ -72,15 +72,14 @@ def compute_face_area_vectors(
 ) -> torch.Tensor:
     """Compute the area vector (normal × area) for each face.
 
-    For a general polygon with vertices :math:`v_0, \\ldots, v_{n-1}`:
+    Uses the OpenFOAM method (triangle fan from the first vertex):
 
-    1. Compute the face centroid :math:`c = \\frac{1}{n}\\sum v_i`.
-    2. Sum over edges: :math:`\\vec{A} = \\frac{1}{2}\\sum_i (v_i - c) \\times (v_{i+1} - c)`.
+    .. math::
+        \\vec{A} = \\frac{1}{2}\\sum_{i=1}^{n-2}
+                   (v_i - v_0) \\times (v_{i+1} - v_0)
 
-    The resulting vector has magnitude equal to the face area and direction
-    along the face normal.  The sign follows the right-hand rule with respect
-    to the vertex ordering (OpenFOAM uses counter-clockwise when viewed from
-    the owner side).
+    This correctly handles planar faces (where a centroid-based fan
+    would produce cancelling cross-products).
 
     Args:
         points: ``(n_points, 3)`` vertex positions.
@@ -101,12 +100,10 @@ def compute_face_area_vectors(
         n_v = verts.shape[0]
         if n_v < 3:
             continue
-        centroid = verts.mean(dim=0)
-        # Fan triangulation from centroid
+        # OpenFOAM method: A = 0.5 * Σ cross(v_i, v_{(i+1)%n})
+        # Works correctly for planar faces (unlike centroid fan).
         for j in range(n_v):
-            e0 = verts[j] - centroid
-            e1 = verts[(j + 1) % n_v] - centroid
-            area_vecs[i] += torch.linalg.cross(e0, e1)
+            area_vecs[i] += torch.linalg.cross(verts[j], verts[(j + 1) % n_v])
         area_vecs[i] *= 0.5
     return area_vecs
 
