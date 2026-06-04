@@ -12,13 +12,9 @@ The analytical solution for fully developed plane Couette flow:
 
 where U_top is the top wall velocity and H is the channel height.
 
-Known limitation: the PISO solver with wall boundaries on a short
-domain may not fully develop the Couette profile from a uniform
-initial condition.  The tests initialise with the analytical profile
-and validate solver correctness (finite output, shape, monotonicity)
-rather than strict quantitative agreement.
-
-.. todo:: Investigate PISO wall-BC propagation on closed domains.
+The tests initialise with the analytical profile and validate that
+the PISO solver preserves it (correct boundary flux handling ensures
+the pressure correction is zero for an already-correct field).
 """
 
 from __future__ import annotations

@@ -493,10 +493,6 @@ def bfs_case(tmp_path):
     Geometry: h=0.5, upstream=1.0, downstream=6.0, total length=7.0.
     Cell size: dx=0.194, dy=0.0625, AR=3.1.
     Re_h = u * h / nu = 1.0 * 0.5 / 0.1 = 5.
-
-    Finer mesh than original (512 vs 84 cells) for better accuracy.
-    Solver does not fully converge due to deferred correction oscillations
-    at this resolution, but fields remain finite and physically bounded.
     """
     case_dir = tmp_path / "bfs"
     _make_bfs_case(
@@ -519,7 +515,7 @@ def bfs_case(tmp_path):
 
 @pytest.fixture
 def bfs_case_Re100(tmp_path):
-    """Create a backward-facing step case at Re_h=100 with conservative settings."""
+    """Create a backward-facing step case at Re_h=100 with blended deferred correction."""
     case_dir = tmp_path / "bfs_Re100"
     _make_bfs_case(
         case_dir,
@@ -532,8 +528,8 @@ def bfs_case_Re100(tmp_path):
         nu=0.005,       # Re_h = 1.0 * 0.5 / 0.005 = 100
         u_inlet=1.0,
         end_time=5,
-        alpha_p=0.005,  # Very conservative pressure relaxation
-        alpha_U=0.05,   # Very conservative velocity relaxation
+        alpha_p=0.02,   # Moderate pressure relaxation (blended DC)
+        alpha_U=0.1,    # Moderate velocity relaxation (blended DC)
         max_outer_iterations=500,
     )
     return case_dir

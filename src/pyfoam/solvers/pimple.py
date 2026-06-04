@@ -186,6 +186,10 @@ class PIMPLESolver(CoupledSolverBase):
                     mesh.n_internal_faces, mesh.face_weights,
                 )
 
+                # Fix boundary face fluxes using prescribed BC velocities
+                if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
+                    self._fix_boundary_flux(phiHbyA, U_bc, mesh)
+
                 # Assemble and solve pressure equation
                 p_eqn = assemble_pressure_equation(
                     phiHbyA, A_p, mesh, mesh.face_weights,
@@ -202,6 +206,10 @@ class PIMPLESolver(CoupledSolverBase):
 
                 # Correct face flux
                 phi = correct_face_flux(phi, p, A_p, mesh, mesh.face_weights)
+
+                # Fix boundary face fluxes using prescribed BC velocities
+                if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
+                    self._fix_boundary_flux(phi, U_bc, mesh)
 
                 # Re-apply BCs after velocity correction
                 if U_bc is not None:
@@ -512,3 +520,31 @@ class PIMPLESolver(CoupledSolverBase):
         div_phi = div_phi / V
 
         return float(div_phi.abs().mean().item())
+
+    def _fix_boundary_flux(
+        self,
+        phi: torch.Tensor,
+        U_bc: torch.Tensor,
+        mesh: Any,
+    ) -> None:
+        """Overwrite boundary face fluxes using prescribed BC velocities.
+
+        Only faces whose owner cell has a prescribed (non-NaN) BC are
+        modified.  Other boundary faces keep their original flux.
+
+        Args:
+            phi: ``(n_faces,)`` — face flux (modified in-place).
+            U_bc: ``(n_cells, 3)`` — prescribed velocity (NaN where no BC).
+            mesh: The finite volume mesh.
+        """
+        n_internal = mesh.n_internal_faces
+        bnd_owner = mesh.owner[n_internal:]
+        bnd_areas = mesh.face_areas[n_internal:]
+
+        U_bnd = U_bc[bnd_owner]
+        has_bc = ~torch.isnan(U_bnd[:, 0])
+
+        if has_bc.any():
+            U_bnd_clean = U_bnd.nan_to_num(0.0)
+            phi_bnd = (U_bnd_clean * bnd_areas).sum(dim=1)
+            phi[n_internal:] = torch.where(has_bc, phi_bnd, phi[n_internal:])

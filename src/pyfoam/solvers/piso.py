@@ -179,6 +179,15 @@ class PISOSolver(CoupledSolverBase):
                 mesh.n_internal_faces, mesh.face_weights,
             )
 
+            # Fix boundary face fluxes using prescribed BC velocities.
+            # compute_face_flux_HbyA uses cell-centre HbyA for boundary
+            # faces, but fixedValue BCs prescribe the face velocity directly.
+            # Using cell-centre values causes non-zero spurious boundary
+            # fluxes in closed domains (Couette, Poiseuille), corrupting
+            # the pressure equation RHS and destroying the solution.
+            if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
+                self._fix_boundary_flux(phiHbyA, U_bc, mesh)
+
             # Assemble and solve pressure equation
             p_eqn = assemble_pressure_equation(
                 phiHbyA, A_p, mesh, mesh.face_weights,
@@ -195,6 +204,10 @@ class PISOSolver(CoupledSolverBase):
 
             # Correct face flux
             phi = correct_face_flux(phi, p, A_p, mesh, mesh.face_weights)
+
+            # Fix boundary face fluxes using prescribed BC velocities
+            if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
+                self._fix_boundary_flux(phi, U_bc, mesh)
 
             # Re-apply BCs after velocity correction
             if U_bc is not None:
@@ -301,42 +314,55 @@ class PISOSolver(CoupledSolverBase):
         source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
 
         # ============================================
-        # Boundary condition enforcement (implicit BC method)
-        # Matches SIMPLE's approach: add face diffusion coefficient
-        # to diagonal and source for fixed-value boundary cells.
+        # Boundary condition enforcement via face-based diffusion.
+        #
+        # For ALL boundary faces (including walls): add face_diff_coeff
+        # to the owner cell's diagonal and face_diff_coeff * U_face to
+        # the source.  For walls with U=0, this creates implicit
+        # diffusion toward zero at the wall face WITHOUT forcing the
+        # entire cell velocity to zero.  For moving walls (U=U_top),
+        # the source drives the cell toward U_top.
+        #
+        # Do NOT use cell-based penalty for wall cells — that would
+        # force all wall-adjacent cells to zero, destroying the
+        # velocity gradient in closed domains (Couette, Poiseuille).
         # ============================================
-        if U_bc is not None:
-            bc_mask = ~torch.isnan(U_bc[:, 0])
-            if bc_mask.any() and n_faces > n_internal:
-                bnd_owner = owner[n_internal:]
-                bnd_areas = mesh.face_areas[n_internal:]
-                bnd_face_centres = mesh.face_centres[n_internal:]
+        if n_faces > n_internal:
+            bnd_owner = owner[n_internal:]
+            bnd_areas = mesh.face_areas[n_internal:]
+            bnd_face_centres = mesh.face_centres[n_internal:]
 
-                # Compute boundary delta using 2×d_P to match internal face convention
-                owner_centres = mesh.cell_centres[bnd_owner]
-                d_P = bnd_face_centres - owner_centres
-                d_full = 2.0 * d_P
-                bnd_S_mag = bnd_areas.norm(dim=1)
-                safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
-                n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
-                d_dot_n = (d_full * n_hat).sum(dim=1).abs()
-                bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+            # Compute boundary delta using d_P (cell-to-face distance).
+            # For boundary faces, the correct delta is |d_P · n|, NOT
+            # 2×|d_P · n|.  Using 2×d_P makes wall diffusion twice as
+            # strong as internal diffusion, which overwhelms the solution
+            # and drives wall-adjacent cells to zero velocity.
+            owner_centres = mesh.cell_centres[bnd_owner]
+            d_P = bnd_face_centres - owner_centres
+            bnd_S_mag = bnd_areas.norm(dim=1)
+            safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
+            n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
+            d_dot_n = (d_P * n_hat).sum(dim=1).abs()
+            bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
-                # Face diffusion coefficient: nu * |S_f| * delta_bnd
-                bnd_face_coeff = nu * bnd_S_mag * bnd_delta
+            # Face diffusion coefficient: nu * |S_f| * delta_bnd
+            bnd_face_coeff = nu * bnd_S_mag * bnd_delta
 
-                # Only apply to cells that have BCs
-                bnd_bc_mask = bc_mask[bnd_owner]
-                bnd_face_coeff_masked = bnd_face_coeff * bnd_bc_mask.float()
+            # Divide by cell volume to match per-unit-volume form
+            bnd_V = gather(cell_volumes_safe, bnd_owner)
+            bnd_face_coeff_pv = bnd_face_coeff / bnd_V
 
-                # Divide by cell volume to match per-unit-volume form
-                bnd_V = gather(cell_volumes_safe, bnd_owner)
-                bnd_face_coeff_pv = bnd_face_coeff_masked / bnd_V
-
-                # Add to diagonal: internalCoeffs = face_coeff / V
-                diag = diag + scatter_add(bnd_face_coeff_pv, bnd_owner, n_cells)
-
-                # Add to source: boundaryCoeffs = face_coeff * U_bc / V
+            # Add face-based diffusion source for boundary faces.
+            # For stationary walls (U=0): source = 0 (no contribution)
+            # For moving walls (U=U_top): source = face_coeff * U_top / V
+            # For empty patches: face_area = 0, so contribution = 0
+            #
+            # Do NOT add to diagonal — that creates extra diffusion that
+            # pulls wall-adjacent cells toward the boundary value.  The
+            # boundary flux is already constrained to the prescribed value
+            # by _fix_boundary_flux, so the pressure equation handles the
+            # wall condition correctly without diagonal penalty.
+            if U_bc is not None:
                 for comp in range(3):
                     u_bc_comp = U_bc[bnd_owner, comp].nan_to_num(0.0)
                     source_contrib = bnd_face_coeff_pv * u_bc_comp
@@ -360,16 +386,7 @@ class PISOSolver(CoupledSolverBase):
         # H now includes off-diagonal product + BC source (no pressure gradient)
         H = H + source
 
-        # Time derivative term: V/dt * U_old added to source, V/dt added to diagonal
-        dt = self._piso_config.dt if hasattr(self._piso_config, 'dt') else 1.0
-        if U_old is not None and dt > 0:
-            V_over_dt = cell_volumes_safe / dt
-            # Add V/dt * U_old to source
-            H = H + V_over_dt.unsqueeze(-1) * U_old
-            # Add V/dt to diagonal
-            diag = diag + V_over_dt
-
-        # Store BC source for _recompute_H
+        # Store BC source for _recompute_H (spatial operator only, no time derivative)
         self._bc_source = source.clone()
 
         # Pressure gradient
@@ -383,8 +400,18 @@ class PISOSolver(CoupledSolverBase):
         grad_p.index_add_(0, int_owner, p_contrib)
         grad_p.index_add_(0, int_neigh, -p_contrib)
 
-        # Solve: A_p * U = H - grad(p)
-        total_source = H - grad_p
+        # Time derivative term: V/dt * U_old added to total_source, V/dt to diagonal
+        # NOTE: Do NOT add V/dt*U_old to H — that would dilute it by dividing
+        # by A_p (which includes V/dt) in HbyA, destroying the time accuracy.
+        dt = self._piso_config.dt if hasattr(self._piso_config, 'dt') else 1.0
+        time_source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        if U_old is not None and dt > 0:
+            V_over_dt = cell_volumes_safe / dt
+            time_source = V_over_dt.unsqueeze(-1) * U_old
+            diag = diag + V_over_dt
+
+        # Solve: A_p * U = H + time_source - grad(p)
+        total_source = H + time_source - grad_p
 
         diag_safe = diag.abs().clamp(min=1e-30)
         U_new = total_source / diag_safe.unsqueeze(-1)
@@ -492,3 +519,36 @@ class PISOSolver(CoupledSolverBase):
         div_phi = div_phi / V
 
         return float(div_phi.abs().mean().item())
+
+    def _fix_boundary_flux(
+        self,
+        phi: torch.Tensor,
+        U_bc: torch.Tensor,
+        mesh: Any,
+    ) -> None:
+        """Overwrite boundary face fluxes using prescribed BC velocities.
+
+        For fixedValue boundary faces, the face velocity is the prescribed
+        value (not the cell-centre interpolated value).  This is critical
+        for closed domains where wall fluxes must be exact.
+
+        Only faces whose owner cell has a prescribed (non-NaN) BC are
+        modified.  Other boundary faces (e.g. zeroGradient) keep their
+        original flux.
+
+        Args:
+            phi: ``(n_faces,)`` — face flux (modified in-place).
+            U_bc: ``(n_cells, 3)`` — prescribed velocity (NaN where no BC).
+            mesh: The finite volume mesh.
+        """
+        n_internal = mesh.n_internal_faces
+        bnd_owner = mesh.owner[n_internal:]
+        bnd_areas = mesh.face_areas[n_internal:]
+
+        U_bnd = U_bc[bnd_owner]  # (n_bnd, 3)
+        has_bc = ~torch.isnan(U_bnd[:, 0])
+
+        if has_bc.any():
+            U_bnd_clean = U_bnd.nan_to_num(0.0)
+            phi_bnd = (U_bnd_clean * bnd_areas).sum(dim=1)
+            phi[n_internal:] = torch.where(has_bc, phi_bnd, phi[n_internal:])

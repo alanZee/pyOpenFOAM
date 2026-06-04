@@ -275,6 +275,14 @@ class IcoFoam(SolverBase):
             if patch.patch_type == "fixedValue" and patch.value is not None:
                 value = self._parse_vector_value(patch.value)
                 if value is not None:
+                    # Skip zero-velocity walls (no-slip).
+                    # Wall BCs are enforced through face-based diffusion
+                    # and zero boundary flux, NOT through cell penalty.
+                    # Cell penalty for zero-velocity walls forces all
+                    # wall-adjacent cells to zero, destroying the velocity
+                    # gradient in closed domains like Couette flow.
+                    if abs(value[0]) < 1e-30 and abs(value[1]) < 1e-30 and abs(value[2]) < 1e-30:
+                        continue
                     # Get face range from mesh boundary info
                     mesh_info = mesh_patches.get(patch.name)
                     if mesh_info is not None:

@@ -205,6 +205,12 @@ class SIMPLESolver(CoupledSolverBase):
                 mesh.n_internal_faces, mesh.face_weights,
             )
 
+            # Fix boundary face fluxes using prescribed BC velocities.
+            # compute_face_flux_HbyA uses cell-centre HbyA for boundary
+            # faces, but fixedValue BCs prescribe the face velocity directly.
+            if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
+                self._fix_boundary_flux(phiHbyA, U_bc, mesh)
+
             # ============================================
             # SIMPLEC modification (if enabled)
             # In OpenFOAM: rAtU = 1/(1/rAU - H1) = 1/(A_p - H1)
@@ -255,12 +261,13 @@ class SIMPLESolver(CoupledSolverBase):
             # ============================================
             phi = correct_face_flux(phiHbyA, p_prime, A_p_eff, mesh, mesh.face_weights)
 
+            # Fix boundary face fluxes using prescribed BC velocities
+            if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
+                self._fix_boundary_flux(phi, U_bc, mesh)
+
             # Under-relax pressure correction
-            # SIMPLEC uses alpha_p = 1.0 by default because rAtU already
-            # provides more accurate corrections (Van Doormaal & Raithby, 1984).
-            # But for stability, users can override via config.relaxation_factor_p.
             if config.consistent:
-                alpha_p = config.relaxation_factor_p  # Default 1.0 for SIMPLEC
+                alpha_p = config.relaxation_factor_p
             else:
                 alpha_p = config.relaxation_factor_p
             p_prime = alpha_p * p_prime
@@ -414,32 +421,22 @@ class SIMPLESolver(CoupledSolverBase):
 
         # Convection — deferred-correction linearUpwind (2nd order)
         # Implicit part: upwind (diagonally dominant)
-        # Explicit part: (φ_lu - φ_up) * flux as deferred correction source
+        # Explicit part: TVD-limited correction as deferred source
         flux = phi[:n_internal]
         flux_pos = torch.where(flux >= 0, flux, torch.zeros_like(flux))
         flux_neg = torch.where(flux < 0, flux, torch.zeros_like(flux))
 
-        # Upwind cell index per face
-        upwind_cell = torch.where(flux >= 0, int_owner, int_neigh)
-
-        # Compute cell-centre gradient of U for linearUpwind correction
+        # Compute cell-centre gradient of U for TVD limiter
         grad_U = self._compute_cell_gradient(U, mesh)
-        # grad_U: (n_cells, 3, 3) — grad_U[c, i, j] = dU_i/dx_j
-
-        # LinearUpwind correction: (grad_U_up · d) where d = face_centre - cell_centre
-        fc = mesh.face_centres[:n_internal]
-        cc = mesh.cell_centres
-        d_vec = fc - cc[upwind_cell]  # (n_internal, 3)
-        # Correction per component: grad_U_up[i, :] · d_vec
-        lu_correction = torch.einsum('fid,fd->fi', grad_U[upwind_cell], d_vec)  # (n_internal, 3)
-        # Zero correction at boundary-adjacent faces for safety
-        lu_correction = lu_correction * (upwind_cell < n_cells).unsqueeze(-1).float()
 
         # Deferred correction source: TVD-limited linearUpwind
         # φ_f = φ_up + ψ(r) * (φ_dn - φ_up) / 2
         # where r = (φ_up - φ_2up) / (φ_dn - φ_up), ψ = van Leer limiter
-        # This is always bounded and stable.
+        # Blending factor controls how much of the correction is applied
+        # per iteration. Full correction (1.0) can cause oscillations on
+        # coarse meshes at high Re; 0.5 provides stable convergence.
         dc_source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        dc_blend = 0.5
 
         # Compute face values for upwind and downwind cells
         upwind_cell = torch.where(flux >= 0, int_owner, int_neigh)
@@ -470,9 +467,8 @@ class SIMPLESolver(CoupledSolverBase):
         # Correction: ψ * (φ_dn - φ_up) / 2 = -ψ * dU / 2
         correction = -0.5 * psi * dU  # (n_internal, 3)
 
-        # Apply as deferred correction source (scaled by flux magnitude)
-        flux_mag = flux.abs().clamp(min=eps)
-        dc_contrib = correction * flux.unsqueeze(-1)
+        # Apply as deferred correction source (scaled by flux magnitude and blend)
+        dc_contrib = dc_blend * correction * flux.unsqueeze(-1)
         dc_source.index_add_(0, int_owner, dc_contrib)
         dc_source.index_add_(0, int_neigh, -dc_contrib)
 
@@ -744,6 +740,37 @@ class SIMPLESolver(CoupledSolverBase):
 
         # Return L1 norm (mean absolute divergence)
         return float(div_phi.abs().mean().item())
+
+    def _fix_boundary_flux(
+        self,
+        phi: torch.Tensor,
+        U_bc: torch.Tensor,
+        mesh: Any,
+    ) -> None:
+        """Overwrite boundary face fluxes using prescribed BC velocities.
+
+        For fixedValue boundary faces, the face velocity is the prescribed
+        value (not the cell-centre interpolated value).
+
+        Only faces whose owner cell has a prescribed (non-NaN) BC are
+        modified.  Other boundary faces keep their original flux.
+
+        Args:
+            phi: ``(n_faces,)`` — face flux (modified in-place).
+            U_bc: ``(n_cells, 3)`` — prescribed velocity (NaN where no BC).
+            mesh: The finite volume mesh.
+        """
+        n_internal = mesh.n_internal_faces
+        bnd_owner = mesh.owner[n_internal:]
+        bnd_areas = mesh.face_areas[n_internal:]
+
+        U_bnd = U_bc[bnd_owner]
+        has_bc = ~torch.isnan(U_bnd[:, 0])
+
+        if has_bc.any():
+            U_bnd_clean = U_bnd.nan_to_num(0.0)
+            phi_bnd = (U_bnd_clean * bnd_areas).sum(dim=1)
+            phi[n_internal:] = torch.where(has_bc, phi_bnd, phi[n_internal:])
 
     def _compute_cell_gradient(self, U, mesh):
         """Compute cell-centre gradient of vector field U using Gauss theorem.
