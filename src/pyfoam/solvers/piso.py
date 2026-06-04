@@ -130,6 +130,7 @@ class PISOSolver(CoupledSolverBase):
         U_bc: torch.Tensor | None = None,
         U_old: torch.Tensor | None = None,
         p_old: torch.Tensor | None = None,
+        body_force: torch.Tensor | None = None,
         max_outer_iterations: int = 1,
         tolerance: float = 1e-4,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, ConvergenceData]:
@@ -140,10 +141,9 @@ class PISOSolver(CoupledSolverBase):
             p: ``(n_cells,)`` — pressure field.
             phi: ``(n_faces,)`` — face flux field.
             U_bc: ``(n_cells, 3)`` — prescribed velocity for boundary cells.
-                Cells with fixed-value BCs should have their prescribed values;
-                cells without BCs should have NaN. If None, no BC enforcement.
             U_old: Previous time-step velocity (for time derivative).
             p_old: Previous time-step pressure (for time derivative).
+            body_force: ``(n_cells, 3)`` — body force per unit volume.
             max_outer_iterations: Not used for PISO (always 1 time step).
             tolerance: Convergence tolerance.
 
@@ -165,7 +165,7 @@ class PISOSolver(CoupledSolverBase):
         # ============================================
         # Step 1: Momentum predictor
         # ============================================
-        U, A_p, H = self._momentum_predictor(U, p, phi, U_old, U_bc=U_bc)
+        U, A_p, H = self._momentum_predictor(U, p, phi, U_old, U_bc=U_bc, body_force=body_force)
 
         # ============================================
         # Pressure correction loop
@@ -260,6 +260,7 @@ class PISOSolver(CoupledSolverBase):
         phi: torch.Tensor,
         U_old: torch.Tensor | None = None,
         U_bc: torch.Tensor | None = None,
+        body_force: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Solve the momentum equation without under-relaxation.
 
@@ -372,6 +373,10 @@ class PISOSolver(CoupledSolverBase):
 
         # H now includes off-diagonal product + BC source (no pressure gradient)
         H = H + source
+
+        # Add body force contribution (per-unit-volume, matching matrix form)
+        if body_force is not None:
+            H = H + body_force.to(device=device, dtype=dtype)
 
         # Store BC source for _recompute_H (spatial operator only, no time derivative)
         self._bc_source = source.clone()

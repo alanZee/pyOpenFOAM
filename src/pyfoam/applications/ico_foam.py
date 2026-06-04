@@ -206,6 +206,26 @@ class IcoFoam(SolverBase):
         p_data = self.case.read_field("p", 0)
         return U_data, p_data
 
+    def _read_fv_options_body_force(self) -> 'torch.Tensor | None':
+        """Read body force from constant/fvOptions."""
+        fv_path = self.case_path / "constant" / "fvOptions"
+        if not fv_path.exists():
+            return None
+        try:
+            from pyfoam.io.dictionary import parse_dict_file
+            fv_data = parse_dict_file(fv_path)
+        except Exception:
+            return None
+        for key, block in fv_data.items():
+            if isinstance(block, dict) and block.get("type") == "vectorSemiImplicitSource":
+                su = block.get("Su", block.get("sources", {}).get("U"))
+                if isinstance(su, (list, tuple)) and len(su) >= 3:
+                    import torch
+                    force = torch.tensor([float(su[0]), float(su[1]), float(su[2])],
+                                         dtype=self.U.dtype, device=self.U.device)
+                    return force.unsqueeze(0).expand(self.mesh.n_cells, -1).clone()
+        return None
+
     # ------------------------------------------------------------------
     # PISO solver construction
     # ------------------------------------------------------------------
@@ -349,6 +369,9 @@ class IcoFoam(SolverBase):
         # Build boundary conditions
         U_bc = self._build_boundary_conditions()
 
+        # Read body force from fvOptions
+        body_force = self._read_fv_options_body_force()
+
         # Write initial fields
         self._write_fields(self.start_time)
         time_loop.mark_written()
@@ -366,6 +389,7 @@ class IcoFoam(SolverBase):
                 U_bc=U_bc,
                 U_old=self.U_old,
                 p_old=self.p_old,
+                body_force=body_force,
                 tolerance=self.convergence_tolerance,
             )
             last_convergence = conv
