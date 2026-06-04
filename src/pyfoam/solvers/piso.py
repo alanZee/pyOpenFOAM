@@ -224,11 +224,16 @@ class PISOSolver(CoupledSolverBase):
             if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
                 self._fix_boundary_flux(phi, U_bc, mesh)
 
-            # Do NOT re-apply BCs here.  The cell penalty in the momentum
-            # predictor already drives wall cells toward the prescribed
-            # velocity.  Re-applying BCs forces cell velocities to the
-            # prescribed FACE values, which are incorrect for cell centres
-            # (e.g., u(face)=1.0 but u(cell)=0.875 for Couette flow).
+            # Re-apply BCs only for non-zero prescribed velocity cells
+            # (moving walls, inlets).  Do NOT re-apply for zero-velocity
+            # walls — the face-based diffusion already drives those cells
+            # toward zero, and forcing them to exactly zero destroys the
+            # velocity gradient in closed domains like Couette flow.
+            if U_bc is not None:
+                bc_mask = ~torch.isnan(U_bc[:, 0])
+                nonzero_bc = bc_mask & (U_bc.abs().sum(dim=1) > 1e-10)
+                if nonzero_bc.any():
+                    U[nonzero_bc] = U_bc[nonzero_bc]
 
             # Recompute H for subsequent corrections (not needed for last)
             if corr < config.n_correctors - 1:

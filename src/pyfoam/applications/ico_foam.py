@@ -290,22 +290,32 @@ class IcoFoam(SolverBase):
                 "nFaces": bp.n_faces,
             }
 
-        # Iterate over BoundaryPatch objects from the field file
+        # Iterate over BoundaryPatch objects from the field file.
+        # Process non-zero BCs LAST so they take priority over zero BCs
+        # at shared cells (e.g., corner cells touching both movingWall
+        # and fixedWalls).
+        patches_by_priority = []
         for patch in boundary_field:
             if patch.patch_type == "fixedValue" and patch.value is not None:
                 value = self._parse_vector_value(patch.value)
                 if value is not None:
-                    # Get face range from mesh boundary info
-                    mesh_info = mesh_patches.get(patch.name)
-                    if mesh_info is not None:
-                        start_face = mesh_info["startFace"]
-                        n_faces = mesh_info["nFaces"]
-                        for i in range(n_faces):
-                            face_idx = start_face + i
-                            cell_idx = owner[face_idx].item()
-                            U_bc[cell_idx, 0] = value[0]
-                            U_bc[cell_idx, 1] = value[1]
-                            U_bc[cell_idx, 2] = value[2]
+                    is_zero = abs(value[0]) < 1e-30 and abs(value[1]) < 1e-30 and abs(value[2]) < 1e-30
+                    patches_by_priority.append((0 if is_zero else 1, patch, value))
+
+        # Sort: zero BCs first (priority 0), non-zero BCs last (priority 1)
+        patches_by_priority.sort(key=lambda x: x[0])
+
+        for _, patch, value in patches_by_priority:
+            mesh_info = mesh_patches.get(patch.name)
+            if mesh_info is not None:
+                start_face = mesh_info["startFace"]
+                n_faces = mesh_info["nFaces"]
+                for i in range(n_faces):
+                    face_idx = start_face + i
+                    cell_idx = owner[face_idx].item()
+                    U_bc[cell_idx, 0] = value[0]
+                    U_bc[cell_idx, 1] = value[1]
+                    U_bc[cell_idx, 2] = value[2]
 
         return U_bc
 
