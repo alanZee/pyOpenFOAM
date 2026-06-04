@@ -189,6 +189,9 @@ class PISOSolver(CoupledSolverBase):
             if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
                 self._fix_boundary_flux(phiHbyA, U_bc, mesh)
 
+            # Zero out empty patch faces (2-D approximation)
+            self._zero_empty_patches(phiHbyA, mesh)
+
             # Adjust boundary fluxes for global conservation on closed domains.
             # This ensures the net boundary flux is zero, making the pressure
             # equation well-posed.  Equivalent to OpenFOAM's adjustPhi().
@@ -223,6 +226,9 @@ class PISOSolver(CoupledSolverBase):
             # Fix boundary face fluxes using prescribed BC velocities
             if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
                 self._fix_boundary_flux(phi, U_bc, mesh)
+
+            # Zero out empty patch faces on corrected phi
+            self._zero_empty_patches(phi, mesh)
 
             # Re-apply BCs only for non-zero prescribed velocity cells
             # (moving walls, inlets).  Do NOT re-apply for zero-velocity
@@ -352,7 +358,13 @@ class PISOSolver(CoupledSolverBase):
             bnd_S_mag = bnd_areas.norm(dim=1)
             safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
             n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
-            d_dot_n = (d_P * n_hat).sum(dim=1).abs()
+            # Boundary delta uses 2*d_P (full cell-to-cell distance)
+            # to match the internal face convention.  Using d_P alone
+            # overestimates the boundary diffusion by 2x, inflating A_p
+            # and making V/dt overly dominant.  This is the key fix that
+            # matches OpenFOAM/SIMPLE's boundary treatment.
+            d_full = 2.0 * d_P
+            d_dot_n = (d_full * n_hat).sum(dim=1).abs()
             bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
             bnd_face_coeff = nu * bnd_S_mag * bnd_delta
@@ -559,3 +571,16 @@ class PISOSolver(CoupledSolverBase):
             U_bnd_clean = U_bnd.nan_to_num(0.0)
             phi_bnd = (U_bnd_clean * bnd_areas).sum(dim=1)
             phi[n_internal:] = torch.where(has_bc, phi_bnd, phi[n_internal:])
+
+    @staticmethod
+    def _zero_empty_patches(phi: torch.Tensor, mesh: Any) -> None:
+        """Zero out face fluxes on empty patch faces."""
+        if not hasattr(mesh, 'boundary'):
+            return
+        n_internal = mesh.n_internal_faces
+        for patch in mesh.boundary:
+            if patch.get("type", "") == "empty":
+                start = patch.get("startFace", 0) - n_internal
+                n = patch.get("nFaces", 0)
+                if start >= 0 and n > 0:
+                    phi[n_internal + start: n_internal + start + n] = 0.0

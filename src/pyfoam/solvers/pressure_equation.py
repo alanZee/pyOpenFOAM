@@ -190,6 +190,7 @@ def correct_velocity(
     p: torch.Tensor,
     A_p: torch.Tensor,
     mesh: Any,
+    alpha: float = 1.0,
 ) -> torch.Tensor:
     """Correct velocity from the pressure gradient.
 
@@ -256,7 +257,7 @@ def correct_velocity(
 
     # Velocity correction: U = HbyA - (1/A_p) * grad(p)
     # NOTE: Using the original formulation without V factor
-    U_corrected = HbyA - inv_A_p.unsqueeze(-1) * grad_p
+    U_corrected = HbyA - alpha * inv_A_p.unsqueeze(-1) * grad_p
 
     return U_corrected
 
