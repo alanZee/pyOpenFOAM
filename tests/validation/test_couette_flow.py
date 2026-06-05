@@ -132,13 +132,13 @@ def _make_couette_case(
     bottom_start = moving_start + n_moving
 
     # inletOutlet (left x=0, right x=L) — zeroGradient for fully developed flow
-    # Left (x=0)
+    # Left (x=0) — reversed winding for outward -x normal
     for j in range(n_cells_y):
         p0 = j * (n_cells_x + 1)
         p1 = p0 + n_cells_x + 1
         p2 = p1 + n_base
         p3 = p0 + n_base
-        faces.append((4, p0, p1, p2, p3))
+        faces.append((4, p0, p3, p2, p1))
         owner.append(j * n_cells_x)
 
     # Right (x=L)
