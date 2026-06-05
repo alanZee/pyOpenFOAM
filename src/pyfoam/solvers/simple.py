@@ -170,10 +170,6 @@ class SIMPLESolver(CoupledSolverBase):
 
         convergence = ConvergenceData()
 
-        # Store old values for relaxation
-        U_old_iter = U.clone()
-        p_old_iter = p.clone()
-
         for outer in range(max_outer_iterations):
             # Store previous iteration for convergence check
             U_prev = U.clone()
@@ -260,9 +256,11 @@ class SIMPLESolver(CoupledSolverBase):
                 phiHbyA, A_p_eff, mesh, mesh.face_weights,
             )
 
-            # Solve for pressure correction (initial guess = 0)
-            p_prime, p_iters, p_res = solve_pressure_equation(
-                p_eqn, torch.zeros_like(p), self._p_solver,
+            # Solve pressure equation with previous pressure as initial guess.
+            # OpenFOAM solves for TOTAL pressure (not correction),
+            # so starting from p_prev gives faster convergence.
+            p_solved, p_iters, p_res = solve_pressure_equation(
+                p_eqn, p_prev.clone(), self._p_solver,
                 tolerance=config.p_tolerance,
                 max_iter=config.p_max_iter,
             )
@@ -270,41 +268,22 @@ class SIMPLESolver(CoupledSolverBase):
             # ============================================
             # Step 7: Correct face flux (BEFORE pressure relaxation)
             # In OpenFOAM: phi = phiHbyA - pEqn.flux()
-            # pEqn.flux() uses the SOLVED p' (un-relaxed).
             # ============================================
-            phi = correct_face_flux(phiHbyA, p_prime, A_p_eff, mesh, mesh.face_weights)
+            phi = correct_face_flux(phiHbyA, p_solved, A_p_eff, mesh, mesh.face_weights)
 
             # Fix boundary face fluxes using prescribed BC velocities
             if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
                 self._fix_boundary_flux(phi, U_bc, mesh)
 
-            # Under-relax pressure correction
-            if config.consistent:
-                alpha_p = config.relaxation_factor_p
-            else:
-                alpha_p = config.relaxation_factor_p
-            p_prime = alpha_p * p_prime
-
-            # Accumulate pressure: p = p_old + p'
-            p = p_prev + p_prime
-
-            # Limit pressure magnitude to prevent unbounded growth.
-            # On coarse meshes, the pressure correction can accumulate
-            # without bound.  Clipping prevents this while allowing
-            # the pressure to develop toward the correct solution.
-            p = p.clamp(min=-10.0, max=10.0)
+            # Under-relax pressure: p = p_old + α_p * (p_solved - p_old)
+            # This matches OpenFOAM's p.relax() which does:
+            # p = prevIter(p) + alpha * (p - prevIter(p))
+            alpha_p = config.relaxation_factor_p
+            p = p_prev + alpha_p * (p_solved - p_prev)
 
             # Correct velocity: U = HbyA - (1/A_p) * grad(p)
-            # No correction limiting — use full pressure correction.
+            # where p is the RELAXED total pressure.
             U = correct_velocity(U, HbyA, p, A_p_eff, mesh)
-
-            # Clip velocity to physical bounds [0, U_max].
-            U_max = 1.0
-            if U_bc is not None:
-                bc_vals = U_bc[~torch.isnan(U_bc[:, 0])]
-                if bc_vals.numel() > 0:
-                    U_max = bc_vals.abs().max().item()
-            U = U.clamp(min=0.0, max=U_max)
 
             # Re-apply boundary conditions after velocity correction
             if U_bc is not None:
