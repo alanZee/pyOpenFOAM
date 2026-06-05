@@ -192,10 +192,17 @@ class PISOSolver(CoupledSolverBase):
             # Zero out empty patch faces (2-D approximation)
             self._zero_empty_patches(phiHbyA, mesh)
 
-            # Adjust boundary fluxes for global conservation on closed domains.
-            # This ensures the net boundary flux is zero, making the pressure
-            # equation well-posed.  Equivalent to OpenFOAM's adjustPhi().
-            adjust_phi(phiHbyA, mesh, closed=True)
+            # Fix boundary fluxes for zero-gradient patches.
+            # For zero-gradient BCs, the face velocity = owner cell velocity.
+            # These fluxes must be included in the pressure equation source
+            # so the discrete divergence is consistent with the HbyA field.
+            self._fix_zerogradient_boundary_flux(phiHbyA, HbyA, mesh)
+
+            # Adjust boundary fluxes for global conservation on CLOSED domains
+            # with NO moving walls.  For domains with moving walls or open
+            # boundaries, skip adjustment — the fluxes are physical.
+            if U_bc is None or not self._has_moving_wall_or_open_bc(mesh, U_bc):
+                adjust_phi(phiHbyA, mesh, closed=True)
 
             # Assemble and solve pressure equation
             p_eqn = assemble_pressure_equation(
@@ -354,44 +361,55 @@ class PISOSolver(CoupledSolverBase):
         # diffusion only, NOT through cell-level penalty.
         source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
 
-        # Add face-based diffusion at ALL boundary faces.
+        # Add face-based diffusion at FIXED-VALUE wall boundary faces.
         # This is the discrete equivalent of the wall shear stress.
         # For walls with U=0: adds face_coeff to diagonal (pulls velocity to 0)
         # For moving walls: adds face_coeff*U_top to source (drives flow)
-        # Without this, the time derivative decays velocity to zero with
-        # no driving mechanism for Couette flow.
-        if n_faces > n_internal:
-            bnd_owner = owner[n_internal:]
-            bnd_areas = mesh.face_areas[n_internal:]
-            bnd_face_centres = mesh.face_centres[n_internal:]
+        # Skip empty patches (2D approximation) and non-wall patches —
+        # only wall patches impose a velocity constraint via penalty.
+        if n_faces > n_internal and hasattr(mesh, 'boundary') and U_bc is not None:
+            bc_mask = ~torch.isnan(U_bc[:, 0])
+            for patch in mesh.boundary:
+                ptype = patch.get("type", "")
+                # Only process wall patches (fixedValue velocity BCs)
+                if ptype != "wall":
+                    continue
+                sf = patch.get("startFace", 0)
+                nf = patch.get("nFaces", 0)
+                if nf <= 0:
+                    continue
 
-            owner_centres = mesh.cell_centres[bnd_owner]
-            d_P = bnd_face_centres - owner_centres
-            bnd_S_mag = bnd_areas.norm(dim=1)
-            safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
-            n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
-            # Boundary delta uses 2*d_P (full cell-to-cell distance)
-            # to match the internal face convention.  Using d_P alone
-            # overestimates the boundary diffusion by 2x, inflating A_p
-            # and making V/dt overly dominant.  This is the key fix that
-            # matches OpenFOAM/SIMPLE's boundary treatment.
-            d_full = 2.0 * d_P
-            d_dot_n = (d_full * n_hat).sum(dim=1).abs()
-            bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+                patch_owner = owner[sf:sf + nf]
+                # Only process patches with fixedValue BCs
+                if not bc_mask[patch_owner].any():
+                    continue
 
-            bnd_face_coeff = nu * bnd_S_mag * bnd_delta
-            bnd_V = gather(cell_volumes_safe, bnd_owner)
-            bnd_face_coeff_pv = bnd_face_coeff / bnd_V
+                patch_areas = face_areas[sf:sf + nf]
+                patch_fc = mesh.face_centres[sf:sf + nf]
+                patch_oc = mesh.cell_centres[patch_owner]
 
-            # Add to ALL boundary cells' diagonal (diffusion toward boundary)
-            diag = diag + scatter_add(bnd_face_coeff_pv, bnd_owner, n_cells)
+                d_P = patch_fc - patch_oc
+                patch_S_mag = patch_areas.norm(dim=1)
+                safe_mag = torch.where(patch_S_mag > 1e-30, patch_S_mag, torch.ones_like(patch_S_mag))
+                n_hat = patch_areas / safe_mag.unsqueeze(-1)
+                d_full = 2.0 * d_P
+                d_dot_n = (d_full * n_hat).sum(dim=1).abs()
+                patch_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
-            # Add boundary source: face_coeff * U_bc (for non-zero BCs only)
-            if U_bc is not None:
+                patch_coeff = nu * patch_S_mag * patch_delta
+                patch_V = gather(cell_volumes_safe, patch_owner)
+                patch_coeff_pv = patch_coeff / patch_V
+
+                # Only add for cells that have BCs
+                patch_bc = bc_mask[patch_owner]
+                patch_coeff_masked = patch_coeff_pv * patch_bc.float()
+
+                diag = diag + scatter_add(patch_coeff_masked, patch_owner, n_cells)
+
                 for comp in range(3):
-                    u_bc_comp = U_bc[bnd_owner, comp].nan_to_num(0.0)
-                    source_contrib = bnd_face_coeff_pv * u_bc_comp
-                    source[:, comp] = source[:, comp] + scatter_add(source_contrib, bnd_owner, n_cells)
+                    u_bc_comp = U_bc[patch_owner, comp].nan_to_num(0.0)
+                    source_contrib = patch_coeff_masked * u_bc_comp
+                    source[:, comp] = source[:, comp] + scatter_add(source_contrib, patch_owner, n_cells)
 
         # Compute H(U): off-diagonal contributions (absolute form)
         H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
@@ -427,6 +445,7 @@ class PISOSolver(CoupledSolverBase):
             H = H + V_over_dt.unsqueeze(-1) * U_old
             # Also add V/dt to diagonal
             diag = diag + V_over_dt
+
 
         # Store BC source for _recompute_H (spatial operator only, no time derivative)
         self._bc_source = source.clone()
@@ -596,6 +615,70 @@ class PISOSolver(CoupledSolverBase):
             U_bnd_clean = U_bnd.nan_to_num(0.0)
             phi_bnd = (U_bnd_clean * bnd_areas).sum(dim=1)
             phi[n_internal:] = torch.where(has_bc, phi_bnd, phi[n_internal:])
+
+    @staticmethod
+    def _has_moving_wall_or_open_bc(mesh: Any, U_bc: torch.Tensor) -> bool:
+        """Check if domain has moving walls or open (non-wall) boundaries.
+
+        Returns True if adjust_phi should NOT be applied (domain is not
+        a simple closed cavity with all stationary walls).
+        """
+        if not hasattr(mesh, 'boundary'):
+            return False
+        n_internal = mesh.n_internal_faces
+        bc_mask = ~torch.isnan(U_bc[:, 0])
+        bnd_owner = mesh.owner[n_internal:]
+        for patch in mesh.boundary:
+            ptype = patch.get("type", "")
+            # Open patches (not wall, not empty) → don't adjust
+            if ptype not in ("wall", "empty", ""):
+                return True
+            # Check if any wall has non-zero prescribed velocity
+            if ptype == "wall":
+                sf = patch.get("startFace", 0) - n_internal
+                nf = patch.get("nFaces", 0)
+                if sf >= 0 and nf > 0:
+                    owners = bnd_owner[sf:sf+nf]
+                    u_vals = U_bc[owners]
+                    if (u_vals.abs().sum() > 1e-10):
+                        return True
+        return False
+
+    @staticmethod
+    def _fix_zerogradient_boundary_flux(
+        phi: torch.Tensor,
+        HbyA: torch.Tensor,
+        mesh: Any,
+    ) -> None:
+        """Fix boundary fluxes for non-fixedValue patches.
+
+        For zero-gradient patches (inletOutlet, etc.), the face velocity
+        equals the owner cell's HbyA velocity.  These fluxes must be
+        consistent with HbyA so the pressure equation source (which only
+        sums over internal faces and fixedValue boundary faces) captures
+        the full divergence.
+        """
+        if not hasattr(mesh, 'boundary'):
+            return
+        n_internal = mesh.n_internal_faces
+        owner = mesh.owner
+        face_areas = mesh.face_areas
+        for patch in mesh.boundary:
+            ptype = patch.get("type", "")
+            # Skip empty patches (already zeroed) and wall patches
+            # (handled by _fix_boundary_flux)
+            if ptype in ("empty", "wall", ""):
+                continue
+            sf = patch.get("startFace", 0)
+            nf = patch.get("nFaces", 0)
+            if nf <= 0:
+                continue
+            for fi in range(sf, sf + nf):
+                bfi = fi - n_internal
+                if bfi < 0:
+                    continue
+                c = owner[fi].item()
+                phi[fi] = (HbyA[c] * face_areas[fi]).sum()
 
     @staticmethod
     def _zero_empty_patches(phi: torch.Tensor, mesh: Any) -> None:

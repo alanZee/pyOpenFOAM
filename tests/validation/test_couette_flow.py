@@ -106,7 +106,7 @@ def _make_couette_case(
 
     n_internal = len(neighbour)
 
-    # Boundary faces — two patch groups: movingWall, fixedWalls
+    # Boundary faces — separate patches for correct BCs
     # movingWall (top, y=H)
     for i in range(n_cells_x):
         p0 = n_cells_y * (n_cells_x + 1) + i
@@ -119,8 +119,7 @@ def _make_couette_case(
     n_moving = n_cells_x
     moving_start = n_internal
 
-    # fixedWalls: bottom, left, right
-    # Bottom (y=0)
+    # bottomWall (y=0) — separate from side walls
     for i in range(n_cells_x):
         p0 = i
         p1 = i + 1
@@ -129,6 +128,10 @@ def _make_couette_case(
         faces.append((4, p0, p1, p2, p3))
         owner.append(i)
 
+    n_bottom = n_cells_x
+    bottom_start = moving_start + n_moving
+
+    # inletOutlet (left x=0, right x=L) — zeroGradient for fully developed flow
     # Left (x=0)
     for j in range(n_cells_y):
         p0 = j * (n_cells_x + 1)
@@ -147,8 +150,8 @@ def _make_couette_case(
         faces.append((4, p0, p1, p2, p3))
         owner.append(j * n_cells_x + n_cells_x - 1)
 
-    n_fixed = n_cells_x + 2 * n_cells_y
-    fixed_start = moving_start + n_moving
+    n_sides = 2 * n_cells_y
+    sides_start = bottom_start + n_bottom
 
     # frontAndBack (empty, z-normal)
     for j in range(n_cells_y):
@@ -170,7 +173,7 @@ def _make_couette_case(
             owner.append(j * n_cells_x + i)
 
     n_empty = 2 * n_cells_x * n_cells_y
-    empty_start = fixed_start + n_fixed
+    empty_start = sides_start + n_sides
 
     n_faces = len(faces)
     n_cells = n_cells_x * n_cells_y
@@ -214,10 +217,11 @@ def _make_couette_case(
     write_foam_file(mesh_dir / "neighbour", h, "\n".join(lines), overwrite=True)
 
     h = FoamFileHeader(**{**header_base.__dict__, "class_name": "polyBoundaryMesh", "object": "boundary"})
-    lines = ["3", "("]
+    lines = ["4", "("]
     for name, ptype, nf, sf in [
         ("movingWall", "wall", n_moving, moving_start),
-        ("fixedWalls", "wall", n_fixed, fixed_start),
+        ("bottomWall", "wall", n_bottom, bottom_start),
+        ("inletOutlet", "patch", n_sides, sides_start),
         ("frontAndBack", "empty", n_empty, empty_start),
     ]:
         lines.append(f"    {name}")
@@ -264,9 +268,12 @@ def _make_couette_case(
         "        type            fixedValue;\n"
         f"        value           uniform ({U_top} 0 0);\n"
         "    }\n"
-        "    fixedWalls\n    {\n"
+        "    bottomWall\n    {\n"
         "        type            fixedValue;\n"
         "        value           uniform (0 0 0);\n"
+        "    }\n"
+        "    inletOutlet\n    {\n"
+        "        type            zeroGradient;\n"
         "    }\n"
         "    frontAndBack\n    {\n"
         "        type            empty;\n"
@@ -287,7 +294,10 @@ def _make_couette_case(
         "    movingWall\n    {\n"
         "        type            zeroGradient;\n"
         "    }\n"
-        "    fixedWalls\n    {\n"
+        "    bottomWall\n    {\n"
+        "        type            zeroGradient;\n"
+        "    }\n"
+        "    inletOutlet\n    {\n"
         "        type            zeroGradient;\n"
         "    }\n"
         "    frontAndBack\n    {\n"
