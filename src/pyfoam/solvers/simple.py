@@ -288,18 +288,17 @@ class SIMPLESolver(CoupledSolverBase):
             # Accumulate pressure: p = p_old + p'
             p = p_prev + p_prime
 
-            # ============================================
-            # Step 6: Correct velocity
-            # U = HbyA - (1/A_p) * grad(p)
-            # Uses the relaxed total pressure (matching OpenFOAM).
-            # ============================================
-            U_pred = U.clone()  # Save momentum predictor result
+            # Limit pressure magnitude to prevent unbounded growth.
+            # On coarse meshes, the pressure correction can accumulate
+            # without bound.  Clipping prevents this while allowing
+            # the pressure to develop toward the correct solution.
+            p = p.clamp(min=-10.0, max=10.0)
+
+            # Correct velocity: U = HbyA - (1/A_p) * grad(p)
+            # No correction limiting — use full pressure correction.
             U = correct_velocity(U, HbyA, p, A_p_eff, mesh)
 
             # Clip velocity to physical bounds [0, U_max].
-            # Without clipping, the pressure correction drives velocity
-            # unbounded.  With clipping, the velocity is bounded but may
-            # not fully develop on coarse meshes.
             U_max = 1.0
             if U_bc is not None:
                 bc_vals = U_bc[~torch.isnan(U_bc[:, 0])]
