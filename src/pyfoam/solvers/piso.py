@@ -222,25 +222,17 @@ class PISOSolver(CoupledSolverBase):
             # Pressure correction: p' = p_new - p_old
             p_prime = p - p_old_iter
 
-            # Correct velocity: U = HbyA - (1/A_p) * grad(p')
-            # Adaptive scaling: limit the pressure correction so it
-            # doesn't overwhelm the predicted velocity.  On coarse meshes
-            # with V/dt >> dc, the correction can be 1000x the predicted
-            # velocity, driving it negative.
-            U_pred = HbyA.clone()
-            U_raw = correct_velocity(U, HbyA, p_prime, A_p, mesh)
-            correction = U_raw - U_pred
-            # Adaptive scaling: limit the pressure correction so it
-            # doesn't overwhelm the predicted velocity.  On coarse meshes
-            # with V/dt >> dc, the correction can be 1000x the predicted
-            # velocity, driving it negative.
-            pred_max = U_pred.abs().max().item()
-            corr_max = correction.abs().max().item()
-            if corr_max > 1e-30 and pred_max > 1e-30:
-                scale = min(1.0, 0.5 * pred_max / corr_max)
-            else:
-                scale = 1.0
-            U = U_pred + scale * correction
+            # Correct velocity: U = U - (1/A_p) * grad(p')
+            # Use the CURRENT velocity U as base (not HbyA, which is tiny
+            # due to V/dt dominance in the diagonal solve).  The correction
+            # is only the pressure gradient adjustment to enforce continuity.
+            U = correct_velocity(U, U, p_prime, A_p, mesh)
+
+            # Re-apply boundary conditions
+            if U_bc is not None:
+                bc_mask = ~torch.isnan(U_bc[:, 0])
+                if bc_mask.any():
+                    U[bc_mask] = U_bc[bc_mask]
 
             # Correct face flux using pressure correction
             phi = correct_face_flux(phi, p_prime, A_p, mesh, mesh.face_weights)
