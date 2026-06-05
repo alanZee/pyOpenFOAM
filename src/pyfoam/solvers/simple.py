@@ -182,14 +182,16 @@ class SIMPLESolver(CoupledSolverBase):
             # ============================================
             # Step 1: Momentum predictor
             # ============================================
-            U, A_p, H, mat_lower, mat_upper = self._momentum_predictor(
+            U, A_p, H, mat_lower, mat_upper, A_p_rAU = self._momentum_predictor(
                 U, p, phi, U_bc=U_bc, nu_field=nu_field, body_force=body_force,
             )
 
             # ============================================
             # Step 2: Compute HbyA
+            # Use unrelaxed A_p (OpenFOAM: rAU = 1/UEqn.A())
+            # Using relaxed A_p underestimates HbyA by factor alpha_U.
             # ============================================
-            HbyA = compute_HbyA(H, A_p)
+            HbyA = compute_HbyA(H, A_p_rAU)
 
             # Constrain HbyA at boundary cells to match prescribed velocity
             # This matches OpenFOAM's constrainHbyA() function
@@ -244,12 +246,22 @@ class SIMPLESolver(CoupledSolverBase):
 
             # ============================================
             # Step 4-5: Assemble and solve pressure equation
-            # Solves: laplacian(A_p_eff, p') = div(phiHbyA)
-            # where A_p_eff = rAtU if SIMPLEC, else A_p
+            # Use unrelaxed A_p for pressure equation (OpenFOAM convention).
             # ============================================
+            A_p_pEqn = A_p_eff if config.consistent else A_p_rAU
             p_eqn = assemble_pressure_equation(
-                phiHbyA, A_p_eff, mesh, mesh.face_weights,
+                phiHbyA, A_p_pEqn, mesh, mesh.face_weights,
             )
+
+            # Apply boundary pressure correction (fixedFluxPressure equivalent).
+            # For fixedValue velocity BCs, the pressure equation needs a
+            # boundary source to ensure the corrected face flux matches the
+            # prescribed velocity.  This prevents the pressure correction
+            # from over-correcting at boundary-adjacent cells.
+            if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
+                self._apply_boundary_pressure_correction(
+                    p_eqn, phiHbyA, A_p_pEqn, U_bc, mesh,
+                )
 
             # Solve for pressure correction (initial guess = 0)
             p_prime, p_iters, p_res = solve_pressure_equation(
@@ -263,7 +275,7 @@ class SIMPLESolver(CoupledSolverBase):
             # In OpenFOAM: phi = phiHbyA - pEqn.flux()
             # pEqn.flux() uses the SOLVED p' (un-relaxed).
             # ============================================
-            phi = correct_face_flux(phiHbyA, p_prime, A_p_eff, mesh, mesh.face_weights)
+            phi = correct_face_flux(phiHbyA, p_prime, A_p_pEqn, mesh, mesh.face_weights)
 
             # Fix boundary face fluxes using prescribed BC velocities
             if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
@@ -285,12 +297,10 @@ class SIMPLESolver(CoupledSolverBase):
             # Uses the relaxed total pressure (matching OpenFOAM).
             # ============================================
             U_pred = U.clone()  # Save momentum predictor result
-            U = correct_velocity(U, HbyA, p, A_p_eff, mesh)
+            U = correct_velocity(U, HbyA, p, A_p_pEqn, mesh)
 
-            # Clip velocity to physical bounds after correction.
-            # On coarse meshes with standard relaxation, the pressure
-            # correction can produce unphysical velocities.  Clipping
-            # prevents divergence while allowing the solver to continue.
+            # Clip velocity to [0, U_max] after correction.
+            # Prevents negative velocities and unbounded growth.
             U_max = 1.0
             if U_bc is not None:
                 bc_vals = U_bc[~torch.isnan(U_bc[:, 0])]
@@ -599,8 +609,13 @@ class SIMPLESolver(CoupledSolverBase):
         # Add relaxation contribution to source
         source = source + (D_new - diag).unsqueeze(-1) * U
 
-        # Store A_p_eff for downstream use
+        # Store A_p_eff for downstream use (relaxed, for momentum solve)
         A_p_eff = D_new.clone()
+        # Store unrelaxed diagonal for HbyA and pressure equation.
+        # OpenFOAM uses rAU = 1/UEqn.A() which is the unrelaxed diagonal.
+        # Using relaxed A_p for HbyA underestimates HbyA by factor alpha_U,
+        # preventing the pressure correction from properly coupling to BCs.
+        A_p_rAU = D_dominant.clone()
 
         mat.source = source
 
@@ -668,7 +683,7 @@ class SIMPLESolver(CoupledSolverBase):
         # Simpler approach: just set HbyA at boundary cells to U_bc
         # (which we already do below)
 
-        return U_solved, A_p_eff, H_from_Ustar, mat.lower.clone(), mat.upper.clone()
+        return U_solved, A_p_eff, H_from_Ustar, mat.lower.clone(), mat.upper.clone(), A_p_rAU
 
     def _compute_pressure_gradient(
         self,
@@ -828,5 +843,76 @@ class SIMPLESolver(CoupledSolverBase):
 
         V = mesh.cell_volumes.clamp(min=1e-30)
         grad_U = grad_U / V.unsqueeze(-1).unsqueeze(-1)
-
         return grad_U
+
+    @staticmethod
+    def _apply_boundary_pressure_correction(
+        p_eqn: 'FvMatrix',
+        phiHbyA: torch.Tensor,
+        A_p: torch.Tensor,
+        U_bc: torch.Tensor,
+        mesh: Any,
+    ) -> None:
+        """Apply boundary pressure correction (fixedFluxPressure equivalent).
+
+        For fixedValue velocity BCs, the pressure equation needs a
+        boundary source term to make the corrected face flux match the
+        prescribed velocity:
+
+            source[P] += (phiHbyA_bnd - U_bc · S_f) * (1/A_p)_f / V_P
+
+        Without this correction, the pressure equation over-corrects at
+        boundary-adjacent cells because it doesn't account for the
+        prescribed boundary flux.
+
+        Args:
+            p_eqn: Assembled pressure equation (source modified in-place).
+            phiHbyA: ``(n_faces,)`` — face flux from HbyA.
+            A_p: ``(n_cells,)`` — diagonal momentum coefficients.
+            U_bc: ``(n_cells, 3)`` — prescribed velocity (NaN where no BC).
+            mesh: The finite volume mesh.
+        """
+        from pyfoam.core.backend import scatter_add, gather
+
+        n_internal = mesh.n_internal_faces
+        bnd_owner = mesh.owner[n_internal:]
+        bnd_areas = mesh.face_areas[n_internal:]
+
+        # Build per-face prescribed velocity from patch definitions
+        U_bnd = torch.full_like(bnd_areas, float('nan'))
+        for patch in mesh.boundary:
+            if patch.get("type", "") == "empty":
+                continue
+            sf = patch.get("startFace", 0) - n_internal
+            nf = patch.get("nFaces", 0)
+            if sf < 0 or nf <= 0:
+                continue
+            first_owner = bnd_owner[sf].item()
+            u_patch = U_bc[first_owner]
+            if torch.isnan(u_patch[0]):
+                continue
+            U_bnd[sf:sf+nf] = u_patch.unsqueeze(0)
+
+        has_bc = ~torch.isnan(U_bnd[:, 0])
+        if not has_bc.any():
+            return
+
+        # Prescribed boundary flux: U_bc · S_f
+        U_bnd_clean = U_bnd.nan_to_num(0.0)
+        phi_bc = (U_bnd_clean * bnd_areas).sum(dim=1)
+
+        # Flux correction: (phiHbyA - U_bc · S_f)
+        flux_correction = phiHbyA[n_internal:] - phi_bc
+
+        # Face-interpolated 1/A_p
+        A_p_safe = A_p.abs().clamp(min=1e-30)
+        inv_A_p = 1.0 / A_p_safe
+        inv_A_p_bnd = gather(inv_A_p, bnd_owner)
+
+        # Source correction (per-unit-volume)
+        source_correction = flux_correction * inv_A_p_bnd
+        source_correction = torch.where(has_bc, source_correction, torch.zeros_like(source_correction))
+
+        V = mesh.cell_volumes.clamp(min=1e-30)
+        V_bnd = gather(V, bnd_owner)
+        p_eqn.source.scatter_add_(0, bnd_owner, source_correction / V_bnd)
