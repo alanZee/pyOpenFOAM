@@ -128,10 +128,10 @@ class DifferentiableSIMPLE:
         dtype = self._dtype
         mesh = self._mesh
 
-        # Ensure tensors are on correct device/dtype
-        U = U.to(device=device, dtype=dtype).clone()
-        p = p.to(device=device, dtype=dtype).clone()
-        phi = phi.to(device=device, dtype=dtype).clone()
+        # Ensure tensors are on correct device/dtype (don't clone — preserve autograd graph)
+        U = U.to(device=device, dtype=dtype)
+        p = p.to(device=device, dtype=dtype)
+        phi = phi.to(device=device, dtype=dtype)
 
         convergence = ConvergenceData()
 
@@ -148,7 +148,8 @@ class DifferentiableSIMPLE:
             if U_bc is not None:
                 bc_mask = ~torch.isnan(U_bc[:, 0])
                 if bc_mask.any():
-                    HbyA[bc_mask] = U_bc[bc_mask]
+                    mask3 = bc_mask.unsqueeze(-1).expand_as(HbyA)
+                    HbyA = torch.where(mask3, U_bc, HbyA)
 
             # Compute phiHbyA
             phiHbyA = compute_face_flux_HbyA(
@@ -157,11 +158,14 @@ class DifferentiableSIMPLE:
             )
 
             # Assemble and solve pressure equation
+            # NOTE: Don't call set_reference — it modifies _diag and
+            # _source in-place, breaking autograd.  The singular matrix
+            # (zero-gradient BCs) is handled by the PCG solver naturally.
             p_eqn = assemble_pressure_equation(
                 phiHbyA, A_p, mesh, mesh.face_weights,
             )
-            p_prime, _, _ = solve_pressure_equation(
-                p_eqn, torch.zeros_like(p), self._p_solver,
+            p_prime, _, _ = p_eqn.solve(
+                self._p_solver, torch.zeros_like(p),
                 tolerance=1e-6, max_iter=1000,
             )
 
@@ -174,7 +178,8 @@ class DifferentiableSIMPLE:
             if U_bc is not None:
                 bc_mask = ~torch.isnan(U_bc[:, 0])
                 if bc_mask.any():
-                    U[bc_mask] = U_bc[bc_mask]
+                    mask3 = bc_mask.unsqueeze(-1).expand_as(U)
+                    U = torch.where(mask3, U_bc, U)
 
             # Check convergence
             continuity_error = self._compute_continuity_error(phi)
@@ -266,6 +271,11 @@ class DifferentiableSIMPLE:
 
         # Solve momentum (simple Jacobi iteration for differentiability)
         U_new = U.clone()
+        if U_bc is not None:
+            bc_mask = ~torch.isnan(U_bc[:, 0])
+        else:
+            bc_mask = None
+
         for _ in range(10):
             H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
             H.index_add_(0, int_owner, -lower.unsqueeze(-1) * U_new[int_neigh])
@@ -273,10 +283,10 @@ class DifferentiableSIMPLE:
             H = H + source
             U_new = H / D_new.unsqueeze(-1).clamp(min=1e-30)
 
-            if U_bc is not None:
-                bc_mask = ~torch.isnan(U_bc[:, 0])
-                if bc_mask.any():
-                    U_new[bc_mask] = U_bc[bc_mask]
+            # Re-apply BCs using torch.where (not in-place) for autograd
+            if bc_mask is not None and bc_mask.any():
+                mask3 = bc_mask.unsqueeze(-1).expand_as(U_new)
+                U_new = torch.where(mask3, U_bc, U_new)
 
         # Compute H from solved U
         H_from_U = torch.zeros(n_cells, 3, dtype=dtype, device=device)
