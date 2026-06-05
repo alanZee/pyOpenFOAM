@@ -216,11 +216,21 @@ class PISOSolver(CoupledSolverBase):
             p_prime = p - p_old_iter
 
             # Correct velocity: U = HbyA - (1/A_p) * grad(p')
-            # Use ONLY the pressure correction, not the total pressure.
-            # Using total pressure causes velocity decay because the old
-            # pressure gradient keeps subtracting from the velocity.
-            p_relaxed = p_prime  # No under-relaxation (small correction)
-            U = correct_velocity(U, HbyA, p_relaxed, A_p, mesh)
+            # Adaptive scaling: limit the pressure correction so it
+            # doesn't overwhelm the predicted velocity.  On coarse meshes
+            # with V/dt >> dc, the correction can be 1000x the predicted
+            # velocity, driving it negative.
+            U_pred = HbyA.clone()
+            U_raw = correct_velocity(U, HbyA, p_prime, A_p, mesh)
+            correction = U_raw - U_pred
+            # Scale correction so max change ≤ 50% of max predicted velocity
+            pred_max = U_pred.abs().max().item()
+            corr_max = correction.abs().max().item()
+            if corr_max > 1e-30 and pred_max > 1e-30:
+                scale = min(1.0, 0.5 * pred_max / corr_max)
+            else:
+                scale = 1.0
+            U = U_pred + scale * correction
 
             # Correct face flux using pressure correction
             phi = correct_face_flux(phi, p_prime, A_p, mesh, mesh.face_weights)
