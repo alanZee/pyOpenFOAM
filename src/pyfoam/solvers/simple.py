@@ -296,10 +296,10 @@ class SIMPLESolver(CoupledSolverBase):
             U_pred = U.clone()  # Save momentum predictor result
             U = correct_velocity(U, HbyA, p, A_p_eff, mesh)
 
-            # Clip velocity to physical bounds after correction.
-            # On coarse meshes with standard relaxation, the pressure
-            # correction can produce unphysical velocities.  Clipping
-            # prevents divergence while allowing the solver to continue.
+            # Clip velocity to physical bounds [0, U_max].
+            # Without clipping, the pressure correction drives velocity
+            # unbounded.  With clipping, the velocity is bounded but may
+            # not fully develop on coarse meshes.
             U_max = 1.0
             if U_bc is not None:
                 bc_vals = U_bc[~torch.isnan(U_bc[:, 0])]
