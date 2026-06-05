@@ -320,7 +320,7 @@ def _make_couette_case(
         "startFrom       startTime;\n"
         "startTime       0;\n"
         "stopAt          endTime;\n"
-        "endTime         200;\n"
+        "endTime         2;\n"
         "deltaT          0.01;\n"
         "writeControl    timeStep;\n"
         "writeInterval   200;\n"
