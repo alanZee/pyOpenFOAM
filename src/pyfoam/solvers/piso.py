@@ -230,7 +230,10 @@ class PISOSolver(CoupledSolverBase):
             U_pred = HbyA.clone()
             U_raw = correct_velocity(U, HbyA, p_prime, A_p, mesh)
             correction = U_raw - U_pred
-            # Scale correction so max change ≤ 50% of max predicted velocity
+            # Adaptive scaling: limit the pressure correction so it
+            # doesn't overwhelm the predicted velocity.  On coarse meshes
+            # with V/dt >> dc, the correction can be 1000x the predicted
+            # velocity, driving it negative.
             pred_max = U_pred.abs().max().item()
             corr_max = correction.abs().max().item()
             if corr_max > 1e-30 and pred_max > 1e-30:
@@ -356,9 +359,7 @@ class PISOSolver(CoupledSolverBase):
         diag = diag + scatter_add((diff_coeff - flux_neg) / V_P, int_owner, n_cells)
         diag = diag + scatter_add((diff_coeff + flux_pos) / V_N, int_neigh, n_cells)
 
-        # Source term — no cell penalty for boundary conditions.
-        # Wall BCs are enforced through zero boundary flux and face-based
-        # diffusion only, NOT through cell-level penalty.
+        # Source term (per-unit-volume)
         source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
 
         # Add face-based diffusion at FIXED-VALUE wall boundary faces.
@@ -411,45 +412,34 @@ class PISOSolver(CoupledSolverBase):
                     source_contrib = patch_coeff_masked * u_bc_comp
                     source[:, comp] = source[:, comp] + scatter_add(source_contrib, patch_owner, n_cells)
 
-        # Compute H(U): off-diagonal contributions (absolute form)
-        H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
-
-        U_neigh = U[int_neigh]  # (n_internal, 3)
-        U_own = U[int_owner]  # (n_internal, 3)
-
-        # lower * U_neigh * V_P = (-diff_coeff + flux_neg) * U_neigh (absolute)
-        owner_contrib = lower.unsqueeze(-1) * U_neigh * V_P.unsqueeze(-1)
-        H.index_add_(0, int_owner, owner_contrib)
-
-        # upper * U_own * V_N = (-diff_coeff - flux_pos) * U_own (absolute)
-        neigh_contrib = upper.unsqueeze(-1) * U_own * V_N.unsqueeze(-1)
-        H.index_add_(0, int_neigh, neigh_contrib)
-
-        # H = off-diagonal product + BC source (source is per-unit-volume,
-        # scaled to absolute form by multiplying by V)
-        H = H + source * cell_volumes_safe.unsqueeze(-1)
-
-        # Add body force contribution (absolute form: F * V)
-        if body_force is not None:
-            H = H + body_force.to(device=device, dtype=dtype) * cell_volumes_safe.unsqueeze(-1)
-
-        # Add time derivative V/dt * U_old to H.
-        # This is critical: HbyA = H/A_p must equal U_pred for the
-        # pressure equation to work correctly.  Without the time derivative
-        # in H, HbyA is diluted by V/dt in A_p, causing the pressure
-        # equation to produce a spurious pressure field that destroys the
-        # velocity in closed domains (Couette, Poiseuille).
-        dt = self._piso_config.dt if hasattr(self._piso_config, 'dt') else 1.0
-        if U_old is not None and dt > 0:
-            V_over_dt = cell_volumes_safe / dt
-            H = H + V_over_dt.unsqueeze(-1) * U_old
-            # Also add V/dt to diagonal
-            diag = diag + V_over_dt
-
-
         # Store BC source for _recompute_H (spatial operator only, no time derivative)
         self._bc_source = source.clone()
 
+        # Add time derivative V/dt * U_old to H and V/dt to diagonal.
+        dt = self._piso_config.dt if hasattr(self._piso_config, 'dt') else 1.0
+        V_over_dt = torch.zeros(1, dtype=dtype, device=device)
+        if U_old is not None and dt > 0:
+            V_over_dt = cell_volumes_safe / dt
+            diag = diag + V_over_dt
+
+        # Compute H from off-diagonal contributions (absolute form).
+        # H is used for HbyA and the pressure equation, NOT for the
+        # momentum solve (which uses the diagonal approximation).
+        H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        U_neigh = U[int_neigh]
+        U_own = U[int_owner]
+        owner_contrib = lower.unsqueeze(-1) * U_neigh * V_P.unsqueeze(-1)
+        H.index_add_(0, int_owner, owner_contrib)
+        neigh_contrib = upper.unsqueeze(-1) * U_own * V_N.unsqueeze(-1)
+        H.index_add_(0, int_neigh, neigh_contrib)
+        H = H + source * cell_volumes_safe.unsqueeze(-1)
+        if body_force is not None:
+            H = H + body_force.to(device=device, dtype=dtype) * cell_volumes_safe.unsqueeze(-1)
+        if U_old is not None and dt > 0:
+            H = H + V_over_dt.unsqueeze(-1) * U_old
+
+        # Diagonal solve: U_new = (H - grad(p)) / A_p
+        # This is the standard PISO approach (Issa 1986).
         # Pressure gradient
         w = mesh.face_weights[:n_internal]
         p_P = gather(p, int_owner)
@@ -461,9 +451,7 @@ class PISOSolver(CoupledSolverBase):
         grad_p.index_add_(0, int_owner, p_contrib)
         grad_p.index_add_(0, int_neigh, -p_contrib)
 
-        # Solve: A_p * U = H - grad(p)
         total_source = H - grad_p
-
         diag_safe = diag.abs().clamp(min=1e-30)
         U_new = total_source / diag_safe.unsqueeze(-1)
 
