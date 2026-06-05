@@ -545,15 +545,13 @@ class PISOSolver(CoupledSolverBase):
         U_bc: torch.Tensor,
         mesh: Any,
     ) -> None:
-        """Overwrite boundary face fluxes using prescribed BC velocities.
+        """Overwrite boundary face fluxes using per-patch prescribed velocities.
 
         For fixedValue boundary faces, the face velocity is the prescribed
-        value (not the cell-centre interpolated value).  This is critical
-        for closed domains where wall fluxes must be exact.
-
-        Only faces whose owner cell has a prescribed (non-NaN) BC are
-        modified.  Other boundary faces (e.g. zeroGradient) keep their
-        original flux.
+        value from the PATCH definition, not the owner cell's velocity.
+        This is critical for corner cells shared between patches (e.g.,
+        movingWall and fixedWalls) where the owner cell may have the
+        wrong prescribed velocity for some of its boundary faces.
 
         Args:
             phi: ``(n_faces,)`` — face flux (modified in-place).
@@ -564,9 +562,24 @@ class PISOSolver(CoupledSolverBase):
         bnd_owner = mesh.owner[n_internal:]
         bnd_areas = mesh.face_areas[n_internal:]
 
-        U_bnd = U_bc[bnd_owner]  # (n_bnd, 3)
-        has_bc = ~torch.isnan(U_bnd[:, 0])
+        # Build per-face prescribed velocity from patch definitions
+        U_bnd = torch.full_like(bnd_areas, float('nan'))
+        for patch in mesh.boundary:
+            if patch.get("type", "") == "empty":
+                continue  # skip empty patches
+            sf = patch.get("startFace", 0) - n_internal
+            nf = patch.get("nFaces", 0)
+            if sf < 0 or nf <= 0:
+                continue
+            # Get prescribed velocity from the first owner cell of this patch
+            first_owner = bnd_owner[sf].item()
+            u_patch = U_bc[first_owner]
+            if torch.isnan(u_patch[0]):
+                continue
+            # Apply to all faces in this patch
+            U_bnd[sf:sf+nf] = u_patch.unsqueeze(0)
 
+        has_bc = ~torch.isnan(U_bnd[:, 0])
         if has_bc.any():
             U_bnd_clean = U_bnd.nan_to_num(0.0)
             phi_bnd = (U_bnd_clean * bnd_areas).sum(dim=1)
