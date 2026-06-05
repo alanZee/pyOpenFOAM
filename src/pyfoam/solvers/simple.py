@@ -182,14 +182,23 @@ class SIMPLESolver(CoupledSolverBase):
             # ============================================
             # Step 1: Momentum predictor
             # ============================================
-            U, A_p, H, mat_lower, mat_upper = self._momentum_predictor(
+            U, A_p, H, mat_lower, mat_upper, A_p_rAU = self._momentum_predictor(
                 U, p, phi, U_bc=U_bc, nu_field=nu_field, body_force=body_force,
             )
 
             # ============================================
             # Step 2: Compute HbyA
+            # Use unrelaxed A_p at boundary cells (OpenFOAM: rAU = 1/UEqn.A())
+            # to get correct HbyA for boundary flux computation.
+            # Keep relaxed A_p for interior cells to maintain stability.
             # ============================================
             HbyA = compute_HbyA(H, A_p)
+            # Override boundary cells with unrelaxed HbyA
+            if U_bc is not None:
+                bc_mask = ~torch.isnan(U_bc[:, 0])
+                if bc_mask.any():
+                    HbyA_rAU = compute_HbyA(H, A_p_rAU)
+                    HbyA[bc_mask] = HbyA_rAU[bc_mask]
 
             # Constrain HbyA at boundary cells to match prescribed velocity
             # This matches OpenFOAM's constrainHbyA() function
@@ -599,8 +608,10 @@ class SIMPLESolver(CoupledSolverBase):
         # Add relaxation contribution to source
         source = source + (D_new - diag).unsqueeze(-1) * U
 
-        # Store A_p_eff for downstream use
+        # Store A_p_eff for downstream use (relaxed, for momentum solve)
         A_p_eff = D_new.clone()
+        # Store unrelaxed diagonal for HbyA only (OpenFOAM: rAU = 1/UEqn.A())
+        A_p_rAU = D_dominant.clone()
 
         mat.source = source
 
@@ -668,7 +679,7 @@ class SIMPLESolver(CoupledSolverBase):
         # Simpler approach: just set HbyA at boundary cells to U_bc
         # (which we already do below)
 
-        return U_solved, A_p_eff, H_from_Ustar, mat.lower.clone(), mat.upper.clone()
+        return U_solved, A_p_eff, H_from_Ustar, mat.lower.clone(), mat.upper.clone(), A_p_rAU
 
     def _compute_pressure_gradient(
         self,
