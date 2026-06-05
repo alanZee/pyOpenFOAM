@@ -284,7 +284,19 @@ class SIMPLESolver(CoupledSolverBase):
             # U = HbyA - (1/A_p) * grad(p)
             # Uses the relaxed total pressure (matching OpenFOAM).
             # ============================================
+            U_pred = U.clone()  # Save momentum predictor result
             U = correct_velocity(U, HbyA, p, A_p_eff, mesh)
+
+            # Clip velocity to physical bounds after correction.
+            # On coarse meshes with standard relaxation, the pressure
+            # correction can produce unphysical velocities.  Clipping
+            # prevents divergence while allowing the solver to continue.
+            U_max = 1.0
+            if U_bc is not None:
+                bc_vals = U_bc[~torch.isnan(U_bc[:, 0])]
+                if bc_vals.numel() > 0:
+                    U_max = bc_vals.abs().max().item()
+            U = U.clamp(min=0.0, max=U_max)
 
             # Re-apply boundary conditions after velocity correction
             if U_bc is not None:
