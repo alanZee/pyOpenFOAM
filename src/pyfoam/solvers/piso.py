@@ -198,17 +198,13 @@ class PISOSolver(CoupledSolverBase):
             adjust_phi(phiHbyA, mesh, closed=True)
 
             # Assemble and solve pressure equation
-            # NOTE: Force the pressure solver to converge to the absolute
-            # tolerance by temporarily disabling relative tolerance.  The
-            # default relTol=0.01 causes the solver to stop at ~1% of the
-            # initial residual, which is insufficient for the pressure
-            # correction to work correctly in closed domains.
             p_eqn = assemble_pressure_equation(
                 phiHbyA, A_p, mesh, mesh.face_weights,
             )
 
             saved_rel_tol = self._p_solver._rel_tol
             self._p_solver._rel_tol = 0.0
+            p_old_iter = p.clone()
             p, p_iters, p_res = solve_pressure_equation(
                 p_eqn, p, self._p_solver,
                 tolerance=config.p_tolerance,
@@ -216,12 +212,18 @@ class PISOSolver(CoupledSolverBase):
             )
             self._p_solver._rel_tol = saved_rel_tol
 
-            # Correct velocity: U = HbyA - (1/A_p) * grad(p')
-            # HbyA now includes the time derivative in H, so HbyA = U_pred.
-            U = correct_velocity(U, HbyA, p, A_p, mesh)
+            # Pressure correction: p' = p_new - p_old
+            p_prime = p - p_old_iter
 
-            # Correct face flux
-            phi = correct_face_flux(phi, p, A_p, mesh, mesh.face_weights)
+            # Correct velocity: U = HbyA - (1/A_p) * grad(p')
+            # Use ONLY the pressure correction, not the total pressure.
+            # Using total pressure causes velocity decay because the old
+            # pressure gradient keeps subtracting from the velocity.
+            p_relaxed = p_prime  # No under-relaxation (small correction)
+            U = correct_velocity(U, HbyA, p_relaxed, A_p, mesh)
+
+            # Correct face flux using pressure correction
+            phi = correct_face_flux(phi, p_prime, A_p, mesh, mesh.face_weights)
 
             # Fix boundary face fluxes using prescribed BC velocities
             if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
@@ -597,3 +599,71 @@ class PISOSolver(CoupledSolverBase):
                 n = patch.get("nFaces", 0)
                 if start >= 0 and n > 0:
                     phi[n_internal + start: n_internal + start + n] = 0.0
+
+    @staticmethod
+    def _apply_boundary_pressure_correction(
+        p_eqn: FvMatrix,
+        phiHbyA: torch.Tensor,
+        A_p: torch.Tensor,
+        U_bc: torch.Tensor,
+        mesh: Any,
+    ) -> None:
+        """Apply boundary pressure correction (fixedFluxPressure equivalent).
+
+        For fixedValue velocity BCs, the pressure equation needs a boundary
+        source term to make the corrected flux match the prescribed velocity:
+
+            source[P] += (phiHbyA_bnd - U_bc · S_f) * (1/A_p)_f / V_P
+
+        This ensures the pressure gradient at walls is consistent with
+        the velocity BC, preventing spurious pressure accumulation.
+
+        Args:
+            p_eqn: Assembled pressure equation (source modified in-place).
+            phiHbyA: ``(n_faces,)`` — face flux from HbyA.
+            A_p: ``(n_cells,)`` — diagonal momentum coefficients.
+            U_bc: ``(n_cells, 3)`` — prescribed velocity (NaN where no BC).
+            mesh: The finite volume mesh.
+        """
+        n_internal = mesh.n_internal_faces
+        bnd_owner = mesh.owner[n_internal:]
+        bnd_areas = mesh.face_areas[n_internal:]
+
+        # Build per-face prescribed velocity
+        U_bnd = torch.full_like(bnd_areas, float('nan'))
+        for patch in mesh.boundary:
+            if patch.get("type", "") == "empty":
+                continue
+            sf = patch.get("startFace", 0) - n_internal
+            nf = patch.get("nFaces", 0)
+            if sf < 0 or nf <= 0:
+                continue
+            first_owner = bnd_owner[sf].item()
+            u_patch = U_bc[first_owner]
+            if torch.isnan(u_patch[0]):
+                continue
+            U_bnd[sf:sf+nf] = u_patch.unsqueeze(0)
+
+        has_bc = ~torch.isnan(U_bnd[:, 0])
+        if not has_bc.any():
+            return
+
+        # Prescribed boundary flux: U_bc · S_f
+        U_bnd_clean = U_bnd.nan_to_num(0.0)
+        phi_bc = (U_bnd_clean * bnd_areas).sum(dim=1)
+
+        # Flux correction: (phiHbyA - U_bc · S_f)
+        flux_correction = phiHbyA[n_internal:] - phi_bc
+
+        # Face-interpolated 1/A_p for boundary faces
+        A_p_safe = A_p.abs().clamp(min=1e-30)
+        inv_A_p = 1.0 / A_p_safe
+        inv_A_p_bnd = gather(inv_A_p, bnd_owner)
+
+        # Source correction (per-unit-volume)
+        source_correction = flux_correction * inv_A_p_bnd
+        source_correction = torch.where(has_bc, source_correction, torch.zeros_like(source_correction))
+
+        V = mesh.cell_volumes.clamp(min=1e-30)
+        V_bnd = gather(V, bnd_owner)
+        p_eqn.source.scatter_add_(0, bnd_owner, source_correction / V_bnd)
