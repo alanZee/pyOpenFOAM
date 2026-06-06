@@ -44,6 +44,7 @@ Usage::
 from __future__ import annotations
 
 import logging
+from abc import ABC, abstractmethod
 from typing import Any
 
 import torch
@@ -73,13 +74,14 @@ _EPS = 1e-30
 # ---------------------------------------------------------------------------
 
 
-class ViscosityModelBase:
+class ViscosityModelBase(ABC):
     """Abstract base for non-Newtonian viscosity constitutive laws.
 
     Subclasses implement :meth:`mu` to compute the apparent viscosity
     from the shear-strain rate magnitude.
     """
 
+    @abstractmethod
     def mu(self, gamma_dot: torch.Tensor) -> torch.Tensor:
         """Compute apparent viscosity from shear-strain rate magnitude.
 
@@ -89,7 +91,6 @@ class ViscosityModelBase:
         Returns:
             ``(n_cells,)`` apparent dynamic viscosity.
         """
-        raise NotImplementedError
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}()"

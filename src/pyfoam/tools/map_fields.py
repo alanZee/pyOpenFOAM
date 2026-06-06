@@ -18,6 +18,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 import numpy as np
+import torch
 
 if TYPE_CHECKING:
     from pyfoam.mesh.fv_mesh import FvMesh
@@ -149,9 +150,10 @@ def map_fields_from_case(
 ) -> Dict[str, np.ndarray]:
     """High-level convenience: map fields between two case directories.
 
-    This is a thin wrapper around :func:`map_fields` that accepts case
-    directory paths.  When case paths are given, the meshes must be
-    loaded externally and passed as *source_case* / *target_case*.
+    Accepts either case directory paths (strings) or pre-loaded
+    :class:`~pyfoam.mesh.fv_mesh.FvMesh` objects.  When paths are given,
+    the mesh is loaded from ``constant/polyMesh`` via
+    :class:`~pyfoam.io.case.Case`.
 
     Parameters
     ----------
@@ -169,11 +171,52 @@ def map_fields_from_case(
     dict
         Mapped fields on the target mesh.
     """
-    # If strings are passed, we cannot load meshes from disk yet
-    if isinstance(source_case, str) or isinstance(target_case, str):
-        raise NotImplementedError(
-            "On-disk mesh loading is not yet supported.  "
-            "Pass FvMesh objects directly."
-        )
+    source_mesh = _resolve_mesh(source_case)
+    target_mesh = _resolve_mesh(target_case)
 
-    return map_fields(source_case, target_case, source_fields)
+    return map_fields(source_mesh, target_mesh, source_fields)
+
+
+def _resolve_mesh(case_or_mesh: Union[str, "FvMesh"]) -> "FvMesh":
+    """Load an FvMesh from a case path string, or pass through an existing mesh."""
+    if not isinstance(case_or_mesh, str):
+        return case_or_mesh
+
+    from pyfoam.io.case import Case
+    from pyfoam.io.mesh_io import BoundaryPatch
+
+    case = Case(case_or_mesh)
+    mesh_data = case.mesh
+
+    # Convert MeshData → FvMesh
+    from pyfoam.core.dtype import INDEX_DTYPE
+
+    faces_t = [
+        torch.tensor(f, dtype=INDEX_DTYPE) if not isinstance(f, torch.Tensor) else f
+        for f in mesh_data.faces
+    ]
+
+    # BoundaryPatch objects → dict format expected by PolyMesh
+    boundary_dicts = []
+    for bp in mesh_data.boundary:
+        if isinstance(bp, BoundaryPatch):
+            boundary_dicts.append({
+                "name": bp.name,
+                "type": bp.patch_type,
+                "startFace": bp.start_face,
+                "nFaces": bp.n_faces,
+            })
+        else:
+            boundary_dicts.append(bp)
+
+    from pyfoam.mesh.fv_mesh import FvMesh
+
+    mesh = FvMesh(
+        points=mesh_data.points,
+        faces=faces_t,
+        owner=mesh_data.owner,
+        neighbour=mesh_data.neighbour,
+        boundary=boundary_dicts,
+    )
+    mesh.compute_geometry()
+    return mesh

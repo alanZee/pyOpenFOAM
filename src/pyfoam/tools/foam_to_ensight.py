@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional, Sequence, Union
 
 import numpy as np
+import torch
 
 if TYPE_CHECKING:
     from pyfoam.mesh.fv_mesh import FvMesh
@@ -107,11 +108,8 @@ def foam_to_ensight(
     if mesh is not None:
         cell_verts = _compute_cell_vertices(mesh)
     elif times:
-        # TODO: load mesh from disk if not provided
-        raise ValueError(
-            "No mesh provided and on-disk mesh loading is not yet supported. "
-            "Pass a mesh object directly."
-        )
+        mesh = _load_mesh_from_case(case_dir)
+        cell_verts = _compute_cell_vertices(mesh)
 
     # Determine variable names from fields dict
     var_names: list[str] = list(fields.keys()) if fields else []
@@ -239,6 +237,56 @@ def _write_topology(
         for _, verts in poly_cells:
             line = "".join(f"{v + 1:12d}" for v in verts)
             f.write(line + "\n")
+
+
+# ---------------------------------------------------------------------------
+# On-disk mesh loading
+# ---------------------------------------------------------------------------
+
+
+def _load_mesh_from_case(case_dir: Path) -> "FvMesh":
+    """Load an FvMesh from ``constant/polyMesh`` inside *case_dir*.
+
+    Uses the :class:`~pyfoam.io.case.Case` helper to read mesh data, then
+    constructs an :class:`~pyfoam.mesh.fv_mesh.FvMesh` with geometry
+    pre-computed.
+    """
+    from pyfoam.core.dtype import INDEX_DTYPE
+    from pyfoam.io.case import Case
+    from pyfoam.io.mesh_io import BoundaryPatch
+    from pyfoam.mesh.fv_mesh import FvMesh
+
+    case = Case(case_dir)
+    mesh_data = case.mesh
+
+    # Convert numpy face arrays to torch tensors
+    faces_t = [
+        torch.tensor(f, dtype=INDEX_DTYPE) if not isinstance(f, torch.Tensor) else f
+        for f in mesh_data.faces
+    ]
+
+    # BoundaryPatch objects → dict format expected by PolyMesh
+    boundary_dicts = []
+    for bp in mesh_data.boundary:
+        if isinstance(bp, BoundaryPatch):
+            boundary_dicts.append({
+                "name": bp.name,
+                "type": bp.patch_type,
+                "startFace": bp.start_face,
+                "nFaces": bp.n_faces,
+            })
+        else:
+            boundary_dicts.append(bp)
+
+    mesh = FvMesh(
+        points=mesh_data.points,
+        faces=faces_t,
+        owner=mesh_data.owner,
+        neighbour=mesh_data.neighbour,
+        boundary=boundary_dicts,
+    )
+    mesh.compute_geometry()
+    return mesh
 
 
 # ---------------------------------------------------------------------------

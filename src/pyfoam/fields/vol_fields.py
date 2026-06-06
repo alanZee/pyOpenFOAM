@@ -49,6 +49,10 @@ class VolField(FieldArithmeticMixin, GeometricField):
         """Number of cells."""
         return self._mesh.n_cells
 
+    def _expected_shape(self) -> tuple[int, ...]:
+        """Default shape for vol fields: ``(n_cells, *rank)``."""
+        return (self._mesh.n_cells,)
+
 
 # ---------------------------------------------------------------------------
 # Concrete volume fields

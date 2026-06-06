@@ -132,6 +132,6 @@ class TestMapFields:
         np.testing.assert_allclose(result["p"], 7.0)
 
     def test_map_fields_from_case_with_string_raises(self, large_mesh):
-        """map_fields_from_case should raise on string arguments."""
-        with pytest.raises(NotImplementedError):
+        """map_fields_from_case should raise FileNotFoundError for non-existent paths."""
+        with pytest.raises(FileNotFoundError):
             map_fields_from_case("/fake/path", large_mesh, {"p": np.ones(1)})

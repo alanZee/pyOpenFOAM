@@ -239,19 +239,21 @@ class CompressibleTurbulenceModel(ABC):
     def epsilon(self) -> torch.Tensor:
         """Return turbulent dissipation rate ``(n_cells,)``.
 
+        Default: zero field (not applicable to this model type).
         Override in k-epsilon models.
         """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} does not implement epsilon()"
+        return torch.zeros(
+            self._mesh.n_cells, device=self._device, dtype=self._dtype,
         )
 
     def omega(self) -> torch.Tensor:
         """Return specific dissipation rate ``(n_cells,)``.
 
+        Default: zero field (not applicable to this model type).
         Override in k-omega models.
         """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} does not implement omega()"
+        return torch.zeros(
+            self._mesh.n_cells, device=self._device, dtype=self._dtype,
         )
 
     # ------------------------------------------------------------------

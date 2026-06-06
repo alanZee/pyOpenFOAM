@@ -47,6 +47,10 @@ class SurfaceField(FieldArithmeticMixin, GeometricField):
         """Total number of faces (internal + boundary)."""
         return self._mesh.n_faces
 
+    def _expected_shape(self) -> tuple[int, ...]:
+        """Default shape for surface fields: ``(n_faces,)``."""
+        return (self._mesh.n_faces,)
+
     @property
     def n_internal_faces(self) -> int:
         """Number of internal faces."""

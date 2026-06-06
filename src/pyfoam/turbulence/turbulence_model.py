@@ -188,31 +188,86 @@ class TurbulenceModel(ABC):
     def epsilon(self) -> torch.Tensor:
         """Return turbulent dissipation rate ``(n_cells,)``.
 
-        Default implementation returns ``C_mu * k^1.5 / delta``.
+        Default: zero field (laminar / not applicable).
         Override in k-epsilon models.
         """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} does not implement epsilon()"
+        return torch.zeros(
+            self._mesh.n_cells, device=self._device, dtype=self._dtype,
         )
 
     def omega(self) -> torch.Tensor:
         """Return specific dissipation rate ``(n_cells,)``.
 
-        Default implementation returns ``epsilon / (C_mu * k)``.
+        Default: zero field (laminar / not applicable).
         Override in k-omega models.
         """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} does not implement omega()"
+        return torch.zeros(
+            self._mesh.n_cells, device=self._device, dtype=self._dtype,
         )
 
     def devReff(self) -> torch.Tensor:
         """Return effective deviatoric Reynolds stress ``(n_cells, 3, 3)``.
 
-        τ_eff = ν_eff * (∇U + ∇U^T) - (2/3) k I
+        Default (eddy-viscosity approximation)::
+
+            tau_eff = nut * (grad(U) + grad(U)^T) - (2/3) k I
+
+        Override in Reynolds-stress models (SSG, LRR, etc.).
         """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} does not implement devReff()"
-        )
+        n_cells = self._mesh.n_cells
+        device = self._device
+        dtype = self._dtype
+
+        nut = self.nut()  # (n_cells,)
+        k = self.k()  # (n_cells,)
+
+        # Compute grad(U) via Gauss-linear interpolation on internal faces
+        mesh = self._mesh
+        n_internal = mesh.n_internal_faces
+
+        if n_internal == 0:
+            # No internal faces — viscous part zero, subtract isotropic k only
+            tau = torch.zeros(n_cells, 3, 3, device=device, dtype=dtype)
+            tau[:, 0, 0] = -2.0 / 3.0 * k
+            tau[:, 1, 1] = -2.0 / 3.0 * k
+            tau[:, 2, 2] = -2.0 / 3.0 * k
+            return tau
+
+        U = self._U.to(device=device, dtype=dtype)
+        int_owner = mesh.owner[:n_internal]
+        int_neigh = mesh.neighbour
+
+        if hasattr(mesh, "face_weights"):
+            w = mesh.face_weights[:n_internal].to(dtype=dtype)
+        else:
+            w = torch.full((n_internal,), 0.5, dtype=dtype, device=device)
+
+        U_P = U[int_owner]
+        U_N = U[int_neigh]
+        U_face = w.unsqueeze(-1) * U_P + (1.0 - w).unsqueeze(-1) * U_N
+
+        face_areas = mesh.face_areas[:n_internal].to(dtype=dtype)
+
+        grad_U = torch.zeros(n_cells, 3, 3, dtype=dtype, device=device)
+        for i in range(3):
+            for j in range(3):
+                contrib = U_face[:, i] * face_areas[:, j]
+                grad_U[:, i, j] = grad_U[:, i, j].index_add(0, int_owner, contrib)
+                grad_U[:, i, j] = grad_U[:, i, j].index_add(0, int_neigh, -contrib)
+
+        V = mesh.cell_volumes.to(dtype=dtype).clamp(min=1e-30)
+        grad_U = grad_U / V.unsqueeze(-1).unsqueeze(-1)
+
+        # Strain rate: S = 0.5 * (grad(U) + grad(U)^T)
+        S = 0.5 * (grad_U + grad_U.transpose(-1, -2))
+
+        # tau_eff = nut * 2S - (2/3) k I
+        nut_3d = nut.unsqueeze(-1).unsqueeze(-1)
+        tau = nut_3d * 2.0 * S
+        tau[:, 0, 0] -= 2.0 / 3.0 * k
+        tau[:, 1, 1] -= 2.0 / 3.0 * k
+        tau[:, 2, 2] -= 2.0 / 3.0 * k
+        return tau
 
     # ------------------------------------------------------------------
     # Representation
