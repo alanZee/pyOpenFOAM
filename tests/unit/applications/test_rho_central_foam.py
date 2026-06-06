@@ -607,12 +607,6 @@ class TestRhoCentralFoamInit:
 class TestKurganovTadmorFlux:
     """Tests for KT central-upwind flux scheme."""
 
-    _KT_GATHER_BUG = (
-        "Source code bug: gather() dimension mismatch in _tvd_reconstruct_* — "
-        "grad_q is 2D but owner index is 1D. Blocked on fixing rho_central_foam.py."
-    )
-
-    @pytest.mark.xfail(reason=_KT_GATHER_BUG, strict=False)
     def test_kt_fluxes_shape(self, sod_case):
         """KT fluxes have correct shapes."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -628,7 +622,6 @@ class TestKurganovTadmorFlux:
         assert flux_rhoU.shape == (n_internal, 3)
         assert flux_rhoE.shape == (n_internal,)
 
-    @pytest.mark.xfail(reason=_KT_GATHER_BUG, strict=False)
     def test_kt_fluxes_finite(self, sod_case):
         """KT fluxes are finite (no NaN or Inf)."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -643,7 +636,6 @@ class TestKurganovTadmorFlux:
         assert torch.isfinite(flux_rhoU).all()
         assert torch.isfinite(flux_rhoE).all()
 
-    @pytest.mark.xfail(reason=_KT_GATHER_BUG, strict=False)
     def test_tvd_reconstruct_scalar(self, sod_case):
         """TVD scalar reconstruction produces bounded values."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -666,7 +658,6 @@ class TestKurganovTadmorFlux:
         assert torch.isfinite(q_L).all()
         assert torch.isfinite(q_R).all()
 
-    @pytest.mark.xfail(reason=_KT_GATHER_BUG, strict=False)
     def test_tvd_reconstruct_vector(self, sod_case):
         """TVD vector reconstruction produces bounded values."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -720,7 +711,6 @@ class TestRhoCentralFoamRun:
         "prevents solver.run() from completing."
     )
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_run_completes(self, sod_case):
         """Solver run completes without errors."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -730,7 +720,6 @@ class TestRhoCentralFoamRun:
 
         assert conv is not None
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_output_fields_valid(self, sod_case):
         """Output fields have correct shapes and are finite."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -747,7 +736,6 @@ class TestRhoCentralFoamRun:
         assert torch.isfinite(solver.p).all(), "p contains NaN/Inf"
         assert torch.isfinite(solver.T).all(), "T contains NaN/Inf"
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_density_positive_after_run(self, sod_case):
         """Density remains positive after simulation."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -758,7 +746,6 @@ class TestRhoCentralFoamRun:
         rho = solver.thermo.rho(solver.p, solver.T)
         assert (rho > 0).all(), "Negative density detected"
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_pressure_positive_after_run(self, sod_case):
         """Pressure remains positive after simulation."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -768,7 +755,6 @@ class TestRhoCentralFoamRun:
 
         assert (solver.p > 0).all(), "Negative pressure detected"
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_temperature_positive_after_run(self, sod_case):
         """Temperature remains positive after simulation."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -778,7 +764,6 @@ class TestRhoCentralFoamRun:
 
         assert (solver.T > 0).all(), "Negative temperature detected"
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_conservative_variables_finite(self, sod_case):
         """Conservative variables are finite after run."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -816,12 +801,6 @@ class TestRhoCentralFoamRun:
 class TestRhoCentralSodShockTube:
     """Physics-based tests for Sod shock tube with rhoCentralFoam."""
 
-    _RUN_BUG = (
-        "Source code bug: gather() dimension mismatch in _tvd_reconstruct_* "
-        "prevents solver.run() from completing."
-    )
-
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_shock_capturing(self, sod_case):
         """Shock tube develops pressure variation."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -832,7 +811,6 @@ class TestRhoCentralSodShockTube:
         p_range = solver.p.max() - solver.p.min()
         assert p_range > 0, "Pressure field is uniform (no shock development)"
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_density_variation(self, sod_case):
         """Shock tube develops density variation."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -844,7 +822,6 @@ class TestRhoCentralSodShockTube:
         rho_range = rho.max() - rho.min()
         assert rho_range > 0, "Density field is uniform"
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_velocity_development(self, sod_case):
         """Shock tube develops non-zero velocity."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -855,7 +832,6 @@ class TestRhoCentralSodShockTube:
         U_mag = (solver.U * solver.U).sum(dim=1).sqrt()
         assert U_mag.max() > 0, "Velocity did not develop"
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_mass_conservation(self, sod_case):
         """Total mass is approximately conserved."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -884,11 +860,6 @@ class TestRhoCentralSodShockTube:
 
 class TestRhoCentralFoamLimiters:
     """Tests for rhoCentralFoam with different TVD limiters."""
-
-    _RUN_BUG = (
-        "Source code bug: gather() dimension mismatch in _tvd_reconstruct_* "
-        "prevents solver.run() from completing."
-    )
 
     @pytest.fixture
     def minmod_case(self, tmp_path):
@@ -922,7 +893,6 @@ class TestRhoCentralFoamLimiters:
         solver = RhoCentralFoam(superbee_case, limiter="superbee")
         assert solver._limiter_name == "superbee"
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_minmod_runs(self, minmod_case):
         """rhoCentralFoam with minmod limiter runs successfully."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
@@ -934,7 +904,6 @@ class TestRhoCentralFoamLimiters:
         assert torch.isfinite(solver.U).all()
         assert torch.isfinite(solver.p).all()
 
-    @pytest.mark.xfail(reason=_RUN_BUG, strict=False)
     def test_superbee_runs(self, superbee_case):
         """rhoCentralFoam with superbee limiter runs successfully."""
         from pyfoam.applications.rho_central_foam import RhoCentralFoam
