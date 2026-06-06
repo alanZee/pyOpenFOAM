@@ -251,7 +251,7 @@ class DifferentiableDivergence(torch.autograd.Function):
             U_N = U_data[int_neigh]  # (n_internal, 3)
             U_face_internal = w.unsqueeze(-1) * U_P + (1.0 - w).unsqueeze(-1) * U_N
             if n_faces > n_internal:
-                U_bnd = U_data[owner[n_internal:]]
+                U_bnd = U_data[mesh.owner[n_internal:]]
                 U_face = torch.cat([U_face_internal, U_bnd])
             else:
                 U_face = U_face_internal
