@@ -106,7 +106,8 @@ class FixedProfileBC:
             速度值 ``(n_faces,)``。
         """
         # 归一化坐标
-        eta = (y - self._y_min) / (self._y_max - self._y_min).clamp(min=1e-30)
+        dy = float(self._y_max - self._y_min)
+        eta = (y - self._y_min) / max(dy, 1e-30)
         eta = eta.clamp(0, 1)
 
         if self._type == "parabolic":
