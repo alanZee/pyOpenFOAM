@@ -13,7 +13,7 @@ from __future__ import annotations
 import torch
 
 from pyfoam.core.dtype import CFD_DTYPE
-from pyfoam.turbulence.k_omega_sst import KOmegaSST
+from pyfoam.turbulence.k_omega_sst import KOmegaSSTModel as KOmegaSST
 
 
 class KOmegaSSTSato(KOmegaSST):
