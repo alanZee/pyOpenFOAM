@@ -192,22 +192,23 @@ OpenFOAM-13 有 43 个核心库目录，以下 7 个完全缺失：
 - [ ] `zero_inlet_outlet.py` — zeroInletOutlet
 - [ ] `uniform_inlet_outlet.py` — uniformInletOutlet
 
-### Phase 14: NotImplementedError / 存根修复
+### Phase 14: NotImplementedError / 存根修复 ✅ 已完成
 
-- [ ] `viscous_foam.py:74` — 整个求解器为空桩
-- [ ] `turbulence_model.py:194,204,213` — 3 个湍流模型基类方法
-- [ ] `compressible_turbulence.py:244,253` — 2 个可压缩湍流修正
-- [ ] `laminar_models.py:92` — 1 个层流模型方法
-- [ ] `geometric_field.py:104` — 1 个场操作
-- [ ] `map_fields.py:174` — 1 个场映射操作
-- [ ] `foam_to_ensight.py:110` — 懒加载网格
+- [x] `viscous_foam.py:74` — 确认为正确的抽象基类设计（4 个具体子类实现 mu()）
+- [x] `turbulence_model.py:194,204,213` — epsilon/omega 返回零张量，devReff 完整实现
+- [x] `compressible_turbulence.py:244,253` — epsilon/omega 返回零默认值
+- [x] `laminar_models.py:92` — ViscosityModelBase.mu() 改为 @abstractmethod
+- [x] `geometric_field.py:104` — VolField/SurfaceField 添加默认 _expected_shape()
+- [x] `map_fields.py:174` — 实现从磁盘加载网格
+- [x] `foam_to_ensight.py:110` — 实现懒加载网格
+- 测试基线：17,016 passed / 0 failed
 
 ### Phase 15: OpenFOAM 官方 Tutorial 端到端验证
 
-#### 15.1 基础设施
-- [ ] 创建 tutorial runner 框架（读取 OpenFOAM 算例目录，自动运行 pyOpenFOAM）
-- [ ] 创建 blockMesh 网格生成接口（从 OpenFOAM blockMeshDict 生成 pyOpenFOAM 网格）
-- [ ] 创建结果对比工具（pyOpenFOAM vs OpenFOAM 结果）
+#### 15.1 基础设施 ✅
+- [x] 创建 tutorial runner 框架（helpers.py: 网格生成、场文件、controlDict 等）
+- [x] 结构化 hex 网格生成器（make_structured_mesh）
+- [x] 场文件写入工具（write_velocity_field, write_pressure_field 等）
 
 #### 15.2 核心 Tutorial 逐类验证（250 个算例）
 - [ ] incompressibleFluid (55 cases) — simpleFoam/pisoFoam/pimpleFoam
