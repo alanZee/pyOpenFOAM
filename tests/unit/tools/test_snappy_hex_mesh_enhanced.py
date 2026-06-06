@@ -213,7 +213,7 @@ class TestSnappyHexMeshDict:
         config = SnappyHexMeshConfig()
         out = tmp_path / "snappyHexMeshDict"
         write_snappy_hex_mesh_dict(str(out), config)
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "geometry" in content
 
     def test_dict_contains_controls(self, tmp_path):
@@ -221,7 +221,7 @@ class TestSnappyHexMeshDict:
         config = SnappyHexMeshConfig()
         out = tmp_path / "snappyHexMeshDict"
         write_snappy_hex_mesh_dict(str(out), config)
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "castellatedMeshControls" in content
         assert "snapControls" in content
         assert "addLayersControls" in content
@@ -236,7 +236,7 @@ class TestSnappyHexMeshDict:
         )
         out = tmp_path / "snappyHexMeshDict"
         write_snappy_hex_mesh_dict(str(out), config)
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "refinementRegions" in content
         assert "body" in content
 
@@ -249,7 +249,7 @@ class TestSnappyHexMeshDict:
         )
         out = tmp_path / "snappyHexMeshDict"
         write_snappy_hex_mesh_dict(str(out), config)
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "layers" in content
         assert "wall" in content
         assert "5" in content
@@ -262,7 +262,7 @@ class TestSnappyHexMeshDict:
             str(out), config,
             geometry_stl_files={"body": "body.stl"},
         )
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "body.stl" in content
         assert "triSurfaceMesh" in content
 

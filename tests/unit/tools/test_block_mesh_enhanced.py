@@ -170,7 +170,7 @@ class TestBlockMeshDictWriter:
         config = _unit_cube_config()
         out = tmp_path / "blockMeshDict"
         block_mesh(config, write_dict=str(out))
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "vertices" in content
 
     def test_dict_contains_blocks(self, tmp_path):
@@ -178,7 +178,7 @@ class TestBlockMeshDictWriter:
         config = _unit_cube_config()
         out = tmp_path / "blockMeshDict"
         block_mesh(config, write_dict=str(out))
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "blocks" in content
         assert "simpleGrading" in content
 
@@ -187,7 +187,7 @@ class TestBlockMeshDictWriter:
         config = _unit_cube_config(scale=0.01)
         out = tmp_path / "blockMeshDict"
         block_mesh(config, write_dict=str(out))
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "scale" in content
         assert "0.01" in content
 
@@ -204,7 +204,7 @@ class TestBlockMeshDictWriter:
         )
         out = tmp_path / "blockMeshDict"
         block_mesh(config, write_dict=str(out))
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "boundary" in content
         assert "inlet" in content
 
@@ -215,7 +215,7 @@ class TestBlockMeshDictWriter:
         )
         out = tmp_path / "blockMeshDict"
         block_mesh(config, write_dict=str(out))
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "mergePatchPairs" in content
         assert "top" in content
         assert "bottom" in content
@@ -233,7 +233,7 @@ class TestBlockMeshDictWriter:
         )
         out = tmp_path / "blockMeshDict"
         block_mesh(config, write_dict=str(out))
-        content = out.read_text()
+        content = out.read_text(encoding="utf-8")
         assert "simpleGrading" in content
 
     def test_import_from_tools(self):

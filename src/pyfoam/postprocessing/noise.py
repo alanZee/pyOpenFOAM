@@ -268,7 +268,7 @@ class Noise(FunctionObject):
         if self._write_spectrum:
             for i in range(n_probes):
                 spec_file = self._output_path / f"spectrum_probe{i}.dat"
-                with open(spec_file, "w") as f:
+                with open(spec_file, "w", encoding="utf-8") as f:
                     f.write("# Frequency(Hz)  PSD(Pa²/Hz)  SPL(dB)\n")
                     for j in range(len(self._frequencies)):
                         f.write(
@@ -280,7 +280,7 @@ class Noise(FunctionObject):
 
         # Write overall SPL
         spl_file = self._output_path / "spl_overall.dat"
-        with open(spl_file, "w") as f:
+        with open(spl_file, "w", encoding="utf-8") as f:
             f.write("# Probe  SPL_total(dB)\n")
             for i in range(n_probes):
                 f.write(f"{i}  {self._spl_total[i]:.6e}\n")
