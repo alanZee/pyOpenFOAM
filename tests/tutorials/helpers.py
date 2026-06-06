@@ -262,12 +262,22 @@ snGradSchemes { default corrected; }
     write_foam_file(case_dir / "system" / "fvSchemes", h, content, overwrite=True)
 
 
-def write_fv_solution(case_dir: Path) -> None:
+def write_fv_solution(case_dir: Path, algorithm: str = "SIMPLE") -> None:
     h = FoamFileHeader(
         version="2.0", format=FileFormat.ASCII,
         class_name="dictionary", location="system", object="fvSolution",
     )
-    content = """\
+    if algorithm == "PISO":
+        content = """\
+solvers
+{
+    p { solver PCG; preconditioner DIC; tolerance 1e-6; relTol 0.01; }
+    U { solver PBiCGStab; preconditioner DILU; tolerance 1e-6; relTol 0.01; }
+}
+PISO { nCorrectors 2; nNonOrthogonalCorrectors 0; }
+"""
+    else:
+        content = """\
 solvers
 {
     p { solver GAMG; tolerance 1e-06; relTol 0.01; smoother DICGaussSeidel; }
