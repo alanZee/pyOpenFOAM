@@ -67,6 +67,9 @@ Available solvers:
 - :class:`CompressibleInterFoam2` — Enhanced compressible VOF with energy equation and variable Cp
 - :class:`TwoPhaseEulerFoam2` — Enhanced Euler-Euler with kinetic theory of granular flow
 - :class:`MultiphaseEulerFoam2` — Enhanced N-phase with population balance (MUSIG)
+- :class:`XiFoam` — Premixed/partially-premixed combustion with Xi transport
+- :class:`DenseParticleFoam` — Dense particle two-way Euler-Lagrange
+- :class:`CompressibleMultiphaseVoFFoam` — Compressible N-phase VOF with MULES
 - :class:`SolidFoam` — Solid mechanics solver with thermal stress analysis
 - :class:`FilmFoam` — Thin film flow solver with surface tension
 - :class:`SprayFoam2` — Enhanced Lagrangian spray with KH-RT breakup
@@ -428,6 +431,9 @@ from pyfoam.applications.buoyant_simple_foam_enhanced_13 import BuoyantSimpleFoa
 from pyfoam.applications.compressible_inter_foam_enhanced_13 import CompressibleInterFoamEnhanced13
 from pyfoam.applications.spray_foam_enhanced_13 import SprayFoamEnhanced13
 from pyfoam.applications.multiphase_euler_foam_enhanced_13 import MultiphaseEulerFoamEnhanced13
+from pyfoam.applications.xi_foam import XiFoam
+from pyfoam.applications.dense_particle_foam import DenseParticleFoam
+from pyfoam.applications.compressible_multiphase_vof_foam import CompressibleMultiphaseVoFFoam
 from pyfoam.applications.time_loop import TimeLoop
 from pyfoam.applications.convergence import ConvergenceMonitor
 
@@ -646,6 +652,9 @@ __all__ = [
     "CompressibleInterFoamEnhanced13",
     "SprayFoamEnhanced13",
     "MultiphaseEulerFoamEnhanced13",
+    "XiFoam",
+    "DenseParticleFoam",
+    "CompressibleMultiphaseVoFFoam",
     "TimeLoop",
     "ConvergenceMonitor",
 ]
