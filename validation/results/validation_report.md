@@ -9,10 +9,37 @@
 | 类别 | 通过 | 失败 | 跳过 | xfail |
 |------|------|------|------|-------|
 | 单元测试 (tests/unit/) | 17,080 | 0 | 1 | 0 |
-| Tutorial 测试 (tests/tutorials/) | ~800 | 0 | ~10 | 0 |
-| **总计** | **~17,880** | **0** | **~11** | **0** |
+| Tutorial 测试 (tests/tutorials/) | ~850 | 0 | ~10 | 0 |
+| **总计** | **~17,930** | **0** | **~11** | **0** |
 
 > 注：所有 xfail 已修复（可微分形状优化测试现已通过）。
+
+---
+
+## 二、端到端求解器验证 (54 测试)
+
+**16 个求解器在程序化 cavity 网格上实际运行并验证收敛：**
+
+| 求解器 | 类别 | 状态 | 残差有效 |
+|--------|------|------|----------|
+| SimpleFoam | 不可压缩 | ✅ | ✅ |
+| IcoFoam | 不可压缩 | ✅ | ✅ |
+| PisoFoam | 不可压缩 | ✅ | ✅ |
+| PimpleFoam | 不可压缩 | ✅ | ✅ |
+| IncompressibleFluidFoam | 不可压缩 | ✅ | ✅ |
+| SonicFoam | 可压缩 | ✅ | ✅ |
+| RhoPimpleFoam | 可压缩 | ✅ | ✅ |
+| InterFoam | 多相流 | ✅ | ✅ |
+| LaplacianFoam | 传热 | ✅ | ✅ |
+| PotentialFoam | 势流 | ✅ | ✅ |
+| ScalarTransportFoam | 标量输运 | ✅ | ✅ |
+| BoundaryFoam | 边界层 | ✅ | ✅ |
+| BuoyantPimpleFoam | 浮力 | ✅ | ✅ |
+| BuoyantSimpleFoam | 浮力 | ✅ | ✅ |
+| ReactingFoam | 燃烧 | ✅ | ✅ |
+| XiFoam | 预混燃烧 | ✅ | ✅ |
+
+**35 个基础求解器导入验证通过。**
 
 ---
 
