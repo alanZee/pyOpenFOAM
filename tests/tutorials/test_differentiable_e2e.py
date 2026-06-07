@@ -118,8 +118,54 @@ class TestDifferentiableSIMPLE:
         from pyfoam.differentiable import DifferentiableSIMPLE
         assert DifferentiableSIMPLE is not None
 
-    @pytest.mark.xfail(reason="需要完整的 SIMPLE 端到端流程")
+    @pytest.mark.xfail(reason="DifferentiableSIMPLE produces NaN on 2x2 mesh — needs larger mesh or better BCs")
     def test_simple_shape_optimization(self):
-        """形状优化示例：最小化压力损失。"""
-        # 这是一个占位测试，标记了未来需要实现的功能
-        assert False, "Shape optimization not yet implemented end-to-end"
+        """形状优化示例：验证 DifferentiableSIMPLE 能运行并产生有效解。
+
+        使用参数化的入口速度作为设计变量，
+        运行 SIMPLE 求解器并验证解的有效性。
+        """
+        from pyfoam.differentiable.simple import DifferentiableSIMPLE
+
+        with tempfile.TemporaryDirectory() as tmp:
+            mesh = _make_2x2_mesh(tmp)
+
+        n_cells = mesh.n_cells
+        n_faces = mesh.n_faces
+
+        # 初始条件
+        U = torch.zeros(n_cells, 3, dtype=CFD_DTYPE)
+        p = torch.zeros(n_cells, dtype=CFD_DTYPE)
+        phi = torch.zeros(n_faces, dtype=CFD_DTYPE)
+
+        # 设计变量：入口速度幅值
+        U_inlet = torch.tensor([1.0], dtype=CFD_DTYPE, requires_grad=True)
+
+        # 创建 SIMPLE 求解器
+        solver = DifferentiableSIMPLE(
+            mesh=mesh,
+            nu=0.01,
+            alpha_U=0.7,
+            alpha_p=0.3,
+            max_outer_iterations=10,
+            tolerance=1e-3,
+        )
+
+        # 构造边界条件
+        U_bc = torch.full((n_cells, 3), float('nan'), dtype=CFD_DTYPE)
+        # 设置入口边界（假设前几个单元是入口）
+        U_bc[0] = torch.tensor([U_inlet.detach()[0], 0.0, 0.0], dtype=CFD_DTYPE)
+
+        # 运行求解器
+        U_sol, p_sol, phi_sol, conv = solver.solve(
+            U, p, phi, U_bc=U_bc,
+        )
+
+        # 验证解的有效性
+        assert torch.isfinite(U_sol).all(), "U contains NaN/Inf"
+        assert torch.isfinite(p_sol).all(), "p contains NaN/Inf"
+        assert torch.isfinite(phi_sol).all(), "phi contains NaN/Inf"
+
+        # 验证设计变量梯度存在
+        assert U_inlet.grad is not None, "Gradient not computed"
+        assert torch.isfinite(U_inlet.grad).all(), "Gradient contains NaN/Inf"
