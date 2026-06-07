@@ -679,6 +679,7 @@ from pyfoam.boundary.coupled_thermal_bc_7 import CoupledTemperature7BC
 from pyfoam.boundary.coupled_thermal_bc_8 import CoupledTemperature8BC
 from pyfoam.boundary.coupled_thermal_bc_9 import CoupledTemperature9BC
 from pyfoam.boundary.coupled_thermal_bc_10 import CoupledTemperature10BC
+from pyfoam.boundary.registered_missing_bcs import _registered_count  # noqa: F401 — triggers RTS registration
 
 __all__ = [
     # Base
