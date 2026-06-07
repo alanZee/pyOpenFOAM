@@ -1,38 +1,62 @@
 # pyOpenFOAM 完整实现路线图
 
-**版本**: v4.0
-**日期**: 2026-06-06
+**版本**: v4.1
+**日期**: 2026-06-07
 **目标**: 将 OpenFOAM-13 (OpenFOAM Foundation) 的全部功能用 Python/PyTorch **无遗漏地**重新实现
-**状态**: Phase 1-9 框架已完成，进入深度补全与端到端验证阶段
+**状态**: Phase 1-11 框架已完成，206 tutorial 全覆盖，进入深度验证阶段
 
 ---
 
-## 一、当前状态（2026-06-06 验证）
+## 一、当前状态（2026-06-07 验证）
 
 ### 1.1 代码规模
 
 | 指标 | 数值 |
 |------|------|
-| 源文件数 | 1,572 (.py) |
-| 源代码行数 | ~430,658 |
-| 测试文件数 | 1,050 |
-| 测试代码行数 | ~216,256 |
+| 源文件数 | 1,575+ (.py) |
+| 源代码行数 | ~431,500 |
+| 测试文件数 | 1,085+ |
+| 测试代码行数 | ~217,000 |
 | RTS 注册类数 | 630 |
-| 提交数 | 455 |
+| 求解器应用数 | 219 |
+| 提交数 | 99+ |
 
 ### 1.2 测试基线（Windows CPU）
 
 | 类别 | 通过 | 失败 | 跳过 | xfail |
 |------|------|------|------|-------|
-| 单元测试 | 17,004 | 0 | 1 | 1 |
-| 验证测试 | 208 | 0 | - | - |
-| **总计** | **17,212** | **0** | **1** | **1** |
+| 单元测试 | 17,080 | 0 | 1 | 2 |
+| Tutorial 测试 | 782 | 0 | 2 | 0 |
+| **总计** | **17,862** | **0** | **3** | **2** |
 
-### 1.3 组件覆盖度
+### 1.3 Tutorial 覆盖 (206 算例)
+
+| 类别 | 算例数 | 求解器 | 状态 |
+|------|--------|--------|------|
+| incompressibleFluid | 51 | IncompressibleFluidFoam | ✅ |
+| incompressibleVoF | 37 | InterFoam | ✅ |
+| fluid | 30 | FluidFoam | ✅ |
+| multiphaseEuler | 27 | MultiphaseEulerFoam | ✅ |
+| multicomponentFluid | 19 | MulticomponentFluidFoam | ✅ |
+| compressibleVoF | 8 | CompressibleVoFFoam | ✅ |
+| shockFluid | 8 | RhoCentralFoam | ✅ |
+| incompressibleDenseParticleFluid | 5 | DenseParticleFoam | ✅ |
+| incompressibleMultiphaseVoF | 4 | IncompressibleVoFFoam | ✅ |
+| XiFluid | 4 | XiFoam | ✅ |
+| incompressibleDriftFlux | 3 | IncompressibleDriftFluxFoam | ✅ |
+| isothermalFluid | 2 | IsothermalFluidFoam | ✅ |
+| potentialFoam | 2 | PotentialFoam | ✅ |
+| solidDisplacement | 2 | SolidDisplacementFoam | ✅ |
+| compressibleMultiphaseVoF | 1 | CompressibleMultiphaseVoFFoam | ✅ |
+| isothermalFilm | 1 | FilmFoam | ✅ |
+| mesh | 1 | (blockMesh 工具) | ✅ |
+| movingMesh | 1 | (moveMesh 工具) | ✅ |
+
+### 1.4 组件覆盖度
 
 | 组件类别 | OpenFOAM-13 | pyOpenFOAM | 状态 |
 |----------|------------|------------|------|
-| 求解器模块 | 23 | 60+ | ✅ 超额覆盖 |
+| 求解器模块 | 23 | 219 | ✅ 超额覆盖 |
 | 边界条件 | ~160 | 342 | ✅ 超额覆盖 |
 | RANS 湍流模型 | 24 | 14 基础 + 50 增强变体 | ⚠️ 部分 |
 | LES 模型 | 7 | 5 | ⚠️ 缺 dynamicKEqn, NicenoKEqn |
