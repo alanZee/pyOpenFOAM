@@ -102,6 +102,7 @@ class DifferentiableSIMPLE:
         phi: torch.Tensor,
         *,
         U_bc: torch.Tensor | None = None,
+        bc_mask: torch.Tensor | None = None,
         nu_field: torch.Tensor | None = None,
         parameters: dict[str, torch.Tensor] | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, ConvergenceData]:
@@ -116,6 +117,8 @@ class DifferentiableSIMPLE:
             p: ``(n_cells,)`` pressure field.
             phi: ``(n_faces,)`` face flux field.
             U_bc: ``(n_cells, 3)`` prescribed velocity for boundary cells.
+            bc_mask: ``(n_cells,)`` boolean mask of boundary cells.
+                If None, derived from ``~torch.isnan(U_bc[:, 0])``.
             nu_field: ``(n_cells,)`` per-cell effective viscosity.
             parameters: Optional dict of parameters to differentiate w.r.t.
                 These are treated as constants in the forward pass but
@@ -135,21 +138,25 @@ class DifferentiableSIMPLE:
 
         convergence = ConvergenceData()
 
+        # Resolve BC mask
+        if U_bc is not None and bc_mask is None:
+            bc_mask = ~torch.isnan(U_bc[:, 0])
+
         # Run SIMPLE to convergence
         for outer in range(self._max_outer_iterations):
             U_prev = U.clone()
             p_prev = p.clone()
 
             # Momentum predictor
-            U, A_p, H = self._momentum_predictor(U, p, phi, U_bc=U_bc, nu_field=nu_field)
+            U, A_p, H = self._momentum_predictor(
+                U, p, phi, U_bc=U_bc, bc_mask=bc_mask, nu_field=nu_field,
+            )
 
             # Compute HbyA
             HbyA = compute_HbyA(H, A_p)
-            if U_bc is not None:
-                bc_mask = ~torch.isnan(U_bc[:, 0])
-                if bc_mask.any():
-                    mask3 = bc_mask.unsqueeze(-1).expand_as(HbyA)
-                    HbyA = torch.where(mask3, U_bc, HbyA)
+            if U_bc is not None and bc_mask is not None and bc_mask.any():
+                mask3 = bc_mask.unsqueeze(-1).expand_as(HbyA)
+                HbyA = torch.where(mask3, U_bc, HbyA)
 
             # Compute phiHbyA
             phiHbyA = compute_face_flux_HbyA(
@@ -175,11 +182,9 @@ class DifferentiableSIMPLE:
 
             # Correct velocity
             U = correct_velocity(U, HbyA, p, A_p, mesh)
-            if U_bc is not None:
-                bc_mask = ~torch.isnan(U_bc[:, 0])
-                if bc_mask.any():
-                    mask3 = bc_mask.unsqueeze(-1).expand_as(U)
-                    U = torch.where(mask3, U_bc, U)
+            if U_bc is not None and bc_mask is not None and bc_mask.any():
+                mask3 = bc_mask.unsqueeze(-1).expand_as(U)
+                U = torch.where(mask3, U_bc, U)
 
             # Check convergence
             continuity_error = self._compute_continuity_error(phi)
@@ -198,6 +203,7 @@ class DifferentiableSIMPLE:
         p: torch.Tensor,
         phi: torch.Tensor,
         U_bc: torch.Tensor | None = None,
+        bc_mask: torch.Tensor | None = None,
         nu_field: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Momentum predictor step."""
@@ -271,10 +277,10 @@ class DifferentiableSIMPLE:
 
         # Solve momentum (simple Jacobi iteration for differentiability)
         U_new = U.clone()
-        if U_bc is not None:
-            bc_mask = ~torch.isnan(U_bc[:, 0])
+        if U_bc is not None and bc_mask is None:
+            bc_mask_local = ~torch.isnan(U_bc[:, 0])
         else:
-            bc_mask = None
+            bc_mask_local = bc_mask
 
         for _ in range(10):
             H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
@@ -284,8 +290,8 @@ class DifferentiableSIMPLE:
             U_new = H / D_new.unsqueeze(-1).clamp(min=1e-30)
 
             # Re-apply BCs using torch.where (not in-place) for autograd
-            if bc_mask is not None and bc_mask.any():
-                mask3 = bc_mask.unsqueeze(-1).expand_as(U_new)
+            if U_bc is not None and bc_mask_local is not None and bc_mask_local.any():
+                mask3 = bc_mask_local.unsqueeze(-1).expand_as(U_new)
                 U_new = torch.where(mask3, U_bc, U_new)
 
         # Compute H from solved U
