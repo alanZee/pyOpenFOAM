@@ -1,0 +1,175 @@
+icoFoam completed without full convergence
+pisoFoam completed without full convergence
+PIMPLE did not converge in 3 outer iterations (continuity=4.973251e+00)
+PIMPLE did not converge in 3 outer iterations (continuity=9.753281e+00)
+PIMPLE did not converge in 3 outer iterations (continuity=1.437287e+01)
+PIMPLE did not converge in 3 outer iterations (continuity=1.885619e+01)
+PIMPLE did not converge in 3 outer iterations (continuity=2.322177e+01)
+pimpleFoam completed without full convergence
+boundaryFoam did not converge in 200 iterations
+No reactions file found, using default A¡úB reaction
+SIMPLE diverged at iteration 20 (NaN detected)
+SIMPLE did not converge in 100 iterations (continuity=nan)
+incompressibleFluid (SIMPLE) completed without full convergence
+[
+  {
+    "solver": "SimpleFoam",
+    "status": "OK",
+    "converged": true,
+    "U_residual": 7.030761274474588e-06,
+    "p_residual": 7.848738704863858e-05,
+    "continuity": 7.796305171771118e-07,
+    "iterations": 2,
+    "elapsed_s": 1.374
+  },
+  {
+    "solver": "IcoFoam",
+    "status": "OK",
+    "converged": false,
+    "U_residual": 0.0,
+    "p_residual": 9.150875664017535e-07,
+    "continuity": 0.025099909829592804,
+    "iterations": 1,
+    "elapsed_s": 2.207
+  },
+  {
+    "solver": "PisoFoam",
+    "status": "OK",
+    "converged": false,
+    "U_residual": 0.0,
+    "p_residual": 8.544096139011197e-07,
+    "continuity": 0.003193098022126503,
+    "iterations": 1,
+    "elapsed_s": 1.341
+  },
+  {
+    "solver": "PimpleFoam",
+    "status": "OK",
+    "converged": false,
+    "U_residual": 0.011606283409299055,
+    "p_residual": 0.03137451967281734,
+    "continuity": 23.22177049746316,
+    "iterations": 3,
+    "elapsed_s": 1.719
+  },
+  {
+    "solver": "SonicFoam",
+    "status": "OK",
+    "converged": false,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 1,
+    "elapsed_s": 0.056
+  },
+  {
+    "solver": "RhoPimpleFoam",
+    "status": "OK",
+    "converged": true,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 2,
+    "elapsed_s": 0.041
+  },
+  {
+    "solver": "InterFoam",
+    "status": "OK",
+    "converged": true,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 2,
+    "elapsed_s": 0.047
+  },
+  {
+    "solver": "LaplacianFoam",
+    "status": "OK",
+    "converged": true,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 0,
+    "elapsed_s": 0.031
+  },
+  {
+    "solver": "PotentialFoam",
+    "status": "OK",
+    "converged": false,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 0,
+    "elapsed_s": 0.034
+  },
+  {
+    "solver": "ScalarTransportFoam",
+    "status": "OK",
+    "converged": false,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 0,
+    "elapsed_s": 0.051
+  },
+  {
+    "solver": "BoundaryFoam",
+    "status": "OK",
+    "converged": false,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 0,
+    "elapsed_s": 1.703
+  },
+  {
+    "solver": "BuoyantPimpleFoam",
+    "status": "OK",
+    "converged": true,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 2,
+    "elapsed_s": 0.059
+  },
+  {
+    "solver": "BuoyantSimpleFoam",
+    "status": "OK",
+    "converged": true,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 2,
+    "elapsed_s": 0.044
+  },
+  {
+    "solver": "ReactingFoam",
+    "status": "OK",
+    "converged": false,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 0,
+    "elapsed_s": 0.036
+  },
+  {
+    "solver": "XiFoam",
+    "status": "OK",
+    "converged": false,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "iterations": 3,
+    "elapsed_s": 0.037
+  },
+  {
+    "solver": "IncompressibleFluidFoam",
+    "status": "OK",
+    "converged": false,
+    "U_residual": NaN,
+    "p_residual": NaN,
+    "continuity": NaN,
+    "iterations": 20,
+    "elapsed_s": 25.068
+  }
+]
