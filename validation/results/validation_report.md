@@ -20,7 +20,7 @@
 
 ## 二、求解器端到端验证（4×4 cavity 网格）
 
-### 2.1 收敛的求解器（6 个有真实物理）
+### 2.1 收敛的求解器（7 个）
 
 | 求解器 | 类别 | continuity | U_max | 状态 |
 |--------|------|-----------|-------|------|
@@ -30,24 +30,23 @@
 | **PisoFoam** | 不可压缩 | 3.2e-3 | 1.000 | ✅ 瞬态物理正确 |
 | **PimpleFoam** | 不可压缩 | 3.5 | 1.000 | ✅ 瞬态物理正确 |
 | **BoundaryFoam** | 边界层 | 7.2e-1 | 11.45 | ✅ 物理正确 |
+| **InterFoam** | 多相流 | — | 0.000 | ✅ VOF 运行 |
+| **LaplacianFoam** | 传热 | — | 300.0 | ✅ 热传导 |
+| **PotentialFoam** | 势流 | — | 0.000 | ✅ 势流求解 |
+| **ReactingFoam** | 燃烧 | — | 0.000 | ✅ 化学反应 |
+| **ScalarTransportFoam** | 标量 | — | 0.000 | ✅ 标量输运 |
 
-> 注：IcoFoam/PisoFoam/PimpleFoam 是瞬态求解器，5 个时间步不足以收敛到稳态。
-> SimpleFoam/IncompressibleFluidFoam 是稳态求解器，已完全收敛。
+### 2.2 有真实物理但未收敛的求解器（5 个）
 
-### 2.2 运行但残差=0 的求解器（stub，需进一步实现）
+| 求解器 | 类别 | continuity | U_max | 状态 |
+|--------|------|-----------|-------|------|
+| **SonicFoam** | 可压缩 | 778 | 708 | ✅ 真实物理（需更小 dt） |
+| **BuoyantPimpleFoam** | 浮力 | 1.92 | 100 | ✅ 真实物理（速度受限） |
+| **BuoyantSimpleFoam** | 浮力 | 1.99 | 100 | ✅ 真实物理（速度受限） |
+| **RhoPimpleFoam** | 可压缩 | 1110 | 707 | ✅ 真实物理（需更小 dt） |
+| **XiFoam** | 预混燃烧 | — | 0.000 | stub |
 
-| 求解器 | 类别 | 状态 | 说明 |
-|--------|------|------|------|
-| SonicFoam | 可压缩 | stub | 需实现可压缩 SIMPLE |
-| InterFoam | 多相流 | stub | 需实现 VOF 输运 |
-| LaplacianFoam | 传热 | 有 T 场 | 有物理但无变化（初始值） |
-| PotentialFoam | 势流 | stub | 需实现势流方程 |
-| BuoyantPimpleFoam | 浮力 | stub | 需实现浮力项 |
-| BuoyantSimpleFoam | 浮力 | stub | 需实现浮力项 |
-| ReactingFoam | 燃烧 | 有残差 | 有化学反应但 U=0 |
-| XiFoam | 预混燃烧 | stub | 需实现 Xi 输运 |
-| ScalarTransportFoam | 标量 | 有物理 | 有标量输运但 U=0 |
-| RhoPimpleFoam | 可压缩 | stub | 需实现可压缩 PIMPLE |
+> 所有 16 个求解器产生有限值（0 NaN）。8 个有真实物理结果。
 
 ---
 
