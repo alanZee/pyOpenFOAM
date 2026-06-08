@@ -400,8 +400,16 @@ class IncompressibleFluidFoam(SolverBase):
         has_bc = False
 
         for patch in boundary_field:
-            if patch.patch_type == "fixedValue" and patch.value is not None:
-                value = self._parse_vector_value(patch.value)
+            # Include both fixedValue and noSlip BCs
+            is_fixed = patch.patch_type == "fixedValue" and patch.value is not None
+            is_noslip = patch.patch_type == "noSlip"
+
+            if is_fixed or is_noslip:
+                if is_fixed:
+                    value = self._parse_vector_value(patch.value)
+                else:
+                    value = (0.0, 0.0, 0.0)  # noSlip = zero velocity
+
                 if value is not None:
                     mesh_info = mesh_patches.get(patch.name)
                     if mesh_info is not None:
