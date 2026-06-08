@@ -1,175 +1,203 @@
-icoFoam completed without full convergence
-pisoFoam completed without full convergence
-PIMPLE did not converge in 3 outer iterations (continuity=4.973251e+00)
-PIMPLE did not converge in 3 outer iterations (continuity=9.753281e+00)
-PIMPLE did not converge in 3 outer iterations (continuity=1.437287e+01)
-PIMPLE did not converge in 3 outer iterations (continuity=1.885619e+01)
-PIMPLE did not converge in 3 outer iterations (continuity=2.322177e+01)
-pimpleFoam completed without full convergence
-boundaryFoam did not converge in 200 iterations
-No reactions file found, using default A¡úB reaction
-SIMPLE diverged at iteration 20 (NaN detected)
-SIMPLE did not converge in 100 iterations (continuity=nan)
-incompressibleFluid (SIMPLE) completed without full convergence
 [
   {
     "solver": "SimpleFoam",
+    "category": "incompressible",
     "status": "OK",
     "converged": true,
     "U_residual": 7.030761274474588e-06,
     "p_residual": 7.848738704863858e-05,
     "continuity": 7.796305171771118e-07,
-    "iterations": 2,
-    "elapsed_s": 1.374
+    "U_finite": true,
+    "U_max": 1.0,
+    "elapsed_s": 1.612,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "IcoFoam",
+    "category": "incompressible",
     "status": "OK",
     "converged": false,
-    "U_residual": 0.0,
+    "U_residual": 0.0028525631101761852,
     "p_residual": 9.150875664017535e-07,
     "continuity": 0.025099909829592804,
-    "iterations": 1,
-    "elapsed_s": 2.207
+    "U_finite": true,
+    "U_max": 1.0,
+    "elapsed_s": 2.22,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "PisoFoam",
+    "category": "incompressible",
     "status": "OK",
     "converged": false,
-    "U_residual": 0.0,
+    "U_residual": 0.002402269849430104,
     "p_residual": 8.544096139011197e-07,
     "continuity": 0.003193098022126503,
-    "iterations": 1,
-    "elapsed_s": 1.341
+    "U_finite": true,
+    "U_max": 1.0,
+    "elapsed_s": 1.291,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "PimpleFoam",
+    "category": "incompressible",
     "status": "OK",
     "converged": false,
-    "U_residual": 0.011606283409299055,
-    "p_residual": 0.03137451967281734,
-    "continuity": 23.22177049746316,
-    "iterations": 3,
-    "elapsed_s": 1.719
+    "U_residual": 0.033468944947352086,
+    "p_residual": 0.004279954634590724,
+    "continuity": 3.5354235657549,
+    "U_finite": true,
+    "U_max": 1.0,
+    "elapsed_s": 1.591,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "SonicFoam",
+    "category": "compressible",
     "status": "OK",
     "converged": false,
     "U_residual": 0.0,
     "p_residual": 0.0,
     "continuity": 0.0,
-    "iterations": 1,
-    "elapsed_s": 0.056
-  },
-  {
-    "solver": "RhoPimpleFoam",
-    "status": "OK",
-    "converged": true,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
-    "continuity": 0.0,
-    "iterations": 2,
-    "elapsed_s": 0.041
+    "U_finite": true,
+    "U_max": 0.0,
+    "elapsed_s": 0.02,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "InterFoam",
+    "category": "multiphase",
     "status": "OK",
     "converged": true,
     "U_residual": 0.0,
     "p_residual": 0.0,
     "continuity": 0.0,
-    "iterations": 2,
-    "elapsed_s": 0.047
+    "U_finite": true,
+    "U_max": 0.0,
+    "elapsed_s": 0.011,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "LaplacianFoam",
-    "status": "OK",
-    "converged": true,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
-    "continuity": 0.0,
-    "iterations": 0,
-    "elapsed_s": 0.031
+    "category": "heat",
+    "status": "ERROR",
+    "error": "'LaplacianFoam' object has no attribute 'U'"
   },
   {
     "solver": "PotentialFoam",
+    "category": "incompressible",
     "status": "OK",
     "converged": false,
     "U_residual": 0.0,
     "p_residual": 0.0,
     "continuity": 0.0,
-    "iterations": 0,
-    "elapsed_s": 0.034
-  },
-  {
-    "solver": "ScalarTransportFoam",
-    "status": "OK",
-    "converged": false,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
-    "continuity": 0.0,
-    "iterations": 0,
-    "elapsed_s": 0.051
+    "U_finite": true,
+    "U_max": 0.0,
+    "elapsed_s": 0.004,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "BoundaryFoam",
+    "category": "incompressible",
     "status": "OK",
     "converged": false,
     "U_residual": 0.0,
     "p_residual": 0.0,
     "continuity": 0.0,
-    "iterations": 0,
-    "elapsed_s": 1.703
+    "U_finite": true,
+    "U_max": 11.450533337692523,
+    "elapsed_s": 1.515,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "BuoyantPimpleFoam",
+    "category": "heat",
     "status": "OK",
     "converged": true,
     "U_residual": 0.0,
     "p_residual": 0.0,
     "continuity": 0.0,
-    "iterations": 2,
-    "elapsed_s": 0.059
+    "U_finite": true,
+    "U_max": 0.0,
+    "elapsed_s": 0.01,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "BuoyantSimpleFoam",
+    "category": "heat",
     "status": "OK",
     "converged": true,
     "U_residual": 0.0,
     "p_residual": 0.0,
     "continuity": 0.0,
-    "iterations": 2,
-    "elapsed_s": 0.044
+    "U_finite": true,
+    "U_max": 0.0,
+    "elapsed_s": 0.012,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "ReactingFoam",
+    "category": "combustion",
     "status": "OK",
     "converged": false,
     "U_residual": 0.0,
     "p_residual": 0.0,
     "continuity": 0.0,
-    "iterations": 0,
-    "elapsed_s": 0.036
+    "U_finite": true,
+    "U_max": 0.0,
+    "elapsed_s": 0.007,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "XiFoam",
+    "category": "combustion",
     "status": "OK",
     "converged": false,
     "U_residual": 0.0,
     "p_residual": 0.0,
     "continuity": 0.0,
-    "iterations": 3,
-    "elapsed_s": 0.037
+    "U_finite": true,
+    "U_max": 0.0,
+    "elapsed_s": 0.006,
+    "mesh": "4x4 cavity"
+  },
+  {
+    "solver": "ScalarTransportFoam",
+    "category": "transport",
+    "status": "OK",
+    "converged": false,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "U_finite": true,
+    "U_max": 0.0,
+    "elapsed_s": 0.005,
+    "mesh": "4x4 cavity"
   },
   {
     "solver": "IncompressibleFluidFoam",
+    "category": "incompressible",
     "status": "OK",
     "converged": false,
     "U_residual": NaN,
     "p_residual": NaN,
     "continuity": NaN,
-    "iterations": 20,
-    "elapsed_s": 25.068
+    "U_finite": false,
+    "U_max": NaN,
+    "elapsed_s": 25.529,
+    "mesh": "4x4 cavity"
+  },
+  {
+    "solver": "RhoPimpleFoam",
+    "category": "compressible",
+    "status": "OK",
+    "converged": true,
+    "U_residual": 0.0,
+    "p_residual": 0.0,
+    "continuity": 0.0,
+    "U_finite": true,
+    "U_max": 0.0,
+    "elapsed_s": 0.01,
+    "mesh": "4x4 cavity"
   }
 ]
