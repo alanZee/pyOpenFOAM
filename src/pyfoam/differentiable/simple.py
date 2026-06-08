@@ -165,11 +165,22 @@ class DifferentiableSIMPLE:
             )
 
             # Assemble and solve pressure equation
-            # NOTE: Don't call set_reference — it modifies _diag and
-            # _source in-place, breaking autograd.  The singular matrix
-            # (zero-gradient BCs) is handled by the PCG solver naturally.
+            # Pin reference pressure to remove singularity.
+            # Using torch.where (not in-place) for autograd compatibility.
             p_eqn = assemble_pressure_equation(
                 phiHbyA, A_p, mesh, mesh.face_weights,
+            )
+            # Add large penalty to pin cell 0 pressure to 0
+            large = p_eqn._diag[0].abs().clamp(min=1.0) * 1e10
+            p_eqn._diag = torch.where(
+                torch.arange(mesh.n_cells, device=device) == 0,
+                p_eqn._diag + large,
+                p_eqn._diag,
+            )
+            p_eqn._source = torch.where(
+                torch.arange(mesh.n_cells, device=device) == 0,
+                p_eqn._source + large * 0.0,
+                p_eqn._source,
             )
             p_prime, _, _ = p_eqn.solve(
                 self._p_solver, torch.zeros_like(p),
