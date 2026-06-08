@@ -709,9 +709,9 @@ class TestBoundaryFoamSolver:
         assert torch.isfinite(solver.U).all(), "U contains NaN/Inf"
         assert torch.isfinite(solver.p).all(), "p contains NaN/Inf"
 
-        # Result should be a dict
-        assert "converged" in result
-        assert "iterations" in result
+        # Result should be ConvergenceData
+        assert hasattr(result, 'converged')
+        assert hasattr(result, 'outer_iterations')
 
     def test_run_writes_output(self, tiny_bl_case):
         """boundaryFoam writes field files to time directories."""

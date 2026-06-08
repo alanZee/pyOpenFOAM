@@ -457,7 +457,7 @@ class TestReactingFoamSolver:
         solver = ReactingFoam(reacting_case)
         result = solver.run()
 
-        assert "converged" in result
+        assert hasattr(result, 'converged')
 
     def test_mass_fractions_finite(self, reacting_case):
         """Mass fractions are finite after solving."""

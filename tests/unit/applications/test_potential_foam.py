@@ -530,7 +530,7 @@ class TestPotentialFoamSolver:
         solver = PotentialFoam(tiny_potential_case)
         result = solver.run()
 
-        assert result["converged"] is True
+        assert result.converged is True
 
     def test_velocity_finite(self, tiny_potential_case):
         """Velocity field is finite after solving."""

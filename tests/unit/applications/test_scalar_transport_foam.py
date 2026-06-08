@@ -337,7 +337,7 @@ class TestScalarTransportFoamSolver:
         solver = ScalarTransportFoam(tiny_scalar_case)
         result = solver.run()
 
-        assert "converged" in result
+        assert hasattr(result, 'converged')
 
     def test_concentration_finite(self, tiny_scalar_case):
         """Concentration field is finite after solving."""
