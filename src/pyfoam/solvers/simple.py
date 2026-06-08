@@ -256,18 +256,10 @@ class SIMPLESolver(CoupledSolverBase):
                 phiHbyA, A_p_eff, mesh, mesh.face_weights,
             )
 
-            # Set reference pressure to pin the solution.
-            # Without this, the singular Laplacian causes the pressure
-            # to drift to large constant offsets, corrupting the gradient.
-            # OpenFOAM: pEqn.setReference(pRefCell, pRefValue)
-            p_ref_cell = 0
-            p_ref_value = 0.0
-            p_eqn._diag[p_ref_cell] += 1e20
-            p_eqn._source[p_ref_cell] += 1e20 * p_ref_value
-
             # Solve pressure equation with previous pressure as initial guess.
             # OpenFOAM solves for TOTAL pressure (not correction),
             # so starting from p_prev gives faster convergence.
+            # Reference pressure is set inside solve_pressure_equation.
             p_solved, p_iters, p_res = solve_pressure_equation(
                 p_eqn, p_prev.clone(), self._p_solver,
                 tolerance=config.p_tolerance,

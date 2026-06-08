@@ -128,10 +128,34 @@ def assemble_pressure_equation(
     mat.lower = -face_coeff / V_P
     mat.upper = -face_coeff / V_N
 
-    # Diagonal: sum of off-diagonal contributions
+    # Diagonal: sum of off-diagonal contributions (internal faces)
     diag = torch.zeros(n_cells, dtype=dtype, device=device)
     diag = diag + scatter_add(face_coeff / V_P, int_owner, n_cells)
     diag = diag + scatter_add(face_coeff / V_N, int_neigh, n_cells)
+
+    # Boundary face contributions to diagonal for zero-gradient BC.
+    # Without this, boundary cells have weak diagonal dominance,
+    # causing the pressure correction to produce incorrect gradients.
+    # For zero-gradient: boundary flux = 0 (no source contribution),
+    # but the diagonal must include the boundary face coefficient.
+    if n_faces > n_internal and hasattr(mesh, 'face_centres'):
+        bnd_idx = slice(n_internal, n_faces)
+        bnd_owner = owner[bnd_idx]
+        bnd_areas = face_areas[bnd_idx]
+        bnd_S_mag = bnd_areas.norm(dim=1)
+        bnd_fc = mesh.face_centres[bnd_idx]
+        bnd_oc = mesh.cell_centres[bnd_owner]
+        d_P = bnd_fc - bnd_oc
+        safe_S = bnd_S_mag.clamp(min=1e-30)
+        n_hat = bnd_areas / safe_S.unsqueeze(-1)
+        d_dot_n = (d_P * n_hat).sum(dim=1).abs()
+        bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+
+        inv_A_p_bnd = gather(inv_A_p, bnd_owner)
+        bnd_coeff = inv_A_p_bnd * bnd_S_mag * bnd_delta
+        bnd_V = gather(cell_volumes, bnd_owner)
+        diag = diag + scatter_add(bnd_coeff / bnd_V, bnd_owner, n_cells)
+
     mat.diag = diag
 
     # Source: -div(phiHbyA) in per-unit-volume form (to match matrix)

@@ -762,12 +762,14 @@ class TestPressureEquationAssembly:
     # ------------------------------------------------------------------
 
     def test_diagonal_equals_negative_sum_offdiag(self):
-        """Diagonal equals negative sum of off-diagonal entries per row.
+        """Diagonal equals negative sum of off-diagonal entries per row,
+        plus boundary face contributions for boundary cells.
 
         For a Laplacian with no source, the matrix must satisfy:
             diag[P] = -sum(lower[f] for f where owner=P)
                      - sum(upper[f] for f where neighbour=P)
-        This ensures row sums are zero (conservation).
+                     + boundary_diag[P]  (>= 0 for boundary cells)
+        This ensures diag >= -off_diag_sum (diagonal dominance).
         """
         mesh = make_cavity_mesh(4, 4)
         phiHbyA = torch.zeros(mesh.n_faces, dtype=CFD_DTYPE)
@@ -785,10 +787,10 @@ class TestPressureEquationAssembly:
             p_eqn.upper, mesh.neighbour, mesh.n_cells
         )
 
-        # diag should equal -off_diag_sum
-        assert torch.allclose(p_eqn.diag, -off_diag_sum, atol=1e-12), (
-            f"Diagonal != -sum(off-diag). Max diff: "
-            f"{(p_eqn.diag + off_diag_sum).abs().max():.6e}"
+        # diag should be >= -off_diag_sum (boundary diagonal adds positive term)
+        assert torch.all(p_eqn.diag >= -off_diag_sum - 1e-10), (
+            f"Diagonal < -sum(off-diag) at some cells. Min diff: "
+            f"{(p_eqn.diag + off_diag_sum).min():.6e}"
         )
 
     def test_diagonal_nonnegative(self):
