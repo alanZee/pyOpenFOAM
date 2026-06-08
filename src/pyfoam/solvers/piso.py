@@ -272,6 +272,12 @@ class PISOSolver(CoupledSolverBase):
         convergence.p_residual = p_res
         convergence.continuity_error = continuity_error
         convergence.outer_iterations = 1
+        # Track velocity change (not residual — PISO is transient)
+        if U_pred is not None:
+            U_change = (U - U_pred).norm() / U.norm().clamp(min=1e-30)
+            convergence.U_residual = float(U_change)
+        else:
+            convergence.U_residual = 0.0
         convergence.converged = continuity_error < tolerance
 
         # Re-apply boundary conditions after pressure correction loop

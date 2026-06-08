@@ -119,6 +119,27 @@ class PIMPLESolver(CoupledSolverBase):
         super().__init__(mesh, config)
         self._pimple_config = config
 
+    @staticmethod
+    def _has_moving_wall_or_open_bc(mesh: Any, U_bc: torch.Tensor) -> bool:
+        """Check if domain has moving walls or open (non-wall) boundaries."""
+        if not hasattr(mesh, 'boundary'):
+            return False
+        n_internal = mesh.n_internal_faces
+        bnd_owner = mesh.owner[n_internal:]
+        for patch in mesh.boundary:
+            ptype = patch.get("type", "")
+            if ptype not in ("wall", "empty", ""):
+                return True
+            if ptype == "wall":
+                sf = patch.get("startFace", 0) - n_internal
+                nf = patch.get("nFaces", 0)
+                if sf >= 0 and nf > 0:
+                    owners = bnd_owner[sf:sf+nf]
+                    u_vals = U_bc[owners]
+                    if (u_vals.abs().sum() > 1e-10):
+                        return True
+        return False
+
     def solve(
         self,
         U: torch.Tensor,
@@ -191,25 +212,32 @@ class PIMPLESolver(CoupledSolverBase):
                 if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
                     self._fix_boundary_flux(phiHbyA, U_bc, mesh)
 
-                # Adjust boundary fluxes for global conservation
-                adjust_phi(phiHbyA, mesh, closed=True)
+                # Adjust boundary fluxes for global conservation on CLOSED domains
+                # with NO moving walls.  For domains with moving walls or open
+                # boundaries, skip adjustment — the fluxes are physical.
+                if U_bc is None or not self._has_moving_wall_or_open_bc(mesh, U_bc):
+                    adjust_phi(phiHbyA, mesh, closed=True)
 
                 # Assemble and solve pressure equation
                 p_eqn = assemble_pressure_equation(
                     phiHbyA, A_p, mesh, mesh.face_weights,
                 )
 
+                p_old_corr = p.clone()
                 p, p_iters, p_res = solve_pressure_equation(
                     p_eqn, p, self._p_solver,
                     tolerance=config.p_tolerance,
                     max_iter=config.p_max_iter,
                 )
 
-                # Correct velocity
-                U = correct_velocity(U, HbyA, p, A_p, mesh)
+                # Pressure correction: p' = p_new - p_old
+                p_prime = p - p_old_corr
 
-                # Correct face flux
-                phi = correct_face_flux(phi, p, A_p, mesh, mesh.face_weights)
+                # Correct velocity using pressure correction (not absolute p)
+                U = correct_velocity(U, U, p_prime, A_p, mesh)
+
+                # Correct face flux using pressure correction
+                phi = correct_face_flux(phi, p_prime, A_p, mesh, mesh.face_weights)
 
                 # Fix boundary face fluxes using prescribed BC velocities
                 if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
