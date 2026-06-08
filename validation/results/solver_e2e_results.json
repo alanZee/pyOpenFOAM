@@ -1,203 +1,146 @@
 [
   {
     "solver": "SimpleFoam",
-    "category": "incompressible",
-    "status": "OK",
     "converged": true,
-    "U_residual": 7.030761274474588e-06,
-    "p_residual": 7.848738704863858e-05,
     "continuity": 7.796305171771118e-07,
-    "U_finite": true,
+    "U_residual": 7.030761274474588e-06,
     "U_max": 1.0,
-    "elapsed_s": 1.612,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 1.497
   },
   {
     "solver": "IcoFoam",
-    "category": "incompressible",
-    "status": "OK",
     "converged": false,
-    "U_residual": 0.0028525631101761852,
-    "p_residual": 9.150875664017535e-07,
     "continuity": 0.025099909829592804,
-    "U_finite": true,
+    "U_residual": 0.0028525631101761852,
     "U_max": 1.0,
-    "elapsed_s": 2.22,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 2.381
   },
   {
     "solver": "PisoFoam",
-    "category": "incompressible",
-    "status": "OK",
     "converged": false,
-    "U_residual": 0.002402269849430104,
-    "p_residual": 8.544096139011197e-07,
     "continuity": 0.003193098022126503,
-    "U_finite": true,
+    "U_residual": 0.002402269849430104,
     "U_max": 1.0,
-    "elapsed_s": 1.291,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 1.45
   },
   {
     "solver": "PimpleFoam",
-    "category": "incompressible",
-    "status": "OK",
     "converged": false,
-    "U_residual": 0.033468944947352086,
-    "p_residual": 0.004279954634590724,
     "continuity": 3.5354235657549,
-    "U_finite": true,
+    "U_residual": 0.033468944947352086,
     "U_max": 1.0,
-    "elapsed_s": 1.591,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 1.866
   },
   {
     "solver": "SonicFoam",
-    "category": "compressible",
-    "status": "OK",
     "converged": false,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
     "continuity": 0.0,
-    "U_finite": true,
+    "U_residual": 0.0,
     "U_max": 0.0,
-    "elapsed_s": 0.02,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 0.037
   },
   {
     "solver": "InterFoam",
-    "category": "multiphase",
-    "status": "OK",
     "converged": true,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
     "continuity": 0.0,
-    "U_finite": true,
+    "U_residual": 0.0,
     "U_max": 0.0,
-    "elapsed_s": 0.011,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 0.015
   },
   {
     "solver": "LaplacianFoam",
-    "category": "heat",
-    "status": "ERROR",
-    "error": "'LaplacianFoam' object has no attribute 'U'"
+    "converged": true,
+    "continuity": 0.0,
+    "U_residual": 0.0,
+    "U_max": 300.0,
+    "finite": true,
+    "elapsed": 0.003
   },
   {
     "solver": "PotentialFoam",
-    "category": "incompressible",
-    "status": "OK",
-    "converged": false,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
+    "converged": true,
     "continuity": 0.0,
-    "U_finite": true,
+    "U_residual": 0.0,
     "U_max": 0.0,
-    "elapsed_s": 0.004,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 0.006
   },
   {
     "solver": "BoundaryFoam",
-    "category": "incompressible",
-    "status": "OK",
     "converged": false,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
-    "continuity": 0.0,
-    "U_finite": true,
+    "continuity": 0.720742395641945,
+    "U_residual": 4.1823886257407745e-12,
     "U_max": 11.450533337692523,
-    "elapsed_s": 1.515,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 1.892
   },
   {
     "solver": "BuoyantPimpleFoam",
-    "category": "heat",
-    "status": "OK",
     "converged": true,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
     "continuity": 0.0,
-    "U_finite": true,
+    "U_residual": 0.0,
     "U_max": 0.0,
-    "elapsed_s": 0.01,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 0.013
   },
   {
     "solver": "BuoyantSimpleFoam",
-    "category": "heat",
-    "status": "OK",
     "converged": true,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
     "continuity": 0.0,
-    "U_finite": true,
+    "U_residual": 0.0,
     "U_max": 0.0,
-    "elapsed_s": 0.012,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 0.012
   },
   {
     "solver": "ReactingFoam",
-    "category": "combustion",
-    "status": "OK",
-    "converged": false,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
+    "converged": true,
     "continuity": 0.0,
-    "U_finite": true,
+    "U_residual": 8.065490087349327e-10,
     "U_max": 0.0,
-    "elapsed_s": 0.007,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 0.006
   },
   {
     "solver": "XiFoam",
-    "category": "combustion",
-    "status": "OK",
     "converged": false,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
     "continuity": 0.0,
-    "U_finite": true,
+    "U_residual": 0.0,
     "U_max": 0.0,
-    "elapsed_s": 0.006,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 0.007
   },
   {
     "solver": "ScalarTransportFoam",
-    "category": "transport",
-    "status": "OK",
-    "converged": false,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
+    "converged": true,
     "continuity": 0.0,
-    "U_finite": true,
+    "U_residual": 0.0,
     "U_max": 0.0,
-    "elapsed_s": 0.005,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 0.004
   },
   {
     "solver": "IncompressibleFluidFoam",
-    "category": "incompressible",
-    "status": "OK",
-    "converged": false,
-    "U_residual": NaN,
-    "p_residual": NaN,
-    "continuity": NaN,
-    "U_finite": false,
-    "U_max": NaN,
-    "elapsed_s": 25.529,
-    "mesh": "4x4 cavity"
+    "converged": true,
+    "continuity": 8.159194820502709e-07,
+    "U_residual": 1.5888968982648928e-05,
+    "U_max": 1.0,
+    "finite": true,
+    "elapsed": 1.116
   },
   {
     "solver": "RhoPimpleFoam",
-    "category": "compressible",
-    "status": "OK",
     "converged": true,
-    "U_residual": 0.0,
-    "p_residual": 0.0,
     "continuity": 0.0,
-    "U_finite": true,
+    "U_residual": 0.0,
     "U_max": 0.0,
-    "elapsed_s": 0.01,
-    "mesh": "4x4 cavity"
+    "finite": true,
+    "elapsed": 0.013
   }
 ]
