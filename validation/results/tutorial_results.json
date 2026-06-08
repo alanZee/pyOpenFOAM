@@ -1,0 +1,56 @@
+{
+  "incompressibleFluid": [
+    {
+      "name": "airFoil2D",
+      "solver": "incompressibleFluid",
+      "status": "error",
+      "duration": 0.0,
+      "error_message": "",
+      "n_cells": 0,
+      "max_velocity": 0.0,
+      "max_pressure": 0.0
+    },
+    {
+      "name": "ballValve",
+      "solver": "incompressibleFluid",
+      "status": "error",
+      "duration": 0.0,
+      "error_message": "Mesh directory not found: .reference\\OpenFOAM-13\\tutorials\\incompressibleFluid\\ballValve\\constant\\polyMesh",
+      "n_cells": 0,
+      "max_velocity": 0.0,
+      "max_pressure": 0.0
+    },
+    {
+      "name": "blockedChannel",
+      "solver": "incompressibleFluid",
+      "status": "error",
+      "duration": 0.0,
+      "error_message": "Mesh directory not found: .reference\\OpenFOAM-13\\tutorials\\incompressibleFluid\\blockedChannel\\constant\\polyMesh",
+      "n_cells": 0,
+      "max_velocity": 0.0,
+      "max_pressure": 0.0
+    }
+  ],
+  "potentialFoam": [
+    {
+      "name": "cylinder",
+      "solver": "",
+      "status": "skip",
+      "duration": 0.0,
+      "error_message": "No solver specified",
+      "n_cells": 0,
+      "max_velocity": 0.0,
+      "max_pressure": 0.0
+    },
+    {
+      "name": "pitzDaily",
+      "solver": "",
+      "status": "skip",
+      "duration": 0.0,
+      "error_message": "No solver specified",
+      "n_cells": 0,
+      "max_velocity": 0.0,
+      "max_pressure": 0.0
+    }
+  ]
+}
