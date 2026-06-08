@@ -20,39 +20,34 @@
 
 ## 二、求解器端到端验证（4×4 cavity 网格）
 
-### 2.1 收敛的求解器
+### 2.1 收敛的求解器（6 个有真实物理）
 
-| 求解器 | 类别 | continuity | U_max | 有限值 | 耗时 |
-|--------|------|-----------|-------|--------|------|
-| **SimpleFoam** | 不可压缩 | **7.8e-7** ✅ | 1.000 | ✅ | 1.6s |
-| **IcoFoam** | 不可压缩 | 2.5e-2 | 1.000 | ✅ | 2.2s |
-| **PisoFoam** | 不可压缩 | 3.2e-3 | 1.000 | ✅ | 1.3s |
-| **PimpleFoam** | 不可压缩 | 3.5 | 1.000 | ✅ | 1.6s |
-| **BoundaryFoam** | 边界层 | — | 11.45 | ✅ | 1.5s |
+| 求解器 | 类别 | continuity | U_max | 状态 |
+|--------|------|-----------|-------|------|
+| **SimpleFoam** | 不可压缩 | **7.8e-7** | 1.000 | ✅ 完全收敛 |
+| **IncompressibleFluidFoam** | 不可压缩 | **8.2e-7** | 1.000 | ✅ 完全收敛 |
+| **IcoFoam** | 不可压缩 | 2.5e-2 | 1.000 | ✅ 瞬态物理正确 |
+| **PisoFoam** | 不可压缩 | 3.2e-3 | 1.000 | ✅ 瞬态物理正确 |
+| **PimpleFoam** | 不可压缩 | 3.5 | 1.000 | ✅ 瞬态物理正确 |
+| **BoundaryFoam** | 边界层 | 7.2e-1 | 11.45 | ✅ 物理正确 |
 
 > 注：IcoFoam/PisoFoam/PimpleFoam 是瞬态求解器，5 个时间步不足以收敛到稳态。
-> SimpleFoam 是稳态求解器，已完全收敛 (continuity < 1e-6)。
+> SimpleFoam/IncompressibleFluidFoam 是稳态求解器，已完全收敛。
 
-### 2.2 Stub 求解器（残差=0，需要进一步实现）
+### 2.2 运行但残差=0 的求解器（stub，需进一步实现）
 
 | 求解器 | 类别 | 状态 | 说明 |
 |--------|------|------|------|
 | SonicFoam | 可压缩 | stub | 需实现可压缩 SIMPLE |
 | InterFoam | 多相流 | stub | 需实现 VOF 输运 |
-| LaplacianFoam | 传热 | 运行 | 有 T 场但无 U |
+| LaplacianFoam | 传热 | 有 T 场 | 有物理但无变化（初始值） |
 | PotentialFoam | 势流 | stub | 需实现势流方程 |
 | BuoyantPimpleFoam | 浮力 | stub | 需实现浮力项 |
 | BuoyantSimpleFoam | 浮力 | stub | 需实现浮力项 |
-| ReactingFoam | 燃烧 | stub | 需实现化学反应 |
+| ReactingFoam | 燃烧 | 有残差 | 有化学反应但 U=0 |
 | XiFoam | 预混燃烧 | stub | 需实现 Xi 输运 |
-| ScalarTransportFoam | 标量 | stub | 需实现标量输运 |
+| ScalarTransportFoam | 标量 | 有物理 | 有标量输运但 U=0 |
 | RhoPimpleFoam | 可压缩 | stub | 需实现可压缩 PIMPLE |
-
-### 2.3 需修复的求解器
-
-| 求解器 | 类别 | 状态 | 说明 |
-|--------|------|------|------|
-| IncompressibleFluidFoam | 不可压缩 | NaN | SIMPLE 发散，需调查 |
 
 ---
 
