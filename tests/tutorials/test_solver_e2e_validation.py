@@ -142,6 +142,11 @@ def _run_solver(solver_cls, case_dir: Path, **kwargs) -> Dict[str, Any]:
         solver = solver_cls(case_dir, **kwargs)
         result = solver.run()
         elapsed = time.time() - start
+        # Get the main field (U if available, else T, else None)
+        main_field = getattr(solver, 'U', None)
+        if main_field is None:
+            main_field = getattr(solver, 'T', None)
+        field_finite = bool(torch.isfinite(main_field).all()) if main_field is not None else True
         return {
             "status": "OK",
             "converged": getattr(result, "converged", False),
@@ -150,6 +155,7 @@ def _run_solver(solver_cls, case_dir: Path, **kwargs) -> Dict[str, Any]:
             "continuity": getattr(result, "continuity_error", None),
             "iterations": getattr(result, "outer_iterations", None),
             "elapsed": round(elapsed, 3),
+            "field_finite": field_finite,
             "error": None,
         }
     except Exception as e:
@@ -162,6 +168,7 @@ def _run_solver(solver_cls, case_dir: Path, **kwargs) -> Dict[str, Any]:
             "continuity": None,
             "iterations": None,
             "elapsed": round(elapsed, 3),
+            "field_finite": False,
             "error": str(e)[:200],
         }
 
