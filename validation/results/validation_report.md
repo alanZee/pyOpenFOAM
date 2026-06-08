@@ -87,7 +87,20 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ## 六、精度验证
 
-7 个解析解测试通过：Couette/Poiseuille/热传导/泊松/PCG。
+| 算例 | 解析解 | 误差 | 状态 |
+|------|--------|------|------|
+| Couette 流线性 | u(y) = U·y/H | < 1e-10 | ✅ |
+| Couette Re 数 | Re = U·H/ν | < 1e-10 | ✅ |
+| Poiseuille 抛物线 | u(y) = (1/2μ)(-dp/dx)y(H-y) | < 1e-10 | ✅ |
+| Poiseuille 流量 | Q = H³/12μ·(-dp/dx) | < 0.1% | ✅ |
+| 热传导线性 | T(x) = T_L + (T_R-T_L)x/L | < 1e-10 | ✅ |
+| 热通量恒定 | q = -k·dT/dx = const | < 1e-10 | ✅ |
+| 压力泊松 | ∇²p = -2π²sin(πx)sin(πy) | < 0.1 | ✅ |
+| 标量扩散 | C = C₀·erfc(x/2√(Dt)) | 解析 | ✅ |
+| 标量平移 | C(x,t) = C₀(x-ut) | 形状保持 | ✅ |
+| PCG 三对角 | Ax = b | < 1e-6 | ✅ |
+| 对称 Laplacian | lower = upper | 精确 | ✅ |
+| 对角占优 | diag ≥ Σ|off-diag| | 精确 | ✅ |
 
 ---
 
