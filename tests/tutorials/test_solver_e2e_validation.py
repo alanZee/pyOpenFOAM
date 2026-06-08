@@ -277,10 +277,25 @@ class TestHeatTransferSolvers:
     """传热求解器端到端验证。"""
 
     def test_laplacian_foam(self):
-        """LaplacianFoam 热传导算例。"""
+        """LaplacianFoam 热传导算例（温度梯度驱动）。"""
         from pyfoam.applications import LaplacianFoam
+        from pyfoam.io.foam_file import write_foam_file, FoamFileHeader, FileFormat
         with tempfile.TemporaryDirectory() as tmp:
             case_dir = _make_cavity_case(tmp, nu=0.01)
+            # 设置温度梯度：顶部 400K，底部 300K
+            zero_dir = case_dir / "0"
+            h_T = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
+                                 class_name="volScalarField", location="0", object="T")
+            lines_T = [
+                "dimensions      [0 0 0 1 0 0 0];",
+                "internalField   uniform 350;",
+                "boundaryField {",
+                "    movingWall { type fixedValue; value uniform 400; }",
+                "    fixedWalls { type fixedValue; value uniform 300; }",
+                "    frontAndBack { type empty; }",
+                "}",
+            ]
+            write_foam_file(zero_dir / "T", h_T, "\n".join(lines_T), overwrite=True)
             result = _run_solver(LaplacianFoam, case_dir)
         assert result["status"] == "OK", f"LaplacianFoam failed: {result['error']}"
 

@@ -179,6 +179,41 @@ class InterFoam(SolverBase):
         """Compute mixture viscosity: μ = α * μ2 + (1 - α) * μ1."""
         return alpha * self.mu2 + (1.0 - alpha) * self.mu1
 
+    def _build_boundary_conditions(self) -> torch.Tensor:
+        """Build velocity BC tensor from 0/U boundary field."""
+        import re
+        device = get_device()
+        dtype = get_default_dtype()
+        n_cells = self.mesh.n_cells
+        U_bc = torch.full((n_cells, 3), float("nan"), dtype=dtype, device=device)
+        U_field_data = self._U_data
+        boundary_field = U_field_data.boundary_field
+        if boundary_field is None or len(boundary_field) == 0:
+            return U_bc
+        mesh_boundary = self.case.boundary
+        owner = self.mesh.owner
+        mesh_patches = {}
+        for bp in mesh_boundary:
+            mesh_patches[bp.name] = {"startFace": bp.start_face, "nFaces": bp.n_faces}
+        for patch in boundary_field:
+            is_fixed = patch.patch_type == "fixedValue" and patch.value is not None
+            is_noslip = patch.patch_type == "noSlip"
+            if is_fixed or is_noslip:
+                if is_fixed:
+                    match = re.search(r"\(\s*([\d.eE+\-]+)\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)\s*\)", str(patch.value))
+                    value = (float(match.group(1)), float(match.group(2)), float(match.group(3))) if match else None
+                else:
+                    value = (0.0, 0.0, 0.0)
+                if value is not None:
+                    mesh_info = mesh_patches.get(patch.name)
+                    if mesh_info is not None:
+                        sf = mesh_info["startFace"]
+                        nf = mesh_info["nFaces"]
+                        for i in range(nf):
+                            cell_idx = owner[sf + i].item()
+                            U_bc[cell_idx] = torch.tensor(value, dtype=dtype)
+        return U_bc
+
     def run(self) -> ConvergenceData:
         """Run the interFoam solver.
 
@@ -201,6 +236,7 @@ class InterFoam(SolverBase):
         logger.info("Starting interFoam run")
         logger.info("  endTime=%.6g, deltaT=%.6g", self.end_time, self.delta_t)
 
+        U_bc = self._build_boundary_conditions()
         self._write_fields(self.start_time)
         time_loop.mark_written()
 
@@ -255,6 +291,10 @@ class InterFoam(SolverBase):
 
         n_outer = min(self.n_outer_correctors, self.max_outer_iterations)
 
+        # Build BC mask
+        U_bc = self._build_boundary_conditions()
+        bc_mask = ~torch.isnan(U_bc[:, 0])
+
         for outer in range(n_outer):
             U_prev = U.clone()
             p_prev = p.clone()
@@ -277,6 +317,10 @@ class InterFoam(SolverBase):
             U, A_p, H = self._momentum_predictor(
                 U, p, phi, rho, mu_mix
             )
+
+            # Apply BCs after momentum predictor
+            if bc_mask.any():
+                U[bc_mask] = U_bc[bc_mask]
 
             # ============================================
             # PISO correction loop
@@ -303,6 +347,10 @@ class InterFoam(SolverBase):
                 # Correct velocity
                 grad_p = self._compute_grad(p, mesh)
                 U = HbyA - grad_p / A_p.abs().clamp(min=1e-30).unsqueeze(-1)
+
+                # Apply BCs after velocity correction
+                if bc_mask.any():
+                    U[bc_mask] = U_bc[bc_mask]
 
                 # Correct flux
                 p_P = gather(p, int_owner)
