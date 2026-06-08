@@ -18,7 +18,7 @@ import pytest
 from pyfoam.core.dtype import CFD_DTYPE
 
 
-def _make_cavity_case(tmp_dir: str, nu: float = 0.01) -> Path:
+def _make_cavity_case(tmp_dir: str, nu: float = 0.01, p_init: float = 0.0) -> Path:
     """创建标准 cavity 算例。"""
     from tests.tutorials.helpers import (
         make_structured_mesh, write_control_dict, write_fv_schemes,
@@ -44,6 +44,28 @@ def _make_cavity_case(tmp_dir: str, nu: float = 0.01) -> Path:
 
     patches_p = {"movingWall": "zeroGradient", "fixedWalls": "zeroGradient"}
     write_pressure_field(case_dir, patches=patches_p)
+
+    # For compressible solvers, set non-zero initial pressure
+    if p_init > 0:
+        zero_dir = case_dir / "0"
+        h_p = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
+                             class_name="volScalarField", location="0", object="p")
+        lines_p = [
+            "dimensions      [1 -1 -2 0 0 0 0];",
+            f"internalField   uniform {p_init};",
+            "boundaryField {",
+            "    movingWall {",
+            "        type            zeroGradient;",
+            "    }",
+            "    fixedWalls {",
+            "        type            zeroGradient;",
+            "    }",
+            "    frontAndBack {",
+            "        type            empty;",
+            "    }",
+            "}",
+        ]
+        write_foam_file(zero_dir / "p", h_p, "\n".join(lines_p), overwrite=True)
 
     # 温度场（可压缩/传热求解器需要）
     zero_dir = case_dir / "0"
@@ -226,7 +248,7 @@ class TestCompressibleSolvers:
         """SonicFoam 激波管算例。"""
         from pyfoam.applications import SonicFoam
         with tempfile.TemporaryDirectory() as tmp:
-            case_dir = _make_cavity_case(tmp, nu=0.01)
+            case_dir = _make_cavity_case(tmp, nu=0.01, p_init=101325)
             result = _run_solver(SonicFoam, case_dir)
         assert result["status"] == "OK", f"SonicFoam failed: {result['error']}"
 
@@ -234,7 +256,7 @@ class TestCompressibleSolvers:
         """RhoPimpleFoam cavity 算例。"""
         from pyfoam.applications import RhoPimpleFoam
         with tempfile.TemporaryDirectory() as tmp:
-            case_dir = _make_cavity_case(tmp, nu=0.01)
+            case_dir = _make_cavity_case(tmp, nu=0.01, p_init=101325)
             result = _run_solver(RhoPimpleFoam, case_dir)
         assert result["status"] == "OK", f"Failed: {result['error']}"
 
