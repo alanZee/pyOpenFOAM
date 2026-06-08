@@ -64,7 +64,12 @@ InterFoam, LaplacianFoam, PotentialFoam, ReactingFoam, XiFoam, ScalarTransportFo
 
 ### 3.4 已知问题
 
-**Couette 流 SIMPLE 精度问题**：SimpleFoam 在 4×4 cavity 网格上收敛到负速度（continuity=7.8e-7 但速度方向错误）。根因分析指向压力方程边界单元对角项不足，导致压力校正过大。这是 SIMPLE 算法实现的深层问题，需要进一步调试。
+**Couette 流 SIMPLE 精度**：压力方程添加边界对角项后，速度方向已修复（正而非负），但求解器仍不收敛：
+- nx=4: cont=0.62, U≈0.04 (应为 0.375)
+- nx=8: cont=0.43
+- nx=16: cont=0.28 (收敛趋势)
+
+根因：边界对角项增加了对角优势但改变了矩阵平衡，需要进一步调整压力方程或动量预测器。
 
 ---
 
