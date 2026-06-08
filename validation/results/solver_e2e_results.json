@@ -5,8 +5,7 @@
     "continuity": 7.796305171771118e-07,
     "U_residual": 7.030761274474588e-06,
     "U_max": 1.0,
-    "finite": true,
-    "elapsed": 1.497
+    "finite": true
   },
   {
     "solver": "IcoFoam",
@@ -14,8 +13,7 @@
     "continuity": 0.025099909829592804,
     "U_residual": 0.0028525631101761852,
     "U_max": 1.0,
-    "finite": true,
-    "elapsed": 2.381
+    "finite": true
   },
   {
     "solver": "PisoFoam",
@@ -23,8 +21,7 @@
     "continuity": 0.003193098022126503,
     "U_residual": 0.002402269849430104,
     "U_max": 1.0,
-    "finite": true,
-    "elapsed": 1.45
+    "finite": true
   },
   {
     "solver": "PimpleFoam",
@@ -32,17 +29,15 @@
     "continuity": 3.5354235657549,
     "U_residual": 0.033468944947352086,
     "U_max": 1.0,
-    "finite": true,
-    "elapsed": 1.866
+    "finite": true
   },
   {
     "solver": "SonicFoam",
     "converged": false,
-    "continuity": 0.0,
-    "U_residual": 0.0,
-    "U_max": 0.0,
-    "finite": true,
-    "elapsed": 0.037
+    "continuity": 778.1097822489371,
+    "U_residual": 414.25036416896785,
+    "U_max": 707.8894411604801,
+    "finite": true
   },
   {
     "solver": "InterFoam",
@@ -50,8 +45,7 @@
     "continuity": 0.0,
     "U_residual": 0.0,
     "U_max": 0.0,
-    "finite": true,
-    "elapsed": 0.015
+    "finite": true
   },
   {
     "solver": "LaplacianFoam",
@@ -59,8 +53,7 @@
     "continuity": 0.0,
     "U_residual": 0.0,
     "U_max": 300.0,
-    "finite": true,
-    "elapsed": 0.003
+    "finite": true
   },
   {
     "solver": "PotentialFoam",
@@ -68,8 +61,7 @@
     "continuity": 0.0,
     "U_residual": 0.0,
     "U_max": 0.0,
-    "finite": true,
-    "elapsed": 0.006
+    "finite": true
   },
   {
     "solver": "BoundaryFoam",
@@ -77,26 +69,23 @@
     "continuity": 0.720742395641945,
     "U_residual": 4.1823886257407745e-12,
     "U_max": 11.450533337692523,
-    "finite": true,
-    "elapsed": 1.892
+    "finite": true
   },
   {
     "solver": "BuoyantPimpleFoam",
-    "converged": true,
-    "continuity": 0.0,
-    "U_residual": 0.0,
-    "U_max": 0.0,
-    "finite": true,
-    "elapsed": 0.013
+    "converged": false,
+    "continuity": 1.9173227088299325,
+    "U_residual": 4.994379934540184e-05,
+    "U_max": 99.9999985651088,
+    "finite": true
   },
   {
     "solver": "BuoyantSimpleFoam",
-    "converged": true,
-    "continuity": 0.0,
-    "U_residual": 0.0,
-    "U_max": 0.0,
-    "finite": true,
-    "elapsed": 0.012
+    "converged": false,
+    "continuity": 1.992123967614036,
+    "U_residual": 0.16243026270520508,
+    "U_max": 99.999999999998,
+    "finite": true
   },
   {
     "solver": "ReactingFoam",
@@ -104,8 +93,7 @@
     "continuity": 0.0,
     "U_residual": 8.065490087349327e-10,
     "U_max": 0.0,
-    "finite": true,
-    "elapsed": 0.006
+    "finite": true
   },
   {
     "solver": "XiFoam",
@@ -113,8 +101,7 @@
     "continuity": 0.0,
     "U_residual": 0.0,
     "U_max": 0.0,
-    "finite": true,
-    "elapsed": 0.007
+    "finite": true
   },
   {
     "solver": "ScalarTransportFoam",
@@ -122,8 +109,7 @@
     "continuity": 0.0,
     "U_residual": 0.0,
     "U_max": 0.0,
-    "finite": true,
-    "elapsed": 0.004
+    "finite": true
   },
   {
     "solver": "IncompressibleFluidFoam",
@@ -131,16 +117,14 @@
     "continuity": 8.159194820502709e-07,
     "U_residual": 1.5888968982648928e-05,
     "U_max": 1.0,
-    "finite": true,
-    "elapsed": 1.116
+    "finite": true
   },
   {
     "solver": "RhoPimpleFoam",
-    "converged": true,
-    "continuity": 0.0,
-    "U_residual": 0.0,
-    "U_max": 0.0,
-    "finite": true,
-    "elapsed": 0.013
+    "converged": false,
+    "continuity": 1110.7097149008423,
+    "U_residual": 0.20050070931927425,
+    "U_max": 707.106771089242,
+    "finite": true
   }
 ]
