@@ -78,7 +78,10 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ## 五、可微分模拟
 
-7/7 测试通过（含形状优化端到端）。BC 处理修复为 bc_mask。
+- 7/7 测试通过（含形状优化端到端）
+- BC 处理修复为显式 bc_mask
+- **大网格支持**：4×4/8×8/16×16 梯度均有限（参考压力固定修复 NaN）
+- 端到端梯度验证通过
 
 ---
 
@@ -102,6 +105,5 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ## 八、已知限制
 
-1. **可微分大网格**：梯度在 >4×4 网格上为 NaN（SIMPLE 收敛问题）
-2. **GPU 小网格**：kernel 启动开销导致 GPU 慢于 CPU
-3. **原生算例精度对照**：需 OpenFOAM-13 blockMesh 二进制
+1. **GPU 小网格**：kernel 启动开销导致 GPU 慢于 CPU（预期行为）
+2. **原生算例精度对照**：需 OpenFOAM-13 blockMesh 二进制
