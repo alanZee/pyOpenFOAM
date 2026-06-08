@@ -48,6 +48,7 @@ from pyfoam.core.fv_matrix import FvMatrix
 from pyfoam.core.backend import scatter_add, gather
 from pyfoam.solvers.linear_solver import create_solver
 
+from pyfoam.solvers.coupled_solver import ConvergenceData
 from .solver_base import SolverBase
 from .time_loop import TimeLoop
 from .convergence import ConvergenceMonitor
@@ -702,19 +703,13 @@ class BoundaryFoam(SolverBase):
         # Write final fields
         self._write_fields(float(last_iteration))
 
-        return {
-            "converged": converged,
-            "iterations": last_iteration,
-            "U_residual": convergence.history[-1].residuals.get("U", 0.0)
-            if convergence.history
-            else 0.0,
-            "continuity_error": convergence.history[-1].residuals.get(
-                "cont", 0.0
-            )
-            if convergence.history
-            else 0.0,
-            "convergence_history": convergence.history,
-        }
+        conv = ConvergenceData()
+        conv.converged = converged
+        conv.outer_iterations = last_iteration
+        if convergence.history:
+            conv.U_residual = convergence.history[-1].residuals.get("U", 0.0)
+            conv.continuity_error = convergence.history[-1].residuals.get("cont", 0.0)
+        return conv
 
     def _update_turbulence(self) -> torch.Tensor | None:
         """Update turbulence model and return effective viscosity field."""

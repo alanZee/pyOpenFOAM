@@ -42,6 +42,7 @@ from pyfoam.core.fv_matrix import FvMatrix
 from pyfoam.discretisation.operators import fvm, fvc
 from pyfoam.solvers.linear_solver import create_solver
 
+from pyfoam.solvers.coupled_solver import ConvergenceData
 from .solver_base import SolverBase
 from .time_loop import TimeLoop
 from .convergence import ConvergenceMonitor
@@ -428,11 +429,11 @@ class ScalarTransportFoam(SolverBase):
         logger.info("  C range: [%.6e, %.6e]",
                     self.C.min().item(), self.C.max().item())
 
-        return {
-            "converged": converged if converged else False,
-            "iterations": iters,
-            "residual": residual,
-        }
+        conv = ConvergenceData()
+        conv.converged = converged if converged else False
+        conv.outer_iterations = iters
+        conv.U_residual = residual
+        return conv
 
     # ------------------------------------------------------------------
     # Field writing

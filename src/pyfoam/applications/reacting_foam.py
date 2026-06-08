@@ -45,6 +45,7 @@ from pyfoam.core.device import get_device, get_default_dtype
 from pyfoam.discretisation.operators import fvm, fvc
 from pyfoam.solvers.linear_solver import create_solver
 
+from pyfoam.solvers.coupled_solver import ConvergenceData
 from .solver_base import SolverBase
 from .time_loop import TimeLoop
 from .convergence import ConvergenceMonitor
@@ -761,11 +762,11 @@ class ReactingFoam(SolverBase):
         logger.info("  T range: [%.1f, %.1f] K",
                     self.T.min().item(), self.T.max().item())
 
-        return {
-            "converged": converged if converged else False,
-            "iterations": t_iters,
-            "residual": t_residual,
-        }
+        conv = ConvergenceData()
+        conv.converged = converged if converged else False
+        conv.outer_iterations = t_iters
+        conv.U_residual = t_residual
+        return conv
 
     # ------------------------------------------------------------------
     # Field writing

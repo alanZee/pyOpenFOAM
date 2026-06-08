@@ -47,6 +47,7 @@ from pyfoam.core.fv_matrix import FvMatrix
 from pyfoam.discretisation.operators import fvm, fvc
 from pyfoam.solvers.linear_solver import create_solver
 
+from pyfoam.solvers.coupled_solver import ConvergenceData
 from .solver_base import SolverBase
 from .convergence import ConvergenceMonitor
 
@@ -345,11 +346,11 @@ class PotentialFoam(SolverBase):
         logger.info("potentialFoam completed")
         logger.info("  max|U| = %.6e", U_mag_sq.sqrt().max().item())
 
-        return {
-            "converged": True,
-            "iterations": iters,
-            "residual": residual,
-        }
+        conv = ConvergenceData()
+        conv.converged = True
+        conv.outer_iterations = iters
+        conv.p_residual = residual
+        return conv
 
     # ------------------------------------------------------------------
     # Field writing
