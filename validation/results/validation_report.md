@@ -49,6 +49,8 @@ Lid-driven cavity flow 是 CFD 标准基准。顶部壁面以 U=1.0 驱动，
 | PisoFoam | 3.2e-3 | ✅ 瞬态 |
 | PimpleFoam | 3.5 | ✅ 瞬态 |
 | BoundaryFoam | 7.2e-1 | ✅ |
+| InterFoam | 7.5e-3 | ✅ VOF（BC 修复后） |
+| LaplacianFoam | — | ✅ 热传导（温度梯度驱动） |
 | SonicFoam | 778 | ✅ 可压缩物理 |
 | BuoyantPimpleFoam | 1.92 | ✅ 浮力物理 |
 | BuoyantSimpleFoam | 1.99 | ✅ 浮力物理 |
