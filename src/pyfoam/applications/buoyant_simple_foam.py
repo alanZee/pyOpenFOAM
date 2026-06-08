@@ -387,6 +387,11 @@ class BuoyantSimpleFoam(RhoSimpleFoam):
             grad_p_rgh = self._compute_grad(p_rgh, mesh)
             U = HbyA - grad_p_rgh / A_p.abs().clamp(min=1e-30).unsqueeze(-1)
 
+            # Limit velocity to prevent divergence
+            U_mag = U.norm(dim=1, keepdim=True)
+            U_max_allowed = 100.0  # m/s for buoyant flows
+            U = torch.where(U_mag > U_max_allowed, U * (U_max_allowed / U_mag.clamp(min=1e-30)), U)
+
             # Correct internal face flux
             phi_internal = phiHbyA.clone()
             p_P = gather(p_rgh, int_owner)
@@ -679,6 +684,9 @@ class BuoyantSimpleFoam(RhoSimpleFoam):
             off_diag = off_diag + scatter_add(upper * T_P, int_neigh, n_cells)
 
             T_new = (source - off_diag) / diag_safe
+
+            # Clamp temperature to physical range
+            T_new = T_new.clamp(min=200.0, max=5000.0)
 
             if (T_new - T).abs().max() < self.T_tolerance:
                 break
