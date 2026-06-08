@@ -415,6 +415,11 @@ class SonicFoam(SolverBase):
             grad_p = self._compute_grad(p, mesh)
             U = HbyA - grad_p / A_p.abs().clamp(min=1e-30).unsqueeze(-1)
 
+            # Limit velocity to prevent divergence
+            U_mag = U.norm(dim=1, keepdim=True)
+            U_max_allowed = 1000.0  # m/s
+            U = torch.where(U_mag > U_max_allowed, U * (U_max_allowed / U_mag.clamp(min=1e-30)), U)
+
             # Correct flux
             p_P = gather(p, int_owner)
             p_N = gather(p, int_neigh)
@@ -916,6 +921,9 @@ class SonicFoam(SolverBase):
             off_diag = off_diag + scatter_add(upper * T_P, int_neigh, n_cells)
 
             T_new = (source - off_diag) / diag_safe
+
+            # Clamp temperature to physical range
+            T_new = T_new.clamp(min=200.0, max=5000.0)
 
             if (T_new - T).abs().max() < self.T_tolerance:
                 break
