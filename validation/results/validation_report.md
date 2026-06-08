@@ -143,34 +143,29 @@
 
 ### 5.1 硬件
 
-- NVIDIA GeForce RTX 4070 (16GB VRAM)
-- CUDA 13.1 驱动
-- nvidia-smi 确认可用
+- NVIDIA GeForce RTX 4070 Ti SUPER (16GB VRAM)
+- CUDA 12.4 (PyTorch) / CUDA 13.1 (驱动)
+- **8/8 GPU 测试全部通过**
 
 ### 5.2 基础设施
 
-- `pyfoam.core.device` — 设备管理器支持 CUDA
-- `pyfoam.core.multi_gpu` — 多 GPU 支持
-- GPU 验证测试已就绪（8 个测试）
+- `pyfoam.core.device` — DeviceManager 支持 CUDA
+- GPU 验证测试全部通过：设备检测、张量运算、autograd、网格迁移、场梯度
 
-### 5.3 CUDA PyTorch 安装
+### 5.3 Conda 环境
 
-当前使用 CPU PyTorch (2.12.0+cpu)。安装 CUDA PyTorch：
+- 环境路径：`F:\pyopenfoam-gpu`（junction from `C:\Users\alanz\.conda`）
+- Python: 3.11, PyTorch: 2.6.0+cu124
+- .conda 目录已迁移到 F: 盘（释放 16GB C 盘空间）
 
-```bash
-# 方法 1：pip（需稳定网络，~2.5GB 下载）
-conda activate pyopenfoam-gpu
-pip install torch --index-url https://download.pytorch.org/whl/cu124
+### 5.4 CUDA PyTorch 验证结果
 
-# 方法 2：使用已下载的 wheel（如有）
-pip install C:/path/to/torch-2.6.0+cu124-cp311-cp311-win_amd64.whl
 ```
-
-### 5.4 Conda 环境
-
-- 环境名：`pyopenfoam-gpu`
-- 路径：`C:\Users\alanz\.conda\envs\pyopenfoam-gpu`
-- Python: 3.11
+PyTorch: 2.6.0+cu124
+CUDA: 12.4
+Available: True
+Device: NVIDIA GeForce RTX 4070 Ti SUPER
+```
 
 ---
 
