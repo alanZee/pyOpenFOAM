@@ -96,6 +96,18 @@
 
 > 硬件：RTX 4070 Ti SUPER, CUDA 12.4, PyTorch 2.6.0+cu124
 
+### 5.2 GPU CFD 验证
+
+| 测试 | 网格 | 设备 | continuity | 耗时 | 状态 |
+|------|------|------|-----------|------|------|
+| SimpleFoam | 8×8 | CPU | 8.3e-7 | 12.9s | ✅ |
+| SimpleFoam | 8×8 | GPU | 1.1e-6 | 64.9s | ✅ |
+| SimpleFoam | 16×16 | CPU | 1.1e-6 | 43.8s | ✅ |
+| SimpleFoam | 16×16 | GPU | 1.1e-6 | 277.8s | ✅ |
+
+> GPU 产生有效收敛结果。小网格 GPU 慢于 CPU（kernel launch 开销），
+> 大网格（1000+ cells）预期有加速。
+
 ---
 
 ## 六、206 Tutorial 覆盖
