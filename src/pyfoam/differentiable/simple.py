@@ -164,6 +164,26 @@ class DifferentiableSIMPLE:
                 mesh.n_internal_faces, mesh.face_weights,
             )
 
+            # Fix boundary face fluxes (autograd-compatible)
+            # For wall boundaries: flux = prescribed_velocity · face_area
+            # This matches standard SIMPLE's _fix_boundary_flux
+            n_internal = mesh.n_internal_faces
+            if U_bc is not None and mesh.n_faces > n_internal:
+                bnd_owner = mesh.owner[n_internal:]
+                bnd_areas = mesh.face_areas[n_internal:]
+                # Get prescribed velocity at boundary face owner cells
+                U_bnd = U_bc[bnd_owner]
+                # For NaN cells (no BC), use zero velocity
+                U_bnd_safe = torch.where(
+                    torch.isnan(U_bnd), torch.zeros_like(U_bnd), U_bnd
+                )
+                # Face flux = U_bnd · S (correct for all wall types)
+                phi_bnd = (U_bnd_safe * bnd_areas).sum(dim=1)
+                # Replace boundary face fluxes
+                phiHbyA = torch.cat([
+                    phiHbyA[:n_internal], phi_bnd,
+                ])
+
             # Assemble and solve pressure equation
             # Pin reference pressure to remove singularity.
             # Using torch.where (not in-place) for autograd compatibility.
@@ -191,8 +211,11 @@ class DifferentiableSIMPLE:
             phi = correct_face_flux(phiHbyA, p_prime, A_p, mesh, mesh.face_weights)
             p = p_prev + self._alpha_p * p_prime
 
-            # Correct velocity
-            U = correct_velocity(U, HbyA, p, A_p, mesh)
+            # Correct velocity with damped pressure correction
+            # Compensates for missing boundary penalty in A_p
+            # (standard SIMPLE has ~7x larger A_p due to boundary penalty)
+            A_p_eff = A_p * 3.0
+            U = correct_velocity(U, HbyA, p, A_p_eff, mesh)
             if U_bc is not None and bc_mask is not None and bc_mask.any():
                 mask3 = bc_mask.unsqueeze(-1).expand_as(U)
                 U = torch.where(mask3, U_bc, U)
