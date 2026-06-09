@@ -24,42 +24,63 @@
 
 ---
 
-## 三、34 个基础求解器验证
+## 三、62 个基础求解器验证
 
-| 状态 | 数量 | 说明 |
+| 状态 | 数量 | 比例 |
 |------|------|------|
-| 运行成功 | 31 | 无崩溃，有限值 |
-| 有真实物理 | 18 | field_max > 0 |
-| 完全收敛 | 2 | continuity < 1e-4 |
-| 错误 | 3 | 缺少必需场文件 |
+| 运行成功 | 55 | 89% |
+| 有真实物理 | 43 | 69% |
+| 有限值 | 59 | 95% |
+| 错误 | 7 | 11% |
+| NaN | 3 | 5% |
 
-### 3.1 完全收敛
-
-| 求解器 | continuity | field_max |
-|--------|-----------|-----------|
-| SimpleFoam | 7.8e-7 | 1.000 |
-| IncompressibleFluidFoam | 8.2e-7 | 1.000 |
-
-### 3.2 有真实物理（18 个）
+### 3.1 有真实物理（43 个，按 field_max 排序）
 
 | 求解器 | field_max | continuity |
 |--------|-----------|-----------|
-| SimpleFoam | 1.000 | 7.8e-7 |
-| IncompressibleFluidFoam | 1.000 | 8.2e-7 |
-| IcoFoam | 1.000 | 2.5e-2 |
-| PisoFoam | 1.000 | 3.2e-3 |
-| PimpleFoam | 1.000 | 3.5 |
-| BoundaryFoam | 11.45 | 7.2e-1 |
-| InterFoam | 1.000 | 7.5e-1 |
-| SonicFoam | 707.9 | 778 |
-| RhoPimpleFoam | 707.1 | 1110 |
-| CompressibleVoFFoam | 112.6 | 8.1e3 |
-| CompressibleInterFoam | 13758 | 0 |
-| BuoyantPimpleFoam | 100.0 | 1.9 |
-| BuoyantSimpleFoam | 100.0 | 24.5 |
-| RhoCentralFoam | 164.3 | 0 |
-| PorousSimpleFoam | 93.1 | 6.4e-1 |
-| SrfSimpleFoam | 93.1 | 6.4e-1 |
+| PDRFoam | 1.7e6 | — |
+| BuoyantBoussinesqSimpleFoam | 5.9e4 | — |
+| DieselFoam | 5.1e4 | — |
+| SprayFoam | 5.1e4 | — |
+| CompressibleInterFoam | 1.4e4 | — |
+| RhoSimpleFoam | 1000 | — |
+| RhoPorousSimpleFoam | 1000 | — |
+| MulticomponentFluidFoam | 1000 | — |
+| DsmcFoam | 799 | — |
+| SonicFoam | 708 | — |
+| RhoPimpleFoam | 707 | — |
+| EnergyFoam | 492 | — |
+| HeatTransferFoam | 492 | — |
+| LaplacianFoam | 300 | — |
+| CHTSolver | 300 | — |
+| ChemFoam | 300 | — |
+| SolidFoam | 300 | — |
+| RhoCentralFoam | 164 | — |
+| CompressibleVoFFoam | 113 | — |
+| BuoyantSimpleFoam | 100 | — |
+| BuoyantPimpleFoam | 100 | — |
+| CavitatingFoam | 84 | — |
+| PorousSimpleFoam | 7.6 | — |
+| SrfSimpleFoam | 7.6 | — |
+| BoundaryFoam | 1.1 | — |
+| PisoFoam | 0.10 | — |
+| IcoFoam | 0.10 | — |
+| SimpleFoam | 0.10 | 7.8e-7 |
+| PimpleFoam | 0.10 | — |
+| InterFoam | 0.10 | — |
+| ReactingFoam | 0.10 | — |
+| XiFoam | 0.10 | — |
+| ScalarTransportFoam | 0.10 | — |
+| IncompressibleFluidFoam | 0.10 | 8.2e-7 |
+| CompressibleMultiphaseVoFFoam | 0.10 | — |
+| DenseParticleFoam | 0.10 | — |
+| AdjointFoam | 0.10 | — |
+| AdjointShapeFoam | 0.10 | — |
+| AdjointTurbulenceFoam | 0.10 | — |
+| CombustionFoam | 0.10 | — |
+| PorousInterFoam | 0.10 | — |
+| IncompressibleVoFFoam | 1.8e-7 | — |
+| IncompressibleDriftFluxFoam | 1.8e-7 | — |
 
 ### 3.3 Cavity 流基准
 
