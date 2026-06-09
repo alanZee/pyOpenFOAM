@@ -1,0 +1,296 @@
+[
+  {
+    "solver": "SimpleFoam",
+    "status": "OK",
+    "converged": true,
+    "continuity": 7.796305171771118e-07,
+    "field_max": 1.0,
+    "finite": true,
+    "elapsed": 1.062
+  },
+  {
+    "solver": "IcoFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.025099909829592804,
+    "field_max": 1.0,
+    "finite": true,
+    "elapsed": 1.897
+  },
+  {
+    "solver": "PisoFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.003193098022126503,
+    "field_max": 1.0,
+    "finite": true,
+    "elapsed": 1.093
+  },
+  {
+    "solver": "PimpleFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 3.5354235657549,
+    "field_max": 1.0,
+    "finite": true,
+    "elapsed": 1.604
+  },
+  {
+    "solver": "SonicFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 778.1097822489371,
+    "field_max": 707.8894411604801,
+    "finite": true,
+    "elapsed": 0.025
+  },
+  {
+    "solver": "RhoPimpleFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 1110.7097149008423,
+    "field_max": 707.106771089242,
+    "finite": true,
+    "elapsed": 0.356
+  },
+  {
+    "solver": "RhoSimpleFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": NaN,
+    "field_max": NaN,
+    "finite": false,
+    "elapsed": 9.63
+  },
+  {
+    "solver": "InterFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.7488501950520516,
+    "field_max": 0.99999995217031,
+    "finite": true,
+    "elapsed": 0.066
+  },
+  {
+    "solver": "LaplacianFoam",
+    "status": "OK",
+    "converged": true,
+    "continuity": 0.0,
+    "field_max": 300.0,
+    "finite": true,
+    "elapsed": 0.003
+  },
+  {
+    "solver": "PotentialFoam",
+    "status": "OK",
+    "converged": true,
+    "continuity": 0.0,
+    "field_max": 0.0,
+    "finite": true,
+    "elapsed": 0.003
+  },
+  {
+    "solver": "BoundaryFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.720742395641945,
+    "field_max": 11.450533337692523,
+    "finite": true,
+    "elapsed": 1.638
+  },
+  {
+    "solver": "BuoyantPimpleFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 1.9176716883887244,
+    "field_max": 99.9999985651088,
+    "finite": true,
+    "elapsed": 0.069
+  },
+  {
+    "solver": "BuoyantSimpleFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 24.548477810169793,
+    "field_max": 99.99999999999294,
+    "finite": true,
+    "elapsed": 24.09
+  },
+  {
+    "solver": "ReactingFoam",
+    "status": "OK",
+    "converged": true,
+    "continuity": 0.0,
+    "field_max": 0.0,
+    "finite": true,
+    "elapsed": 0.006
+  },
+  {
+    "solver": "XiFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.0,
+    "field_max": 0.0,
+    "finite": true,
+    "elapsed": 0.008
+  },
+  {
+    "solver": "ScalarTransportFoam",
+    "status": "OK",
+    "converged": true,
+    "continuity": 0.0,
+    "field_max": 0.0,
+    "finite": true,
+    "elapsed": 0.003
+  },
+  {
+    "solver": "IncompressibleFluidFoam",
+    "status": "OK",
+    "converged": true,
+    "continuity": 8.159194820502709e-07,
+    "field_max": 1.0,
+    "finite": true,
+    "elapsed": 1.098
+  },
+  {
+    "solver": "CompressibleInterFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.0,
+    "field_max": 13757.694077714386,
+    "finite": true,
+    "elapsed": 0.058
+  },
+  {
+    "solver": "MultiphaseEulerFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.0,
+    "field_max": 0,
+    "finite": true,
+    "elapsed": 0.006
+  },
+  {
+    "solver": "TwoPhaseEulerFoam",
+    "status": "ERROR",
+    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpd3885ke3\\0\\U1"
+  },
+  {
+    "solver": "CompressibleVoFFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 8077.680392584818,
+    "field_max": 112.60892313723721,
+    "finite": true,
+    "elapsed": 1.426
+  },
+  {
+    "solver": "FluidFoam",
+    "status": "OK",
+    "converged": true,
+    "continuity": 0.0,
+    "field_max": 0.0,
+    "finite": true,
+    "elapsed": 0.011
+  },
+  {
+    "solver": "MulticomponentFluidFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": NaN,
+    "field_max": NaN,
+    "finite": false,
+    "elapsed": 0.998
+  },
+  {
+    "solver": "IsothermalFluidFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": NaN,
+    "field_max": 3.574193633986483e+160,
+    "finite": true,
+    "elapsed": 1.161
+  },
+  {
+    "solver": "PorousSimpleFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.6353732716748152,
+    "field_max": 93.07895988184312,
+    "finite": true,
+    "elapsed": 27.974
+  },
+  {
+    "solver": "SrfSimpleFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.6353732716748152,
+    "field_max": 93.07895988184312,
+    "finite": true,
+    "elapsed": 28.741
+  },
+  {
+    "solver": "IncompressibleVoFFoam",
+    "status": "OK",
+    "converged": true,
+    "continuity": 0.0,
+    "field_max": 0.0,
+    "finite": true,
+    "elapsed": 0.013
+  },
+  {
+    "solver": "CompressibleMultiphaseVoFFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.0,
+    "field_max": 0.0,
+    "finite": true,
+    "elapsed": 0.006
+  },
+  {
+    "solver": "RhoCentralFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.0,
+    "field_max": 164.25859728964275,
+    "finite": true,
+    "elapsed": 0.015
+  },
+  {
+    "solver": "SolidDisplacementFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.0,
+    "field_max": 0,
+    "finite": true,
+    "elapsed": 0.003
+  },
+  {
+    "solver": "CavitatingFoam",
+    "status": "ERROR",
+    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpzvub8kkq\\0\\alpha.vapor"
+  },
+  {
+    "solver": "DenseParticleFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": 0.0,
+    "field_max": 0.0,
+    "finite": true,
+    "elapsed": 0.003
+  },
+  {
+    "solver": "IncompressibleDriftFluxFoam",
+    "status": "ERROR",
+    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpa4h8i67w\\0\\alpha"
+  },
+  {
+    "solver": "RhoPorousSimpleFoam",
+    "status": "OK",
+    "converged": false,
+    "continuity": NaN,
+    "field_max": NaN,
+    "finite": false,
+    "elapsed": 9.796
+  }
+]
