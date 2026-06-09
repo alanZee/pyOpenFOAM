@@ -282,8 +282,8 @@
   {
     "solver": "AcousticFoam",
     "device": "cuda:0",
-    "finite": false,
-    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpkhumt62x\\0\\p'"
+    "finite": true,
+    "U_max": 0.0
   },
   {
     "solver": "ShallowWaterFoam",
@@ -316,14 +316,14 @@
   {
     "solver": "MagneticFoam",
     "device": "cuda:0",
-    "finite": false,
-    "error": "a Tensor with 3 elements cannot be converted to Scalar"
+    "finite": true,
+    "U_max": 0.0
   },
   {
     "solver": "MhdFoam",
     "device": "cuda:0",
-    "finite": false,
-    "error": "too many indices for tensor of dimension 1"
+    "finite": true,
+    "U_max": 0.0
   },
   {
     "solver": "AdjointFoam",
