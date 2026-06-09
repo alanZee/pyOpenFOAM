@@ -129,7 +129,6 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ## 八、已知限制
 
-1. **4 个求解器产生 NaN**: RhoSimpleFoam, MulticomponentFluidFoam, IsothermalFluidFoam, RhoPorousSimpleFoam
-2. **3 个求解器缺少场文件**: TwoPhaseEulerFoam (U1), CavitatingFoam (alpha.vapor), IncompressibleDriftFluxFoam (alpha)
+1. **3 个求解器缺少场文件**: TwoPhaseEulerFoam (U1), CavitatingFoam (alpha.vapor), IncompressibleDriftFluxFoam (alpha)
+2. **Docker OpenFOAM**: Docker Desktop API 版本不兼容，无法运行参考模拟
 3. **GPU 小网格**: kernel 启动开销导致 GPU 慢于 CPU
-4. **Docker OpenFOAM**: Docker Desktop API 版本不兼容，无法运行参考模拟
