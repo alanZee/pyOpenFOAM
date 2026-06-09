@@ -54,14 +54,19 @@ RhoPorousSimpleFoam, FluidFoam, MulticomponentFluidFoam, IsothermalFluidFoam,
 PDRFoam, SprayFoam, DieselFoam, EnergyFoam, HeatTransferFoam, CHTSolver,
 ChemFoam, SolidFoam, DsmcFoam, BuoyantBoussinesqSimpleFoam, AcousticFoam
 
-### 4.2 零物理（19 个，需特定初始条件）
+### 4.2 零物理求解器（9 个，需特定配置）
 
-PotentialFoam, MultiphaseEulerFoam, TwoPhaseEulerFoam, SolidDisplacementFoam,
-CHTMultiRegionFoam, ElectrostaticFoam, FilmFoam, FinancialFoam, MdFoam,
-AdjointFoam, AdjointShapeFoam, AdjointTurbulenceFoam,
-MultiphaseInterFoam, MultiphaseReactingFoam, ReactingMultiphaseFoam,
-MagneticFoam, MhdFoam, ViscousFoam, CombustionFoam, PorousInterFoam,
-ShallowWaterFoam
+| 求解器 | 原因 |
+|--------|------|
+| PotentialFoam | 需 phi 场或非均匀速度 BC |
+| MultiphaseEulerFoam | 需非均匀相分数 |
+| TwoPhaseEulerFoam | 需 U1 场文件 |
+| SolidDisplacementFoam | 需非零位移 BC |
+| CHTMultiRegionFoam | 需多区域网格 |
+| ElectrostaticFoam | 需非零 Ve 场 |
+| FilmFoam | 需薄膜特定配置 |
+| FinancialFoam | 金融专用（非 CFD） |
+| MdFoam | 分子动力学专用 |
 
 ### 4.3 Cavity 流基准
 
@@ -120,6 +125,6 @@ FvMatrix 矩阵运算 — 全部通过。
 ## 九、已知限制
 
 1. **Docker Desktop**: 无法启动（需用户手动重启或重装）
-2. **19 个零物理求解器**: 需要特定初始条件（多区域网格、位移 BC 等）
+2. **9 个零物理求解器**: 需要特定初始条件
 3. **可微分大网格**: 16x16 使用 3x 阻尼压力校正
 4. **GPU 小网格**: kernel 启动开销导致 GPU 慢于 CPU
