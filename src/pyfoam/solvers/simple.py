@@ -765,10 +765,12 @@ class SIMPLESolver(CoupledSolverBase):
         # Build per-face prescribed velocity from patch definitions
         U_bnd = torch.full_like(bnd_areas, float('nan'))
         for patch in mesh.boundary:
-            if patch.get("type", "") == "empty":
+            # Support both dict and BoundaryPatch objects
+            ptype = patch.patch_type if hasattr(patch, 'patch_type') else patch.get("type", "")
+            if ptype == "empty":
                 continue
-            sf = patch.get("startFace", 0) - n_internal
-            nf = patch.get("nFaces", 0)
+            sf = (patch.start_face if hasattr(patch, 'start_face') else patch.get("startFace", 0)) - n_internal
+            nf = patch.n_faces if hasattr(patch, 'n_faces') else patch.get("nFaces", 0)
             if sf < 0 or nf <= 0:
                 continue
             first_owner = bnd_owner[sf].item()
