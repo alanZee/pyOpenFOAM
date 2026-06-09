@@ -542,7 +542,7 @@ class DsmcFoam(SolverBase):
             Cell index of the nearest cell.
         """
         cell_centres = self._cell_centres
-        pos = torch.tensor(position, dtype=cell_centres.dtype)
+        pos = torch.tensor(position, dtype=cell_centres.dtype, device=cell_centres.device)
         dists = torch.norm(cell_centres - pos.unsqueeze(0), dim=1)
         return int(torch.argmin(dists).item())
 
