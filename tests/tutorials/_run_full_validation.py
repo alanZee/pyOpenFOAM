@@ -49,8 +49,34 @@ def make_full_case(tmp_dir, nu=0.01):
         val = 1.0 if name == "YA" else 0.0
         ws(name, val)
 
-    # Acoustic fields
-    ws("p'", 0, "[1 -1 -2 0 0 0 0]")
+    # Acoustic fields with non-zero p' at moving wall
+    h_pp = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
+                          class_name="volScalarField", location="0", object="p'")
+    lines_pp = [
+        "dimensions      [1 -1 -2 0 0 0 0];",
+        "internalField   uniform 0;",
+        "boundaryField {",
+        "    movingWall { type fixedValue; value uniform 100; }",
+        "    fixedWalls { type zeroGradient; }",
+        "    frontAndBack { type empty; }",
+        "}",
+    ]
+    write_foam_file(zero_dir / "p'", h_pp, "\n".join(lines_pp), overwrite=True)
+
+    # Potential field for PotentialFoam
+    h_phi = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
+                           class_name="volScalarField", location="0", object="phi")
+    lines_phi = [
+        "dimensions      [0 2 -1 0 0 0 0];",
+        "internalField   uniform 0;",
+        "boundaryField {",
+        "    movingWall { type fixedValue; value uniform 1; }",
+        "    fixedWalls { type zeroGradient; }",
+        "    frontAndBack { type empty; }",
+        "}",
+    ]
+    write_foam_file(zero_dir / "phi", h_phi, "\n".join(lines_phi), overwrite=True)
+
     h_up = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
                           class_name="volVectorField", location="0", object="u'")
     lines_up = [
@@ -110,8 +136,10 @@ SOLVER_CONFIG = {
     "SolidDisplacementFoam": {"field": "D", "threshold": 0.0},
     "SolidEquilibriumDisplacementFoam": {"field": "D", "threshold": 0.0},
     "StressFoam": {"field": "D", "threshold": 0.0},
+    "SolidEquilibriumDisplacementFoam": {"field": "D", "threshold": 0.0},
+    "StressFoam": {"field": "D", "threshold": 0.0},
     # 声学
-    "AcousticFoam": {"field": "p'", "threshold": 0.0},
+    "AcousticFoam": {"field": "p_prime", "threshold": 0.001},
     # 电磁
     "MagneticFoam": {"field": "U", "threshold": 0.0},
     "MhdFoam": {"field": "U", "threshold": 0.0},

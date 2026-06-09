@@ -246,6 +246,8 @@ from pyfoam.applications.buoyant_pimple_foam import BuoyantPimpleFoam
 from pyfoam.applications.cht_multi_region_foam import CHTMultiRegionFoam
 from pyfoam.applications.reacting_foam import ReactingFoam
 from pyfoam.applications.solid_displacement_foam import SolidDisplacementFoam
+from pyfoam.applications.solid_equilibrium_displacement_foam import SolidEquilibriumDisplacementFoam
+from pyfoam.applications.stress_foam import StressFoam
 from pyfoam.applications.incompressible_fluid_foam import IncompressibleFluidFoam, Algorithm
 from pyfoam.applications.shallow_water_foam import ShallowWaterFoam
 from pyfoam.applications.rho_porous_simple_foam import RhoPorousSimpleFoam
@@ -465,6 +467,8 @@ __all__ = [
     "CHTMultiRegionFoam",
     "ReactingFoam",
     "SolidDisplacementFoam",
+    "SolidEquilibriumDisplacementFoam",
+    "StressFoam",
     "IncompressibleFluidFoam",
     "Algorithm",
     "ShallowWaterFoam",
