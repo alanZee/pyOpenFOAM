@@ -4,28 +4,28 @@
     "device": "cuda:0",
     "finite": true,
     "U_max": 1.0,
-    "time": 83.7
+    "time": 43.9
   },
   {
     "solver": "IcoFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 1.0,
-    "time": 65.3
+    "time": 75.0
   },
   {
     "solver": "PisoFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 1.0,
-    "time": 37.4
+    "time": 42.8
   },
   {
     "solver": "PimpleFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 1.0,
-    "time": 60.5
+    "time": 74.6
   },
   {
     "solver": "SonicFoam",
@@ -39,21 +39,21 @@
     "device": "cuda:0",
     "finite": true,
     "U_max": 1000.0,
-    "time": 5.3
+    "time": 6.6
   },
   {
     "solver": "RhoSimpleFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 1000.0,
-    "time": 3.2
+    "time": 4.3
   },
   {
     "solver": "InterFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 1.0,
-    "time": 0.5
+    "time": 0.6
   },
   {
     "solver": "LaplacianFoam",
@@ -63,25 +63,32 @@
     "time": 0.0
   },
   {
+    "solver": "PotentialFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 16.0,
+    "time": 0.0
+  },
+  {
     "solver": "BoundaryFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 6.1131,
-    "time": 29.5
+    "time": 35.5
   },
   {
     "solver": "BuoyantPimpleFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 100.0,
-    "time": 9.6
+    "time": 11.9
   },
   {
     "solver": "BuoyantSimpleFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 100.0,
-    "time": 178.4
+    "time": 218.9
   },
   {
     "solver": "ReactingFoam",
@@ -109,76 +116,77 @@
     "device": "cuda:0",
     "finite": true,
     "U_max": 1.0,
-    "time": 179.5
+    "time": 59.5
   },
   {
     "solver": "CompressibleInterFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 381415.2048,
-    "time": 1.0
+    "time": 1.3
   },
   {
     "solver": "CompressibleVoFFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 917.8292,
-    "time": 10.5
+    "time": 13.0
   },
   {
     "solver": "FluidFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 1000.0,
-    "time": 9.2
+    "time": 11.1
   },
   {
     "solver": "MulticomponentFluidFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 1000.0,
-    "time": 9.3
+    "time": 11.4
   },
   {
     "solver": "IsothermalFluidFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 1000.0,
-    "time": 8.3
+    "time": 10.6
   },
   {
     "solver": "PorousSimpleFoam",
     "device": "cuda:0",
     "finite": true,
-    "U_max": 915.6614,
-    "time": 842.7
+    "U_max": 544051270195991.4,
+    "time": 1108.7
   },
   {
     "solver": "SrfSimpleFoam",
     "device": "cuda:0",
     "finite": true,
-    "U_max": 148.7445,
-    "time": 849.2
+    "U_max": 2036.6968,
+    "time": 1017.4
   },
   {
     "solver": "RhoCentralFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 298.5482,
-    "time": 0.1
+    "time": 0.0
   },
   {
     "solver": "ViscousFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 1.0,
-    "time": 62.3
+    "time": 92.9
   },
   {
     "solver": "DsmcFoam",
     "device": "cuda:0",
-    "finite": false,
-    "error": "Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!"
+    "finite": true,
+    "U_max": 547.4801,
+    "time": 2.3
   },
   {
     "solver": "CombustionFoam",
@@ -192,42 +200,42 @@
     "device": "cuda:0",
     "finite": true,
     "U_max": 509.3201,
-    "time": 0.4
+    "time": 0.5
   },
   {
     "solver": "HeatTransferFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 509.3201,
-    "time": 0.4
+    "time": 0.6
   },
   {
     "solver": "PDRFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 8.289616267009348e+69,
-    "time": 10.0
+    "time": 13.3
   },
   {
     "solver": "SprayFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 462559.4067,
-    "time": 8.5
+    "time": 10.6
   },
   {
     "solver": "DieselFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 462559.4067,
-    "time": 8.7
+    "time": 11.3
   },
   {
     "solver": "BuoyantBoussinesqSimpleFoam",
     "device": "cuda:0",
     "finite": true,
     "U_max": 30369.956,
-    "time": 200.4
+    "time": 220.3
   },
   {
     "solver": "CavitatingFoam",
@@ -269,20 +277,20 @@
     "device": "cuda:0",
     "finite": true,
     "U_max": 1000.0,
-    "time": 5.4
+    "time": 5.3
   },
   {
     "solver": "AcousticFoam",
     "device": "cuda:0",
     "finite": false,
-    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpwr9_7hs_\\0\\p'"
+    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpkhumt62x\\0\\p'"
   },
   {
     "solver": "ShallowWaterFoam",
     "device": "cuda:0",
     "finite": true,
-    "U_max": 1.0,
-    "time": 0.6
+    "U_max": 0.1315,
+    "time": 0.5
   },
   {
     "solver": "MultiphaseInterFoam",
@@ -336,6 +344,6 @@
     "device": "cuda:0",
     "finite": true,
     "U_max": 0.0,
-    "time": 1.0
+    "time": 1.1
   }
 ]
