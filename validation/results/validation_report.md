@@ -150,6 +150,5 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ## 八、已知限制
 
-1. **7 个求解器错误**: 缺少配置文件（AcousticFoam, MagneticFoam, MhdFoam, MultiphaseInterFoam, MultiphaseReactingFoam, ReactingMultiphaseFoam, ShallowWaterFoam）
-2. **Docker OpenFOAM**: Docker Desktop API 版本不兼容
-3. **GPU 小网格**: kernel 启动开销导致 GPU 慢于 CPU
+1. **Docker OpenFOAM**: Docker Desktop API 版本不兼容
+2. **GPU 小网格**: kernel 启动开销导致 GPU 慢于 CPU
