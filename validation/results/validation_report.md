@@ -54,12 +54,10 @@ RhoPorousSimpleFoam, FluidFoam, MulticomponentFluidFoam, IsothermalFluidFoam,
 PDRFoam, SprayFoam, DieselFoam, EnergyFoam, HeatTransferFoam, CHTSolver,
 ChemFoam, SolidFoam, DsmcFoam, BuoyantBoussinesqSimpleFoam, AcousticFoam
 
-### 4.2 零物理（19 个，需特定初始条件或专用配置）
+### 4.2 零物理（19 个，需特定初始条件）
 
-PotentialFoam (需 phi 场), MultiphaseEulerFoam (需非均匀 alpha),
-TwoPhaseEulerFoam (需 U1 场), SolidDisplacementFoam (需位移 BC),
-CHTMultiRegionFoam (需多区域网格), ElectrostaticFoam (需 Ve 场),
-FilmFoam (需薄膜配置), FinancialFoam (金融专用), MdFoam (分子动力学),
+PotentialFoam, MultiphaseEulerFoam, TwoPhaseEulerFoam, SolidDisplacementFoam,
+CHTMultiRegionFoam, ElectrostaticFoam, FilmFoam, FinancialFoam, MdFoam,
 AdjointFoam, AdjointShapeFoam, AdjointTurbulenceFoam,
 MultiphaseInterFoam, MultiphaseReactingFoam, ReactingMultiphaseFoam,
 MagneticFoam, MhdFoam, ViscousFoam, CombustionFoam, PorousInterFoam,
@@ -97,7 +95,6 @@ ShallowWaterFoam
 - 7/7 测试通过（含形状优化端到端）
 - 4x4/8x8/16x16 梯度均有限
 - 边界通量修正 + 3x 阻尼压力校正
-- BC 处理修复为显式 bc_mask
 
 ---
 
@@ -123,6 +120,6 @@ FvMatrix 矩阵运算 — 全部通过。
 ## 九、已知限制
 
 1. **Docker Desktop**: 无法启动（需用户手动重启或重装）
-2. **19 个零物理求解器**: 需要特定初始条件（多区域网格、位移 BC、phi 场等）
+2. **19 个零物理求解器**: 需要特定初始条件（多区域网格、位移 BC 等）
 3. **可微分大网格**: 16x16 使用 3x 阻尼压力校正
 4. **GPU 小网格**: kernel 启动开销导致 GPU 慢于 CPU
