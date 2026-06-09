@@ -72,13 +72,13 @@ PorousInterFoam, IncompressibleVoFFoam, IncompressibleDriftFluxFoam
 
 RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
-### 5.2 16 求解器 GPU 验证
+### 5.2 18 求解器 GPU 验证
 
-所有 16 个求解器在 CPU 和 GPU 上产生一致的有限结果：
-SimpleFoam, IncompressibleFluidFoam, IcoFoam, PisoFoam, PimpleFoam,
-BoundaryFoam, InterFoam, LaplacianFoam, ScalarTransportFoam,
-BuoyantPimpleFoam, BuoyantSimpleFoam, RhoSimpleFoam, SonicFoam,
-RhoPimpleFoam, CompressibleInterFoam, CompressibleVoFFoam
+所有 18 个求解器在 CPU 和 GPU 上产生一致的有限结果：
+SimpleFoam, IcoFoam, PisoFoam, PimpleFoam, BoundaryFoam, InterFoam,
+LaplacianFoam, ScalarTransportFoam, BuoyantPimpleFoam, BuoyantSimpleFoam,
+RhoSimpleFoam, SonicFoam, RhoPimpleFoam, CompressibleInterFoam,
+CompressibleVoFFoam, IncompressibleFluidFoam, ViscousFoam, FluidFoam
 
 ### 5.3 GPU CFD 精度验证
 
