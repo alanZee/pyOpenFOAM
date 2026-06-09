@@ -88,7 +88,7 @@ MagneticFoam, MhdFoam, SolidDisplacementFoam
 
 - 7/7 测试通过（含形状优化端到端）
 - 4x4/8x8/16x16 梯度均有限
-- 边界通量修正 + 3x 阻尼压力校正
+- 边界惩罚已修复（替代 3x 阻尼压力校正）
 
 ---
 
@@ -114,7 +114,6 @@ FvMatrix 矩阵运算 — 全部通过。
 ## 九、已知限制
 
 1. **Docker Desktop**: 需手动启动 daemon（已安装，OpenFOAM-13 参照对比待执行）
-2. **5 个零物理求解器**: 需特定配置（PotentialFoam 需势场 BC、AcousticFoam 需声源等）
+2. **5 个求解器需特定配置**: PotentialFoam (phi BC), AcousticFoam (p' BC), SolidDisplacementFoam (D BC), SolidEquilibriumDisplacementFoam, StressFoam
 3. **可微分求解器**: 边界惩罚已修复，4x4/8x8/16x16 梯度均有限
-4. **2 个未注册求解器**: SolidEquilibriumDisplacementFoam, StressFoam
-5. **CavitatingFoam**: 速度限制器 100 m/s，空化模型需进一步调参
+4. **CavitatingFoam**: 速度限制器 100 m/s，空化模型需进一步调参
