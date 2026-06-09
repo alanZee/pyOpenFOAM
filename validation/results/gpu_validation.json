@@ -1,0 +1,258 @@
+[
+  {
+    "device": "cpu",
+    "solver": "SimpleFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 8.335939878063426e-07,
+    "time": 10.4
+  },
+  {
+    "device": "cpu",
+    "solver": "IncompressibleFluidFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 1.0171731496206355e-06,
+    "time": 9.4
+  },
+  {
+    "device": "cpu",
+    "solver": "IcoFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 0.008159729286205425,
+    "time": 10.1
+  },
+  {
+    "device": "cpu",
+    "solver": "PisoFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 0.00038452612506467254,
+    "time": 5.7
+  },
+  {
+    "device": "cpu",
+    "solver": "PimpleFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 1.5873862348650805,
+    "time": 9.5
+  },
+  {
+    "device": "cpu",
+    "solver": "BoundaryFoam",
+    "finite": true,
+    "U_max": 6.1131,
+    "continuity": 0.7436079624938097,
+    "time": 3.8
+  },
+  {
+    "device": "cpu",
+    "solver": "InterFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 0.9396725864936304,
+    "time": 0.1
+  },
+  {
+    "device": "cpu",
+    "solver": "LaplacianFoam",
+    "finite": true,
+    "U_max": 0,
+    "continuity": 0.0,
+    "time": 0.0
+  },
+  {
+    "device": "cpu",
+    "solver": "ScalarTransportFoam",
+    "finite": true,
+    "U_max": 0.0,
+    "continuity": 0.0,
+    "time": 0.0
+  },
+  {
+    "device": "cpu",
+    "solver": "BuoyantPimpleFoam",
+    "finite": true,
+    "U_max": 100.0,
+    "continuity": 38.80098388303944,
+    "time": 1.1
+  },
+  {
+    "device": "cpu",
+    "solver": "BuoyantSimpleFoam",
+    "finite": true,
+    "U_max": 100.0,
+    "continuity": 0.35597340266794886,
+    "time": 19.6
+  },
+  {
+    "device": "cpu",
+    "solver": "RhoSimpleFoam",
+    "finite": true,
+    "U_max": 1000.0,
+    "continuity": 0.5608807024225662,
+    "time": 0.7
+  },
+  {
+    "device": "cpu",
+    "solver": "SonicFoam",
+    "finite": true,
+    "U_max": 1000.0,
+    "continuity": 497.5374700943229,
+    "time": 0.0
+  },
+  {
+    "device": "cpu",
+    "solver": "RhoPimpleFoam",
+    "finite": true,
+    "U_max": 1000.0,
+    "continuity": 741.4257752454763,
+    "time": 0.7
+  },
+  {
+    "device": "cpu",
+    "solver": "CompressibleInterFoam",
+    "finite": true,
+    "U_max": 381415.2048,
+    "continuity": 0.0,
+    "time": 0.1
+  },
+  {
+    "device": "cpu",
+    "solver": "CompressibleVoFFoam",
+    "finite": true,
+    "U_max": 917.8292,
+    "continuity": 4435.954363340123,
+    "time": 1.2
+  },
+  {
+    "device": "cuda:0",
+    "solver": "SimpleFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 7.035642033579682e-07,
+    "time": 59.3
+  },
+  {
+    "device": "cuda:0",
+    "solver": "IncompressibleFluidFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 6.666365162314472e-07,
+    "time": 46.0
+  },
+  {
+    "device": "cuda:0",
+    "solver": "IcoFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 0.008159729286205479,
+    "time": 74.9
+  },
+  {
+    "device": "cuda:0",
+    "solver": "PisoFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 0.00038452612506467286,
+    "time": 41.0
+  },
+  {
+    "device": "cuda:0",
+    "solver": "PimpleFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 1.5873862348650842,
+    "time": 61.0
+  },
+  {
+    "device": "cuda:0",
+    "solver": "BoundaryFoam",
+    "finite": true,
+    "U_max": 6.1131,
+    "continuity": 0.7436079624937876,
+    "time": 28.6
+  },
+  {
+    "device": "cuda:0",
+    "solver": "InterFoam",
+    "finite": true,
+    "U_max": 1.0,
+    "continuity": 0.9396725864936305,
+    "time": 0.5
+  },
+  {
+    "device": "cuda:0",
+    "solver": "LaplacianFoam",
+    "finite": true,
+    "U_max": 0,
+    "continuity": 0.0,
+    "time": 0.0
+  },
+  {
+    "device": "cuda:0",
+    "solver": "ScalarTransportFoam",
+    "finite": true,
+    "U_max": 0.0,
+    "continuity": 0.0,
+    "time": 0.0
+  },
+  {
+    "device": "cuda:0",
+    "solver": "BuoyantPimpleFoam",
+    "finite": true,
+    "U_max": 100.0,
+    "continuity": 39.96305059505036,
+    "time": 9.2
+  },
+  {
+    "device": "cuda:0",
+    "solver": "BuoyantSimpleFoam",
+    "finite": true,
+    "U_max": 100.0,
+    "continuity": 0.355973476609005,
+    "time": 175.4
+  },
+  {
+    "device": "cuda:0",
+    "solver": "RhoSimpleFoam",
+    "finite": true,
+    "U_max": 1000.0,
+    "continuity": 0.5608806954973518,
+    "time": 3.2
+  },
+  {
+    "device": "cuda:0",
+    "solver": "SonicFoam",
+    "finite": true,
+    "U_max": 1000.0,
+    "continuity": 497.5263790634026,
+    "time": 0.1
+  },
+  {
+    "device": "cuda:0",
+    "solver": "RhoPimpleFoam",
+    "finite": true,
+    "U_max": 1000.0,
+    "continuity": 741.3781746203942,
+    "time": 5.3
+  },
+  {
+    "device": "cuda:0",
+    "solver": "CompressibleInterFoam",
+    "finite": true,
+    "U_max": 381415.2048,
+    "continuity": 0.0,
+    "time": 0.9
+  },
+  {
+    "device": "cuda:0",
+    "solver": "CompressibleVoFFoam",
+    "finite": true,
+    "U_max": 917.8292,
+    "continuity": 4435.954319707896,
+    "time": 10.3
+  }
+]
