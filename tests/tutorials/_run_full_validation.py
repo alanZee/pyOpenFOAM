@@ -34,14 +34,38 @@ def make_full_case(tmp_dir, nu=0.01):
         ]
         write_foam_file(zero_dir / name, h, "\n".join(lines), overwrite=True)
 
-    ws("T", 400, "[0 0 0 1 0 0 0]")
+    # Temperature with gradient (400 at moving wall, 300 at fixed walls)
+    h_T = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
+                         class_name="volScalarField", location="0", object="T")
+    lines_T = [
+        "dimensions      [0 0 0 1 0 0 0];",
+        "internalField   uniform 350;",
+        "boundaryField {",
+        "    movingWall { type fixedValue; value uniform 400; }",
+        "    fixedWalls { type fixedValue; value uniform 300; }",
+        "    frontAndBack { type empty; }",
+        "}",
+    ]
+    write_foam_file(zero_dir / "T", h_T, "\n".join(lines_T), overwrite=True)
     ws("p", 101325, "[1 -1 -2 0 0 0 0]")
     ws("p_rgh", 101325, "[1 -1 -2 0 0 0 0]")
     ws("alpha.water", 0.5)
     ws("alpha.vapor", 0)
     ws("alpha", 0.3)
     ws("b", 1)
-    ws("C", 0)
+    # C with gradient (1 at moving wall)
+    h_C = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
+                         class_name="volScalarField", location="0", object="C")
+    lines_C = [
+        "dimensions      [0 0 0 0 0 0 0];",
+        "internalField   uniform 0;",
+        "boundaryField {",
+        "    movingWall { type fixedValue; value uniform 1; }",
+        "    fixedWalls { type zeroGradient; }",
+        "    frontAndBack { type empty; }",
+        "}",
+    ]
+    write_foam_file(zero_dir / "C", h_C, "\n".join(lines_C), overwrite=True)
     ws("Y", 1)
 
     # ReactingFoam species
@@ -76,6 +100,20 @@ def make_full_case(tmp_dir, nu=0.01):
         "}",
     ]
     write_foam_file(zero_dir / "phi", h_phi, "\n".join(lines_phi), overwrite=True)
+
+    # Displacement field for structural solvers
+    h_D = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
+                         class_name="volVectorField", location="0", object="D")
+    lines_D = [
+        "dimensions      [0 1 0 0 0 0 0];",
+        "internalField   uniform (0 0 0);",
+        "boundaryField {",
+        "    movingWall { type fixedValue; value uniform (0.001 0 0); }",
+        "    fixedWalls { type fixedValue; value uniform (0 0 0); }",
+        "    frontAndBack { type empty; }",
+        "}",
+    ]
+    write_foam_file(zero_dir / "D", h_D, "\n".join(lines_D), overwrite=True)
 
     h_up = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
                           class_name="volVectorField", location="0", object="u'")
