@@ -473,6 +473,11 @@ class MulticomponentFluidFoam(SolverBase):
                 grad_p = self._compute_grad(p, mesh)
                 U = HbyA - grad_p / A_p.abs().clamp(min=1e-30).unsqueeze(-1)
 
+                # Limit velocity to prevent divergence
+                U_mag = U.norm(dim=1, keepdim=True)
+                U_max_allowed = 1000.0
+                U = torch.where(U_mag > U_max_allowed, U * (U_max_allowed / U_mag.clamp(min=1e-30)), U)
+
                 p_P = gather(p, int_owner)
                 p_N = gather(p, int_neigh)
                 A_p_inv = 1.0 / A_p.abs().clamp(min=1e-30)
