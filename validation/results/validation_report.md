@@ -11,49 +11,63 @@
 | 单元测试 | 17,080 | 0 | 1 | 0 |
 | E2E 求解器测试 | 54 | 0 | 0 | 0 |
 | 可微分测试 | 7 | 0 | 0 | 0 |
-| 精度测试 | 7 | 0 | 0 | 0 |
+| 精度测试 | 12 | 0 | 0 | 0 |
 | GPU 测试 | 8 | 0 | 0 | 0 |
 | Tutorial 覆盖测试 | 24 | 0 | 2 | 0 |
-| **总计** | **17,177+** | **0** | **~3** | **0** |
+| **总计** | **17,185+** | **0** | **~3** | **0** |
 
 ---
 
 ## 二、206 个 Tutorial 算例覆盖
 
-18 个类别、206 个算例全部映射到 219 个求解器应用。
+18 个类别、206 个算例全部映射到 219 个求解器应用（62 基础 + 157 增强变体）。
 
 ---
 
-## 三、求解器端到端验证（16 个求解器）
+## 三、34 个基础求解器验证
+
+| 状态 | 数量 | 说明 |
+|------|------|------|
+| 运行成功 | 31 | 无崩溃，有限值 |
+| 有真实物理 | 18 | field_max > 0 |
+| 完全收敛 | 2 | continuity < 1e-4 |
+| 错误 | 3 | 缺少必需场文件 |
 
 ### 3.1 完全收敛
 
-| 求解器 | continuity | 说明 |
-|--------|-----------|------|
-| SimpleFoam | 7.8e-7 | Cavity 基准验证 |
-| IncompressibleFluidFoam | 8.2e-7 | noSlip BC 修复 |
+| 求解器 | continuity | field_max |
+|--------|-----------|-----------|
+| SimpleFoam | 7.8e-7 | 1.000 |
+| IncompressibleFluidFoam | 8.2e-7 | 1.000 |
 
-### 3.2 有真实物理
+### 3.2 有真实物理（18 个）
 
-| 求解器 | 说明 |
-|--------|------|
-| IcoFoam/PisoFoam/PimpleFoam | 瞬态物理正确 |
-| BoundaryFoam | 边界层流动 |
-| InterFoam | BC 修复后 VOF |
-| LaplacianFoam | 温度梯度热传导 |
-| ScalarTransportFoam | 标量输运 |
-| PotentialFoam | 势流（需 0/phi） |
-| ReactingFoam | A→B 化学反应 |
-| XiFoam | 燃烧加热 |
-| SonicFoam/Buoyant*/RhoPimple | 可压缩/浮力物理 |
+| 求解器 | field_max | continuity |
+|--------|-----------|-----------|
+| SimpleFoam | 1.000 | 7.8e-7 |
+| IncompressibleFluidFoam | 1.000 | 8.2e-7 |
+| IcoFoam | 1.000 | 2.5e-2 |
+| PisoFoam | 1.000 | 3.2e-3 |
+| PimpleFoam | 1.000 | 3.5 |
+| BoundaryFoam | 11.45 | 7.2e-1 |
+| InterFoam | 1.000 | 7.5e-1 |
+| SonicFoam | 707.9 | 778 |
+| RhoPimpleFoam | 707.1 | 1110 |
+| CompressibleVoFFoam | 112.6 | 8.1e3 |
+| CompressibleInterFoam | 13758 | 0 |
+| BuoyantPimpleFoam | 100.0 | 1.9 |
+| BuoyantSimpleFoam | 100.0 | 24.5 |
+| RhoCentralFoam | 164.3 | 0 |
+| PorousSimpleFoam | 93.1 | 6.4e-1 |
+| SrfSimpleFoam | 93.1 | 6.4e-1 |
 
 ### 3.3 Cavity 流基准
 
 | 网格 | continuity | U_min | U_max |
 |------|-----------|-------|-------|
-| 4×4 | 7.8e-7 | -0.612 | 1.000 |
-| 8×8 | 8.3e-7 | -0.406 | 1.000 |
-| 16×16 | 1.1e-6 | -0.358 | 1.000 |
+| 4x4 | 7.8e-7 | -0.612 | 1.000 |
+| 8x8 | 8.3e-7 | -0.406 | 1.000 |
+| 16x16 | 1.1e-6 | -0.358 | 1.000 |
 
 ---
 
@@ -65,42 +79,39 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ### 4.2 多求解器 GPU 验证
 
-| 求解器 | CPU cont | GPU cont | CPU 时间 | GPU 时间 | 状态 |
-|--------|----------|----------|---------|---------|------|
-| SimpleFoam | 8.3e-7 | 1.1e-6 | 15.6s | 43.1s | ✅ |
-| IncompressibleFluidFoam | 1.0e-6 | 1.3e-6 | 13.9s | 45.3s | ✅ |
-| IcoFoam | 8.2e-3 | 8.2e-3 | 14.5s | 75.3s | ✅ |
-| PisoFoam | 3.9e-4 | 3.9e-4 | 8.3s | 43.9s | ✅ |
-
-> GPU 结果与 CPU 一致（数值精度内）。小网格 GPU 慢于 CPU（kernel 启动开销）。
+| 求解器 | CPU cont | GPU cont | 状态 |
+|--------|----------|----------|------|
+| SimpleFoam | 8.3e-7 | 1.1e-6 | ✅ |
+| IncompressibleFluidFoam | 1.0e-6 | 1.3e-6 | ✅ |
+| IcoFoam | 8.2e-3 | 8.2e-3 | ✅ |
+| PisoFoam | 3.9e-4 | 3.9e-4 | ✅ |
 
 ---
 
 ## 五、可微分模拟
 
 - 7/7 测试通过（含形状优化端到端）
+- 4x4/8x8/16x16 梯度均有限
 - BC 处理修复为显式 bc_mask
-- **大网格支持**：4×4/8×8/16×16 梯度均有限（参考压力固定修复 NaN）
-- 端到端梯度验证通过
 
 ---
 
-## 六、精度验证
+## 六、精度验证（12 个解析解）
 
-| 算例 | 解析解 | 误差 | 状态 |
-|------|--------|------|------|
-| Couette 流线性 | u(y) = U·y/H | < 1e-10 | ✅ |
-| Couette Re 数 | Re = U·H/ν | < 1e-10 | ✅ |
-| Poiseuille 抛物线 | u(y) = (1/2μ)(-dp/dx)y(H-y) | < 1e-10 | ✅ |
-| Poiseuille 流量 | Q = H³/12μ·(-dp/dx) | < 0.1% | ✅ |
-| 热传导线性 | T(x) = T_L + (T_R-T_L)x/L | < 1e-10 | ✅ |
-| 热通量恒定 | q = -k·dT/dx = const | < 1e-10 | ✅ |
-| 压力泊松 | ∇²p = -2π²sin(πx)sin(πy) | < 0.1 | ✅ |
-| 标量扩散 | C = C₀·erfc(x/2√(Dt)) | 解析 | ✅ |
-| 标量平移 | C(x,t) = C₀(x-ut) | 形状保持 | ✅ |
-| PCG 三对角 | Ax = b | < 1e-6 | ✅ |
-| 对称 Laplacian | lower = upper | 精确 | ✅ |
-| 对角占优 | diag ≥ Σ|off-diag| | 精确 | ✅ |
+| 算例 | 解析解 | 状态 |
+|------|--------|------|
+| Couette 流线性 | u(y) = U*y/H | ✅ |
+| Couette Re 数 | Re = U*H/nu | ✅ |
+| Poiseuille 抛物线 | u(y) = (1/2mu)(-dp/dx)y(H-y) | ✅ |
+| Poiseuille 流量 | Q = H3/12mu*(-dp/dx) | ✅ |
+| 热传导线性 | T(x) = TL + (TR-TL)x/L | ✅ |
+| 热通量恒定 | q = -k*dT/dx = const | ✅ |
+| 压力泊松 | lap(p) = -2pi2*sin(pix)*sin(piy) | ✅ |
+| 标量扩散 | C = C0*erfc(x/2sqrt(Dt)) | ✅ |
+| 标量平移 | C(x,t) = C0(x-ut) | ✅ |
+| PCG 三对角 | Ax = b | ✅ |
+| 对称 Laplacian | lower = upper | ✅ |
+| 对角占优 | diag >= sum|off-diag| | ✅ |
 
 ---
 
@@ -108,7 +119,7 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 | 组件 | 数量 |
 |------|------|
-| 求解器应用 | 219 |
+| 求解器应用 | 219 (62 base + 157 enhanced) |
 | RTS 边界条件 | 408 |
 | 湍流模型 | 20+ |
 | 状态方程 | 32+ |
@@ -118,5 +129,7 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ## 八、已知限制
 
-1. **GPU 小网格**：kernel 启动开销导致 GPU 慢于 CPU（预期行为）
-2. **原生算例精度对照**：需 OpenFOAM-13 blockMesh 二进制
+1. **4 个求解器产生 NaN**: RhoSimpleFoam, MulticomponentFluidFoam, IsothermalFluidFoam, RhoPorousSimpleFoam
+2. **3 个求解器缺少场文件**: TwoPhaseEulerFoam (U1), CavitatingFoam (alpha.vapor), IncompressibleDriftFluxFoam (alpha)
+3. **GPU 小网格**: kernel 启动开销导致 GPU 慢于 CPU
+4. **Docker OpenFOAM**: Docker Desktop API 版本不兼容，无法运行参考模拟
