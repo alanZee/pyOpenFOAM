@@ -35,6 +35,7 @@ Usage::
 from __future__ import annotations
 
 import logging
+import re
 from pathlib import Path
 from typing import Any, Union
 
@@ -137,6 +138,40 @@ class IncompressibleVoFFoam(SolverBase):
             "mu1=%.2e, mu2=%.2e, sigma=%.3f, C_alpha=%.2f",
             rho1, rho2, mu1, mu2, sigma, C_alpha,
         )
+
+    def _build_boundary_conditions(self):
+        """从 0/U 边界场构建速度 BC 张量。"""
+        device = get_device()
+        dtype = get_default_dtype()
+        n_cells = self.mesh.n_cells
+        U_bc = torch.full((n_cells, 3), float("nan"), dtype=dtype, device=device)
+        U_field_data = self._U_data
+        boundary_field = U_field_data.boundary_field
+        if boundary_field is None or len(boundary_field) == 0:
+            return U_bc
+        mesh_boundary = self.case.boundary
+        owner = self.mesh.owner
+        mesh_patches = {}
+        for bp in mesh_boundary:
+            mesh_patches[bp.name] = {"startFace": bp.start_face, "nFaces": bp.n_faces}
+        for patch in boundary_field:
+            is_fixed = patch.patch_type == "fixedValue" and patch.value is not None
+            is_noslip = patch.patch_type == "noSlip"
+            if is_fixed or is_noslip:
+                if is_fixed:
+                    match = re.search(r"\(\s*([\d.eE+\-]+)\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)\s*\)", str(patch.value))
+                    value = (float(match.group(1)), float(match.group(2)), float(match.group(3))) if match else None
+                else:
+                    value = (0.0, 0.0, 0.0)
+                if value is not None:
+                    mesh_info = mesh_patches.get(patch.name)
+                    if mesh_info is not None:
+                        sf = mesh_info["startFace"]
+                        nf = mesh_info["nFaces"]
+                        for i in range(nf):
+                            cell_idx = owner[sf + i].item()
+                            U_bc[cell_idx] = torch.tensor(value, dtype=dtype)
+        return U_bc
 
     def _read_fv_solution_settings(self) -> None:
         """从 fvSolution 读取 PIMPLE 设置。"""
@@ -300,6 +335,10 @@ class IncompressibleVoFFoam(SolverBase):
         # ============================================================
         n_outer = min(self.n_outer_correctors, self.max_outer_iterations)
 
+        # 构建边界条件
+        U_bc = self._build_boundary_conditions()
+        bc_mask = ~torch.isnan(U_bc[:, 0])
+
         for outer in range(n_outer):
             U_prev = U.clone()
             p_prev = p.clone()
@@ -308,6 +347,10 @@ class IncompressibleVoFFoam(SolverBase):
             U, A_p, H = self._momentum_predictor(
                 U, p, phi, rho, mu_mix, alpha,
             )
+
+            # 应用边界条件
+            if bc_mask.any():
+                U[bc_mask] = U_bc[bc_mask]
 
             # PISO 校正循环
             for corr in range(self.n_correctors):
@@ -332,6 +375,10 @@ class IncompressibleVoFFoam(SolverBase):
                 # 速度校正
                 grad_p = self._compute_grad(p, mesh)
                 U = HbyA - grad_p / A_p.abs().clamp(min=1e-30).unsqueeze(-1)
+
+                # 应用边界条件
+                if bc_mask.any():
+                    U[bc_mask] = U_bc[bc_mask]
 
                 # 通量校正
                 p_P = gather(p, int_owner)

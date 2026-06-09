@@ -111,6 +111,34 @@ def _make_cavity_case(tmp_dir: str, nu: float = 0.01, p_init: float = 0.0) -> Pa
     ]
     write_foam_file(zero_dir / "alpha.water", h_alpha, "\n".join(lines_alpha), overwrite=True)
 
+    # alpha.vapor 场（CavitatingFoam 需要）
+    h_alpha_vapor = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
+                             class_name="volScalarField", location="0", object="alpha.vapor")
+    lines_alpha_vapor = [
+        "dimensions      [0 0 0 0 0 0 0];",
+        "internalField   uniform 0;",
+        "boundaryField {",
+        "    movingWall { type zeroGradient; }",
+        "    fixedWalls { type zeroGradient; }",
+        "    frontAndBack { type empty; }",
+        "}",
+    ]
+    write_foam_file(zero_dir / "alpha.vapor", h_alpha_vapor, "\n".join(lines_alpha_vapor), overwrite=True)
+
+    # alpha 场（DriftFlux 求解器需要，非均匀初始值驱动漂移通量）
+    h_alpha_df = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
+                             class_name="volScalarField", location="0", object="alpha")
+    lines_alpha_df = [
+        "dimensions      [0 0 0 0 0 0 0];",
+        "internalField   uniform 0.3;",
+        "boundaryField {",
+        "    movingWall { type zeroGradient; }",
+        "    fixedWalls { type zeroGradient; }",
+        "    frontAndBack { type empty; }",
+        "}",
+    ]
+    write_foam_file(zero_dir / "alpha", h_alpha_df, "\n".join(lines_alpha_df), overwrite=True)
+
     # p_rgh 场（可压缩/VOF 求解器需要）
     h_prgh = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
                             class_name="volScalarField", location="0", object="p_rgh")

@@ -22,6 +22,7 @@ Usage::
 from __future__ import annotations
 
 import logging
+import re
 from pathlib import Path
 from typing import Any, Union
 
@@ -104,6 +105,40 @@ class CavitatingFoam(SolverBase):
         self.cavitation_model = SchnerrSauer(n_b=n_b, p_v=p_v)
 
         logger.info("CavitatingFoam ready")
+
+    def _build_boundary_conditions(self):
+        """从 0/U 边界场构建速度 BC 张量。"""
+        device = get_device()
+        dtype = get_default_dtype()
+        n_cells = self.mesh.n_cells
+        U_bc = torch.full((n_cells, 3), float("nan"), dtype=dtype, device=device)
+        U_field_data = self._U_data
+        boundary_field = U_field_data.boundary_field
+        if boundary_field is None or len(boundary_field) == 0:
+            return U_bc
+        mesh_boundary = self.case.boundary
+        owner = self.mesh.owner
+        mesh_patches = {}
+        for bp in mesh_boundary:
+            mesh_patches[bp.name] = {"startFace": bp.start_face, "nFaces": bp.n_faces}
+        for patch in boundary_field:
+            is_fixed = patch.patch_type == "fixedValue" and patch.value is not None
+            is_noslip = patch.patch_type == "noSlip"
+            if is_fixed or is_noslip:
+                if is_fixed:
+                    match = re.search(r"\(\s*([\d.eE+\-]+)\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)\s*\)", str(patch.value))
+                    value = (float(match.group(1)), float(match.group(2)), float(match.group(3))) if match else None
+                else:
+                    value = (0.0, 0.0, 0.0)
+                if value is not None:
+                    mesh_info = mesh_patches.get(patch.name)
+                    if mesh_info is not None:
+                        sf = mesh_info["startFace"]
+                        nf = mesh_info["nFaces"]
+                        for i in range(nf):
+                            cell_idx = owner[sf + i].item()
+                            U_bc[cell_idx] = torch.tensor(value, dtype=dtype)
+        return U_bc
 
     def _read_fv_solution_settings(self):
         fv = self.case.fvSolution
@@ -190,6 +225,10 @@ class CavitatingFoam(SolverBase):
 
         n_outer = min(self.n_outer_correctors, self.max_outer_iterations)
 
+        # 构建边界条件
+        U_bc = self._build_boundary_conditions()
+        bc_mask = ~torch.isnan(U_bc[:, 0])
+
         for outer in range(n_outer):
             U_prev = U.clone()
             p_prev = p.clone()
@@ -214,18 +253,26 @@ class CavitatingFoam(SolverBase):
             rho = self._compute_mixture_rho(alpha)
             mu_mix = self._compute_mixture_mu(alpha)
 
-            # Momentum predictor (simplified, like interFoam)
-            A_p = torch.ones(mesh.n_cells, dtype=dtype, device=device)
+            # 动量预测（完整的对流-扩散-时间项组装）
+            U, A_p, H = self._momentum_predictor(
+                U, p, phi, rho, mu_mix, alpha,
+            )
 
-            # PISO pressure-velocity coupling
+            # 应用边界条件
+            if bc_mask.any():
+                U[bc_mask] = U_bc[bc_mask]
+
+            # 速度限制器（防止发散）
+            U_mag = U.norm(dim=1, keepdim=True).clamp(min=1e-30)
+            U_limit = 100.0
+            U = torch.where(U_mag > U_limit, U * (U_limit / U_mag), U)
             n_internal = mesh.n_internal_faces
             int_owner = mesh.owner[:n_internal]
             int_neigh = mesh.neighbour
             w = mesh.face_weights[:n_internal]
 
             for corr in range(self.n_correctors):
-                # HbyA ≈ U (simplified: no momentum source assembly)
-                HbyA = U
+                HbyA = H / A_p.abs().clamp(min=1e-30).unsqueeze(-1)
 
                 # Face flux from HbyA interpolation
                 HbyA_face = (
@@ -248,7 +295,23 @@ class CavitatingFoam(SolverBase):
 
                 # Correct velocity and face flux
                 U = correct_velocity(U, HbyA, p, A_p, mesh)
+                if bc_mask.any():
+                    U[bc_mask] = U_bc[bc_mask]
                 phi = correct_face_flux(phi_full, p, A_p, mesh)
+
+                # Recompute H for next correction
+                if corr < self.n_correctors - 1:
+                    H = self._recompute_H(U, phi, rho, mu_mix)
+
+            # Under-relaxation
+            if self.alpha_U < 1.0:
+                U = self.alpha_U * U + (1.0 - self.alpha_U) * U_prev
+            if self.alpha_p < 1.0:
+                p = self.alpha_p * p + (1.0 - self.alpha_p) * p_prev
+
+            # 速度限制器
+            U_mag = U.norm(dim=1, keepdim=True).clamp(min=1e-30)
+            U = torch.where(U_mag > U_limit, U * (U_limit / U_mag), U)
 
             # Convergence
             U_residual = self._compute_residual(U, U_prev)
@@ -258,6 +321,121 @@ class CavitatingFoam(SolverBase):
             convergence.outer_iterations = outer + 1
 
         return U, p, alpha, phi, convergence
+
+    def _momentum_predictor(
+        self, U, p, phi, rho, mu_mix, alpha,
+    ):
+        """求解混合物动量方程。"""
+        mesh = self.mesh
+        device = get_device()
+        dtype = get_default_dtype()
+
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        int_owner = mesh.owner[:n_internal]
+        int_neigh = mesh.neighbour
+        cell_volumes = mesh.cell_volumes
+        face_areas = mesh.face_areas
+        delta_coeffs = mesh.delta_coefficients
+
+        # 粘性扩散
+        mu_face = 0.5 * (gather(mu_mix, int_owner) + gather(mu_mix, int_neigh))
+        S_mag = face_areas[:n_internal].norm(dim=1)
+        delta_f = delta_coeffs[:n_internal]
+        diff_coeff = mu_face * S_mag * delta_f
+
+        # 对流项（迎风格式）
+        flux = phi[:n_internal]
+        rho_P = gather(rho, int_owner)
+        rho_N = gather(rho, int_neigh)
+        rho_face = torch.where(flux >= 0, rho_P, rho_N)
+
+        flux_pos = torch.where(flux >= 0, flux, torch.zeros_like(flux))
+        flux_neg = torch.where(flux < 0, flux, torch.zeros_like(flux))
+
+        cell_volumes_safe = cell_volumes.clamp(min=1e-30)
+        V_P = gather(cell_volumes_safe, int_owner)
+        V_N = gather(cell_volumes_safe, int_neigh)
+
+        # 时间导数项
+        dt = self.delta_t
+        rho_V_dt = rho * cell_volumes / dt
+
+        lower = (-diff_coeff + flux_neg * rho_face) / V_P
+        upper = (-diff_coeff - flux_pos * rho_face) / V_N
+
+        A_p = torch.zeros(n_cells, dtype=dtype, device=device)
+        A_p = A_p + scatter_add(
+            (diff_coeff - flux_neg * rho_face) / V_P, int_owner, n_cells,
+        )
+        A_p = A_p + scatter_add(
+            (diff_coeff + flux_pos * rho_face) / V_N, int_neigh, n_cells,
+        )
+        A_p = A_p + rho_V_dt
+
+        # H(U)
+        H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        H.index_add_(0, int_owner,
+                      lower.unsqueeze(-1) * U[int_neigh] * V_P.unsqueeze(-1))
+        H.index_add_(0, int_neigh,
+                      upper.unsqueeze(-1) * U[int_owner] * V_N.unsqueeze(-1))
+        H = H + rho_V_dt.unsqueeze(-1) * self.U
+
+        # 压力梯度
+        w = mesh.face_weights[:n_internal]
+        p_P = gather(p, int_owner)
+        p_N = gather(p, int_neigh)
+        p_face = w * p_P + (1.0 - w) * p_N
+        p_contrib = p_face.unsqueeze(-1) * face_areas[:n_internal]
+
+        grad_p = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        grad_p.index_add_(0, int_owner, p_contrib)
+        grad_p.index_add_(0, int_neigh, -p_contrib)
+
+        source = H - grad_p
+
+        A_p_safe = A_p.abs().clamp(min=1e-30)
+        U_solved = source / A_p_safe.unsqueeze(-1)
+        U_new = self.alpha_U * U_solved + (1.0 - self.alpha_U) * U
+
+        return U_new, A_p, H
+
+    def _recompute_H(self, U, phi, rho, mu_mix):
+        """从校正后的速度重算 H(U)。"""
+        mesh = self.mesh
+        device = get_device()
+        dtype = get_default_dtype()
+
+        n_cells = mesh.n_cells
+        n_internal = mesh.n_internal_faces
+        int_owner = mesh.owner[:n_internal]
+        int_neigh = mesh.neighbour
+
+        mu_face = 0.5 * (gather(mu_mix, int_owner) + gather(mu_mix, int_neigh))
+        S_mag = mesh.face_areas[:n_internal].norm(dim=1)
+        delta_f = mesh.delta_coefficients[:n_internal]
+        diff_coeff = mu_face * S_mag * delta_f
+
+        flux = phi[:n_internal]
+        rho_P = gather(rho, int_owner)
+        rho_N = gather(rho, int_neigh)
+        rho_face = torch.where(flux >= 0, rho_P, rho_N)
+
+        flux_pos = torch.where(flux >= 0, flux, torch.zeros_like(flux))
+        flux_neg = torch.where(flux < 0, flux, torch.zeros_like(flux))
+
+        V_P = gather(mesh.cell_volumes.clamp(min=1e-30), int_owner)
+        V_N = gather(mesh.cell_volumes.clamp(min=1e-30), int_neigh)
+
+        lower = (-diff_coeff + flux_neg * rho_face) / V_P
+        upper = (-diff_coeff - flux_pos * rho_face) / V_N
+
+        H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
+        H.index_add_(0, int_owner,
+                      lower.unsqueeze(-1) * U[int_neigh] * V_P.unsqueeze(-1))
+        H.index_add_(0, int_neigh,
+                      upper.unsqueeze(-1) * U[int_owner] * V_N.unsqueeze(-1))
+        return H
 
     def _compute_residual(self, field, field_old):
         diff = field - field_old
