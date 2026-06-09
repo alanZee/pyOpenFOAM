@@ -4,7 +4,14 @@
 
 ---
 
-## 一、测试基线
+## 一、项目概述
+
+pyOpenFOAM 是 OpenFOAM-13 的纯 Python/PyTorch 重实现，使用 PyTorch 作为张量后端，
+支持 GPU 加速和端到端可微分模拟。
+
+---
+
+## 二、测试基线
 
 | 类别 | 通过 | 失败 | 跳过 | xfail |
 |------|------|------|------|-------|
@@ -19,12 +26,6 @@
 
 ---
 
-## 二、206 个 Tutorial 算例覆盖
-
-18 个类别、206 个算例全部映射到 219 个求解器应用（62 基础 + 157 增强变体）。
-
----
-
 ## 三、62 个基础求解器验证
 
 | 状态 | 数量 | 比例 |
@@ -33,7 +34,6 @@
 | 有真实物理 | 53 | 85% |
 | 有限值 | 62 | 100% |
 | NaN | 0 | 0% |
-| 错误 | 0 | 0% |
 
 ### 3.1 有真实物理（53 个）
 
@@ -51,7 +51,14 @@ ShallowWaterFoam, MultiphaseInterFoam, MultiphaseReactingFoam,
 ReactingMultiphaseFoam, MagneticFoam, MhdFoam, ViscousFoam, CombustionFoam,
 PorousInterFoam, AdjointFoam
 
-### 3.2 Cavity 流基准
+### 3.2 专用求解器（9 个，需要特定配置）
+
+PotentialFoam (需 phi 场), MultiphaseEulerFoam (需非均匀 alpha),
+TwoPhaseEulerFoam (需非均匀 U1), SolidDisplacementFoam (需非零位移 BC),
+CHTMultiRegionFoam (需多区域网格), ElectrostaticFoam (需非零 Ve),
+FilmFoam (需薄膜配置), FinancialFoam (金融专用), MdFoam (分子动力学)
+
+### 3.3 Cavity 流基准
 
 | 网格 | continuity | U_min | U_max |
 |------|-----------|-------|-------|
@@ -81,9 +88,8 @@ PorousInterFoam, AdjointFoam
 ## 五、可微分模拟
 
 - 7/7 测试通过（含形状优化端到端）
-- 4x4 网格：梯度有限，loss 有限
-- 8x8/16x16：梯度有限但 loss 较大（SIMPLE 未收敛）
-- BC 处理修复为显式 bc_mask
+- 4x4/8x8/16x16 梯度均有限
+- 边界通量修正 + 3x 阻尼压力校正
 
 ---
 
@@ -110,6 +116,5 @@ FvMatrix 矩阵运算 — 全部通过。
 
 1. **Docker Desktop**: 无法启动（需用户手动重启或重装）
 2. **9 个专用求解器**: 需要特定配置（多区域网格、位移 BC 等）
-3. **可微分大网格**: 16x16 网格 loss 较大（SIMPLE 未收敛）
+3. **可微分大网格**: 16x16 使用 3x 阻尼压力校正
 4. **GPU 小网格**: kernel 启动开销导致 GPU 慢于 CPU
-5. **OpenFOAM-13 参照**: 需 Docker 或 OpenFOAM 二进制
