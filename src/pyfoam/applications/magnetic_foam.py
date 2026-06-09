@@ -202,14 +202,20 @@ class MagneticFoam(SolverBase):
         """Store raw FieldData for writing."""
         try:
             A_data = self.case.read_field("A", 0)
+            if A_data.scalar_type == "scalar":
+                A_data = None
         except Exception:
             A_data = None
         try:
             B_data = self.case.read_field("B", 0)
+            if B_data.scalar_type == "scalar":
+                B_data = None
         except Exception:
             B_data = None
         try:
             J_data = self.case.read_field("J", 0)
+            if J_data.scalar_type == "scalar":
+                J_data = None
         except Exception:
             J_data = None
         return A_data, B_data, J_data

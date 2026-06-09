@@ -250,6 +250,8 @@ class MhdFoam(SolverBase):
         try:
             B_tensor, _ = self.read_field_tensor("B", 0)
             B = B_tensor.to(device=device, dtype=dtype)
+            if B.dim() < 2:
+                B = torch.zeros(n_cells, 3, dtype=dtype, device=device)
         except Exception:
             B = torch.zeros(n_cells, 3, dtype=dtype, device=device)
 
@@ -270,6 +272,8 @@ class MhdFoam(SolverBase):
             p_data = None
         try:
             B_data = self.case.read_field("B", 0)
+            if B_data.scalar_type == "scalar":
+                B_data = None
         except Exception:
             B_data = None
         return U_data, p_data, B_data
