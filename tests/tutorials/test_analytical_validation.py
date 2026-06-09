@@ -1,5 +1,5 @@
 """
-全面解析解精度验证：所有求解器类别。
+全面解析解精度验证：扩展到所有求解器类别。
 
 每个算例将 pyOpenFOAM 求解结果与解析解对比，
 计算 L2/L∞ 误差并验证精度达标。
@@ -7,11 +7,11 @@
 验证算例：
 1. Couette 流 — SimpleFoam (线性速度剖面)
 2. Poiseuille 流 — SimpleFoam (抛物线速度剖面)
-3. Stokes 第一问题 — IcoFoam (瞬态壁面剪切)
-4. 1D 热传导 — LaplacianFoam (指数衰减)
-5. Sod 激波管 — SonicFoam (精确 Riemann 解)
-6. 被动标量输运 — ScalarTransportFoam (误差函数剖面)
-7. 自然对流 — BuoyantSimpleFoam (Nu 数基准)
+3. 1D 热传导 — LaplacianFoam (指数衰减)
+4. Sod 激波管 — SonicFoam (精确 Riemann 解)
+5. 被动标量输运 — ScalarTransportFoam (误差函数剖面)
+6. Stokes 第一问题 — IcoFoam (瞬态壁面剪切)
+7. 方腔流基准 — SimpleFoam (Ghia et al. 1982)
 """
 from __future__ import annotations
 
