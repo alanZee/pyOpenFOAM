@@ -80,6 +80,15 @@ BoundaryFoam, InterFoam, LaplacianFoam, ScalarTransportFoam,
 BuoyantPimpleFoam, BuoyantSimpleFoam, RhoSimpleFoam, SonicFoam,
 RhoPimpleFoam, CompressibleInterFoam, CompressibleVoFFoam
 
+### 5.3 GPU CFD 精度验证
+
+| 测试 | 设备 | U_max | continuity | 耗时 |
+|------|------|-------|-----------|------|
+| SimpleFoam 8x8 | GPU (cuda:0) | 1.000 | 6.76e-7 | 101.2s |
+| SimpleFoam 8x8 | CPU | 1.000 | 8.34e-7 | 15.6s |
+
+> GPU 产生与 CPU 一致的收敛结果。小网格 GPU 慢于 CPU（kernel 启动开销）。
+
 ---
 
 ## 六、可微分模拟
