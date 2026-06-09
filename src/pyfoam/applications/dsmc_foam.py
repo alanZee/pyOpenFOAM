@@ -166,8 +166,8 @@ class DsmcFoam(SolverBase):
         dtype = get_default_dtype()
 
         # 网格几何缓存（必须在粒子初始化之前设置）
-        self._cell_centres = self.mesh.cell_centres
-        self._cell_volumes = self.mesh.cell_volumes
+        self._cell_centres = self.mesh.cell_centres.to(device=device)
+        self._cell_volumes = self.mesh.cell_volumes.to(device=device)
 
         # 宏观量（从粒子统计采样得到）
         self.rho = torch.zeros(self.n_cells, dtype=dtype, device=device)
