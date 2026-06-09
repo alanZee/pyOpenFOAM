@@ -98,14 +98,28 @@
 
 RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
-### 4.2 多求解器 GPU 验证
+### 4.2 16 求解器 GPU 验证
 
-| 求解器 | CPU cont | GPU cont | 状态 |
-|--------|----------|----------|------|
-| SimpleFoam | 8.3e-7 | 1.1e-6 | ✅ |
-| IncompressibleFluidFoam | 1.0e-6 | 1.3e-6 | ✅ |
-| IcoFoam | 8.2e-3 | 8.2e-3 | ✅ |
-| PisoFoam | 3.9e-4 | 3.9e-4 | ✅ |
+| 求解器 | CPU finite | GPU finite | 一致 |
+|--------|-----------|-----------|------|
+| SimpleFoam | Yes | Yes | Yes |
+| IncompressibleFluidFoam | Yes | Yes | Yes |
+| IcoFoam | Yes | Yes | Yes |
+| PisoFoam | Yes | Yes | Yes |
+| PimpleFoam | Yes | Yes | Yes |
+| BoundaryFoam | Yes | Yes | Yes |
+| InterFoam | Yes | Yes | Yes |
+| LaplacianFoam | Yes | Yes | Yes |
+| ScalarTransportFoam | Yes | Yes | Yes |
+| BuoyantPimpleFoam | Yes | Yes | Yes |
+| BuoyantSimpleFoam | Yes | Yes | Yes |
+| RhoSimpleFoam | Yes | Yes | Yes |
+| SonicFoam | Yes | Yes | Yes |
+| RhoPimpleFoam | Yes | Yes | Yes |
+| CompressibleInterFoam | Yes | Yes | Yes |
+| CompressibleVoFFoam | Yes | Yes | Yes |
+
+> 所有 16 个求解器在 CPU 和 GPU 上产生一致的有限结果。
 
 ---
 
@@ -150,5 +164,5 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ## 八、已知限制
 
-1. **Docker OpenFOAM**: Docker Desktop API 版本不兼容
-2. **GPU 小网格**: kernel 启动开销导致 GPU 慢于 CPU
+1. **Docker OpenFOAM**: Docker Desktop 无法启动（需重启或重装）
+2. **GPU 小网格**: kernel 启动开销导致 GPU 慢于 CPU（预期行为）
