@@ -1,0 +1,341 @@
+[
+  {
+    "solver": "SimpleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1.0,
+    "time": 83.7
+  },
+  {
+    "solver": "IcoFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1.0,
+    "time": 65.3
+  },
+  {
+    "solver": "PisoFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1.0,
+    "time": 37.4
+  },
+  {
+    "solver": "PimpleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1.0,
+    "time": 60.5
+  },
+  {
+    "solver": "SonicFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1000.0,
+    "time": 0.1
+  },
+  {
+    "solver": "RhoPimpleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1000.0,
+    "time": 5.3
+  },
+  {
+    "solver": "RhoSimpleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1000.0,
+    "time": 3.2
+  },
+  {
+    "solver": "InterFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1.0,
+    "time": 0.5
+  },
+  {
+    "solver": "LaplacianFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 300.0,
+    "time": 0.0
+  },
+  {
+    "solver": "BoundaryFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 6.1131,
+    "time": 29.5
+  },
+  {
+    "solver": "BuoyantPimpleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 100.0,
+    "time": 9.6
+  },
+  {
+    "solver": "BuoyantSimpleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 100.0,
+    "time": 178.4
+  },
+  {
+    "solver": "ReactingFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.1
+  },
+  {
+    "solver": "XiFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.0
+  },
+  {
+    "solver": "ScalarTransportFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.0
+  },
+  {
+    "solver": "IncompressibleFluidFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1.0,
+    "time": 179.5
+  },
+  {
+    "solver": "CompressibleInterFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 381415.2048,
+    "time": 1.0
+  },
+  {
+    "solver": "CompressibleVoFFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 917.8292,
+    "time": 10.5
+  },
+  {
+    "solver": "FluidFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1000.0,
+    "time": 9.2
+  },
+  {
+    "solver": "MulticomponentFluidFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1000.0,
+    "time": 9.3
+  },
+  {
+    "solver": "IsothermalFluidFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1000.0,
+    "time": 8.3
+  },
+  {
+    "solver": "PorousSimpleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 915.6614,
+    "time": 842.7
+  },
+  {
+    "solver": "SrfSimpleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 148.7445,
+    "time": 849.2
+  },
+  {
+    "solver": "RhoCentralFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 298.5482,
+    "time": 0.1
+  },
+  {
+    "solver": "ViscousFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1.0,
+    "time": 62.3
+  },
+  {
+    "solver": "DsmcFoam",
+    "device": "cuda:0",
+    "finite": false,
+    "error": "Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!"
+  },
+  {
+    "solver": "CombustionFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.1
+  },
+  {
+    "solver": "EnergyFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 509.3201,
+    "time": 0.4
+  },
+  {
+    "solver": "HeatTransferFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 509.3201,
+    "time": 0.4
+  },
+  {
+    "solver": "PDRFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 8.289616267009348e+69,
+    "time": 10.0
+  },
+  {
+    "solver": "SprayFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 462559.4067,
+    "time": 8.5
+  },
+  {
+    "solver": "DieselFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 462559.4067,
+    "time": 8.7
+  },
+  {
+    "solver": "BuoyantBoussinesqSimpleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 30369.956,
+    "time": 200.4
+  },
+  {
+    "solver": "CavitatingFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.2
+  },
+  {
+    "solver": "DenseParticleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.0
+  },
+  {
+    "solver": "IncompressibleDriftFluxFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.0
+  },
+  {
+    "solver": "IncompressibleVoFFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.0
+  },
+  {
+    "solver": "CompressibleMultiphaseVoFFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.0
+  },
+  {
+    "solver": "RhoPorousSimpleFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1000.0,
+    "time": 5.4
+  },
+  {
+    "solver": "AcousticFoam",
+    "device": "cuda:0",
+    "finite": false,
+    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpwr9_7hs_\\0\\p'"
+  },
+  {
+    "solver": "ShallowWaterFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 1.0,
+    "time": 0.6
+  },
+  {
+    "solver": "MultiphaseInterFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.0
+  },
+  {
+    "solver": "MultiphaseReactingFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 300.0,
+    "time": 0.0
+  },
+  {
+    "solver": "ReactingMultiphaseFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 300.0,
+    "time": 0.0
+  },
+  {
+    "solver": "MagneticFoam",
+    "device": "cuda:0",
+    "finite": false,
+    "error": "a Tensor with 3 elements cannot be converted to Scalar"
+  },
+  {
+    "solver": "MhdFoam",
+    "device": "cuda:0",
+    "finite": false,
+    "error": "too many indices for tensor of dimension 1"
+  },
+  {
+    "solver": "AdjointFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.0
+  },
+  {
+    "solver": "AdjointShapeFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 0.0
+  },
+  {
+    "solver": "AdjointTurbulenceFoam",
+    "device": "cuda:0",
+    "finite": true,
+    "U_max": 0.0,
+    "time": 1.0
+  }
+]
