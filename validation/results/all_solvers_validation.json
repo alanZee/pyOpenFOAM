@@ -1,0 +1,477 @@
+[
+  {
+    "solver": "SimpleFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 2.6391659272731693e-07,
+    "elapsed": 1.374
+  },
+  {
+    "solver": "IcoFoam",
+    "status": "OK",
+    "field_max": 0.10028963748714845,
+    "finite": true,
+    "continuity": 0.2006481735406394,
+    "elapsed": 1.738
+  },
+  {
+    "solver": "PisoFoam",
+    "status": "OK",
+    "field_max": 0.10031693810582633,
+    "finite": true,
+    "continuity": 0.0014673110189832449,
+    "elapsed": 1.028
+  },
+  {
+    "solver": "PimpleFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.316455696092266,
+    "elapsed": 1.414
+  },
+  {
+    "solver": "SonicFoam",
+    "status": "OK",
+    "field_max": 707.8634307017326,
+    "finite": true,
+    "continuity": 765.2553997915039,
+    "elapsed": 0.027
+  },
+  {
+    "solver": "RhoPimpleFoam",
+    "status": "OK",
+    "field_max": 707.1133738415627,
+    "finite": true,
+    "continuity": 1092.1768479111818,
+    "elapsed": 0.393
+  },
+  {
+    "solver": "RhoSimpleFoam",
+    "status": "OK",
+    "field_max": 999.9999999324427,
+    "finite": true,
+    "continuity": 1.346712283282568,
+    "elapsed": 0.781
+  },
+  {
+    "solver": "InterFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.007542117268340053,
+    "elapsed": 0.065
+  },
+  {
+    "solver": "LaplacianFoam",
+    "status": "OK",
+    "field_max": 300.0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.002
+  },
+  {
+    "solver": "PotentialFoam",
+    "status": "OK",
+    "field_max": 0.0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.004
+  },
+  {
+    "solver": "BoundaryFoam",
+    "status": "OK",
+    "field_max": 1.1450533337715565,
+    "finite": true,
+    "continuity": 0.07207423956432026,
+    "elapsed": 1.434
+  },
+  {
+    "solver": "BuoyantPimpleFoam",
+    "status": "OK",
+    "field_max": 99.99999856654385,
+    "finite": true,
+    "continuity": 14.88486138017395,
+    "elapsed": 1.247
+  },
+  {
+    "solver": "BuoyantSimpleFoam",
+    "status": "OK",
+    "field_max": 99.99999999999572,
+    "finite": true,
+    "continuity": 22.754058711518944,
+    "elapsed": 22.772
+  },
+  {
+    "solver": "ReactingFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.019
+  },
+  {
+    "solver": "XiFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.007
+  },
+  {
+    "solver": "ScalarTransportFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.004
+  },
+  {
+    "solver": "IncompressibleFluidFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 3.012718833531142e-07,
+    "elapsed": 1.284
+  },
+  {
+    "solver": "CompressibleInterFoam",
+    "status": "OK",
+    "field_max": 13805.965716070885,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.058
+  },
+  {
+    "solver": "MultiphaseEulerFoam",
+    "status": "OK",
+    "field_max": 0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.007
+  },
+  {
+    "solver": "TwoPhaseEulerFoam",
+    "status": "OK",
+    "field_max": 0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.008
+  },
+  {
+    "solver": "CompressibleVoFFoam",
+    "status": "OK",
+    "field_max": 112.7208494569199,
+    "finite": true,
+    "continuity": 8082.048656240857,
+    "elapsed": 1.352
+  },
+  {
+    "solver": "FluidFoam",
+    "status": "OK",
+    "field_max": NaN,
+    "finite": false,
+    "continuity": NaN,
+    "elapsed": 0.272
+  },
+  {
+    "solver": "MulticomponentFluidFoam",
+    "status": "OK",
+    "field_max": 999.9999856467625,
+    "finite": true,
+    "continuity": 574.3659810772265,
+    "elapsed": 1.336
+  },
+  {
+    "solver": "IsothermalFluidFoam",
+    "status": "OK",
+    "field_max": NaN,
+    "finite": false,
+    "continuity": NaN,
+    "elapsed": 1.308
+  },
+  {
+    "solver": "PorousSimpleFoam",
+    "status": "OK",
+    "field_max": 7.550366214674294,
+    "finite": true,
+    "continuity": 0.053814578180369686,
+    "elapsed": 30.551
+  },
+  {
+    "solver": "SrfSimpleFoam",
+    "status": "OK",
+    "field_max": 7.550366214674294,
+    "finite": true,
+    "continuity": 0.053814578180369686,
+    "elapsed": 30.593
+  },
+  {
+    "solver": "IncompressibleVoFFoam",
+    "status": "OK",
+    "field_max": 1.773848611882787e-07,
+    "finite": true,
+    "continuity": 3.315026345657983e-05,
+    "elapsed": 0.035
+  },
+  {
+    "solver": "CompressibleMultiphaseVoFFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.007
+  },
+  {
+    "solver": "RhoCentralFoam",
+    "status": "OK",
+    "field_max": 164.25917848126915,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.015
+  },
+  {
+    "solver": "SolidDisplacementFoam",
+    "status": "OK",
+    "field_max": 0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.003
+  },
+  {
+    "solver": "CavitatingFoam",
+    "status": "OK",
+    "field_max": 84.27657761406289,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.054
+  },
+  {
+    "solver": "DenseParticleFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.004
+  },
+  {
+    "solver": "IncompressibleDriftFluxFoam",
+    "status": "OK",
+    "field_max": 1.7643130755320672e-07,
+    "finite": true,
+    "continuity": 3.314845647317211e-05,
+    "elapsed": 0.029
+  },
+  {
+    "solver": "RhoPorousSimpleFoam",
+    "status": "OK",
+    "field_max": 999.9999999324427,
+    "finite": true,
+    "continuity": 1.346712283282568,
+    "elapsed": 1.308
+  },
+  {
+    "solver": "AcousticFoam",
+    "status": "ERROR",
+    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmp91aetj1r\\0\\p'"
+  },
+  {
+    "solver": "AdjointFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.008
+  },
+  {
+    "solver": "AdjointShapeFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.003
+  },
+  {
+    "solver": "AdjointTurbulenceFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.101
+  },
+  {
+    "solver": "BuoyantBoussinesqSimpleFoam",
+    "status": "OK",
+    "field_max": 59173.34854015138,
+    "finite": true,
+    "continuity": 573.89835635673,
+    "elapsed": 22.504
+  },
+  {
+    "solver": "CHTMultiRegionFoam",
+    "status": "OK",
+    "field_max": 0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.0
+  },
+  {
+    "solver": "CHTSolver",
+    "status": "OK",
+    "field_max": 300.0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.003
+  },
+  {
+    "solver": "ChemFoam",
+    "status": "OK",
+    "field_max": 300.0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.005
+  },
+  {
+    "solver": "CombustionFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.019
+  },
+  {
+    "solver": "DieselFoam",
+    "status": "OK",
+    "field_max": 51231.959390625794,
+    "finite": true,
+    "continuity": 7047.836227122302,
+    "elapsed": 1.042
+  },
+  {
+    "solver": "DsmcFoam",
+    "status": "OK",
+    "field_max": 799.0650369960598,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.031
+  },
+  {
+    "solver": "ElectrostaticFoam",
+    "status": "OK",
+    "field_max": 0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.002
+  },
+  {
+    "solver": "EnergyFoam",
+    "status": "OK",
+    "field_max": 492.009834247655,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.017
+  },
+  {
+    "solver": "FilmFoam",
+    "status": "OK",
+    "field_max": 0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.004
+  },
+  {
+    "solver": "FinancialFoam",
+    "status": "OK",
+    "field_max": 0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.007
+  },
+  {
+    "solver": "HeatTransferFoam",
+    "status": "OK",
+    "field_max": 492.009834247655,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.015
+  },
+  {
+    "solver": "MagneticFoam",
+    "status": "ERROR",
+    "error": "a Tensor with 3 elements cannot be converted to Scalar"
+  },
+  {
+    "solver": "MdFoam",
+    "status": "OK",
+    "field_max": 0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.008
+  },
+  {
+    "solver": "MhdFoam",
+    "status": "ERROR",
+    "error": "too many indices for tensor of dimension 1"
+  },
+  {
+    "solver": "MultiphaseInterFoam",
+    "status": "ERROR",
+    "error": "MultiphaseInterFoam.__init__() missing 1 required positional argument: 'phases'"
+  },
+  {
+    "solver": "MultiphaseReactingFoam",
+    "status": "ERROR",
+    "error": "MultiphaseReactingFoam.__init__() missing 1 required positional argument: 'phases'"
+  },
+  {
+    "solver": "PDRFoam",
+    "status": "OK",
+    "field_max": 1727706.2688361662,
+    "finite": true,
+    "continuity": 563220.9221976652,
+    "elapsed": 1.34
+  },
+  {
+    "solver": "PorousInterFoam",
+    "status": "OK",
+    "field_max": 0.1,
+    "finite": true,
+    "continuity": 0.007542117268340053,
+    "elapsed": 0.062
+  },
+  {
+    "solver": "ReactingMultiphaseFoam",
+    "status": "ERROR",
+    "error": "ReactingMultiphaseFoam.__init__() missing 1 required positional argument: 'phases'"
+  },
+  {
+    "solver": "ShallowWaterFoam",
+    "status": "ERROR",
+    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpb2j7a765\\0\\h"
+  },
+  {
+    "solver": "SolidFoam",
+    "status": "OK",
+    "field_max": 300.0,
+    "finite": true,
+    "continuity": 0.0,
+    "elapsed": 0.004
+  },
+  {
+    "solver": "SprayFoam",
+    "status": "OK",
+    "field_max": 51231.959390625794,
+    "finite": true,
+    "continuity": 7047.836227122302,
+    "elapsed": 1.058
+  },
+  {
+    "solver": "ViscousFoam",
+    "status": "OK",
+    "field_max": NaN,
+    "finite": false,
+    "continuity": NaN,
+    "elapsed": 14.0
+  }
+]
