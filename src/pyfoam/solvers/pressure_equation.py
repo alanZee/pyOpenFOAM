@@ -259,6 +259,11 @@ def correct_velocity(
     # NOTE: Using the original formulation without V factor
     U_corrected = HbyA - alpha * inv_A_p.unsqueeze(-1) * grad_p
 
+    # 速度限制器（防止发散）
+    U_mag = U_corrected.norm(dim=1, keepdim=True).clamp(min=1e-30)
+    U_limit = 1e4
+    U_corrected = torch.where(U_mag > U_limit, U_corrected * (U_limit / U_mag), U_corrected)
+
     return U_corrected
 
 

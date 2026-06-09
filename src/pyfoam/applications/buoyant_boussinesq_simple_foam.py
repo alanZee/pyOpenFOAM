@@ -457,6 +457,11 @@ class BuoyantBoussinesqSimpleFoam(SolverBase):
             grad_p_rgh = self._compute_grad(p_rgh, mesh)
             U = HbyA - grad_p_rgh / A_p.abs().clamp(min=1e-30).unsqueeze(-1)
 
+            # 速度限制器（防止发散）
+            U_mag = U.norm(dim=1, keepdim=True).clamp(min=1e-30)
+            U_limit = 1e4
+            U = torch.where(U_mag > U_limit, U * (U_limit / U_mag), U)
+
             # Correct internal face flux
             phi_internal = phiHbyA.clone()
             p_P = gather(p_rgh, int_owner)
