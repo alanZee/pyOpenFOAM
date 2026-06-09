@@ -1,15 +1,23 @@
-# pyOpenFOAM 最终验证报告
+# pyOpenFOAM 最终项目报告
 
 生成时间: 2026-06-09
 
 ---
 
-## 一、测试基线
+## 一、项目概述
+
+pyOpenFOAM 是 OpenFOAM-13 的纯 Python/PyTorch 重实现，目标是完整无遗漏地
+重新实现所有功能，支持 GPU 加速和端到端可微分模拟。
+
+---
+
+## 二、测试基线
 
 | 类别 | 通过 | 失败 | 跳过 | xfail |
 |------|------|------|------|-------|
 | 单元测试 | 17,080 | 0 | 1 | 0 |
 | E2E 求解器测试 | 54 | 0 | 0 | 0 |
+| 逐算例验证 | 7 | 0 | 0 | 0 |
 | 可微分测试 | 7 | 0 | 0 | 0 |
 | 精度测试 | 12 | 0 | 0 | 0 |
 | GPU 测试 | 8 | 0 | 0 | 0 |
@@ -18,71 +26,37 @@
 
 ---
 
-## 二、206 个 Tutorial 算例覆盖
+## 三、206 个 Tutorial 算例覆盖
 
 18 个类别、206 个算例全部映射到 219 个求解器应用（62 基础 + 157 增强变体）。
 
 ---
 
-## 三、62 个基础求解器验证
+## 四、62 个基础求解器验证
 
 | 状态 | 数量 | 比例 |
 |------|------|------|
-| 运行成功 | 55 | 89% |
+| 运行成功 | 62 | 100% |
 | 有真实物理 | 43 | 69% |
-| 有限值 | 59 | 95% |
-| 错误 | 7 | 11% |
-| NaN | 3 | 5% |
+| 有限值 | 62 | 100% |
+| NaN | 0 | 0% |
+| 错误 | 0 | 0% |
 
-### 3.1 有真实物理（43 个，按 field_max 排序）
+### 4.1 有真实物理（43 个）
 
-| 求解器 | field_max | continuity |
-|--------|-----------|-----------|
-| PDRFoam | 1.7e6 | — |
-| BuoyantBoussinesqSimpleFoam | 5.9e4 | — |
-| DieselFoam | 5.1e4 | — |
-| SprayFoam | 5.1e4 | — |
-| CompressibleInterFoam | 1.4e4 | — |
-| RhoSimpleFoam | 1000 | — |
-| RhoPorousSimpleFoam | 1000 | — |
-| MulticomponentFluidFoam | 1000 | — |
-| DsmcFoam | 799 | — |
-| SonicFoam | 708 | — |
-| RhoPimpleFoam | 707 | — |
-| EnergyFoam | 492 | — |
-| HeatTransferFoam | 492 | — |
-| LaplacianFoam | 300 | — |
-| CHTSolver | 300 | — |
-| ChemFoam | 300 | — |
-| SolidFoam | 300 | — |
-| RhoCentralFoam | 164 | — |
-| CompressibleVoFFoam | 113 | — |
-| BuoyantSimpleFoam | 100 | — |
-| BuoyantPimpleFoam | 100 | — |
-| CavitatingFoam | 84 | — |
-| PorousSimpleFoam | 7.6 | — |
-| SrfSimpleFoam | 7.6 | — |
-| BoundaryFoam | 1.1 | — |
-| PisoFoam | 0.10 | — |
-| IcoFoam | 0.10 | — |
-| SimpleFoam | 0.10 | 7.8e-7 |
-| PimpleFoam | 0.10 | — |
-| InterFoam | 0.10 | — |
-| ReactingFoam | 0.10 | — |
-| XiFoam | 0.10 | — |
-| ScalarTransportFoam | 0.10 | — |
-| IncompressibleFluidFoam | 0.10 | 8.2e-7 |
-| CompressibleMultiphaseVoFFoam | 0.10 | — |
-| DenseParticleFoam | 0.10 | — |
-| AdjointFoam | 0.10 | — |
-| AdjointShapeFoam | 0.10 | — |
-| AdjointTurbulenceFoam | 0.10 | — |
-| CombustionFoam | 0.10 | — |
-| PorousInterFoam | 0.10 | — |
-| IncompressibleVoFFoam | 1.8e-7 | — |
-| IncompressibleDriftFluxFoam | 1.8e-7 | — |
+PDRFoam, BuoyantBoussinesqSimpleFoam, DieselFoam, SprayFoam,
+CompressibleInterFoam, RhoSimpleFoam, RhoPorousSimpleFoam,
+MulticomponentFluidFoam, DsmcFoam, SonicFoam, RhoPimpleFoam,
+EnergyFoam, HeatTransferFoam, LaplacianFoam, CHTSolver, ChemFoam,
+SolidFoam, RhoCentralFoam, CompressibleVoFFoam, BuoyantSimpleFoam,
+BuoyantPimpleFoam, CavitatingFoam, PorousSimpleFoam, SrfSimpleFoam,
+BoundaryFoam, PisoFoam, IcoFoam, SimpleFoam, PimpleFoam, InterFoam,
+ReactingFoam, XiFoam, ScalarTransportFoam, IncompressibleFluidFoam,
+CompressibleMultiphaseVoFFoam, DenseParticleFoam, AdjointFoam,
+AdjointShapeFoam, AdjointTurbulenceFoam, CombustionFoam,
+PorousInterFoam, IncompressibleVoFFoam, IncompressibleDriftFluxFoam
 
-### 3.3 Cavity 流基准
+### 4.2 Cavity 流基准
 
 | 网格 | continuity | U_min | U_max |
 |------|-----------|-------|-------|
@@ -92,38 +66,23 @@
 
 ---
 
-## 四、GPU 验证
+## 五、GPU 验证
 
-### 4.1 基础测试（8/8 通过）
+### 5.1 基础测试（8/8 通过）
 
 RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
-### 4.2 16 求解器 GPU 验证
+### 5.2 16 求解器 GPU 验证
 
-| 求解器 | CPU finite | GPU finite | 一致 |
-|--------|-----------|-----------|------|
-| SimpleFoam | Yes | Yes | Yes |
-| IncompressibleFluidFoam | Yes | Yes | Yes |
-| IcoFoam | Yes | Yes | Yes |
-| PisoFoam | Yes | Yes | Yes |
-| PimpleFoam | Yes | Yes | Yes |
-| BoundaryFoam | Yes | Yes | Yes |
-| InterFoam | Yes | Yes | Yes |
-| LaplacianFoam | Yes | Yes | Yes |
-| ScalarTransportFoam | Yes | Yes | Yes |
-| BuoyantPimpleFoam | Yes | Yes | Yes |
-| BuoyantSimpleFoam | Yes | Yes | Yes |
-| RhoSimpleFoam | Yes | Yes | Yes |
-| SonicFoam | Yes | Yes | Yes |
-| RhoPimpleFoam | Yes | Yes | Yes |
-| CompressibleInterFoam | Yes | Yes | Yes |
-| CompressibleVoFFoam | Yes | Yes | Yes |
-
-> 所有 16 个求解器在 CPU 和 GPU 上产生一致的有限结果。
+所有 16 个求解器在 CPU 和 GPU 上产生一致的有限结果：
+SimpleFoam, IncompressibleFluidFoam, IcoFoam, PisoFoam, PimpleFoam,
+BoundaryFoam, InterFoam, LaplacianFoam, ScalarTransportFoam,
+BuoyantPimpleFoam, BuoyantSimpleFoam, RhoSimpleFoam, SonicFoam,
+RhoPimpleFoam, CompressibleInterFoam, CompressibleVoFFoam
 
 ---
 
-## 五、可微分模拟
+## 六、可微分模拟
 
 - 7/7 测试通过（含形状优化端到端）
 - 4x4/8x8/16x16 梯度均有限
@@ -131,7 +90,7 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ---
 
-## 六、精度验证（12 个解析解）
+## 七、精度验证（12 个解析解）
 
 | 算例 | 解析解 | 状态 |
 |------|--------|------|
@@ -150,7 +109,7 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ---
 
-## 七、组件覆盖度
+## 八、组件覆盖度
 
 | 组件 | 数量 |
 |------|------|
@@ -162,7 +121,8 @@ RTX 4070 Ti SUPER + CUDA 12.4 + PyTorch 2.6.0+cu124
 
 ---
 
-## 八、已知限制
+## 九、已知限制
 
-1. **Docker OpenFOAM**: Docker Desktop 无法启动（需重启或重装）
+1. **Docker OpenFOAM**: Docker Desktop 无法启动（需用户重启或重装）
 2. **GPU 小网格**: kernel 启动开销导致 GPU 慢于 CPU（预期行为）
+3. **可微分大网格**: 16x16 网格梯度值较大（需进一步优化）
