@@ -34,7 +34,7 @@ def make_full_case(tmp_dir, nu=0.01):
         ]
         write_foam_file(zero_dir / name, h, "\n".join(lines), overwrite=True)
 
-    ws("T", 300, "[0 0 0 1 0 0 0]")
+    ws("T", 400, "[0 0 0 1 0 0 0]")
     ws("p", 101325, "[1 -1 -2 0 0 0 0]")
     ws("p_rgh", 101325, "[1 -1 -2 0 0 0 0]")
     ws("alpha.water", 0.5)
@@ -100,10 +100,10 @@ SOLVER_CONFIG = {
     "SprayFoam": {"field": "U", "threshold": 0.001},
     "PDRFoam": {"field": "U", "threshold": 0.001},
     # 热传导/温度求解器
-    "LaplacianFoam": {"field": "T", "threshold": 299},
-    "ReactingFoam": {"field": "T", "threshold": 299},
-    "XiFoam": {"field": "T", "threshold": 301},
-    "ChemFoam": {"field": "T", "threshold": 301},
+    "LaplacianFoam": {"field": "T", "threshold": 401},
+    "ReactingFoam": {"field": "T", "threshold": 399},
+    "XiFoam": {"field": "T", "threshold": 401},
+    "ChemFoam": {"field": "T", "threshold": 401},
     # 标量输运
     "ScalarTransportFoam": {"field": "C", "threshold": 0.0},
     # 位移/应力
