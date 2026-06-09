@@ -139,8 +139,11 @@ class DifferentiableSIMPLE:
         convergence = ConvergenceData()
 
         # Resolve BC mask
-        if U_bc is not None and bc_mask is None:
-            bc_mask = ~torch.isnan(U_bc[:, 0])
+        if U_bc is not None:
+            U_bc = U_bc.to(device=device, dtype=dtype)
+            if bc_mask is None:
+                bc_mask = ~torch.isnan(U_bc[:, 0])
+            bc_mask = bc_mask.to(device=device)
 
         # Run SIMPLE to convergence
         for outer in range(self._max_outer_iterations):
@@ -211,11 +214,8 @@ class DifferentiableSIMPLE:
             phi = correct_face_flux(phiHbyA, p_prime, A_p, mesh, mesh.face_weights)
             p = p_prev + self._alpha_p * p_prime
 
-            # Correct velocity with damped pressure correction
-            # Compensates for missing boundary penalty in A_p
-            # (standard SIMPLE has ~7x larger A_p due to boundary penalty)
-            A_p_eff = A_p * 3.0
-            U = correct_velocity(U, HbyA, p, A_p_eff, mesh)
+            # Correct velocity
+            U = correct_velocity(U, HbyA, p, A_p, mesh)
             if U_bc is not None and bc_mask is not None and bc_mask.any():
                 mask3 = bc_mask.unsqueeze(-1).expand_as(U)
                 U = torch.where(mask3, U_bc, U)
@@ -298,6 +298,39 @@ class DifferentiableSIMPLE:
         grad_p = grad_p / cell_volumes_safe.unsqueeze(-1)
 
         source = -grad_p
+
+        # Boundary penalty (implicit BC method)
+        # Adds face diffusion coefficient to diagonal and U_bc to source
+        # This matches OpenFOAM's fixedValue BC treatment
+        if U_bc is not None and bc_mask is not None and bc_mask.any() and n_faces > n_internal:
+            U_bc = U_bc.to(device=device, dtype=dtype)
+            bc_mask = bc_mask.to(device=device)
+            bnd_owner = owner[n_internal:]
+            bnd_areas = face_areas[n_internal:]
+            bnd_face_centres = mesh.face_centres[n_internal:]
+
+            owner_centres = mesh.cell_centres[bnd_owner]
+            d_P = bnd_face_centres - owner_centres
+            bnd_S_mag = bnd_areas.norm(dim=1)
+            safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
+            n_hat = bnd_areas / safe_S_mag.unsqueeze(-1)
+            d_dot_n = (d_P * n_hat).sum(dim=1).abs()
+            bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+
+            bnd_face_coeff = nu * bnd_S_mag * bnd_delta
+
+            bnd_bc_mask = bc_mask[bnd_owner]
+            bnd_face_coeff_masked = bnd_face_coeff * bnd_bc_mask.to(dtype=dtype)
+
+            bnd_V = gather(cell_volumes_safe, bnd_owner)
+            bnd_face_coeff_pv = bnd_face_coeff_masked / bnd_V
+
+            diag = diag + scatter_add(bnd_face_coeff_pv, bnd_owner, n_cells)
+
+            for comp in range(3):
+                u_bc_comp = U_bc[bnd_owner, comp].nan_to_num(0.0)
+                source_contrib = bnd_face_coeff_pv * u_bc_comp
+                source[:, comp] = source[:, comp] + scatter_add(source_contrib, bnd_owner, n_cells)
 
         # Under-relaxation
         sum_off = torch.zeros(n_cells, dtype=dtype, device=device)
