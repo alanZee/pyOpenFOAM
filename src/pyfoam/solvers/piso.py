@@ -234,6 +234,11 @@ class PISOSolver(CoupledSolverBase):
                 if bc_mask.any():
                     U[bc_mask] = U_bc[bc_mask]
 
+            # 速度限制器（防止发散）
+            U_mag = U.norm(dim=1, keepdim=True).clamp(min=1e-30)
+            U_limit = 1e4
+            U = torch.where(U_mag > U_limit, U * (U_limit / U_mag), U)
+
             # Correct face flux using pressure correction
             phi = correct_face_flux(phi, p_prime, A_p, mesh, mesh.face_weights)
 

@@ -292,6 +292,11 @@ class SIMPLESolver(CoupledSolverBase):
                 if bc_mask.any():
                     U[bc_mask] = U_bc[bc_mask]
 
+            # 速度限制器（防止发散）
+            U_mag = U.norm(dim=1, keepdim=True).clamp(min=1e-30)
+            U_limit = 1e4
+            U = torch.where(U_mag > U_limit, U * (U_limit / U_mag), U)
+
             # ============================================
             # Step 8: Check convergence
             # ============================================
