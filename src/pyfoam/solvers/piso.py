@@ -248,12 +248,6 @@ class PISOSolver(CoupledSolverBase):
             A_p_damped = A_p * 5.0
             U = correct_velocity(U, U, p_prime, A_p_damped, mesh)
 
-            # Re-apply boundary conditions
-            if U_bc is not None:
-                bc_mask = ~torch.isnan(U_bc[:, 0])
-                if bc_mask.any():
-                    U[bc_mask] = U_bc[bc_mask]
-
             # 速度限制器（防止发散）
             U_mag = U.norm(dim=1, keepdim=True).clamp(min=1e-30)
             U_limit = 1e4
@@ -306,10 +300,13 @@ class PISOSolver(CoupledSolverBase):
         convergence.converged = continuity_error < tolerance
 
         # Re-apply boundary conditions after pressure correction loop
+        # Only enforce for non-zero prescribed velocity cells (moving walls, inlets).
+        # Zero-velocity wall cells are driven by the penalty method.
         if U_bc is not None:
             bc_mask = ~torch.isnan(U_bc[:, 0])
-            if bc_mask.any():
-                U[bc_mask] = U_bc[bc_mask]
+            nonzero_bc = bc_mask & (U_bc.abs().sum(dim=1) > 1e-10)
+            if nonzero_bc.any():
+                U[nonzero_bc] = U_bc[nonzero_bc]
 
         logger.info(
             "PISO: %d corrections, continuity=%.6e",
