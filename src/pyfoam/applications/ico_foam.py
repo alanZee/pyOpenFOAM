@@ -301,6 +301,8 @@ class IcoFoam(SolverBase):
                 if value is not None:
                     is_zero = abs(value[0]) < 1e-30 and abs(value[1]) < 1e-30 and abs(value[2]) < 1e-30
                     patches_by_priority.append((0 if is_zero else 1, patch, value))
+            elif patch.patch_type == "noSlip":
+                patches_by_priority.append((0, patch, (0.0, 0.0, 0.0)))
 
         # Sort: zero BCs first (priority 0), non-zero BCs last (priority 1)
         patches_by_priority.sort(key=lambda x: x[0])
@@ -378,6 +380,11 @@ class IcoFoam(SolverBase):
 
         # Build boundary conditions
         U_bc = self._build_boundary_conditions()
+
+        # Apply boundary conditions to initial field
+        bc_mask = ~torch.isnan(U_bc[:, 0])
+        if bc_mask.any():
+            self.U[bc_mask] = U_bc[bc_mask]
 
         # Read body force from fvOptions
         body_force = self._read_fv_options_body_force()

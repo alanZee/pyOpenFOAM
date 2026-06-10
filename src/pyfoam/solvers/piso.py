@@ -174,6 +174,19 @@ class PISOSolver(CoupledSolverBase):
             # Compute HbyA
             HbyA = compute_HbyA(H, A_p)
 
+            # Blend HbyA at boundary cells toward U_bc.
+            # Pure HbyA is too small (penalty method weakness),
+            # pure U_bc causes pressure over-correction.
+            if U_bc is not None:
+                bc_mask_local = ~torch.isnan(U_bc[:, 0])
+                if bc_mask_local.any():
+                    blend = 0.5
+                    HbyA = torch.where(
+                        bc_mask_local.unsqueeze(-1),
+                        blend * U_bc + (1.0 - blend) * HbyA,
+                        HbyA,
+                    )
+
             # Compute phiHbyA
             phiHbyA = compute_face_flux_HbyA(
                 HbyA, mesh.face_areas, mesh.owner, mesh.neighbour,
@@ -396,8 +409,7 @@ class PISOSolver(CoupledSolverBase):
                 patch_S_mag = patch_areas.norm(dim=1)
                 safe_mag = torch.where(patch_S_mag > 1e-30, patch_S_mag, torch.ones_like(patch_S_mag))
                 n_hat = patch_areas / safe_mag.unsqueeze(-1)
-                d_full = 2.0 * d_P
-                d_dot_n = (d_full * n_hat).sum(dim=1).abs()
+                d_dot_n = (d_P * n_hat).sum(dim=1).abs()
                 patch_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
                 patch_coeff = nu * patch_S_mag * patch_delta
