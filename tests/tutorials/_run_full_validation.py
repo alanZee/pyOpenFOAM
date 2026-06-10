@@ -101,6 +101,20 @@ def make_full_case(tmp_dir, nu=0.01):
     ]
     write_foam_file(zero_dir / "phi", h_phi, "\n".join(lines_phi), overwrite=True)
 
+    # Current density J for MagneticFoam (non-zero source)
+    h_J = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
+                         class_name="volVectorField", location="0", object="J")
+    lines_J = [
+        "dimensions      [0 -2 0 0 0 1 0];",
+        "internalField   uniform (0 0 1);",
+        "boundaryField {",
+        "    movingWall { type zeroGradient; }",
+        "    fixedWalls { type zeroGradient; }",
+        "    frontAndBack { type empty; }",
+        "}",
+    ]
+    write_foam_file(zero_dir / "J", h_J, "\n".join(lines_J), overwrite=True)
+
     # Displacement field for structural solvers
     h_D = FoamFileHeader(version="2.0", format=FileFormat.ASCII,
                          class_name="volVectorField", location="0", object="D")
@@ -179,7 +193,7 @@ SOLVER_CONFIG = {
     # 声学
     "AcousticFoam": {"field": "p_prime", "threshold": 0.001},
     # 电磁
-    "MagneticFoam": {"field": "U", "threshold": 0.0},
+    "MagneticFoam": {"field": "B", "threshold": 0.001},
     "MhdFoam": {"field": "U", "threshold": 0.0},
     # 势流
     "PotentialFoam": {"field": "U", "threshold": 0.0},
