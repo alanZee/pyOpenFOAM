@@ -196,10 +196,6 @@ class PISOSolver(CoupledSolverBase):
                 HbyA_for_flux, mesh.face_areas, mesh.owner, mesh.neighbour,
                 mesh.n_internal_faces, mesh.face_weights,
             )
-            phiHbyA = compute_face_flux_HbyA(
-                HbyA, mesh.face_areas, mesh.owner, mesh.neighbour,
-                mesh.n_internal_faces, mesh.face_weights,
-            )
 
             # Fix boundary face fluxes using prescribed BC velocities.
             # compute_face_flux_HbyA uses cell-centre HbyA for boundary
@@ -247,7 +243,10 @@ class PISOSolver(CoupledSolverBase):
             # Use the CURRENT velocity U as base (not HbyA, which is tiny
             # due to V/dt dominance in the diagonal solve).  The correction
             # is only the pressure gradient adjustment to enforce continuity.
-            U = correct_velocity(U, U, p_prime, A_p, mesh)
+            # Apply damping factor (like SIMPLE's A_p_eff = A_p * 3.0)
+            # to prevent over-correction on coarse meshes.
+            A_p_damped = A_p * 5.0
+            U = correct_velocity(U, U, p_prime, A_p_damped, mesh)
 
             # Re-apply boundary conditions
             if U_bc is not None:
