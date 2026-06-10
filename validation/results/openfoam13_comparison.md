@@ -11,60 +11,72 @@
 | 版本 | v1906 (Ubuntu 20.04 apt) | OpenFOAM-13 重实现 |
 | 运行环境 | WSL2 Ubuntu 20.04 | Windows 11 + conda pyopenfoam-gpu |
 | 编译器 | GCC 9.4.0 | Python 3.11 + PyTorch |
-| 网格 | 8x8x1 (blockMesh) | 8x8x1 (make_structured_mesh) |
+| 网格 | 8x8/16x16/32x32x1 (blockMesh) | 同上 (make_structured_mesh) |
 
 ## 二、Cavity 算例对比 (icoFoam, Re=100)
 
 ### 2.1 算例设置
 
-- 网格: 8x8x1
-- 时间步长: Δt = 0.001s
-- 终止时间: t = 0.1s
+- 网格: 8x8/16x16/32x32x1
+- 时间步长: Δt = 0.005s
+- 终止时间: t = 1.0s (200 步)
 - 运动粘度: ν = 0.01 m²/s
 - 边界条件:
   - movingWall: U = (1, 0, 0)
   - fixedWalls: noSlip (U = 0)
   - frontAndBack: empty
 
-### 2.2 结果对比
+### 2.2 OpenFOAM v1906 结果 (参照)
 
-| 指标 | OpenFOAM v1906 | pyOpenFOAM | 误差 |
-|------|----------------|------------|------|
-| U_max (内部单元) | 0.0843 | 0.0587 | 30.4% |
-| U_min (内部单元) | -0.0437 | -0.0587 | 34.3% |
-| continuity error | 2.26e-12 | 8.24e-3 | — |
+| 网格 | Ux_max | Ux_min |
+|------|--------|--------|
+| 8x8 | 0.4445 | -0.1199 |
+| 16x16 | 0.7378 | -0.1822 |
+| 32x32 | 0.8738 | -0.2026 |
 
-### 2.3 分析
+### 2.3 pyOpenFOAM 结果
 
-1. **U_max 差异**: pyOpenFOAM 的 U_max (0.0587) 与 OpenFOAM v1906 (0.0843) 在同一数量级，差异约 30%。
+| 网格 | Ux_max | Ux_min | 误差 (Ux_max) |
+|------|--------|--------|---------------|
+| 8x8 | ~0 | -0.145 | ~100% |
+| 16x16 | ~0 | — | ~100% |
+| 32x32 | ~0 | — | ~100% |
 
-2. **差异原因**:
-   - OpenFOAM v1906 与 OpenFOAM-13 版本差异（v1906 是 2019 年版本，v13 是 2025 年版本）
-   - 求解器算法差异（pyOpenFOAM 使用简化 PISO 实现）
-   - 网格生成方式差异（blockMesh vs make_structured_mesh）
-   - 边界条件处理差异
+### 2.4 根因分析
 
-3. **continuity error**: pyOpenFOAM 的 continuity error (8.24e-3) 比 OpenFOAM v1906 (2.26e-12) 大，这是因为 pyOpenFOAM 使用更简单的压力方程求解器。
+pyOpenFOAM 的 PISO 求解器在 cavity 算例上产生几乎为零的 Ux_max，根本原因是 **边界条件处理方式与 OpenFOAM 不一致**：
 
-### 2.4 结论
+1. **OpenFOAM 方式**: 边界条件直接修改矩阵系数（对角项和源项），使 HbyA 在边界单元自然等于 U_bc。线性求解器 (PBiCGStab) 迭代求解，壁面剪切力通过离散方程自然传播到内部单元。
 
-pyOpenFOAM 的 cavity 算例结果与 OpenFOAM v1906 在同一数量级，验证了核心物理方程的正确实现。差异主要来自版本差异和求解器简化。
+2. **pyOpenFOAM 方式**: 使用惩罚方法（penalty method）添加边界贡献。惩罚系数不足以使 HbyA = U_bc（实际值 ~0.03 vs 期望 1.0）。对角求解器无法将壁面剪切力传播到内部单元。
+
+3. **影响**: 边界单元的 HbyA 值过小，导致内部面通量计算错误，压力方程产生不正确的压力校正，最终速度场衰减至零。
+
+### 2.5 已尝试的修复
+
+| 方法 | 结果 |
+|------|------|
+| noSlip BC 支持 | ✅ 修复了 28 个边界单元（原来只有 8 个） |
+| HbyA 边界覆盖 | ❌ 导致发散 |
+| Jacobi 迭代 (10/50 次) | ❌ 速度仍衰减至零 |
+| 惩罚系数修正 (移除 2x) | ❌ 无改善 |
+| HbyA 混合 (50%) | ❌ 无改善 |
+
+### 2.6 需要的根本修复
+
+需要将 PISO 求解器的边界条件处理从惩罚方法改为 OpenFOAM 的矩阵修改方式：
+- 边界面对角贡献直接添加到 A_p
+- 边界面源项直接添加到 H
+- 使用线性求解器 (PBiCGStab) 替代对角求解
 
 ---
 
-## 三、待完成工作
-
-1. **OpenFOAM-13 参照**: 需要 GCC 11+ 编译 OpenFOAM-13 源码，或使用 Docker（当前 WSL2 Docker 故障）
-2. **更多算例对比**: 需要对比 damBreak、shockTube 等算例
-3. **精度验证**: 需要更严格的精度目标（如 L2 误差 < 1%）
-
----
-
-## 四、总结
+## 三、总结
 
 pyOpenFOAM 已完成 OpenFOAM-13 的核心重实现：
 - ✅ 50/50 基础求解器有真实物理
 - ✅ 17,197+ 测试通过
 - ✅ GPU 加速支持
-- ✅ 端到端可微分模拟
-- ⏳ OpenFOAM-13 参照对比（需 GCC 11+ 或 Docker）
+- ✅ 端到端可微分模拟 (4x4 到 64x64)
+- ⚠️ Cavity 流精度不足（PISO BC 处理需根本修复）
+- ⏳ OpenFOAM-13 源码参照对比（需 GCC 11+）
