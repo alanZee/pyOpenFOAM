@@ -174,20 +174,28 @@ class PISOSolver(CoupledSolverBase):
             # Compute HbyA
             HbyA = compute_HbyA(H, A_p)
 
-            # Blend HbyA at boundary cells toward U_bc.
-            # Pure HbyA is too small (penalty method weakness),
-            # pure U_bc causes pressure over-correction.
+            # Override HbyA at boundary cells for face flux computation.
+            # The penalty method produces HbyA << U_bc at boundary cells
+            # (weighted average of off-diag contributions and U_bc).
+            # In OpenFOAM, BCs modify the matrix so HbyA naturally = U_bc.
+            # We override HbyA for face flux only; velocity correction
+            # uses the original U (not HbyA), so this doesn't affect it.
             if U_bc is not None:
                 bc_mask_local = ~torch.isnan(U_bc[:, 0])
                 if bc_mask_local.any():
-                    blend = 0.5
-                    HbyA = torch.where(
-                        bc_mask_local.unsqueeze(-1),
-                        blend * U_bc + (1.0 - blend) * HbyA,
-                        HbyA,
+                    HbyA_for_flux = torch.where(
+                        bc_mask_local.unsqueeze(-1), U_bc, HbyA,
                     )
+                else:
+                    HbyA_for_flux = HbyA
+            else:
+                HbyA_for_flux = HbyA
 
-            # Compute phiHbyA
+            # Compute phiHbyA using corrected HbyA
+            phiHbyA = compute_face_flux_HbyA(
+                HbyA_for_flux, mesh.face_areas, mesh.owner, mesh.neighbour,
+                mesh.n_internal_faces, mesh.face_weights,
+            )
             phiHbyA = compute_face_flux_HbyA(
                 HbyA, mesh.face_areas, mesh.owner, mesh.neighbour,
                 mesh.n_internal_faces, mesh.face_weights,
