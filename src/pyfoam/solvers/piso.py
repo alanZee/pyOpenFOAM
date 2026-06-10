@@ -174,37 +174,26 @@ class PISOSolver(CoupledSolverBase):
             # Compute HbyA
             HbyA = compute_HbyA(H, A_p)
 
-            # Override HbyA at boundary cells for face flux computation.
-            # The penalty method produces HbyA << U_bc at boundary cells
-            # (weighted average of off-diag contributions and U_bc).
-            # In OpenFOAM, BCs modify the matrix so HbyA naturally = U_bc.
-            # We override HbyA for face flux only; velocity correction
-            # uses the original U (not HbyA), so this doesn't affect it.
+            # Blend HbyA at boundary cells toward U_bc.
+            # Pure HbyA is too small (penalty weakness), pure U_bc
+            # causes pressure over-correction.  Blend factor 0.5.
             if U_bc is not None:
                 bc_mask_local = ~torch.isnan(U_bc[:, 0])
                 if bc_mask_local.any():
-                    HbyA_for_flux = torch.where(
-                        bc_mask_local.unsqueeze(-1), U_bc, HbyA,
+                    blend = 0.3
+                    HbyA = torch.where(
+                        bc_mask_local.unsqueeze(-1),
+                        blend * U_bc + (1.0 - blend) * HbyA,
+                        HbyA,
                     )
-                else:
-                    HbyA_for_flux = HbyA
-            else:
-                HbyA_for_flux = HbyA
 
-            # Compute phiHbyA using corrected HbyA
+            # Compute phiHbyA
             phiHbyA = compute_face_flux_HbyA(
-                HbyA_for_flux, mesh.face_areas, mesh.owner, mesh.neighbour,
+                HbyA, mesh.face_areas, mesh.owner, mesh.neighbour,
                 mesh.n_internal_faces, mesh.face_weights,
             )
 
             # Fix boundary face fluxes using prescribed BC velocities.
-            # compute_face_flux_HbyA uses cell-centre HbyA for boundary
-            # faces, but fixedValue BCs prescribe the face velocity directly.
-            # Using cell-centre values causes non-zero spurious boundary
-            # fluxes in closed domains (Couette, Poiseuille), corrupting
-            # the pressure equation RHS and destroying the solution.
-            if U_bc is not None and mesh.n_faces > mesh.n_internal_faces:
-                self._fix_boundary_flux(phiHbyA, U_bc, mesh)
 
             # Zero out empty patch faces (2-D approximation)
             self._zero_empty_patches(phiHbyA, mesh)
@@ -240,13 +229,16 @@ class PISOSolver(CoupledSolverBase):
             p_prime = p - p_old_iter
 
             # Correct velocity: U = U - (1/A_p) * grad(p')
-            # Use the CURRENT velocity U as base (not HbyA, which is tiny
-            # due to V/dt dominance in the diagonal solve).  The correction
-            # is only the pressure gradient adjustment to enforce continuity.
-            # Apply damping factor (like SIMPLE's A_p_eff = A_p * 3.0)
-            # to prevent over-correction on coarse meshes.
+            # Use 5x damped A_p to prevent over-correction
             A_p_damped = A_p * 5.0
             U = correct_velocity(U, U, p_prime, A_p_damped, mesh)
+
+            # Re-apply BCs for non-zero prescribed velocity cells
+            if U_bc is not None:
+                bc_mask = ~torch.isnan(U_bc[:, 0])
+                nonzero_bc = bc_mask & (U_bc.abs().sum(dim=1) > 1e-10)
+                if nonzero_bc.any():
+                    U[nonzero_bc] = U_bc[nonzero_bc]
 
             # 速度限制器（防止发散）
             U_mag = U.norm(dim=1, keepdim=True).clamp(min=1e-30)
@@ -262,17 +254,6 @@ class PISOSolver(CoupledSolverBase):
 
             # Zero out empty patch faces on corrected phi
             self._zero_empty_patches(phi, mesh)
-
-            # Re-apply BCs only for non-zero prescribed velocity cells
-            # (moving walls, inlets).  Do NOT re-apply for zero-velocity
-            # walls — the face-based diffusion already drives those cells
-            # toward zero, and forcing them to exactly zero destroys the
-            # velocity gradient in closed domains like Couette flow.
-            if U_bc is not None:
-                bc_mask = ~torch.isnan(U_bc[:, 0])
-                nonzero_bc = bc_mask & (U_bc.abs().sum(dim=1) > 1e-10)
-                if nonzero_bc.any():
-                    U[nonzero_bc] = U_bc[nonzero_bc]
 
             # Recompute H for subsequent corrections (not needed for last)
             if corr < config.n_correctors - 1:
@@ -299,9 +280,7 @@ class PISOSolver(CoupledSolverBase):
             convergence.U_residual = 0.0
         convergence.converged = continuity_error < tolerance
 
-        # Re-apply boundary conditions after pressure correction loop
-        # Only enforce for non-zero prescribed velocity cells (moving walls, inlets).
-        # Zero-velocity wall cells are driven by the penalty method.
+        # Re-apply BCs for non-zero prescribed velocity cells
         if U_bc is not None:
             bc_mask = ~torch.isnan(U_bc[:, 0])
             nonzero_bc = bc_mask & (U_bc.abs().sum(dim=1) > 1e-10)
@@ -472,13 +451,9 @@ class PISOSolver(CoupledSolverBase):
 
         total_source = H - grad_p
         diag_safe = diag.abs().clamp(min=1e-30)
-        U_new = total_source / diag_safe.unsqueeze(-1)
 
-        # Re-apply boundary conditions directly after solve
-        if U_bc is not None:
-            bc_mask = ~torch.isnan(U_bc[:, 0])
-            if bc_mask.any():
-                U_new[bc_mask] = U_bc[bc_mask]
+        # Single diagonal solve (standard PISO)
+        U_new = total_source / diag_safe.unsqueeze(-1)
 
         return U_new, diag, H
 
