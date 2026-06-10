@@ -170,14 +170,17 @@ class ReactingFoam(SolverBase):
         if not rxn_path.exists():
             # Default: single reaction A → B
             logger.warning("No reactions file found, using default A→B reaction")
-            reactions.append(Reaction(
+            rxn = Reaction(
                 name="reaction1",
                 A=1.0,
                 beta=0.0,
                 Ea=0.0,
                 reactants={"A": 1.0},
                 products={"B": 1.0},
-            ))
+            )
+            rxn.h_f_reactants = {"A": 0.0}
+            rxn.h_f_products = {"B": -1e5}
+            reactions.append(rxn)
             return reactions
 
         try:
@@ -434,9 +437,16 @@ class ReactingFoam(SolverBase):
         for reaction in self.reactions:
             rate = self._compute_arrhenius_rate(reaction, T, Y)
 
-            # Simplified: assume ΔH = 0 for now
-            # In a full implementation, this would read from thermo data
-            # heat_release += delta_H * rate
+            # ΔH_rxn = Σ_products(ν_j · h_j) - Σ_reactants(ν_j · h_j)
+            delta_H = 0.0
+            for species, nu in reaction.products.items():
+                h_f = getattr(reaction, "h_f_products", {}).get(species, -1e5)
+                delta_H += nu * h_f
+            for species, nu in reaction.reactants.items():
+                h_f = getattr(reaction, "h_f_reactants", {}).get(species, 0.0)
+                delta_H -= nu * h_f
+
+            heat_release = heat_release + delta_H * rate
 
         return heat_release
 

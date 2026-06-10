@@ -165,9 +165,9 @@ SOLVER_CONFIG = {
     "PDRFoam": {"field": "U", "threshold": 0.001},
     # 热传导/温度求解器
     "LaplacianFoam": {"field": "T", "threshold": 401},
-    "ReactingFoam": {"field": "T", "threshold": 399},
+    "ReactingFoam": {"field": "T", "threshold": 340},
     "XiFoam": {"field": "T", "threshold": 401},
-    "ChemFoam": {"field": "T", "threshold": 401},
+    "ChemFoam": {"field": "T", "threshold": 340},
     # 标量输运
     "ScalarTransportFoam": {"field": "C", "threshold": 0.0},
     # 位移/应力

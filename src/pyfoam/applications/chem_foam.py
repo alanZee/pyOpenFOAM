@@ -160,10 +160,14 @@ class ChemFoam(SolverBase):
         rxn_path = self.case_path / "constant" / "reactions"
         if not rxn_path.exists():
             logger.warning("No reactions file found, using default A→B reaction")
-            reactions.append(ChemReaction(
+            rxn = ChemReaction(
                 name="reaction1", A=1.0, beta=0.0, Ea=0.0,
                 reactants={"A": 1.0}, products={"B": 1.0},
-            ))
+            )
+            # 默认放热反应（ΔH = -1e5 J/kg），确保温度有变化
+            rxn.h_f_reactants = {"A": 0.0}
+            rxn.h_f_products = {"B": -1e5}
+            reactions.append(rxn)
             return reactions
 
         try:
