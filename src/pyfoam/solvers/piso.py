@@ -420,8 +420,7 @@ class PISOSolver(CoupledSolverBase):
             diag = diag + V_over_dt
 
         # Compute H from off-diagonal contributions (absolute form).
-        # H is used for HbyA and the pressure equation, NOT for the
-        # momentum solve (which uses the diagonal approximation).
+        # Include boundary face contributions for proper driving force.
         H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
         U_neigh = U[int_neigh]
         U_own = U[int_owner]
@@ -429,6 +428,45 @@ class PISOSolver(CoupledSolverBase):
         H.index_add_(0, int_owner, owner_contrib)
         neigh_contrib = upper.unsqueeze(-1) * U_own * V_N.unsqueeze(-1)
         H.index_add_(0, int_neigh, neigh_contrib)
+
+        # Add boundary face contributions to H.
+        # Treat boundary faces as internal faces with prescribed velocity.
+        if n_faces > n_internal and U_bc is not None:
+            bc_mask = ~torch.isnan(U_bc[:, 0])
+            for patch in mesh.boundary:
+                ptype = patch.get("type", "")
+                if ptype != "wall":
+                    continue
+                sf = patch.get("startFace", 0)
+                nf = patch.get("nFaces", 0)
+                if nf <= 0:
+                    continue
+
+                patch_owner = owner[sf:sf + nf]
+                if not bc_mask[patch_owner].any():
+                    continue
+
+                patch_areas = face_areas[sf:sf + nf]
+                patch_fc = mesh.face_centres[sf:sf + nf]
+                patch_oc = mesh.cell_centres[patch_owner]
+
+                d_P = patch_fc - patch_oc
+                patch_S_mag = patch_areas.norm(dim=1)
+                safe_mag = torch.where(patch_S_mag > 1e-30, patch_S_mag, torch.ones_like(patch_S_mag))
+                n_hat = patch_areas / safe_mag.unsqueeze(-1)
+                d_dot_n = (d_P * n_hat).sum(dim=1).abs()
+                patch_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+
+                # Off-diagonal coefficient for boundary face
+                bnd_coeff = nu * patch_S_mag * patch_delta
+                bnd_V = gather(cell_volumes_safe, patch_owner)
+
+                # H contribution: -bnd_coeff * U_bc (off-diagonal * neighbor velocity)
+                for comp in range(3):
+                    u_bc_comp = U_bc[patch_owner, comp].nan_to_num(0.0)
+                    H_contrib = -bnd_coeff * u_bc_comp / bnd_V
+                    H[:, comp] = H[:, comp] + scatter_add(H_contrib, patch_owner, n_cells)
+
         H = H + source * cell_volumes_safe.unsqueeze(-1)
         if body_force is not None:
             H = H + body_force.to(device=device, dtype=dtype) * cell_volumes_safe.unsqueeze(-1)
@@ -451,13 +489,30 @@ class PISOSolver(CoupledSolverBase):
         total_source = H - grad_p
         diag_safe = diag.abs().clamp(min=1e-30)
 
-        total_source = H - grad_p
-        diag_safe = diag.abs().clamp(min=1e-30)
+        # Use PBiCGStab to solve the momentum equation.
+        # The diagonal solve cannot propagate boundary driving force.
+        # PBiCGStab properly solves: A * U = total_source
+        # where A includes boundary penalty in diagonal.
+        from pyfoam.core.ldu_matrix import LduMatrix
+        from pyfoam.solvers.pbicgstab import PBiCGSTABSolver
 
-        # Single diagonal solve (standard PISO)
-        U_new = total_source / diag_safe.unsqueeze(-1)
+        # Assemble LDU matrix (includes boundary penalty in diagonal)
+        mat = LduMatrix(n_cells, int_owner, int_neigh, device=device, dtype=dtype)
+        mat.diag = diag.clone()
+        mat.lower = lower.clone()
+        mat.upper = upper.clone()
 
-        return U_new, diag, H
+        momentum_solver = PBiCGSTABSolver(
+            tolerance=1e-3, rel_tol=0.01, max_iter=100,
+        )
+
+        # Solve each velocity component
+        U_new = U.clone()
+        for comp in range(3):
+            source_comp = total_source[:, comp]
+            x0 = U[:, comp].clone()
+            x_sol, iters, residual = momentum_solver(mat, source_comp, x0)
+            U_new[:, comp] = x_sol
 
         return U_new, diag, H
 
