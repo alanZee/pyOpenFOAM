@@ -175,8 +175,7 @@ class PISOSolver(CoupledSolverBase):
             HbyA = compute_HbyA(H, A_p)
 
             # Blend HbyA at boundary cells toward U_bc.
-            # Pure HbyA is too small (penalty weakness), pure U_bc
-            # causes pressure over-correction.  Blend factor 0.5.
+            # Pure HbyA is too small, pure U_bc causes over-correction.
             if U_bc is not None:
                 bc_mask_local = ~torch.isnan(U_bc[:, 0])
                 if bc_mask_local.any():
@@ -452,8 +451,13 @@ class PISOSolver(CoupledSolverBase):
         total_source = H - grad_p
         diag_safe = diag.abs().clamp(min=1e-30)
 
+        total_source = H - grad_p
+        diag_safe = diag.abs().clamp(min=1e-30)
+
         # Single diagonal solve (standard PISO)
         U_new = total_source / diag_safe.unsqueeze(-1)
+
+        return U_new, diag, H
 
         return U_new, diag, H
 
