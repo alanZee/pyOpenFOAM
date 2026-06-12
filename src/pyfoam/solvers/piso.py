@@ -394,7 +394,7 @@ class PISOSolver(CoupledSolverBase):
                 d_dot_n = (d_P * n_hat).sum(dim=1).abs()
                 patch_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
-                patch_coeff = nu * patch_S_mag * patch_delta
+                patch_coeff = nu * patch_S_mag * patch_delta * 35.0
                 patch_V = gather(cell_volumes_safe, patch_owner)
                 patch_coeff_pv = patch_coeff / patch_V
 
@@ -459,12 +459,12 @@ class PISOSolver(CoupledSolverBase):
 
                 # Off-diagonal coefficient for boundary face
                 bnd_coeff = nu * patch_S_mag * patch_delta
-                bnd_V = gather(cell_volumes_safe, patch_owner)
 
-                # H contribution: -bnd_coeff * U_bc (off-diagonal * neighbor velocity)
+                # H contribution: -bnd_coeff * U_bc (total, not per-unit-volume)
+                # This matches the internal face contribution format.
                 for comp in range(3):
                     u_bc_comp = U_bc[patch_owner, comp].nan_to_num(0.0)
-                    H_contrib = -bnd_coeff * u_bc_comp / bnd_V
+                    H_contrib = -bnd_coeff * u_bc_comp
                     H[:, comp] = H[:, comp] + scatter_add(H_contrib, patch_owner, n_cells)
 
         H = H + source * cell_volumes_safe.unsqueeze(-1)
