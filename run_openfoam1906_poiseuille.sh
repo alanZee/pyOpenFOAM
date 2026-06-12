@@ -182,6 +182,17 @@ SIMPLE
     nNonOrthogonalCorrectors 0;
     pRefCell        0;
     pRefValue       0;
+    relaxationFactors
+    {
+        fields
+        {
+            p               0.3;
+        }
+        equations
+        {
+            U               0.7;
+        }
+    }
 }
 EOF
 
