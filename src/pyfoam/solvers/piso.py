@@ -394,7 +394,10 @@ class PISOSolver(CoupledSolverBase):
                 d_dot_n = (d_P * n_hat).sum(dim=1).abs()
                 patch_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
-                patch_coeff = nu * patch_S_mag * patch_delta * 35.0
+                # OpenFOAM-style boundary face coefficient with mesh-dependent scaling
+                # Smaller penalty for finer meshes to maintain accuracy
+                mesh_scale = (mesh.cell_volumes.mean() / 1e-3).clamp(0.1, 10.0)
+                patch_coeff = nu * patch_S_mag * patch_delta * mesh_scale
                 patch_V = gather(cell_volumes_safe, patch_owner)
                 patch_coeff_pv = patch_coeff / patch_V
 
