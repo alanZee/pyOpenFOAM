@@ -514,6 +514,12 @@ class PISOSolver(CoupledSolverBase):
             x_sol, iters, residual = momentum_solver(mat, source_comp, x0)
             U_new[:, comp] = x_sol
 
+        # Enforce boundary conditions after PBiCGStab solve
+        if U_bc is not None:
+            bc_mask_local = ~torch.isnan(U_bc[:, 0])
+            if bc_mask_local.any():
+                U_new[bc_mask_local] = U_bc[bc_mask_local]
+
         return U_new, diag, H
 
     def _recompute_H(
