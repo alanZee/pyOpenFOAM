@@ -395,8 +395,8 @@ class PISOSolver(CoupledSolverBase):
                 patch_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
                 # OpenFOAM-style boundary face coefficient
-                # Large penalty to enforce BC at matrix level
-                patch_coeff = nu * patch_S_mag * patch_delta * 1000.0
+                # Very large penalty to enforce BC at matrix level
+                patch_coeff = nu * patch_S_mag * patch_delta * 10000.0
                 patch_V = gather(cell_volumes_safe, patch_owner)
                 patch_coeff_pv = patch_coeff / patch_V
 
