@@ -159,8 +159,13 @@ class PISOSolver(CoupledSolverBase):
         U = U.to(device=device, dtype=dtype)
         p = p.to(device=device, dtype=dtype)
         phi = phi.to(device=device, dtype=dtype)
+        if U_bc is not None:
+            U_bc = U_bc.to(device=device, dtype=dtype)
 
         convergence = ConvergenceData()
+
+        # Cache U_bc for _recompute_H
+        self._U_bc_cached = U_bc
 
         # ============================================
         # Step 1: Momentum predictor
@@ -174,17 +179,9 @@ class PISOSolver(CoupledSolverBase):
             # Compute HbyA
             HbyA = compute_HbyA(H, A_p)
 
-            # Blend HbyA at boundary cells toward U_bc.
-            # Pure HbyA is too small, pure U_bc causes over-correction.
-            if U_bc is not None:
-                bc_mask_local = ~torch.isnan(U_bc[:, 0])
-                if bc_mask_local.any():
-                    blend = 0.9
-                    HbyA = torch.where(
-                        bc_mask_local.unsqueeze(-1),
-                        blend * U_bc + (1.0 - blend) * HbyA,
-                        HbyA,
-                    )
+            # Matrix-level BC: HbyA is correct because _momentum_predictor
+            # adds boundary face coefficient to both H and A_p.
+            # No blending needed — H/A_p naturally → U_bc at boundary cells.
 
             # Compute phiHbyA
             phiHbyA = compute_face_flux_HbyA(
@@ -227,17 +224,14 @@ class PISOSolver(CoupledSolverBase):
             # Pressure correction: p' = p_new - p_old
             p_prime = p - p_old_iter
 
-            # Correct velocity: U = U - (1/A_p) * grad(p')
-            # Use 5x damped A_p to prevent over-correction
-            A_p_damped = A_p * 5.0
-            U = correct_velocity(U, U, p_prime, A_p_damped, mesh)
+            # Correct velocity: U = HbyA - (1/A_p) * grad(p')
+            U = correct_velocity(U, U, p_prime, A_p, mesh)
 
-            # Re-apply BCs for non-zero prescribed velocity cells
+            # Re-apply BCs for ALL prescribed velocity cells (including noSlip)
             if U_bc is not None:
                 bc_mask = ~torch.isnan(U_bc[:, 0])
-                nonzero_bc = bc_mask & (U_bc.abs().sum(dim=1) > 1e-10)
-                if nonzero_bc.any():
-                    U[nonzero_bc] = U_bc[nonzero_bc]
+                if bc_mask.any():
+                    U[bc_mask] = U_bc[bc_mask]
 
             # 速度限制器（防止发散）
             U_mag = U.norm(dim=1, keepdim=True).clamp(min=1e-30)
@@ -279,12 +273,11 @@ class PISOSolver(CoupledSolverBase):
             convergence.U_residual = 0.0
         convergence.converged = continuity_error < tolerance
 
-        # Re-apply BCs for non-zero prescribed velocity cells
+        # Re-apply BCs for ALL prescribed velocity cells
         if U_bc is not None:
             bc_mask = ~torch.isnan(U_bc[:, 0])
-            nonzero_bc = bc_mask & (U_bc.abs().sum(dim=1) > 1e-10)
-            if nonzero_bc.any():
-                U[nonzero_bc] = U_bc[nonzero_bc]
+            if bc_mask.any():
+                U[bc_mask] = U_bc[bc_mask]
 
         logger.info(
             "PISO: %d corrections, continuity=%.6e",
@@ -360,17 +353,23 @@ class PISOSolver(CoupledSolverBase):
         # Source term (per-unit-volume)
         source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
 
-        # Add face-based diffusion at FIXED-VALUE wall boundary faces.
-        # This is the discrete equivalent of the wall shear stress.
-        # For walls with U=0: adds face_coeff to diagonal (pulls velocity to 0)
-        # For moving walls: adds face_coeff*U_top to source (drives flow)
-        # Skip empty patches (2D approximation) and non-wall patches —
-        # only wall patches impose a velocity constraint via penalty.
+        # Store source BEFORE boundary handling for _recompute_H.
+        # Boundary contributions are computed separately in _recompute_H
+        # using stored boundary coefficients, so must not be double-counted.
+        self._bc_source = source.clone()
+
+        # Matrix-level boundary condition treatment.
+        # Add boundary face coefficient to BOTH diagonal and source.
+        # This ensures HbyA = H/A_p naturally → U_bc at boundary cells,
+        # matching OpenFOAM's approach of treating boundary faces as
+        # virtual internal faces with prescribed neighbor velocity.
+        self._bnd_coeff_data = None
         if n_faces > n_internal and hasattr(mesh, 'boundary') and U_bc is not None:
             bc_mask = ~torch.isnan(U_bc[:, 0])
+            all_bnd_coeff = []
+            all_bnd_owner = []
             for patch in mesh.boundary:
                 ptype = patch.get("type", "")
-                # Only process wall patches (fixedValue velocity BCs)
                 if ptype != "wall":
                     continue
                 sf = patch.get("startFace", 0)
@@ -378,14 +377,13 @@ class PISOSolver(CoupledSolverBase):
                 if nf <= 0:
                     continue
 
-                patch_owner = owner[sf:sf + nf]
-                # Only process patches with fixedValue BCs
-                if not bc_mask[patch_owner].any():
+                patch_owner = owner[sf:sf + nf].to(device=device)
+                if not bc_mask.to(device=device)[patch_owner].any():
                     continue
 
-                patch_areas = face_areas[sf:sf + nf]
-                patch_fc = mesh.face_centres[sf:sf + nf]
-                patch_oc = mesh.cell_centres[patch_owner]
+                patch_areas = face_areas[sf:sf + nf].to(device=device, dtype=dtype)
+                patch_fc = mesh.face_centres[sf:sf + nf].to(device=device, dtype=dtype)
+                patch_oc = mesh.cell_centres.to(device=device, dtype=dtype)[patch_owner]
 
                 d_P = patch_fc - patch_oc
                 patch_S_mag = patch_areas.norm(dim=1)
@@ -394,25 +392,32 @@ class PISOSolver(CoupledSolverBase):
                 d_dot_n = (d_P * n_hat).sum(dim=1).abs()
                 patch_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
-                # OpenFOAM-style boundary face coefficient
-                # Very large penalty to enforce BC at matrix level
-                patch_coeff = nu * patch_S_mag * patch_delta * 10000.0
+                # Boundary face coefficient: nu * |S| * delta (per-unit-volume)
+                patch_coeff = nu * patch_S_mag * patch_delta
                 patch_V = gather(cell_volumes_safe, patch_owner)
                 patch_coeff_pv = patch_coeff / patch_V
 
-                # Only add for cells that have BCs
-                patch_bc = bc_mask[patch_owner]
+                # Add to diagonal: a_P += coeff
+                patch_bc = bc_mask.to(device=device)[patch_owner]
                 patch_coeff_masked = patch_coeff_pv * patch_bc.float()
-
                 diag = diag + scatter_add(patch_coeff_masked, patch_owner, n_cells)
 
+                # Add to source: b += coeff * U_bc (per-unit-volume)
+                U_bc_dev = U_bc.to(device=device)
                 for comp in range(3):
-                    u_bc_comp = U_bc[patch_owner, comp].nan_to_num(0.0)
+                    u_bc_comp = U_bc_dev[patch_owner, comp].nan_to_num(0.0)
                     source_contrib = patch_coeff_masked * u_bc_comp
                     source[:, comp] = source[:, comp] + scatter_add(source_contrib, patch_owner, n_cells)
 
-        # Store BC source for _recompute_H (spatial operator only, no time derivative)
-        self._bc_source = source.clone()
+                # Store for H assembly and recompute_H
+                all_bnd_coeff.append(patch_coeff)
+                all_bnd_owner.append(patch_owner)
+
+            if all_bnd_coeff:
+                self._bnd_coeff_data = (
+                    torch.cat(all_bnd_coeff),
+                    torch.cat(all_bnd_owner),
+                )
 
         # Add time derivative V/dt * U_old to H and V/dt to diagonal.
         dt = self._piso_config.dt if hasattr(self._piso_config, 'dt') else 1.0
@@ -422,7 +427,6 @@ class PISOSolver(CoupledSolverBase):
             diag = diag + V_over_dt
 
         # Compute H from off-diagonal contributions (absolute form).
-        # Include boundary face contributions for proper driving force.
         H = torch.zeros(n_cells, 3, dtype=dtype, device=device)
         U_neigh = U[int_neigh]
         U_own = U[int_owner]
@@ -431,44 +435,8 @@ class PISOSolver(CoupledSolverBase):
         neigh_contrib = upper.unsqueeze(-1) * U_own * V_N.unsqueeze(-1)
         H.index_add_(0, int_neigh, neigh_contrib)
 
-        # Add boundary face contributions to H.
-        # Treat boundary faces as internal faces with prescribed velocity.
-        if n_faces > n_internal and U_bc is not None:
-            bc_mask = ~torch.isnan(U_bc[:, 0])
-            for patch in mesh.boundary:
-                ptype = patch.get("type", "")
-                if ptype != "wall":
-                    continue
-                sf = patch.get("startFace", 0)
-                nf = patch.get("nFaces", 0)
-                if nf <= 0:
-                    continue
-
-                patch_owner = owner[sf:sf + nf]
-                if not bc_mask[patch_owner].any():
-                    continue
-
-                patch_areas = face_areas[sf:sf + nf]
-                patch_fc = mesh.face_centres[sf:sf + nf]
-                patch_oc = mesh.cell_centres[patch_owner]
-
-                d_P = patch_fc - patch_oc
-                patch_S_mag = patch_areas.norm(dim=1)
-                safe_mag = torch.where(patch_S_mag > 1e-30, patch_S_mag, torch.ones_like(patch_S_mag))
-                n_hat = patch_areas / safe_mag.unsqueeze(-1)
-                d_dot_n = (d_P * n_hat).sum(dim=1).abs()
-                patch_delta = 1.0 / d_dot_n.clamp(min=1e-30)
-
-                # Off-diagonal coefficient for boundary face
-                bnd_coeff = nu * patch_S_mag * patch_delta
-
-                # H contribution: -bnd_coeff * U_bc (total, not per-unit-volume)
-                # This matches the internal face contribution format.
-                for comp in range(3):
-                    u_bc_comp = U_bc[patch_owner, comp].nan_to_num(0.0)
-                    H_contrib = -bnd_coeff * u_bc_comp
-                    H[:, comp] = H[:, comp] + scatter_add(H_contrib, patch_owner, n_cells)
-
+        # Add boundary face contributions via source * V.
+        # source already contains boundary terms (coeff * U_bc per unit volume).
         H = H + source * cell_volumes_safe.unsqueeze(-1)
         if body_force is not None:
             H = H + body_force.to(device=device, dtype=dtype) * cell_volumes_safe.unsqueeze(-1)
@@ -491,85 +459,10 @@ class PISOSolver(CoupledSolverBase):
         total_source = H - grad_p
         diag_safe = diag.abs().clamp(min=1e-30)
 
-        # OpenFOAM-style matrix-level BC: treat boundary faces as internal
-        # faces with prescribed velocity. This extends the LDU matrix with
-        # boundary face off-diagonal terms, allowing PBiCGStab to properly
-        # enforce boundary conditions.
-        from pyfoam.core.ldu_matrix import LduMatrix
-        from pyfoam.solvers.pbicgstab import PBiCGSTABSolver
-
-        # Collect boundary face contributions for LDU matrix extension
-        bnd_lower_list = []
-        bnd_upper_list = []
-        bnd_owner_list = []
-        bnd_neigh_list = []
-
-        if n_faces > n_internal and U_bc is not None:
-            bc_mask = ~torch.isnan(U_bc[:, 0])
-            for patch in mesh.boundary:
-                ptype = patch.get("type", "")
-                if ptype != "wall":
-                    continue
-                sf = patch.get("startFace", 0)
-                nf = patch.get("nFaces", 0)
-                if nf <= 0:
-                    continue
-                patch_owner = owner[sf:sf + nf]
-                if not bc_mask[patch_owner].any():
-                    continue
-                patch_areas = face_areas[sf:sf + nf]
-                patch_fc = mesh.face_centres[sf:sf + nf]
-                patch_oc = mesh.cell_centres[patch_owner]
-                d_P = patch_fc - patch_oc
-                patch_S_mag = patch_areas.norm(dim=1)
-                safe_mag = torch.where(patch_S_mag > 1e-30, patch_S_mag, torch.ones_like(patch_S_mag))
-                n_hat = patch_areas / safe_mag.unsqueeze(-1)
-                d_dot_n = (d_P * n_hat).sum(dim=1).abs()
-                patch_delta = 1.0 / d_dot_n.clamp(min=1e-30)
-                patch_coeff = nu * patch_S_mag * patch_delta
-                patch_V = gather(cell_volumes_safe, patch_owner)
-                patch_coeff_pv = patch_coeff / patch_V
-                # Boundary face: owner = patch_owner, virtual neighbor = self
-                # Off-diagonal coefficient (negative, like internal faces)
-                bnd_lower_list.append(-patch_coeff_pv)
-                bnd_owner_list.append(patch_owner)
-
-        # Assemble LDU matrix with boundary face contributions
-        if bnd_lower_list:
-            bnd_lower = torch.cat(bnd_lower_list)
-            bnd_owner_cat = torch.cat(bnd_owner_list)
-            # Extend lower/upper with boundary contributions
-            all_lower = torch.cat([lower, bnd_lower])
-            all_upper = torch.cat([upper, torch.zeros_like(bnd_lower)])
-            all_owner = torch.cat([int_owner, bnd_owner_cat])
-            all_neigh = torch.cat([int_neigh, bnd_owner_cat])  # virtual self-neighbor
-            mat = LduMatrix(n_cells, all_owner, all_neigh, device=device, dtype=dtype)
-            mat.diag = diag.clone()
-            mat.lower = all_lower.clone()
-            mat.upper = all_upper.clone()
-        else:
-            mat = LduMatrix(n_cells, int_owner, int_neigh, device=device, dtype=dtype)
-            mat.diag = diag.clone()
-            mat.lower = lower.clone()
-            mat.upper = upper.clone()
-
-        momentum_solver = PBiCGSTABSolver(
-            tolerance=1e-3, rel_tol=0.01, max_iter=100,
-        )
-
-        # Solve each velocity component
-        U_new = U.clone()
-        for comp in range(3):
-            source_comp = total_source[:, comp]
-            x0 = U[:, comp].clone()
-            x_sol, iters, residual = momentum_solver(mat, source_comp, x0)
-            U_new[:, comp] = x_sol
-
-        # Enforce boundary conditions after PBiCGStab solve
-        if U_bc is not None:
-            bc_mask_local = ~torch.isnan(U_bc[:, 0])
-            if bc_mask_local.any():
-                U_new[bc_mask_local] = U_bc[bc_mask_local]
+        # Diagonal solve: U_new = (H - grad(p)) / A_p
+        # Standard PISO approach (Issa 1986). Boundary conditions are
+        # properly enforced through matrix-level BC treatment above.
+        U_new = total_source / diag_safe.unsqueeze(-1)
 
         return U_new, diag, H
 
@@ -637,6 +530,18 @@ class PISOSolver(CoupledSolverBase):
         # Add stored BC source contributions (scale to absolute form)
         if hasattr(self, '_bc_source'):
             H = H + self._bc_source * cell_volumes_safe.unsqueeze(-1)
+
+        # Add boundary face contributions using stored coefficients
+        if hasattr(self, '_bnd_coeff_data') and self._bnd_coeff_data is not None:
+            bnd_coeff, bnd_owner_idx = self._bnd_coeff_data
+            # Use U_bc stored from the solve call
+            if hasattr(self, '_U_bc_cached') and self._U_bc_cached is not None:
+                U_bc = self._U_bc_cached
+                for comp in range(3):
+                    u_bc_comp = U_bc[bnd_owner_idx, comp].nan_to_num(0.0)
+                    H[:, comp] = H[:, comp] + scatter_add(
+                        bnd_coeff * u_bc_comp, bnd_owner_idx, n_cells
+                    )
 
         return H
 

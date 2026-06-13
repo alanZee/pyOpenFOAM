@@ -37,6 +37,7 @@ import torch
 
 from pyfoam.core.backend import scatter_add, gather
 from pyfoam.core.device import get_device, get_default_dtype
+from pyfoam.core.dtype import INDEX_DTYPE
 from pyfoam.core.fv_matrix import FvMatrix
 from pyfoam.solvers.coupled_solver import (
     CoupledSolverBase,
@@ -167,6 +168,8 @@ class SIMPLESolver(CoupledSolverBase):
         U = U.to(device=device, dtype=dtype)
         p = p.to(device=device, dtype=dtype)
         phi = phi.to(device=device, dtype=dtype)
+        if U_bc is not None:
+            U_bc = U_bc.to(device=device, dtype=dtype)
 
         convergence = ConvergenceData()
 
@@ -532,13 +535,11 @@ class SIMPLESolver(CoupledSolverBase):
             bc_mask = ~torch.isnan(U_bc[:, 0])
             if bc_mask.any() and n_faces > n_internal:
                 bnd_owner = owner[n_internal:]
-                bnd_areas = mesh.face_areas[n_internal:]
-                bnd_face_centres = mesh.face_centres[n_internal:]
+                bnd_areas = mesh.face_areas[n_internal:].to(device=device, dtype=dtype)
+                bnd_face_centres = mesh.face_centres[n_internal:].to(device=device, dtype=dtype)
+                owner_centres = mesh.cell_centres.to(device=device, dtype=dtype)[bnd_owner.to(device=device)]
 
                 # Compute boundary delta using d_P (cell-centre to face distance).
-                # This matches OpenFOAM's convention where boundary
-                # deltaCoeffs = 1/d_P for fixedValue BCs.
-                owner_centres = mesh.cell_centres[bnd_owner]
                 d_P = bnd_face_centres - owner_centres
                 bnd_S_mag = bnd_areas.norm(dim=1)
                 safe_S_mag = torch.where(bnd_S_mag > 1e-30, bnd_S_mag, torch.ones_like(bnd_S_mag))
@@ -546,30 +547,35 @@ class SIMPLESolver(CoupledSolverBase):
                 d_dot_n = (d_P * n_hat).sum(dim=1).abs()
                 bnd_delta = 1.0 / d_dot_n.clamp(min=1e-30)
 
+                # Move boundary owner indices to solver device
+                bnd_owner_dev = bnd_owner.to(device=device)
+                bc_mask_dev = bc_mask.to(device=device)
+
                 # Face diffusion coefficient: nu * |S_f| * delta_bnd
                 if nu_field is not None:
-                    bnd_nu = gather(nu_field, bnd_owner)
+                    bnd_nu = gather(nu_field.to(device=device), bnd_owner_dev)
                     bnd_face_coeff = bnd_nu * bnd_S_mag * bnd_delta
                 else:
                     bnd_face_coeff = nu * bnd_S_mag * bnd_delta
 
                 # Only apply to cells that have BCs
-                bnd_bc_mask = bc_mask[bnd_owner]
+                bnd_bc_mask = bc_mask_dev[bnd_owner_dev]
                 bnd_face_coeff_masked = bnd_face_coeff * bnd_bc_mask.float()
 
                 # Divide by cell volume to match per-unit-volume form
                 # (internal face coefficients are already per-unit-volume)
-                bnd_V = gather(cell_volumes_safe, bnd_owner)
+                bnd_V = gather(cell_volumes_safe, bnd_owner_dev)
                 bnd_face_coeff_pv = bnd_face_coeff_masked / bnd_V
 
                 # Add to diagonal: internalCoeffs = face_coeff / V
-                diag = diag + scatter_add(bnd_face_coeff_pv, bnd_owner, n_cells)
+                diag = diag + scatter_add(bnd_face_coeff_pv, bnd_owner_dev, n_cells)
 
                 # Add to source: boundaryCoeffs = face_coeff * U_bc / V
+                U_bc_dev = U_bc.to(device=device)
                 for comp in range(3):
-                    u_bc_comp = U_bc[bnd_owner, comp].nan_to_num(0.0)
+                    u_bc_comp = U_bc_dev[bnd_owner_dev, comp].nan_to_num(0.0)
                     source_contrib = bnd_face_coeff_pv * u_bc_comp
-                    source[:, comp] = source[:, comp] + scatter_add(source_contrib, bnd_owner, n_cells)
+                    source[:, comp] = source[:, comp] + scatter_add(source_contrib, bnd_owner_dev, n_cells)
 
         # ============================================
         # Step 4: Implicit under-relaxation (OpenFOAM style)
