@@ -604,7 +604,10 @@ class PISOSolver(CoupledSolverBase):
         bnd_owner = mesh.owner[n_internal:]
         bnd_areas = mesh.face_areas[n_internal:]
 
-        # Build per-face prescribed velocity: check each face's owner cell
+        # Build per-face prescribed velocity: check each face's owner cell.
+        # For each non-empty patch, look up U_bc for each face's owner cell.
+        # Faces whose owner has NaN (no prescribed BC) keep their NaN marker
+        # so the has_bc mask below correctly excludes them.
         U_bnd = torch.full_like(bnd_areas, float('nan'))
         for patch in mesh.boundary:
             if patch.get("type", "") == "empty":
@@ -613,12 +616,15 @@ class PISOSolver(CoupledSolverBase):
             nf = patch.get("nFaces", 0)
             if sf < 0 or nf <= 0:
                 continue
-            # Check each face's owner cell individually for prescribed BC
-            for fi in range(sf, sf + nf):
-                owner_cell = bnd_owner[fi].item()
-                u_cell = U_bc[owner_cell]
-                if not torch.isnan(u_cell[0]):
-                    U_bnd[fi] = u_cell
+            # Vectorized: get prescribed velocity for each face's owner cell
+            patch_owners = bnd_owner[sf:sf + nf]
+            u_cells = U_bc[patch_owners]  # (nf, 3)
+            # Only set faces whose owner cell has a prescribed BC (not NaN)
+            valid = ~torch.isnan(u_cells[:, 0])
+            if valid.any():
+                U_bnd[sf:sf + nf] = torch.where(
+                    valid.unsqueeze(-1), u_cells, U_bnd[sf:sf + nf],
+                )
 
         has_bc = ~torch.isnan(U_bnd[:, 0])
         if has_bc.any():
@@ -741,11 +747,13 @@ class PISOSolver(CoupledSolverBase):
             nf = patch.get("nFaces", 0)
             if sf < 0 or nf <= 0:
                 continue
-            for fi in range(sf, sf + nf):
-                owner_cell = bnd_owner[fi].item()
-                u_cell = U_bc[owner_cell]
-                if not torch.isnan(u_cell[0]):
-                    U_bnd[fi] = u_cell
+            patch_owners = bnd_owner[sf:sf + nf]
+            u_cells = U_bc[patch_owners]
+            valid = ~torch.isnan(u_cells[:, 0])
+            if valid.any():
+                U_bnd[sf:sf + nf] = torch.where(
+                    valid.unsqueeze(-1), u_cells, U_bnd[sf:sf + nf],
+                )
 
         has_bc = ~torch.isnan(U_bnd[:, 0])
         if not has_bc.any():
