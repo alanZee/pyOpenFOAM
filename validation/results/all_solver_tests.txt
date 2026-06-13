@@ -1,0 +1,96 @@
+pyOpenFOAM Solver Validation - 2026-06-13
+================================================================================
+
+Full Suite: 2016 collected | 2015 passed | 1 xfailed | 0 failed | 0 errors
+Runtime: 325.54s (5m 25s)
+Xfail: test_rho_central_foam.py::TestRhoCentralFoamRun::test_writes_output
+
+Per-Solver Breakdown (77 test files):
+Total tests: 2011
+Total passed: 2011
+Total failed: 0
+Total errors: 0
+Total skipped: 0
+Pass rate: 100.0%
+Base solvers in registry: 70
+
+================================================================================
+File                                                    Tests   Passed  Failed  Errors  Status
+--------------------------------------------------------------------------------
+test_acoustic_foam.py                                     12 tests |   12 passed |  0 failed |  0 errors | PASS
+test_adjoint_foam.py                                      13 tests |   13 passed |  0 failed |  0 errors | PASS
+test_adjoint_shape_foam.py                                20 tests |   20 passed |  0 failed |  0 errors | PASS
+test_adjoint_turbulence_foam.py                           16 tests |   16 passed |  0 failed |  0 errors | PASS
+test_boundary_foam.py                                     30 tests |   30 passed |  0 failed |  0 errors | PASS
+test_buoyant_boussinesq_simple_foam.py                    28 tests |   28 passed |  0 failed |  0 errors | PASS
+test_buoyant_pimple_foam.py                               37 tests |   37 passed |  0 failed |  0 errors | PASS
+test_buoyant_simple_foam.py                               40 tests |   40 passed |  0 failed |  0 errors | PASS
+test_cavitating_foam.py                                    4 tests |    4 passed |  0 failed |  0 errors | PASS
+test_chem_foam.py                                         15 tests |   15 passed |  0 failed |  0 errors | PASS
+test_cht_multi_region_enhanced_foam.py                    15 tests |   15 passed |  0 failed |  0 errors | PASS
+test_cht_multi_region_foam.py                             12 tests |   12 passed |  0 failed |  0 errors | PASS
+test_cht_solver.py                                        12 tests |   12 passed |  0 failed |  0 errors | PASS
+test_combustion_foam.py                                   14 tests |   14 passed |  0 failed |  0 errors | PASS
+test_compressible_inter_foam.py                            5 tests |    5 passed |  0 failed |  0 errors | PASS
+test_compressible_inter_foam2.py                           9 tests |    9 passed |  0 failed |  0 errors | PASS
+test_compressible_vof_foam.py                              7 tests |    7 passed |  0 failed |  0 errors | PASS
+test_diesel_foam.py                                       14 tests |   14 passed |  0 failed |  0 errors | PASS
+test_dsmc_foam.py                                         17 tests |   17 passed |  0 failed |  0 errors | PASS
+test_electrostatic_foam.py                                14 tests |   14 passed |  0 failed |  0 errors | PASS
+test_energy_foam.py                                       16 tests |   16 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers.py                                  50 tests |   50 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers10.py                                73 tests |   73 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers11.py                                61 tests |   61 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers12.py                                47 tests |   47 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers13.py                                38 tests |   38 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers2.py                                 59 tests |   59 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers3.py                                 71 tests |   71 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers4.py                                 76 tests |   76 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers5.py                                 73 tests |   73 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers6.py                                 85 tests |   85 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers7.py                                 81 tests |   81 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers8.py                                 74 tests |   74 passed |  0 failed |  0 errors | PASS
+test_enhanced_solvers9.py                                 75 tests |   75 passed |  0 failed |  0 errors | PASS
+test_film_foam.py                                         10 tests |   10 passed |  0 failed |  0 errors | PASS
+test_financial_foam.py                                    14 tests |   14 passed |  0 failed |  0 errors | PASS
+test_financial_foam2.py                                   13 tests |   13 passed |  0 failed |  0 errors | PASS
+test_fluid_foam.py                                        11 tests |   11 passed |  0 failed |  0 errors | PASS
+test_heat_transfer_foam.py                                15 tests |   15 passed |  0 failed |  0 errors | PASS
+test_ico_foam.py                                          17 tests |   17 passed |  0 failed |  0 errors | PASS
+test_incompressible_drift_flux_foam.py                     7 tests |    7 passed |  0 failed |  0 errors | PASS
+test_incompressible_fluid_foam.py                         31 tests |   31 passed |  0 failed |  0 errors | PASS
+test_incompressible_vof_foam.py                           18 tests |   18 passed |  0 failed |  0 errors | PASS
+test_inter_foam.py                                        13 tests |   13 passed |  0 failed |  0 errors | PASS
+test_isothermal_fluid_foam.py                             13 tests |   13 passed |  0 failed |  0 errors | PASS
+test_laplacian_foam.py                                    19 tests |   19 passed |  0 failed |  0 errors | PASS
+test_magnetic_foam.py                                     15 tests |   15 passed |  0 failed |  0 errors | PASS
+test_md_foam.py                                           19 tests |   19 passed |  0 failed |  0 errors | PASS
+test_mhd_foam.py                                          13 tests |   13 passed |  0 failed |  0 errors | PASS
+test_multicomponent_fluid_foam.py                         10 tests |   10 passed |  0 failed |  0 errors | PASS
+test_multiphase_euler_foam2.py                            10 tests |   10 passed |  0 failed |  0 errors | PASS
+test_multiphase_reacting_foam.py                          10 tests |   10 passed |  0 failed |  0 errors | PASS
+test_pdr_foam.py                                          13 tests |   13 passed |  0 failed |  0 errors | PASS
+test_pimple_foam.py                                       32 tests |   32 passed |  0 failed |  0 errors | PASS
+test_piso_foam.py                                         27 tests |   27 passed |  0 failed |  0 errors | PASS
+test_porous_inter_foam.py                                 17 tests |   17 passed |  0 failed |  0 errors | PASS
+test_porous_simple_foam.py                                31 tests |   31 passed |  0 failed |  0 errors | PASS
+test_potential_foam.py                                    12 tests |   12 passed |  0 failed |  0 errors | PASS
+test_reacting_foam.py                                     11 tests |   11 passed |  0 failed |  0 errors | PASS
+test_reacting_foam_enhanced.py                            12 tests |   12 passed |  0 failed |  0 errors | PASS
+test_reacting_foam_enhanced2.py                           10 tests |   10 passed |  0 failed |  0 errors | PASS
+test_reacting_multiphase_foam.py                          11 tests |   11 passed |  0 failed |  0 errors | PASS
+test_rho_central_foam.py                                  37 tests |   37 passed |  0 failed |  0 errors | PASS
+test_rho_pimple_foam.py                                   33 tests |   33 passed |  0 failed |  0 errors | PASS
+test_rho_porous_simple_foam.py                            34 tests |   34 passed |  0 failed |  0 errors | PASS
+test_rho_simple_foam.py                                   46 tests |   46 passed |  0 failed |  0 errors | PASS
+test_scalar_transport_foam.py                              8 tests |    8 passed |  0 failed |  0 errors | PASS
+test_shallow_water_foam.py                                36 tests |   36 passed |  0 failed |  0 errors | PASS
+test_simple_foam.py                                       27 tests |   27 passed |  0 failed |  0 errors | PASS
+test_solid_displacement_foam.py                           14 tests |   14 passed |  0 failed |  0 errors | PASS
+test_solid_foam.py                                        13 tests |   13 passed |  0 failed |  0 errors | PASS
+test_sonic_foam.py                                        37 tests |   37 passed |  0 failed |  0 errors | PASS
+test_spray_foam.py                                        12 tests |   12 passed |  0 failed |  0 errors | PASS
+test_spray_foam2.py                                       12 tests |   12 passed |  0 failed |  0 errors | PASS
+test_srf_simple_foam.py                                   29 tests |   29 passed |  0 failed |  0 errors | PASS
+test_two_phase_euler_foam2.py                              7 tests |    7 passed |  0 failed |  0 errors | PASS
+test_viscous_foam.py                                      19 tests |   19 passed |  0 failed |  0 errors | PASS

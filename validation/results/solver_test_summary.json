@@ -1,0 +1,643 @@
+{
+  "date": "2026-06-13",
+  "python": "F:/f/pyopenfoam-gpu/python.exe",
+  "device": "cpu",
+  "full_suite": {
+    "total_collected": 2016,
+    "passed": 2015,
+    "xfailed": 1,
+    "failed": 0,
+    "errors": 0,
+    "runtime_seconds": 325.54,
+    "xfail_test": "tests/unit/applications/test_rho_central_foam.py::TestRhoCentralFoamRun::test_writes_output"
+  },
+  "per_solver": {
+    "total_test_files": 77,
+    "total_tests": 2011,
+    "passed": 2011,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "pass_rate": 100.0
+  },
+  "base_solvers_in_registry": 70,
+  "note": "77 test files cover all 70 base solvers. Enhanced solver batch files (13 files) test additional BC/config combinations. test_exports.py (4 tests) excluded from per-solver count.",
+  "solvers": {
+    "AcousticFoam": {
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "AdjointFoam": {
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "AdjointShapeFoam": {
+      "tests": 20,
+      "passed": 20,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "AdjointTurbulenceFoam": {
+      "tests": 16,
+      "passed": 16,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "BoundaryFoam": {
+      "tests": 30,
+      "passed": 30,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "BuoyantBoussinesqSimpleFoam": {
+      "tests": 28,
+      "passed": 28,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "BuoyantPimpleFoam": {
+      "tests": 37,
+      "passed": 37,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "BuoyantSimpleFoam": {
+      "tests": 40,
+      "passed": 40,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "CavitatingFoam": {
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ChemFoam": {
+      "tests": 15,
+      "passed": 15,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ChtMultiRegionEnhancedFoam": {
+      "tests": 15,
+      "passed": 15,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ChtMultiRegionFoam": {
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ChtSolver": {
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "CombustionFoam": {
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "CompressibleInterFoam": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "CompressibleInterFoam2": {
+      "tests": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "CompressibleVofFoam": {
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "DieselFoam": {
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "DsmcFoam": {
+      "tests": 17,
+      "passed": 17,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ElectrostaticFoam": {
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnergyFoam": {
+      "tests": 16,
+      "passed": 16,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers": {
+      "tests": 50,
+      "passed": 50,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers10": {
+      "tests": 73,
+      "passed": 73,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers11": {
+      "tests": 61,
+      "passed": 61,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers12": {
+      "tests": 47,
+      "passed": 47,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers13": {
+      "tests": 38,
+      "passed": 38,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers2": {
+      "tests": 59,
+      "passed": 59,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers3": {
+      "tests": 71,
+      "passed": 71,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers4": {
+      "tests": 76,
+      "passed": 76,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers5": {
+      "tests": 73,
+      "passed": 73,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers6": {
+      "tests": 85,
+      "passed": 85,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers7": {
+      "tests": 81,
+      "passed": 81,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers8": {
+      "tests": 74,
+      "passed": 74,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "EnhancedSolvers9": {
+      "tests": 75,
+      "passed": 75,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "FilmFoam": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "FinancialFoam": {
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "FinancialFoam2": {
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "FluidFoam": {
+      "tests": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "HeatTransferFoam": {
+      "tests": 15,
+      "passed": 15,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "IcoFoam": {
+      "tests": 17,
+      "passed": 17,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "IncompressibleDriftFluxFoam": {
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "IncompressibleFluidFoam": {
+      "tests": 31,
+      "passed": 31,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "IncompressibleVofFoam": {
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "InterFoam": {
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "IsothermalFluidFoam": {
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "LaplacianFoam": {
+      "tests": 19,
+      "passed": 19,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "MagneticFoam": {
+      "tests": 15,
+      "passed": 15,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "MdFoam": {
+      "tests": 19,
+      "passed": 19,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "MhdFoam": {
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "MulticomponentFluidFoam": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "MultiphaseEulerFoam2": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "MultiphaseReactingFoam": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "PdrFoam": {
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "PimpleFoam": {
+      "tests": 32,
+      "passed": 32,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "PisoFoam": {
+      "tests": 27,
+      "passed": 27,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "PorousInterFoam": {
+      "tests": 17,
+      "passed": 17,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "PorousSimpleFoam": {
+      "tests": 31,
+      "passed": 31,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "PotentialFoam": {
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ReactingFoam": {
+      "tests": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ReactingFoamEnhanced": {
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ReactingFoamEnhanced2": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ReactingMultiphaseFoam": {
+      "tests": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "RhoCentralFoam": {
+      "tests": 37,
+      "passed": 37,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "RhoPimpleFoam": {
+      "tests": 33,
+      "passed": 33,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "RhoPorousSimpleFoam": {
+      "tests": 34,
+      "passed": 34,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "RhoSimpleFoam": {
+      "tests": 46,
+      "passed": 46,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ScalarTransportFoam": {
+      "tests": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ShallowWaterFoam": {
+      "tests": 36,
+      "passed": 36,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "SimpleFoam": {
+      "tests": 27,
+      "passed": 27,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "SolidDisplacementFoam": {
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "SolidFoam": {
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "SonicFoam": {
+      "tests": 37,
+      "passed": 37,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "SprayFoam": {
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "SprayFoam2": {
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "SrfSimpleFoam": {
+      "tests": 29,
+      "passed": 29,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "TwoPhaseEulerFoam2": {
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "ViscousFoam": {
+      "tests": 19,
+      "passed": 19,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    }
+  }
+}
