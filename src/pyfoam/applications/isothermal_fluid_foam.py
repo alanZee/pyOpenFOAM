@@ -320,7 +320,7 @@ class IsothermalFluidFoam(SolverBase):
 
                 # Limit velocity to prevent divergence
                 U_mag = U.norm(dim=1, keepdim=True)
-                U_max_allowed = 1000.0
+                U_max_allowed = 100.0
                 U = torch.where(U_mag > U_max_allowed, U * (U_max_allowed / U_mag.clamp(min=1e-30)), U)
 
                 # 通量校正
@@ -346,7 +346,9 @@ class IsothermalFluidFoam(SolverBase):
                 p = self.alpha_p * p + (1.0 - self.alpha_p) * p_prev
 
             # ---- 等温 EOS 更新密度（无能量方程） ----
+            p = p.clamp(min=-1e6, max=1e6)  # 防止压力发散
             rho = self._update_rho(p)
+            rho = rho.clamp(min=0.01, max=100.0)
 
             # ---- 收敛检查 ----
             U_residual = self._compute_residual(U, U_prev)
