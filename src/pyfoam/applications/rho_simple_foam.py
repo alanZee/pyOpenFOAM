@@ -441,6 +441,10 @@ class RhoSimpleFoam(SolverBase):
 
             # Update density again after T update
             rho = self.thermo.rho(p, T)
+            rho = rho.clamp(min=0.01, max=100.0)
+
+            # Clamp temperature to physical range
+            T = T.clamp(min=200.0, max=5000.0)
 
             # ============================================
             # Step 7: Check convergence

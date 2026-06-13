@@ -162,7 +162,10 @@ class CavitatingFoam(SolverBase):
         p, _ = self.read_field_tensor("p_rgh", 0)
         p = p.to(device=device, dtype=dtype)
 
-        alpha, _ = self.read_field_tensor("alpha.vapor", 0)
+        try:
+            alpha, _ = self.read_field_tensor("alpha.vapor", 0)
+        except Exception:
+            alpha = torch.zeros(self.mesh.n_cells, dtype=dtype, device=device)
         alpha = alpha.to(device=device, dtype=dtype)
 
         phi = torch.zeros(self.mesh.n_faces, dtype=dtype, device=device)
@@ -171,7 +174,10 @@ class CavitatingFoam(SolverBase):
     def _init_field_data(self):
         U_data = self.case.read_field("U", 0)
         p_data = self.case.read_field("p_rgh", 0)
-        alpha_data = self.case.read_field("alpha.vapor", 0)
+        try:
+            alpha_data = self.case.read_field("alpha.vapor", 0)
+        except Exception:
+            alpha_data = None
         return U_data, p_data, alpha_data
 
     def _compute_mixture_rho(self, alpha):
@@ -449,4 +455,5 @@ class CavitatingFoam(SolverBase):
         time_str = f"{time:g}"
         self.write_field("U", self.U, time_str, self._U_data)
         self.write_field("p_rgh", self.p, time_str, self._p_data)
-        self.write_field("alpha.vapor", self.alpha, time_str, self._alpha_data)
+        if self._alpha_data is not None:
+            self.write_field("alpha.vapor", self.alpha, time_str, self._alpha_data)

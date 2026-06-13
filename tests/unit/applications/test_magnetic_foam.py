@@ -557,3 +557,79 @@ class TestMagneticFoamSolver:
         # B should be non-zero since J is non-zero
         B_mag = (solver.B ** 2).sum(dim=1).sqrt()
         assert B_mag.mean() > 0, "Mean B magnitude is zero"
+
+
+class TestMagneticFoamCaseInsensitiveFieldSafety:
+    """Regression: scalar field 'b' must not corrupt vector field 'B'.
+
+    On case-insensitive filesystems (Windows), reading field 'B' can
+    find the scalar field 'b' (progress variable).  The solver must
+    detect the mismatch and fall back to zeros instead of crashing
+    with a tensor conversion error.
+    """
+
+    def test_scalar_b_field_does_not_corrupt_B(self, tiny_magnetic_case):
+        """Solver initialises B as (n_cells, 3) even when scalar 'b' exists."""
+        from pyfoam.io.foam_file import write_foam_file, FoamFileHeader, FileFormat
+        from pyfoam.applications.magnetic_foam import MagneticFoam
+
+        # Add a scalar 'b' field to the 0/ directory (progress variable)
+        zero_dir = tiny_magnetic_case / "0"
+        h_b = FoamFileHeader(
+            version="2.0", format=FileFormat.ASCII,
+            class_name="volScalarField", location="0", object="b",
+        )
+        b_body = (
+            "dimensions      [0 0 0 0 0 0 0];\n"
+            "internalField   uniform 1;\n"
+            "boundaryField {\n"
+            "    left { type zeroGradient; }\n"
+            "    right { type zeroGradient; }\n"
+            "    wallBottom { type zeroGradient; }\n"
+            "    wallTop { type zeroGradient; }\n"
+            "    front { type empty; }\n"
+            "    back { type empty; }\n"
+            "}\n"
+        )
+        write_foam_file(zero_dir / "b", h_b, b_body, overwrite=True)
+
+        solver = MagneticFoam(tiny_magnetic_case)
+
+        # All fields must be vector (n_cells, 3)
+        assert solver.A.dim() == 2 and solver.A.shape[1] == 3, \
+            f"A has wrong shape: {solver.A.shape}"
+        assert solver.B.dim() == 2 and solver.B.shape[1] == 3, \
+            f"B has wrong shape: {solver.B.shape}"
+        assert solver.J.dim() == 2 and solver.J.shape[1] == 3, \
+            f"J has wrong shape: {solver.J.shape}"
+
+    def test_run_with_scalar_b_field(self, tiny_magnetic_case):
+        """Solver runs without error even when scalar 'b' field exists."""
+        from pyfoam.io.foam_file import write_foam_file, FoamFileHeader, FileFormat
+        from pyfoam.applications.magnetic_foam import MagneticFoam
+
+        zero_dir = tiny_magnetic_case / "0"
+        h_b = FoamFileHeader(
+            version="2.0", format=FileFormat.ASCII,
+            class_name="volScalarField", location="0", object="b",
+        )
+        b_body = (
+            "dimensions      [0 0 0 0 0 0 0];\n"
+            "internalField   uniform 1;\n"
+            "boundaryField {\n"
+            "    left { type zeroGradient; }\n"
+            "    right { type zeroGradient; }\n"
+            "    wallBottom { type zeroGradient; }\n"
+            "    wallTop { type zeroGradient; }\n"
+            "    front { type empty; }\n"
+            "    back { type empty; }\n"
+            "}\n"
+        )
+        write_foam_file(zero_dir / "b", h_b, b_body, overwrite=True)
+
+        solver = MagneticFoam(tiny_magnetic_case)
+        result = solver.run()
+
+        assert result["iterations"] > 0
+        assert torch.isfinite(solver.A).all(), "A contains NaN/Inf"
+        assert torch.isfinite(solver.B).all(), "B contains NaN/Inf"

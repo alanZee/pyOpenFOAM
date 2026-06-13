@@ -179,17 +179,21 @@ class MagneticFoam(SolverBase):
         dtype = get_default_dtype()
         n_cells = self.mesh.n_cells
 
-        # Read vector potential
+        # Read vector potential (must be a vector field)
         try:
             A_tensor, _ = self.read_field_tensor("A", 0)
             A = A_tensor.to(device=device, dtype=dtype)
+            if A.dim() < 2 or A.shape[-1] != 3:
+                A = torch.zeros(n_cells, 3, dtype=dtype, device=device)
         except Exception:
             A = torch.zeros(n_cells, 3, dtype=dtype, device=device)
 
-        # Read current density
+        # Read current density (must be a vector field)
         try:
             J_tensor, _ = self.read_field_tensor("J", 0)
             J = J_tensor.to(device=device, dtype=dtype)
+            if J.dim() < 2 or J.shape[-1] != 3:
+                J = torch.zeros(n_cells, 3, dtype=dtype, device=device)
         except Exception:
             J = torch.zeros(n_cells, 3, dtype=dtype, device=device)
 

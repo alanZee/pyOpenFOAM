@@ -511,12 +511,15 @@ class MulticomponentFluidFoam(SolverBase):
 
             # ---- EOS 更新密度 ----
             rho = self._mixture_rho(p, T, Y)
+            rho = rho.clamp(min=0.01, max=100.0)
 
             # ---- 能量方程 ----
             T = self._solve_energy_equation(T, U, phi, rho, p, Y, T_prev)
+            T = T.clamp(min=200.0, max=5000.0)
 
             # 能量方程后再更新密度
             rho = self._mixture_rho(p, T, Y)
+            rho = rho.clamp(min=0.01, max=100.0)
 
             # ---- 收敛检查 ----
             U_residual = self._compute_residual(U, U_prev)

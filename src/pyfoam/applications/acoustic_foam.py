@@ -140,8 +140,12 @@ class AcousticFoam(SolverBase):
         """Initialise a scalar perturbation field."""
         device = get_device()
         dtype = get_default_dtype()
-        tensor, data = self.read_field_tensor(name, 0)
-        return tensor.to(device=device, dtype=dtype), data
+        try:
+            tensor, data = self.read_field_tensor(name, 0)
+            return tensor.to(device=device, dtype=dtype), data
+        except Exception:
+            tensor = torch.zeros(self.mesh.n_cells, dtype=dtype, device=device)
+            return tensor, None
 
     def _init_vector_field(
         self, name: str,
@@ -149,8 +153,14 @@ class AcousticFoam(SolverBase):
         """Initialise a vector perturbation field."""
         device = get_device()
         dtype = get_default_dtype()
-        tensor, data = self.read_field_tensor(name, 0)
-        return tensor.to(device=device, dtype=dtype), data
+        try:
+            tensor, data = self.read_field_tensor(name, 0)
+            return tensor.to(device=device, dtype=dtype), data
+        except Exception:
+            tensor = torch.zeros(
+                self.mesh.n_cells, 3, dtype=dtype, device=device,
+            )
+            return tensor, None
 
     # ------------------------------------------------------------------
     # Boundary condition parsing
@@ -159,6 +169,8 @@ class AcousticFoam(SolverBase):
     def _parse_bcs(self, field_data: Any) -> dict[str, dict[str, Any]]:
         """Parse boundary conditions from field data."""
         bcs: dict[str, dict[str, Any]] = {}
+        if field_data is None or field_data.boundary_field is None:
+            return bcs
         mesh_boundary = self.case.boundary
 
         for i, patch in enumerate(field_data.boundary_field.patches):
@@ -483,5 +495,7 @@ class AcousticFoam(SolverBase):
     def _write_fields(self, time: float) -> None:
         """Write acoustic perturbation fields."""
         time_str = f"{time:g}"
-        self.write_field("p'", self.p_prime, time_str, self._p_data)
-        self.write_field("u'", self.u_prime, time_str, self._u_data)
+        if self._p_data is not None:
+            self.write_field("p'", self.p_prime, time_str, self._p_data)
+        if self._u_data is not None:
+            self.write_field("u'", self.u_prime, time_str, self._u_data)

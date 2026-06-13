@@ -579,13 +579,21 @@ class PISOSolver(CoupledSolverBase):
         U_bc: torch.Tensor,
         mesh: Any,
     ) -> None:
-        """Overwrite boundary face fluxes using per-patch prescribed velocities.
+        """Overwrite boundary face fluxes using per-face prescribed velocities.
 
         For fixedValue boundary faces, the face velocity is the prescribed
-        value from the PATCH definition, not the owner cell's velocity.
-        This is critical for corner cells shared between patches (e.g.,
-        movingWall and fixedWalls) where the owner cell may have the
-        wrong prescribed velocity for some of its boundary faces.
+        value from the owner cell's boundary condition, not HbyA.
+        Each face is checked individually — only faces whose owner cell
+        has a prescribed (non-NaN) BC value are overwritten.
+
+        This is critical for:
+        - Corner cells shared between patches (e.g., movingWall and
+          fixedWalls) where the owner cell may have the wrong prescribed
+          velocity for some of its boundary faces.
+        - Inlet/outlet patches spanning cells with mixed BCs (e.g.,
+          wall-adjacent cells with U_bc=0 and interior cells without
+          prescribed BCs), where using the first owner cell's velocity
+          for all faces would zero out fluxes that should be nonzero.
 
         Args:
             phi: ``(n_faces,)`` — face flux (modified in-place).
@@ -596,7 +604,7 @@ class PISOSolver(CoupledSolverBase):
         bnd_owner = mesh.owner[n_internal:]
         bnd_areas = mesh.face_areas[n_internal:]
 
-        # Build per-face prescribed velocity from patch definitions
+        # Build per-face prescribed velocity: check each face's owner cell
         U_bnd = torch.full_like(bnd_areas, float('nan'))
         for patch in mesh.boundary:
             if patch.get("type", "") == "empty":
@@ -605,13 +613,12 @@ class PISOSolver(CoupledSolverBase):
             nf = patch.get("nFaces", 0)
             if sf < 0 or nf <= 0:
                 continue
-            # Get prescribed velocity from the first owner cell of this patch
-            first_owner = bnd_owner[sf].item()
-            u_patch = U_bc[first_owner]
-            if torch.isnan(u_patch[0]):
-                continue
-            # Apply to all faces in this patch
-            U_bnd[sf:sf+nf] = u_patch.unsqueeze(0)
+            # Check each face's owner cell individually for prescribed BC
+            for fi in range(sf, sf + nf):
+                owner_cell = bnd_owner[fi].item()
+                u_cell = U_bc[owner_cell]
+                if not torch.isnan(u_cell[0]):
+                    U_bnd[fi] = u_cell
 
         has_bc = ~torch.isnan(U_bnd[:, 0])
         if has_bc.any():
@@ -725,7 +732,7 @@ class PISOSolver(CoupledSolverBase):
         bnd_owner = mesh.owner[n_internal:]
         bnd_areas = mesh.face_areas[n_internal:]
 
-        # Build per-face prescribed velocity
+        # Build per-face prescribed velocity (per face owner, not first owner)
         U_bnd = torch.full_like(bnd_areas, float('nan'))
         for patch in mesh.boundary:
             if patch.get("type", "") == "empty":
@@ -734,11 +741,11 @@ class PISOSolver(CoupledSolverBase):
             nf = patch.get("nFaces", 0)
             if sf < 0 or nf <= 0:
                 continue
-            first_owner = bnd_owner[sf].item()
-            u_patch = U_bc[first_owner]
-            if torch.isnan(u_patch[0]):
-                continue
-            U_bnd[sf:sf+nf] = u_patch.unsqueeze(0)
+            for fi in range(sf, sf + nf):
+                owner_cell = bnd_owner[fi].item()
+                u_cell = U_bc[owner_cell]
+                if not torch.isnan(u_cell[0]):
+                    U_bnd[fi] = u_cell
 
         has_bc = ~torch.isnan(U_bnd[:, 0])
         if not has_bc.any():

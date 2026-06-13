@@ -140,7 +140,7 @@
   - IncompressibleDriftFluxFoam: 需要 alpha 场
   - AcousticFoam: 需要 p' 场
 - [ ] C5. 张量处理 bug 修复
-  - MagneticFoam: 张量转换错误
+- [x] C5-1. MagneticFoam: 张量转换错误 — 已修复（大小写不敏感文件系统读取标量场 `b` 为向量场 `B`，添加维度校验）
   - MhdFoam: 张量索引错误
 - [ ] C6. 数值稳定性修复
   - IsothermalFluidFoam: field_max 3.6e160

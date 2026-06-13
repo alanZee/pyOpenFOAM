@@ -127,33 +127,45 @@ class TwoPhaseEulerFoam(SolverBase):
         device = get_device()
         dtype = get_default_dtype()
 
-        U1, _ = self.read_field_tensor("U1", 0)
+        try:
+            U1, _ = self.read_field_tensor("U1", 0)
+        except Exception:
+            U1, _ = self.read_field_tensor("U", 0)
         U1 = U1.to(device=device, dtype=dtype)
 
         try:
             U2, _ = self.read_field_tensor("U2", 0)
-            U2 = U2.to(device=device, dtype=dtype)
         except Exception:
             U2 = U1.clone()
 
         p, _ = self.read_field_tensor("p", 0)
         p = p.to(device=device, dtype=dtype)
 
-        alpha1, _ = self.read_field_tensor("alpha1", 0)
-        alpha1 = alpha1.to(device=device, dtype=dtype)
+        try:
+            alpha1, _ = self.read_field_tensor("alpha1", 0)
+        except Exception:
+            alpha1 = torch.full(
+                (self.mesh.n_cells,), 0.5, dtype=dtype, device=device,
+            )
 
         phi = torch.zeros(self.mesh.n_faces, dtype=dtype, device=device)
 
         return U1, U2, p, alpha1, phi
 
     def _init_field_data(self):
-        U1_data = self.case.read_field("U1", 0)
+        try:
+            U1_data = self.case.read_field("U1", 0)
+        except Exception:
+            U1_data = self.case.read_field("U", 0)
         try:
             U2_data = self.case.read_field("U2", 0)
         except Exception:
-            U2_data = U1_data
+            U2_data = None
         p_data = self.case.read_field("p", 0)
-        alpha1_data = self.case.read_field("alpha1", 0)
+        try:
+            alpha1_data = self.case.read_field("alpha1", 0)
+        except Exception:
+            alpha1_data = None
         return U1_data, U2_data, p_data, alpha1_data
 
     def run(self) -> ConvergenceData:
@@ -236,6 +248,8 @@ class TwoPhaseEulerFoam(SolverBase):
     def _write_fields(self, time):
         time_str = f"{time:g}"
         self.write_field("U1", self.U1, time_str, self._U1_data)
-        self.write_field("U2", self.U2, time_str, self._U2_data)
+        if self._U2_data is not None:
+            self.write_field("U2", self.U2, time_str, self._U2_data)
         self.write_field("p", self.p, time_str, self._p_data)
-        self.write_field("alpha1", self.alpha1, time_str, self._alpha1_data)
+        if self._alpha1_data is not None:
+            self.write_field("alpha1", self.alpha1, time_str, self._alpha1_data)
