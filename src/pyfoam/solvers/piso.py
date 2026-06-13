@@ -491,18 +491,67 @@ class PISOSolver(CoupledSolverBase):
         total_source = H - grad_p
         diag_safe = diag.abs().clamp(min=1e-30)
 
-        # Use PBiCGStab to solve the momentum equation.
-        # The diagonal solve cannot propagate boundary driving force.
-        # PBiCGStab properly solves: A * U = total_source
-        # where A includes boundary penalty in diagonal.
+        # OpenFOAM-style matrix-level BC: treat boundary faces as internal
+        # faces with prescribed velocity. This extends the LDU matrix with
+        # boundary face off-diagonal terms, allowing PBiCGStab to properly
+        # enforce boundary conditions.
         from pyfoam.core.ldu_matrix import LduMatrix
         from pyfoam.solvers.pbicgstab import PBiCGSTABSolver
 
-        # Assemble LDU matrix (includes boundary penalty in diagonal)
-        mat = LduMatrix(n_cells, int_owner, int_neigh, device=device, dtype=dtype)
-        mat.diag = diag.clone()
-        mat.lower = lower.clone()
-        mat.upper = upper.clone()
+        # Collect boundary face contributions for LDU matrix extension
+        bnd_lower_list = []
+        bnd_upper_list = []
+        bnd_owner_list = []
+        bnd_neigh_list = []
+
+        if n_faces > n_internal and U_bc is not None:
+            bc_mask = ~torch.isnan(U_bc[:, 0])
+            for patch in mesh.boundary:
+                ptype = patch.get("type", "")
+                if ptype != "wall":
+                    continue
+                sf = patch.get("startFace", 0)
+                nf = patch.get("nFaces", 0)
+                if nf <= 0:
+                    continue
+                patch_owner = owner[sf:sf + nf]
+                if not bc_mask[patch_owner].any():
+                    continue
+                patch_areas = face_areas[sf:sf + nf]
+                patch_fc = mesh.face_centres[sf:sf + nf]
+                patch_oc = mesh.cell_centres[patch_owner]
+                d_P = patch_fc - patch_oc
+                patch_S_mag = patch_areas.norm(dim=1)
+                safe_mag = torch.where(patch_S_mag > 1e-30, patch_S_mag, torch.ones_like(patch_S_mag))
+                n_hat = patch_areas / safe_mag.unsqueeze(-1)
+                d_dot_n = (d_P * n_hat).sum(dim=1).abs()
+                patch_delta = 1.0 / d_dot_n.clamp(min=1e-30)
+                patch_coeff = nu * patch_S_mag * patch_delta
+                patch_V = gather(cell_volumes_safe, patch_owner)
+                patch_coeff_pv = patch_coeff / patch_V
+                # Boundary face: owner = patch_owner, virtual neighbor = self
+                # Off-diagonal coefficient (negative, like internal faces)
+                bnd_lower_list.append(-patch_coeff_pv)
+                bnd_owner_list.append(patch_owner)
+
+        # Assemble LDU matrix with boundary face contributions
+        if bnd_lower_list:
+            bnd_lower = torch.cat(bnd_lower_list)
+            bnd_owner_cat = torch.cat(bnd_owner_list)
+            # Extend lower/upper with boundary contributions
+            all_lower = torch.cat([lower, bnd_lower])
+            all_upper = torch.cat([upper, torch.zeros_like(bnd_lower)])
+            all_owner = torch.cat([int_owner, bnd_owner_cat])
+            all_neigh = torch.cat([int_neigh, bnd_owner_cat])  # virtual self-neighbor
+            mat = LduMatrix(n_cells, all_owner, all_neigh, device=device, dtype=dtype)
+            mat.diag = diag.clone()
+            mat.lower = all_lower.clone()
+            mat.upper = all_upper.clone()
+        else:
+            mat = LduMatrix(n_cells, int_owner, int_neigh, device=device, dtype=dtype)
+            mat.diag = diag.clone()
+            mat.lower = lower.clone()
+            mat.upper = upper.clone()
 
         momentum_solver = PBiCGSTABSolver(
             tolerance=1e-3, rel_tol=0.01, max_iter=100,
