@@ -1,0 +1,47 @@
+[
+  {
+    "solver": "RhoSimpleFoam",
+    "status": "ERROR",
+    "error": "RhoSimpleFoam.__init__() missing 1 required positional argument: 'case_path'"
+  },
+  {
+    "solver": "MulticomponentFluidFoam",
+    "status": "ERROR",
+    "error": "MulticomponentFluidFoam.__init__() missing 1 required positional argument: 'case_path'"
+  },
+  {
+    "solver": "RhoPorousSimpleFoam",
+    "status": "ERROR",
+    "error": "RhoPorousSimpleFoam.__init__() missing 1 required positional argument: 'case_path'"
+  },
+  {
+    "solver": "TwoPhaseEulerFoam",
+    "status": "ERROR",
+    "error": "TwoPhaseEulerFoam.__init__() missing 1 required positional argument: 'case_path'"
+  },
+  {
+    "solver": "CavitatingFoam",
+    "status": "ERROR",
+    "error": "CavitatingFoam.__init__() missing 1 required positional argument: 'case_path'"
+  },
+  {
+    "solver": "IncompressibleDriftFluxFoam",
+    "status": "ERROR",
+    "error": "IncompressibleDriftFluxFoam.__init__() missing 1 required positional argument: 'case_path'"
+  },
+  {
+    "solver": "AcousticFoam",
+    "status": "ERROR",
+    "error": "AcousticFoam.__init__() missing 1 required positional argument: 'case_path'"
+  },
+  {
+    "solver": "MagneticFoam",
+    "status": "ERROR",
+    "error": "MagneticFoam.__init__() missing 1 required positional argument: 'case_path'"
+  },
+  {
+    "solver": "MhdFoam",
+    "status": "ERROR",
+    "error": "MhdFoam.__init__() missing 1 required positional argument: 'case_path'"
+  }
+]

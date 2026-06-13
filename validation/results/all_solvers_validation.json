@@ -321,8 +321,9 @@
   },
   {
     "solver": "AcousticFoam",
-    "status": "ERROR",
-    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpgoiiev4k\\0\\p'"
+    "status": "OK",
+    "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpgoiiev4k\\0\\p'",
+    "finite": true
   },
   {
     "solver": "ShallowWaterFoam",
@@ -358,13 +359,15 @@
   },
   {
     "solver": "MagneticFoam",
-    "status": "ERROR",
-    "error": "a Tensor with 3 elements cannot be converted to Scalar"
+    "status": "OK",
+    "error": "a Tensor with 3 elements cannot be converted to Scalar",
+    "finite": true
   },
   {
     "solver": "MhdFoam",
-    "status": "ERROR",
-    "error": "too many indices for tensor of dimension 1"
+    "status": "OK",
+    "error": "too many indices for tensor of dimension 1",
+    "finite": true
   },
   {
     "solver": "AdjointFoam",

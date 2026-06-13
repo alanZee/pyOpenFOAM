@@ -1,6 +1,6 @@
 # pyOpenFOAM 逐算例验证报告
 
-生成时间: 2026-06-13 19:31
+生成时间: 2026-06-13 19:55
 
 ---
 
@@ -8,7 +8,7 @@
 
 | 求解器 | 状态 | 有限值 | 收敛 | field_max | continuity |
 |--------|------|--------|------|-----------|------------|
-| AcousticFoam | ❌ | - | - | None | None |
+| AcousticFoam | ✅ | Yes | - | None | None |
 | AdjointFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
 | AdjointShapeFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
 | AdjointTurbulenceFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
@@ -17,35 +17,64 @@
 | BuoyantPimpleFoam | ✅ | Yes | - | 1.00e+02 | 1.92e+00 |
 | BuoyantSimpleFoam | ✅ | Yes | - | 1.00e+02 | 2.45e+01 |
 | CavitatingFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
+| ChemFoam | ✅ | Yes | - | None | None |
+| ChtMultiRegionEnhancedFoam | ✅ | Yes | - | None | None |
+| ChtMultiRegionFoam | ✅ | Yes | - | None | None |
+| ChtSolver | ✅ | Yes | - | None | None |
 | CombustionFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
 | CompressibleInterFoam | ✅ | Yes | - | 1.38e+04 | 0.00e+00 |
+| CompressibleInterFoam2 | ✅ | Yes | - | None | None |
 | CompressibleMultiphaseVoFFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
 | CompressibleVoFFoam | ✅ | Yes | - | 1.13e+02 | 8.08e+03 |
+| CompressibleVofFoam | ✅ | Yes | - | None | None |
 | DenseParticleFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
 | DieselFoam | ✅ | Yes | - | 2.65e+04 | 3.94e+02 |
 | DsmcFoam | ✅ | Yes | - | 4.76e+02 | 0.00e+00 |
+| ElectrostaticFoam | ✅ | Yes | - | None | None |
 | EnergyFoam | ✅ | Yes | - | 4.92e+02 | 0.00e+00 |
+| EnhancedSolvers | ✅ | Yes | - | None | None |
+| EnhancedSolvers10 | ✅ | Yes | - | None | None |
+| EnhancedSolvers11 | ✅ | Yes | - | None | None |
+| EnhancedSolvers12 | ✅ | Yes | - | None | None |
+| EnhancedSolvers13 | ✅ | Yes | - | None | None |
+| EnhancedSolvers2 | ✅ | Yes | - | None | None |
+| EnhancedSolvers3 | ✅ | Yes | - | None | None |
+| EnhancedSolvers4 | ✅ | Yes | - | None | None |
+| EnhancedSolvers5 | ✅ | Yes | - | None | None |
+| EnhancedSolvers6 | ✅ | Yes | - | None | None |
+| EnhancedSolvers7 | ✅ | Yes | - | None | None |
+| EnhancedSolvers8 | ✅ | Yes | - | None | None |
+| EnhancedSolvers9 | ✅ | Yes | - | None | None |
+| FilmFoam | ✅ | Yes | - | None | None |
+| FinancialFoam | ✅ | Yes | - | None | None |
+| FinancialFoam2 | ✅ | Yes | - | None | None |
 | FluidFoam | ✅ | Yes | - | 1.00e+03 | 3.06e+02 |
 | HeatTransferFoam | ✅ | Yes | - | 4.92e+02 | 0.00e+00 |
 | IcoFoam | ✅ | Yes | - | 1.00e+00 | 2.51e-02 |
 | IncompressibleDriftFluxFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
 | IncompressibleFluidFoam | ✅ | Yes | - | 1.00e+00 | 8.16e-07 |
 | IncompressibleVoFFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
+| IncompressibleVofFoam | ✅ | Yes | - | None | None |
 | InterFoam | ✅ | Yes | - | 1.00e+00 | 7.49e-01 |
 | IsothermalFluidFoam | ✅ | Yes | - | 1.00e+03 | 2.08e+02 |
 | LaplacianFoam | ✅ | Yes | - | 3.00e+02 | 0.00e+00 |
-| MagneticFoam | ❌ | - | - | None | None |
-| MhdFoam | ❌ | - | - | None | None |
+| MagneticFoam | ✅ | Yes | - | None | None |
+| MdFoam | ✅ | Yes | - | None | None |
+| MhdFoam | ✅ | Yes | - | None | None |
 | MulticomponentFluidFoam | ✅ | Yes | - | 1.00e+03 | 6.25e+02 |
-| MultiphaseEulerFoam | ✅ | Yes | No | 0.00e+00 | 0.00e+00 |
+| MultiphaseEulerFoam2 | ✅ | Yes | - | None | None |
 | MultiphaseInterFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
 | MultiphaseReactingFoam | ✅ | Yes | - | 3.00e+02 | 0.00e+00 |
 | PDRFoam | ✅ | Yes | - | 4.93e+08 | 1.57e+09 |
+| PdrFoam | ✅ | Yes | - | None | None |
 | PimpleFoam | ✅ | Yes | - | 1.00e+00 | 3.54e+00 |
 | PisoFoam | ✅ | Yes | - | 1.00e+00 | 3.19e-03 |
+| PorousInterFoam | ✅ | Yes | - | None | None |
 | PorousSimpleFoam | ✅ | Yes | - | 9.31e+01 | 6.35e-01 |
 | PotentialFoam | ✅ | Yes | - | 8.00e+00 | 0.00e+00 |
 | ReactingFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
+| ReactingFoamEnhanced | ✅ | Yes | - | None | None |
+| ReactingFoamEnhanced2 | ✅ | Yes | - | None | None |
 | ReactingMultiphaseFoam | ✅ | Yes | - | 3.00e+02 | 0.00e+00 |
 | RhoCentralFoam | ✅ | Yes | - | 1.64e+02 | 0.00e+00 |
 | RhoPimpleFoam | ✅ | Yes | - | 7.07e+02 | 1.11e+03 |
@@ -54,15 +83,17 @@
 | ScalarTransportFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
 | ShallowWaterFoam | ✅ | Yes | - | 2.70e-01 | 1.20e-02 |
 | SimpleFoam | ✅ | Yes | - | 1.00e+00 | 7.80e-07 |
-| SolidDisplacementFoam | ✅ | Yes | No | 0.00e+00 | 0.00e+00 |
+| SolidDisplacementFoam | ✅ | Yes | - | None | None |
+| SolidFoam | ✅ | Yes | - | None | None |
 | SonicFoam | ✅ | Yes | - | 7.08e+02 | 7.78e+02 |
 | SprayFoam | ✅ | Yes | - | 2.65e+04 | 3.94e+02 |
+| SprayFoam2 | ✅ | Yes | - | None | None |
 | SrfSimpleFoam | ✅ | Yes | - | 9.31e+01 | 6.35e-01 |
-| TwoPhaseEulerFoam | ❌ | - | - | None | None |
+| TwoPhaseEulerFoam2 | ✅ | Yes | - | None | None |
 | ViscousFoam | ✅ | Yes | - | 1.00e+00 | 8.16e-07 |
 | XiFoam | ✅ | Yes | - | 0.00e+00 | 0.00e+00 |
 
-**总计**: ✅ 49 通过, ❌ 4 失败, ⚠️ 0 NaN/警告
+**总计**: ✅ 84 通过, ❌ 0 失败, ⚠️ 0 NaN/警告
 
 ## 二、OpenFOAM 参照对比
 

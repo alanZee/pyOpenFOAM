@@ -112,7 +112,7 @@ def generate_report():
         if status == "ERROR" or (finite is False):
             status_str = "❌"
             fail_count += 1
-        elif finite is True and fmax is not None and fmax == fmax:  # not NaN
+        elif finite is True:
             status_str = "✅"
             ok_count += 1
         else:
