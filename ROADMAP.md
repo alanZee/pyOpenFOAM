@@ -33,6 +33,11 @@
 误差在网格加密时不单调下降（16x16: 26.7%, 32x32: 20.7%, 64x64: 23.9%），
 需高阶格式（QUICK/TVD）才能改善。与 OpenFOAM 原生行为一致。
 
+**OpenFOAM-13 编译状态**: WSL Ubuntu 20.04 + GCC 11.5 已安装，但 glibc 2.31
+与 GCC 11 `<cwchar>` 头文件不兼容（`mbstate_t` 等全局命名空间声明缺失）。
+Ubuntu 22.04+ (glibc 2.35+) 才支持。OpenFOAM v11 Docker 镜像 API 与 v13
+基本兼容（同为 OpenFOAM Foundation），参照对比有效。
+
 ## 已完成阶段
 
 ### 阶段 1：核心框架 ✅
