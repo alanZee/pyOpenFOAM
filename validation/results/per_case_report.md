@@ -1,6 +1,6 @@
 # pyOpenFOAM 逐算例验证报告
 
-生成时间: 2026-06-14 01:19
+生成时间: 2026-06-14 21:35
 
 ---
 
@@ -97,30 +97,11 @@
 
 ## 二、OpenFOAM v11 参照对比
 
-74 个 OpenFOAM v11 参照算例已运行并保存（覆盖 24+ 种求解器类型）。
+270 个 OpenFOAM v11 参照算例已运行并保存（超过 267 个 OpenFOAM-13 教程总数）。
 
-主要参照算例（部分列表）：
+覆盖 30+ 种求解器类型：不可压缩、多相 VoF、多相 Euler、可压缩 VoF、可压缩多相、冲击、传热、反应、多区域、等温、薄膜、移动网格、DSMC、MHD、电静力学、多孔、结构、金融、Xi 燃烧、伴随优化等全部主要类别。
 
-| 类别 | 算例 | 求解器 | 状态 |
-|------|------|--------|------|
-| 不可压缩 | cavity_icoFoam, cavityClipped, elbow | icoFoam | ✅ |
-| 不可压缩 | pitzDaily, channel395, rotor2D | incompressibleFluid | ✅ |
-| 不可压缩 | planarCouette, planarPoiseuille | incompressibleFluid | ✅ |
-| 多相 VoF | damBreak, sloshingTank2D, nozzleFlow2D | incompressibleVoF | ✅ |
-| 多相 VoF | capillaryRise, waterChannel, weirOverflow | incompressibleVoF | ✅ |
-| 多相 Euler | bubbleColumn, fluidisedBed, LBend | multiphaseEuler | ✅ |
-| 可压缩 | shockTube, forwardStep, obliqueShock | shockFluid | ✅ |
-| 传热 | buoyantCavity, hotRoom, hotRoomBoussinesq | fluid | ✅ |
-| 反应 | counterFlowFlame2D, lockExchange, DLR_A_LTS | multicomponentFluid | ✅ |
-| 多区域 | coolingCylinder2D, heatedDuct, shellAndTube | chtMultiRegion | ✅ |
-| 多相 4phase | damBreak4phase, damBreak4phaseLaminar | incompressibleMultiphaseVoF | ✅ |
-| 特殊 | potentialFoam, laplacianFoam, financialFoam | various | ✅ |
-| 特殊 | mhdFoam, dsmcFoam, electrostaticFoam | legacy | ✅ |
-| 多孔 | angledDuctExplicit, angledDuctImplicit | porousSimpleFoam | ✅ |
-| 结构 | plateHole, beamEndLoad | solidDisplacement | ✅ |
-| 燃烧 Xi | kivaTest | XiFluid | ✅ |
-| 等温 | potentialFreeSurfaceOscillatingBox | isothermalFluid | ✅ |
-
+详细算例列表见 `validation/reference/openfoam/reference_summary.json`。
 
 ## 三、Cavity 流精度对比
 
@@ -154,4 +135,4 @@
 
 1. **高 Re cavity 精度**：Re=400 在粗网格上误差 20%+，linearUpwind 格式数值扩散限制
 2. **OpenFOAM v11 参照**：v13 无 Docker 镜像，glibc 2.31 不兼容 GCC 11 编译
-3. **数值稳定性截断**：部分可压缩/多相求解器使用密度/温度范围限制
+3. **数值稳定性截断**：部分可压缩/多相求解器使用密度/温度/压力范围限制
