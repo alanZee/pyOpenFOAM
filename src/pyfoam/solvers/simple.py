@@ -78,6 +78,11 @@ class SIMPLEConfig(CoupledSolverConfig):
         If True, use SIMPLEC (SIMPLE-Consistent) algorithm.
         Uses rAtU = 1/(A_p - H1) instead of rAU = 1/A_p,
         which reduces the need for under-relaxation (default False).
+    dc_blend : float
+        Deferred-correction blending factor (default 0.5).
+        1.0 = full correction, 0.5 = conservative, 0.0 = pure upwind.
+    convection_scheme : str
+        Convection scheme: 'linearUpwind' (default) or 'quick'.
     """
 
     def __init__(
@@ -85,12 +90,16 @@ class SIMPLEConfig(CoupledSolverConfig):
         n_correctors: int = 1,
         nu: float = 1.0,
         consistent: bool = False,
+        dc_blend: float = 0.5,
+        convection_scheme: str = "linearUpwind",
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)
         self.n_correctors = n_correctors
         self.nu = nu
         self.consistent = consistent
+        self.dc_blend = dc_blend
+        self.convection_scheme = convection_scheme
 
 
 class SIMPLESolver(CoupledSolverBase):
@@ -431,7 +440,7 @@ class SIMPLESolver(CoupledSolverBase):
             nu = config.nu
             diff_coeff = nu * S_mag * delta_f
 
-        # Convection — deferred-correction linearUpwind (2nd order)
+        # Convection — deferred-correction (2nd order linearUpwind or QUICK)
         # Implicit part: upwind (diagonally dominant)
         # Explicit part: TVD-limited correction as deferred source
         flux = phi[:n_internal]
@@ -441,14 +450,9 @@ class SIMPLESolver(CoupledSolverBase):
         # Compute cell-centre gradient of U for TVD limiter
         grad_U = self._compute_cell_gradient(U, mesh)
 
-        # Deferred correction source: TVD-limited linearUpwind
-        # φ_f = φ_up + ψ(r) * (φ_dn - φ_up) / 2
-        # where r = (φ_up - φ_2up) / (φ_dn - φ_up), ψ = van Leer limiter
-        # Blending factor controls how much of the correction is applied
-        # per iteration. Full correction (1.0) can cause oscillations on
-        # coarse meshes at high Re; 0.5 provides stable convergence.
+        # Deferred correction source
         dc_source = torch.zeros(n_cells, 3, dtype=dtype, device=device)
-        dc_blend = 0.5
+        dc_blend = config.dc_blend
 
         # Compute face values for upwind and downwind cells
         upwind_cell = torch.where(flux >= 0, int_owner, int_neigh)
@@ -465,19 +469,26 @@ class SIMPLESolver(CoupledSolverBase):
         d_vec = mesh.face_centres[:n_internal] - mesh.cell_centres[upwind_cell]
         U_2up = U_up - torch.einsum('fid,fd->fi', grad_U[upwind_cell], d_vec)
 
-        # r = (U_up - U_2up) / (U_dn - U_up + eps)
-        eps = 1e-30
-        numerator = U_up - U_2up
-        denominator = U_dn - U_up
-        r = numerator / (denominator + eps * torch.sign(denominator + eps))
+        if config.convection_scheme == "quick":
+            # QUICK: φ_f = 3/4 φ_up + 3/8 φ_dn - 1/8 φ_2up
+            # Deferred correction relative to upwind:
+            # correction = 3/8 (φ_dn - φ_up) - 1/8 (φ_2up - φ_up)
+            correction = 0.375 * (U_dn - U_up) - 0.125 * (U_2up - U_up)
+        else:
+            # linearUpwind with TVD limiter
+            # r = (U_up - U_2up) / (U_dn - U_up + eps)
+            eps = 1e-30
+            numerator = U_up - U_2up
+            denominator = U_dn - U_up
+            r = numerator / (denominator + eps * torch.sign(denominator + eps))
 
-        # Van Leer limiter: ψ(r) = (r + |r|) / (1 + |r|)
-        abs_r = r.abs()
-        psi = (abs_r + r) / (1.0 + abs_r + eps)
-        psi = psi.clamp(0.0, 2.0)  # Ensure bounded
+            # Van Leer limiter: ψ(r) = (r + |r|) / (1 + |r|)
+            abs_r = r.abs()
+            psi = (abs_r + r) / (1.0 + abs_r + eps)
+            psi = psi.clamp(0.0, 2.0)  # Ensure bounded
 
-        # Correction: ψ * (φ_dn - φ_up) / 2 = -ψ * dU / 2
-        correction = -0.5 * psi * dU  # (n_internal, 3)
+            # Correction: ψ * (φ_dn - φ_up) / 2 = -ψ * dU / 2
+            correction = -0.5 * psi * dU  # (n_internal, 3)
 
         # Apply as deferred correction source (scaled by flux magnitude and blend)
         dc_contrib = dc_blend * correction * flux.unsqueeze(-1)
