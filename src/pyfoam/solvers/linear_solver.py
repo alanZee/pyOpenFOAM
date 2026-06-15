@@ -221,6 +221,14 @@ def create_solver(
         _register_solver("DIAGONAL", DiagonalSolver)
         _register_solver("GAMG", GAMGSolver)
 
+        # Scipy-based solvers (much faster for large problems)
+        try:
+            from pyfoam.solvers.scipy_solver import ScipyPCGSolver, ScipyBiCGStabSolver
+            _register_solver("SCIPYPCG", ScipyPCGSolver)
+            _register_solver("SCIPYBICGSTAB", ScipyBiCGStabSolver)
+        except ImportError:
+            pass
+
     key = name.upper().replace("-", "").replace("_", "")
     # Normalise common aliases
     if key == "PBICGSTAB":
