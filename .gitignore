@@ -58,3 +58,4 @@ CLAUDE.md
 .claude/
 validation/reference/openfoam/
 .test_cases/
+validation/reference-data.tar.gz
