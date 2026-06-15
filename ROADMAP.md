@@ -43,6 +43,10 @@ Re=100 精度达标（20x20: 0.9%, 32x32: 1.0%）。
 Clang 编译器 — 均因同一模板名称查找 bug 失败。这是上游 OpenFOAM Foundation 代码缺陷，
 需等待官方修复。使用 Docker OpenFOAM v11 作为参照（API 与 v13 基本兼容）。
 
+**Docker 状态**: Docker Desktop 因 settings-store.json 中 `DataFolder` 路径的 JSON
+转义 bug（单反斜杠）导致 WSL2 子系统挂起。已修复为双反斜杠，需重启系统恢复。
+重启后 Docker 应正常启动，OpenFOAM v11 镜像可能需重新拉取。
+
 **参照数据存储**: 229 个参照算例数据存储在 Hugging Face Hub
 （`AlanZee/pyOpenFOAM-reference-data`，1.18GB），GitHub 仓库仅存储代码。
 覆盖 OpenFOAM-13 全部 225 个教程中的 199 个（88.4%），26 个为 v13 新增教程。
