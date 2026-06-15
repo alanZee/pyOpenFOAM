@@ -15,7 +15,7 @@
 |------|--------|--------|------|
 | 已注册求解器 | 70 base + 147 enhanced | 对应 OpenFOAM-13 全部 | ✅ |
 | 求解器有真实物理 | 84/84 (100%) | 全部 | ✅ |
-| OpenFOAM 参照对比 | **274 算例 (91.6% 教程覆盖)** | 267 算例 | ✅ |
+| OpenFOAM 参照对比 | **274 算例 (91.6% 教程覆盖)** | 267 算例 | ✅* |
 | **教程求解器覆盖** | **240/240 (100%)** | 240/240 | **✅** |
 | Cavity 20x20 精度 | 0.9% 误差 (vs Ghia) | <5% | ✅ |
 | Cavity 32x32 精度 | 1.0% 误差 | <5% | ✅ |
@@ -33,10 +33,13 @@
 误差在网格加密时不单调下降（16x16: 26.7%, 32x32: 20.7%, 64x64: 23.9%），
 需高阶格式（QUICK/TVD）才能改善。与 OpenFOAM 原生行为一致。
 
-**OpenFOAM-13 编译状态**: WSL Ubuntu 20.04 + GCC 11.5 已安装，但 glibc 2.31
-与 GCC 11 `<cwchar>` 头文件不兼容（`mbstate_t` 等全局命名空间声明缺失）。
-Ubuntu 22.04+ (glibc 2.35+) 才支持。OpenFOAM v11 Docker 镜像 API 与 v13
-基本兼容（同为 OpenFOAM Foundation），参照对比有效。
+**OpenFOAM-13 编译状态**: OpenFOAM-13 (2025-07-08) 有已知 C++ 编译 bug：
+`Foam::UList::size_` 模板友元声明在 GCC 11/12/13 均无法编译（`Foam::token` 特化时
+`List<token>` 无法访问继承的 `size_` 成员）。这是上游 OpenFOAM Foundation 代码缺陷，
+需等待官方修复。使用 Docker OpenFOAM v11 作为参照（API 与 v13 基本兼容）。
+
+**参照数据存储**: 274 个参照算例数据存储在 Hugging Face Hub
+（`AlanZee/pyOpenFOAM-reference-data`），GitHub 仓库仅存储代码。
 
 ## 已完成阶段
 
