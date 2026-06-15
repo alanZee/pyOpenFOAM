@@ -33,13 +33,19 @@
 误差在网格加密时不单调下降（16x16: 26.7%, 32x32: 20.7%, 64x64: 23.9%），
 需高阶格式（QUICK/TVD）才能改善。与 OpenFOAM 原生行为一致。
 
-**OpenFOAM-13 编译状态**: OpenFOAM-13 (2025-07-08) 有已知 C++ 编译 bug：
-`Foam::UList::size_` 模板友元声明在 GCC 11/12/13 均无法编译（`Foam::token` 特化时
-`List<token>` 无法访问继承的 `size_` 成员）。这是上游 OpenFOAM Foundation 代码缺陷，
+**OpenFOAM-13 编译状态**: OpenFOAM-13 (2025-07-08) 有多个 C++ 兼容性问题：
+1. `Foam::UList::size_` 模板友元声明在 GCC 11/12/13 均无法编译（`Foam::token` 和
+   `Foam::UPstream::commsStruct` 特化时 `List<T>` 无法访问继承成员）
+2. `List<T>::size(int)` setter 隐藏 `UList<T>::size()` getter（GCC 13 名称查找更严格）
+3. `UPstream.C` 缺少 `#include <cstring>`（`memmove` 未声明）
+4. 所有源文件使用 CRLF 行尾，需批量转换
+已尝试的修复方案：public `size_`、`using UList<T>::size_`、显式 `size()` getter、
+Clang 编译器 — 均因同一模板名称查找 bug 失败。这是上游 OpenFOAM Foundation 代码缺陷，
 需等待官方修复。使用 Docker OpenFOAM v11 作为参照（API 与 v13 基本兼容）。
 
-**参照数据存储**: 274 个参照算例数据存储在 Hugging Face Hub
+**参照数据存储**: 参照算例数据存储在 Hugging Face Hub
 （`AlanZee/pyOpenFOAM-reference-data`），GitHub 仓库仅存储代码。
+正在通过 Docker v11 重新生成全部 225+ 参照算例数据。
 
 ## 已完成阶段
 
