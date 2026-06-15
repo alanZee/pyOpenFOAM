@@ -57,3 +57,4 @@ AGENTS.md
 CLAUDE.md
 .claude/
 validation/reference/openfoam/
+.test_cases/
