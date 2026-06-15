@@ -1,6 +1,6 @@
 # pyOpenFOAM 逐算例验证报告
 
-生成时间: 2026-06-15 19:25
+生成时间: 2026-06-15 22:00
 
 ---
 
@@ -99,8 +99,8 @@
 
 274 个 OpenFOAM v11 参照算例已运行并保存（覆盖 225 个教程中的 206 个，91.6%）。
 参照数据存储在 Hugging Face Hub（`AlanZee/pyOpenFOAM-reference-data`）。
-已重新生成 192 个参照算例（3.0GB），覆盖全部 v11 可运行教程。
-26 个教程为 v13 新增（v11 Docker 镜像中不存在），10 个教程因依赖/超时无法运行。
+已重新生成 229 个参照算例（3.2GB），覆盖全部 v11 可运行教程。
+仅 26 个 v13 新增教程无法在 v11 上运行（需 v13 环境）。
 
 **未覆盖的 19 个教程**使用 v13 特有关键字（如 `nAlphaSubCycles`），与 v11 不兼容：
 - `incompressibleVoF/damBreakFine`, `damBreakLaminarFine`, `damBreakTracer`, `parshallFlume`, `rotatingCube`, `trayedPipe`
