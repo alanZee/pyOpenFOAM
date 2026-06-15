@@ -133,6 +133,7 @@ class SIMPLESolver(CoupledSolverBase):
         super().__init__(mesh, config)
         self._simple_config = config
 
+    @torch.no_grad()
     def solve(
         self,
         U: torch.Tensor,
