@@ -32,6 +32,9 @@
 *高 Re (400) 精度受限于网格分辨率（32x32 太粗，Ghia 基准用 129x129）。
 QUICK 格式已实现但对 Re=400 精度改善有限（39.5% vs 40.5%）。
 Re=100 精度达标（20x20: 0.9%, 32x32: 1.0%）。
+SIMPLE 求解器性能：16x16 约 0.6s/iter，32x32 约 2.0s/iter（Python 开销主导）。
+128x128 网格需约 30s/iter，1000 次迭代约 8 小时。
+已实现 scipy 稀疏求解器（ScipyPCG/ScipyBiCGStab）但瓶颈在矩阵组装而非求解。
 
 **OpenFOAM-13 编译状态**: OpenFOAM-13 (2025-07-08) 有多个 C++ 兼容性问题：
 1. `Foam::UList::size_` 模板友元声明在 GCC 11/12/13 均无法编译（`Foam::token` 和
