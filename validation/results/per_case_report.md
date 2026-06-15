@@ -1,6 +1,6 @@
 # pyOpenFOAM 逐算例验证报告
 
-生成时间: 2026-06-15 01:50
+生成时间: 2026-06-15 14:30
 
 ---
 
@@ -144,7 +144,7 @@
 ## 七、已知限制
 
 1. **高 Re cavity 精度**：Re=400 在粗网格上误差 20%+。QUICK 格式已实现（收敛更快：48 vs 84 次迭代），但 32x32 Re=400 仍需 >500 次迭代才能收敛
-2. **OpenFOAM v13 参照**：v13 无 Docker 镜像。WSL Ubuntu 20.04 (glibc 2.31) 不兼容 GCC 11 编译。需 Ubuntu 22.04+ (glibc 2.35+)。19 个 v13 特有教程无法在 v11 上运行
-3. **数值稳定性截断**：部分可压缩/多相求解器使用密度/温度/压力范围限制
-4. **磁盘空间**：C: 盘已满 (129GB)，Docker WSL 占用 11GB，阻止 OpenFOAM-13 编译
-5. **GitHub 网络**：DNS 解析成功但连接超时，无法推送代码
+2. **OpenFOAM v13 编译**：v13 有已知 C++ 编译 bug（`Foam::UList::size_` 模板友元声明在 GCC 11/12/13 均无法编译），为上游 OpenFOAM-13 代码缺陷
+3. **参照数据存储**：274 个参照算例数据存储在 Hugging Face Hub（`AlanZee/pyOpenFOAM-reference-data`），GitHub 仓库仅存储代码
+4. **v11 不兼容教程**：9 个教程使用 v13 特有功能（`createZones`、`nAlphaSubCycles`、`geometry` 段等），无法在 v11 上运行
+5. **数值稳定性截断**：部分可压缩/多相求解器使用密度/温度/压力范围限制
