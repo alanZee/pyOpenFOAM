@@ -13,7 +13,7 @@
 
 | 指标 | 当前值 | 目标值 | 状态 |
 |------|--------|--------|------|
-| 已注册求解器 | 64 base solver files | 对应 OpenFOAM-13 全部 | ✅ |
+| 已注册求解器 | 64 solver 实现 (覆盖全部 21 个 OpenFOAM 求解器类别) | 对应 OpenFOAM-13 全部 | ✅ |
 | 求解器有真实物理 | 84/84 (100%) | 全部 | ✅ |
 | OpenFOAM 参照对比 | **229 算例已生成 (101.8% v11 教程覆盖)** | 267 算例 | ✅ |
 | **教程求解器覆盖** | **240/240 (100%)** | 240/240 | **✅** |
@@ -43,9 +43,9 @@ Re=100 精度达标（20x20: 0.9%, 32x32: 1.0%）。
 Clang 编译器 — 均因同一模板名称查找 bug 失败。这是上游 OpenFOAM Foundation 代码缺陷，
 需等待官方修复。使用 Docker OpenFOAM v11 作为参照（API 与 v13 基本兼容）。
 
-**参照数据存储**: 参照算例数据存储在 Hugging Face Hub
-（`AlanZee/pyOpenFOAM-reference-data`），GitHub 仓库仅存储代码。
-正在通过 Docker v11 重新生成全部 225+ 参照算例数据。
+**参照数据存储**: 229 个参照算例数据存储在 Hugging Face Hub
+（`AlanZee/pyOpenFOAM-reference-data`，1.18GB），GitHub 仓库仅存储代码。
+覆盖 OpenFOAM-13 全部 225 个教程中的 199 个（88.4%），26 个为 v13 新增教程。
 
 ## 已完成阶段
 
