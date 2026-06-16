@@ -95,6 +95,14 @@ U = case.read_field("U")
 p = case.read_field("p")
 ```
 
+## Files
+
+| File | Size | Description |
+|------|------|-------------|
+| `openfoam-reference-data.tar.gz` | 1.24 GB | 232 OpenFOAM v11 reference cases |
+| `pyopenfoam-simulation-results.tar.gz` | 47 KB | pyOpenFOAM validation results (34 JSON files) |
+| `README.md` | - | This file |
+
 ## Generation
 
 Reference data was generated using:
