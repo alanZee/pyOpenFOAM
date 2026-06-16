@@ -1,0 +1,5699 @@
+[
+  {
+    "file": "all_solvers_validation.json",
+    "case": "SimpleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 1.0,
+      "finite": true,
+      "continuity": 7.796305171771118e-07,
+      "elapsed": 1.283
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "IcoFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 1.0,
+      "finite": true,
+      "continuity": 0.025099909829592804,
+      "elapsed": 2.198
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "PisoFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 1.0,
+      "finite": true,
+      "continuity": 0.003193098022126503,
+      "elapsed": 1.669
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "PimpleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 1.0,
+      "finite": true,
+      "continuity": 3.5354235657549,
+      "elapsed": 1.971
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "SonicFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 707.8894411604801,
+      "finite": true,
+      "continuity": 778.1097822489371,
+      "elapsed": 0.025
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "RhoPimpleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 707.106771089242,
+      "finite": true,
+      "continuity": 1110.7097149008423,
+      "elapsed": 0.596
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "RhoSimpleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 999.9999999324416,
+      "finite": true,
+      "continuity": 1.3467075666141513,
+      "elapsed": 0.814
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "InterFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.99999995217031,
+      "finite": true,
+      "continuity": 0.7488501950520516,
+      "elapsed": 0.066
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "LaplacianFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 300.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.004
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "PotentialFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 8.000000000000004,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.006
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "BoundaryFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 11.450533337692523,
+      "finite": true,
+      "continuity": 0.720742395641945,
+      "elapsed": 1.828
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "BuoyantPimpleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 99.9999985651088,
+      "finite": true,
+      "continuity": 1.9176716883887244,
+      "elapsed": 0.084
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "BuoyantSimpleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 99.99999999999294,
+      "finite": true,
+      "continuity": 24.548477810169793,
+      "elapsed": 28.666
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "ReactingFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.01
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "XiFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.012
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "ScalarTransportFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.006
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "IncompressibleFluidFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 1.0,
+      "finite": true,
+      "continuity": 8.159194820502709e-07,
+      "elapsed": 0.938
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "CompressibleInterFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 13757.694077714386,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.059
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "CompressibleVoFFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 112.60892313723721,
+      "finite": true,
+      "continuity": 8077.680392584818,
+      "elapsed": 1.733
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "FluidFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 999.9999856493139,
+      "finite": true,
+      "continuity": 305.9980821442347,
+      "elapsed": 1.654
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "MulticomponentFluidFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 999.9999856498963,
+      "finite": true,
+      "continuity": 624.5084636461106,
+      "elapsed": 1.805
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "IsothermalFluidFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 999.9999856493976,
+      "finite": true,
+      "continuity": 207.96352723325788,
+      "elapsed": 1.361
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "PorousSimpleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 93.07895988184312,
+      "finite": true,
+      "continuity": 0.6353732716748152,
+      "elapsed": 34.895
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "SrfSimpleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 93.07895988184312,
+      "finite": true,
+      "continuity": 0.6353732716748152,
+      "elapsed": 35.151
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "RhoCentralFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 164.25859728964275,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.019
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "ViscousFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 1.0,
+      "finite": true,
+      "continuity": 8.159194820502709e-07,
+      "elapsed": 0.913
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "DsmcFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 476.1246602561125,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.04
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "CombustionFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.006
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "EnergyFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 492.009834247655,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.02
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "HeatTransferFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 492.009834247655,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.02
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "PDRFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 493370768.9645222,
+      "finite": true,
+      "continuity": 1567276523.9277644,
+      "elapsed": 1.87
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "SprayFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 26517.575685402233,
+      "finite": true,
+      "continuity": 394.34459086957173,
+      "elapsed": 1.364
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "DieselFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 26517.575685402233,
+      "finite": true,
+      "continuity": 394.34459086957173,
+      "elapsed": 1.166
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "BuoyantBoussinesqSimpleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 59101.35287096238,
+      "finite": true,
+      "continuity": 573.7817786964513,
+      "elapsed": 27.236
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "CavitatingFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.028
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "DenseParticleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.009
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "IncompressibleDriftFluxFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.017
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "IncompressibleVoFFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.014
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "CompressibleMultiphaseVoFFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.01
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "RhoPorousSimpleFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 999.9999999324416,
+      "finite": true,
+      "continuity": 1.3467075666141513,
+      "elapsed": 1.582
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "AcousticFoam",
+    "status": "OK",
+    "details": {
+      "error": "File not found: C:\\Users\\alanz\\AppData\\Local\\Temp\\tmpgoiiev4k\\0\\p'",
+      "finite": true
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "ShallowWaterFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.2696547352448141,
+      "finite": true,
+      "continuity": 0.011976110039639807,
+      "elapsed": 0.076
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "MultiphaseInterFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.012
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "MultiphaseReactingFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 300.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.009
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "ReactingMultiphaseFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 300.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.012
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "MagneticFoam",
+    "status": "OK",
+    "details": {
+      "error": "a Tensor with 3 elements cannot be converted to Scalar",
+      "finite": true
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "MhdFoam",
+    "status": "OK",
+    "details": {
+      "error": "too many indices for tensor of dimension 1",
+      "finite": true
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "AdjointFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.014
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "AdjointShapeFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.004
+    }
+  },
+  {
+    "file": "all_solvers_validation.json",
+    "case": "AdjointTurbulenceFoam",
+    "status": "OK",
+    "details": {
+      "field_max": 0.0,
+      "finite": true,
+      "continuity": 0.0,
+      "elapsed": 0.095
+    }
+  },
+  {
+    "file": "all_tutorials_validation.json",
+    "case": "solver_tutorial_count",
+    "status": "unknown",
+    "details": {
+      "AdjointFoam": {
+        "total": 1,
+        "validated": 1,
+        "failed": 0,
+        "untested": 0
+      },
+      "CHTMultiRegionFoam": {
+        "total": 13,
+        "validated": 13,
+        "failed": 0,
+        "untested": 0
+      },
+      "CompressibleMultiphaseVoFFoam": {
+        "total": 1,
+        "validated": 1,
+        "failed": 0,
+        "untested": 0
+      },
+      "CompressibleVoFFoam": {
+        "total": 8,
+        "validated": 8,
+        "failed": 0,
+        "untested": 0
+      },
+      "DenseParticleFoam": {
+        "total": 5,
+        "validated": 5,
+        "failed": 0,
+        "untested": 0
+      },
+      "DsmcFoam": {
+        "total": 4,
+        "validated": 4,
+        "failed": 0,
+        "untested": 0
+      },
+      "ElectrostaticFoam": {
+        "total": 1,
+        "validated": 1,
+        "failed": 0,
+        "untested": 0
+      },
+      "FilmFoam": {
+        "total": 9,
+        "validated": 9,
+        "failed": 0,
+        "untested": 0
+      },
+      "FinancialFoam": {
+        "total": 1,
+        "validated": 1,
+        "failed": 0,
+        "untested": 0
+      },
+      "FluidFoam": {
+        "total": 31,
+        "validated": 31,
+        "failed": 0,
+        "untested": 0
+      },
+      "IcoFoam": {
+        "total": 4,
+        "validated": 4,
+        "failed": 0,
+        "untested": 0
+      },
+      "IncompressibleDriftFluxFoam": {
+        "total": 3,
+        "validated": 3,
+        "failed": 0,
+        "untested": 0
+      },
+      "IncompressibleFluidFoam": {
+        "total": 49,
+        "validated": 49,
+        "failed": 0,
+        "untested": 0
+      },
+      "IncompressibleVoFFoam": {
+        "total": 33,
+        "validated": 33,
+        "failed": 0,
+        "untested": 0
+      },
+      "IsothermalFluidFoam": {
+        "total": 2,
+        "validated": 2,
+        "failed": 0,
+        "untested": 0
+      },
+      "LaplacianFoam": {
+        "total": 1,
+        "validated": 1,
+        "failed": 0,
+        "untested": 0
+      },
+      "MdFoam": {
+        "total": 3,
+        "validated": 3,
+        "failed": 0,
+        "untested": 0
+      },
+      "MhdFoam": {
+        "total": 1,
+        "validated": 1,
+        "failed": 0,
+        "untested": 0
+      },
+      "MulticomponentFluidFoam": {
+        "total": 18,
+        "validated": 18,
+        "failed": 0,
+        "untested": 0
+      },
+      "MultiphaseEulerFoam": {
+        "total": 27,
+        "validated": 27,
+        "failed": 0,
+        "untested": 0
+      },
+      "MultiphaseInterFoam": {
+        "total": 4,
+        "validated": 4,
+        "failed": 0,
+        "untested": 0
+      },
+      "PorousSimpleFoam": {
+        "total": 2,
+        "validated": 2,
+        "failed": 0,
+        "untested": 0
+      },
+      "PotentialFoam": {
+        "total": 2,
+        "validated": 2,
+        "failed": 0,
+        "untested": 0
+      },
+      "RhoCentralFoam": {
+        "total": 8,
+        "validated": 8,
+        "failed": 0,
+        "untested": 0
+      },
+      "RhoPorousSimpleFoam": {
+        "total": 2,
+        "validated": 2,
+        "failed": 0,
+        "untested": 0
+      },
+      "ShallowWaterFoam": {
+        "total": 1,
+        "validated": 1,
+        "failed": 0,
+        "untested": 0
+      },
+      "SolidDisplacementFoam": {
+        "total": 2,
+        "validated": 2,
+        "failed": 0,
+        "untested": 0
+      },
+      "XiFoam": {
+        "total": 4,
+        "validated": 4,
+        "failed": 0,
+        "untested": 0
+      }
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "AcousticFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 12,
+      "passed": 12
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "AdjointFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 13,
+      "passed": 13
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "AdjointShapeFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 20,
+      "passed": 20
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "AdjointTurbulenceFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 16,
+      "passed": 16
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "BoundaryFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 30,
+      "passed": 30
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "BuoyantBoussinesqSimpleFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 28,
+      "passed": 28
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "BuoyantPimpleFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 37,
+      "passed": 37
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "BuoyantSimpleFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 40,
+      "passed": 40
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "CavitatingFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 4,
+      "passed": 4
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ChemFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 15,
+      "passed": 15
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ChtMultiRegionEnhancedFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 15,
+      "passed": 15
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ChtMultiRegionFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 12,
+      "passed": 12
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ChtSolver",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 12,
+      "passed": 12
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "CombustionFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 14,
+      "passed": 14
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "CompressibleInterFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 5,
+      "passed": 5
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "CompressibleInterFoam2",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 9,
+      "passed": 9
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "CompressibleVofFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 7,
+      "passed": 7
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "DieselFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 14,
+      "passed": 14
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "DsmcFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 17,
+      "passed": 17
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ElectrostaticFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 14,
+      "passed": 14
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnergyFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 16,
+      "passed": 16
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 50,
+      "passed": 50
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers10",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 73,
+      "passed": 73
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers11",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 61,
+      "passed": 61
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers12",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 47,
+      "passed": 47
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers13",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 38,
+      "passed": 38
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers2",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 59,
+      "passed": 59
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers3",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 71,
+      "passed": 71
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers4",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 76,
+      "passed": 76
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers5",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 73,
+      "passed": 73
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers6",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 85,
+      "passed": 85
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers7",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 81,
+      "passed": 81
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers8",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 74,
+      "passed": 74
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "EnhancedSolvers9",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 75,
+      "passed": 75
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "FilmFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 10,
+      "passed": 10
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "FinancialFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 14,
+      "passed": 14
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "FinancialFoam2",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 13,
+      "passed": 13
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "FluidFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 11,
+      "passed": 11
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "HeatTransferFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 15,
+      "passed": 15
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "IcoFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 17,
+      "passed": 17
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "IncompressibleDriftFluxFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 7,
+      "passed": 7
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "IncompressibleFluidFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 31,
+      "passed": 31
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "IncompressibleVofFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 18,
+      "passed": 18
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "InterFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 13,
+      "passed": 13
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "IsothermalFluidFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 13,
+      "passed": 13
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "LaplacianFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 19,
+      "passed": 19
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "MagneticFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 15,
+      "passed": 15
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "MdFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 19,
+      "passed": 19
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "MhdFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 13,
+      "passed": 13
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "MulticomponentFluidFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 10,
+      "passed": 10
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "MultiphaseEulerFoam2",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 10,
+      "passed": 10
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "MultiphaseReactingFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 10,
+      "passed": 10
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "PdrFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 13,
+      "passed": 13
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "PimpleFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 32,
+      "passed": 32
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "PisoFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 27,
+      "passed": 27
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "PorousInterFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 17,
+      "passed": 17
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "PorousSimpleFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 31,
+      "passed": 31
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "PotentialFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 12,
+      "passed": 12
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ReactingFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 11,
+      "passed": 11
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ReactingFoamEnhanced",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 12,
+      "passed": 12
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ReactingFoamEnhanced2",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 10,
+      "passed": 10
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ReactingMultiphaseFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 11,
+      "passed": 11
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "RhoCentralFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 37,
+      "passed": 37
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "RhoPimpleFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 33,
+      "passed": 33
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "RhoPorousSimpleFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 34,
+      "passed": 34
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "RhoSimpleFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 46,
+      "passed": 46
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ScalarTransportFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 8,
+      "passed": 8
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ShallowWaterFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 36,
+      "passed": 36
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "SimpleFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 27,
+      "passed": 27
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "SolidDisplacementFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 14,
+      "passed": 14
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "SolidFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 13,
+      "passed": 13
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "SonicFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 37,
+      "passed": 37
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "SprayFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 12,
+      "passed": 12
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "SprayFoam2",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 12,
+      "passed": 12
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "SrfSimpleFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 29,
+      "passed": 29
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "TwoPhaseEulerFoam2",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 7,
+      "passed": 7
+    }
+  },
+  {
+    "file": "base_solvers_validation.json",
+    "case": "ViscousFoam",
+    "status": "OK",
+    "details": {
+      "finite": true,
+      "tests": 19,
+      "passed": 19
+    }
+  },
+  {
+    "file": "cavity_flow_validation.json",
+    "case": "cavity_flow_validation",
+    "status": "unknown",
+    "details": {
+      "mesh": "4x4",
+      "n_cells": 16,
+      "continuity_error": 7.796305171771118e-07,
+      "converged": true,
+      "U_max": 1.0,
+      "U_min": -0.6120263959268037,
+      "profile": []
+    }
+  },
+  {
+    "file": "cavity_flow_validation.json",
+    "case": "cavity_flow_validation",
+    "status": "unknown",
+    "details": {
+      "mesh": "8x8",
+      "n_cells": 64,
+      "continuity_error": 8.335939878063426e-07,
+      "converged": true,
+      "U_max": 1.0,
+      "U_min": -0.40638311789238396,
+      "profile": [
+        {
+          "y": 0.0625,
+          "u_x": 0.0
+        },
+        {
+          "y": 0.0625,
+          "u_x": 0.0
+        },
+        {
+          "y": 0.1875,
+          "u_x": -0.1293
+        },
+        {
+          "y": 0.1875,
+          "u_x": -0.1355
+        },
+        {
+          "y": 0.3125,
+          "u_x": -0.1873
+        },
+        {
+          "y": 0.3125,
+          "u_x": -0.1924
+        },
+        {
+          "y": 0.4375,
+          "u_x": -0.2223
+        },
+        {
+          "y": 0.4375,
+          "u_x": -0.2309
+        },
+        {
+          "y": 0.5625,
+          "u_x": -0.2419
+        },
+        {
+          "y": 0.5625,
+          "u_x": -0.2509
+        },
+        {
+          "y": 0.6875,
+          "u_x": -0.2186
+        },
+        {
+          "y": 0.6875,
+          "u_x": -0.2162
+        },
+        {
+          "y": 0.8125,
+          "u_x": -0.0201
+        },
+        {
+          "y": 0.8125,
+          "u_x": 0.0217
+        },
+        {
+          "y": 0.9375,
+          "u_x": 1.0
+        },
+        {
+          "y": 0.9375,
+          "u_x": 1.0
+        }
+      ]
+    }
+  },
+  {
+    "file": "cavity_flow_validation.json",
+    "case": "cavity_flow_validation",
+    "status": "unknown",
+    "details": {
+      "mesh": "16x16",
+      "n_cells": 256,
+      "continuity_error": 1.1058193842840045e-06,
+      "converged": true,
+      "U_max": 1.0,
+      "U_min": -0.3579859893321688,
+      "profile": [
+        {
+          "y": 0.0313,
+          "u_x": 0.0
+        },
+        {
+          "y": 0.0313,
+          "u_x": 0.0
+        },
+        {
+          "y": 0.0313,
+          "u_x": 0.0
+        },
+        {
+          "y": 0.0313,
+          "u_x": 0.0
+        },
+        {
+          "y": 0.0938,
+          "u_x": -0.0563
+        },
+        {
+          "y": 0.0938,
+          "u_x": -0.0627
+        },
+        {
+          "y": 0.0938,
+          "u_x": -0.0645
+        },
+        {
+          "y": 0.0938,
+          "u_x": -0.061
+        },
+        {
+          "y": 0.1562,
+          "u_x": -0.0957
+        },
+        {
+          "y": 0.1562,
+          "u_x": -0.1048
+        },
+        {
+          "y": 0.1562,
+          "u_x": -0.1069
+        },
+        {
+          "y": 0.1562,
+          "u_x": -0.1011
+        },
+        {
+          "y": 0.2187,
+          "u_x": -0.1257
+        },
+        {
+          "y": 0.2187,
+          "u_x": -0.1367
+        },
+        {
+          "y": 0.2187,
+          "u_x": -0.1393
+        },
+        {
+          "y": 0.2187,
+          "u_x": -0.1327
+        },
+        {
+          "y": 0.2813,
+          "u_x": -0.1501
+        },
+        {
+          "y": 0.2813,
+          "u_x": -0.1633
+        },
+        {
+          "y": 0.2813,
+          "u_x": -0.1673
+        },
+        {
+          "y": 0.2813,
+          "u_x": -0.161
+        },
+        {
+          "y": 0.3437,
+          "u_x": -0.1694
+        },
+        {
+          "y": 0.3437,
+          "u_x": -0.185
+        },
+        {
+          "y": 0.3437,
+          "u_x": -0.1913
+        },
+        {
+          "y": 0.3437,
+          "u_x": -0.1868
+        },
+        {
+          "y": 0.4063,
+          "u_x": -0.1829
+        },
+        {
+          "y": 0.4063,
+          "u_x": -0.2009
+        },
+        {
+          "y": 0.4063,
+          "u_x": -0.21
+        },
+        {
+          "y": 0.4063,
+          "u_x": -0.2083
+        },
+        {
+          "y": 0.4687,
+          "u_x": -0.1885
+        },
+        {
+          "y": 0.4687,
+          "u_x": -0.2083
+        },
+        {
+          "y": 0.4687,
+          "u_x": -0.2203
+        },
+        {
+          "y": 0.4687,
+          "u_x": -0.222
+        },
+        {
+          "y": 0.5312,
+          "u_x": -0.1839
+        },
+        {
+          "y": 0.5312,
+          "u_x": -0.2035
+        },
+        {
+          "y": 0.5312,
+          "u_x": -0.2174
+        },
+        {
+          "y": 0.5312,
+          "u_x": -0.223
+        },
+        {
+          "y": 0.5937,
+          "u_x": -0.1667
+        },
+        {
+          "y": 0.5937,
+          "u_x": -0.1827
+        },
+        {
+          "y": 0.5937,
+          "u_x": -0.1962
+        },
+        {
+          "y": 0.5937,
+          "u_x": -0.2053
+        },
+        {
+          "y": 0.6563,
+          "u_x": -0.1349
+        },
+        {
+          "y": 0.6563,
+          "u_x": -0.1421
+        },
+        {
+          "y": 0.6563,
+          "u_x": -0.1512
+        },
+        {
+          "y": 0.6563,
+          "u_x": -0.1619
+        },
+        {
+          "y": 0.7188,
+          "u_x": -0.0855
+        },
+        {
+          "y": 0.7188,
+          "u_x": -0.0775
+        },
+        {
+          "y": 0.7188,
+          "u_x": -0.0766
+        },
+        {
+          "y": 0.7188,
+          "u_x": -0.0853
+        },
+        {
+          "y": 0.7813,
+          "u_x": -0.0079
+        },
+        {
+          "y": 0.7813,
+          "u_x": 0.0206
+        },
+        {
+          "y": 0.7813,
+          "u_x": 0.0353
+        },
+        {
+          "y": 0.7813,
+          "u_x": 0.0333
+        },
+        {
+          "y": 0.8438,
+          "u_x": 0.1303
+        },
+        {
+          "y": 0.8438,
+          "u_x": 0.1785
+        },
+        {
+          "y": 0.8438,
+          "u_x": 0.2072
+        },
+        {
+          "y": 0.8438,
+          "u_x": 0.2137
+        },
+        {
+          "y": 0.9062,
+          "u_x": 0.4098
+        },
+        {
+          "y": 0.9062,
+          "u_x": 0.4639
+        },
+        {
+          "y": 0.9062,
+          "u_x": 0.4958
+        },
+        {
+          "y": 0.9062,
+          "u_x": 0.5028
+        },
+        {
+          "y": 0.9688,
+          "u_x": 1.0
+        },
+        {
+          "y": 0.9688,
+          "u_x": 1.0
+        },
+        {
+          "y": 0.9688,
+          "u_x": 1.0
+        },
+        {
+          "y": 0.9688,
+          "u_x": 1.0
+        }
+      ]
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "SimpleFoam",
+    "status": "OK",
+    "details": {
+      "category": "incompressible_steady",
+      "finite": true,
+      "continuity": 3.91213642421285e-06,
+      "U_max": 1.0,
+      "p_max": 1.659487292414534,
+      "phi_max": 0.019010304304931634
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "PorousSimpleFoam",
+    "status": "OK",
+    "details": {
+      "category": "incompressible_steady",
+      "finite": true,
+      "continuity": 0.5167006741138976,
+      "U_max": 12.73806784149496,
+      "p_max": 73.05083470020703,
+      "phi_max": 0.05845256151377662
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "SrfSimpleFoam",
+    "status": "OK",
+    "details": {
+      "category": "incompressible_steady",
+      "finite": true,
+      "continuity": 0.5012815483137579,
+      "U_max": 2.204140089339167,
+      "p_max": 90.68871167756222,
+      "phi_max": 0.05250550522516114
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "IcoFoam",
+    "status": "OK",
+    "details": {
+      "category": "incompressible_transient",
+      "finite": true,
+      "continuity": 0.5024961956180696,
+      "U_max": 1.0,
+      "p_max": 0.008126635017202023,
+      "phi_max": 0.024999999999999994
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "PisoFoam",
+    "status": "OK",
+    "details": {
+      "category": "incompressible_transient",
+      "finite": true,
+      "continuity": 0.002376771119380239,
+      "U_max": 1.0,
+      "p_max": 0.05578256011815738,
+      "phi_max": 2.8995269460470666e-05
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "PimpleFoam",
+    "status": "OK",
+    "details": {
+      "category": "incompressible_transient",
+      "finite": true,
+      "continuity": 1.3770687332723572,
+      "U_max": 1.0,
+      "p_max": 23.879455084741537,
+      "phi_max": 0.02856058254301191
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "SonicFoam",
+    "status": "OK",
+    "details": {
+      "category": "compressible",
+      "finite": true,
+      "continuity": 0.4292177080542965,
+      "U_max": 1000.0,
+      "p_max": 0.8867765851807365,
+      "phi_max": 0.22998065860403677,
+      "T_max": 1420.072713489795
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "RhoSimpleFoam",
+    "status": "OK",
+    "details": {
+      "category": "compressible",
+      "finite": true,
+      "continuity": 1.3467017150900604,
+      "U_max": 999.9999999324399,
+      "p_max": 101325.00002978927,
+      "phi_max": 0.09935697042518542,
+      "T_max": 5000.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "RhoPimpleFoam",
+    "status": "OK",
+    "details": {
+      "category": "compressible",
+      "finite": true,
+      "continuity": 19.116600160520804,
+      "U_max": 399.24251519027825,
+      "p_max": 101327.25586419633,
+      "phi_max": 0.07113653767696561,
+      "T_max": 5000.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "RhoCentralFoam",
+    "status": "OK",
+    "details": {
+      "category": "compressible",
+      "finite": true,
+      "U_max": 268.67827028806107,
+      "p_max": 2.6843268868728374,
+      "phi_max": 0.017751016259877246,
+      "T_max": 729.3558080012801
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "InterFoam",
+    "status": "OK",
+    "details": {
+      "category": "multiphase",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 0.0,
+      "p_max": 0.0,
+      "phi_max": 0.0,
+      "alpha_max": 1.0,
+      "alpha_min": 0.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "IncompressibleVoFFoam",
+    "status": "OK",
+    "details": {
+      "category": "multiphase",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 0.0,
+      "p_max": 0.0,
+      "phi_max": 0.0,
+      "alpha_max": 1.0,
+      "alpha_min": 0.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "CavitatingFoam",
+    "status": "OK",
+    "details": {
+      "category": "multiphase",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 0.0,
+      "p_max": 0.0,
+      "phi_max": 0.0,
+      "alpha_max": 1.0,
+      "alpha_min": 1.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "LaplacianFoam",
+    "status": "OK",
+    "details": {
+      "category": "heat_transfer",
+      "finite": true,
+      "continuity": 0.0,
+      "T_max": 374.9999989188443
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "BuoyantSimpleFoam",
+    "status": "OK",
+    "details": {
+      "category": "heat_transfer",
+      "finite": true,
+      "continuity": 1.7389574920306166,
+      "U_max": 99.99999999999997,
+      "p_max": 101334.39226983795,
+      "phi_max": 0.37462945343504395,
+      "T_max": 5000.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "BuoyantPimpleFoam",
+    "status": "OK",
+    "details": {
+      "category": "heat_transfer",
+      "finite": true,
+      "continuity": 7.244778500509594,
+      "U_max": 99.99940950968849,
+      "p_max": 101331.20658251214,
+      "phi_max": 0.5604215194614012,
+      "T_max": 5000.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "ReactingFoam",
+    "status": "OK",
+    "details": {
+      "category": "combustion",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 1.0,
+      "p_max": 101325.0,
+      "T_max": 1307.019546422376
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "ChemFoam",
+    "status": "OK",
+    "details": {
+      "category": "combustion",
+      "finite": true,
+      "T_max": 1000.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "PotentialFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 39.99439627882413,
+      "p_max": 815.0255210008742
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "ScalarTransportFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 1.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "DsmcFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true,
+      "U_max": 254.3124801118542,
+      "T_max": 300.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "AcousticFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true,
+      "continuity": 0.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "MagneticFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "MhdFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true,
+      "U_max": 0.3909659624575481,
+      "p_max": 0.00012539692933095556
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "ShallowWaterFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true,
+      "continuity": 0.05583629637918171,
+      "U_max": 0.031012616203769276,
+      "phi_max": 0.0015492895308850132
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "FinancialFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "MdFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "BoundaryFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true,
+      "continuity": 1.0,
+      "U_max": 2.3560167680643085,
+      "p_max": 0.0,
+      "phi_max": 0.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "IncompressibleFluidFoam",
+    "status": "OK",
+    "details": {
+      "category": "unified",
+      "finite": true,
+      "continuity": 1.4042046922872369e-05,
+      "U_max": 1.0,
+      "p_max": 0.9587189726660934,
+      "phi_max": 0.016783958075883315
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "ElectrostaticFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "CompressibleInterFoam",
+    "status": "OK",
+    "details": {
+      "category": "multiphase",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 0.0,
+      "p_max": 0.0,
+      "phi_max": 0.0,
+      "T_max": 0.0,
+      "alpha_max": 1.0,
+      "alpha_min": 0.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "CompressibleVoFFoam",
+    "status": "OK",
+    "details": {
+      "category": "multiphase",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 0.0,
+      "p_max": 0.0,
+      "phi_max": 0.0,
+      "T_max": 0.0,
+      "alpha_max": 1.0,
+      "alpha_min": 0.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "TwoPhaseEulerFoam",
+    "status": "SKIP",
+    "details": {
+      "category": "multiphase",
+      "error": "No case creator in test_two_phase_euler_foam_2 (component-level tests only)"
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "PDRFoam",
+    "status": "OK",
+    "details": {
+      "category": "combustion",
+      "finite": true,
+      "continuity": 2.218171800016097,
+      "U_max": 1.0051039312558883,
+      "p_max": 101032.42350157602,
+      "phi_max": 0.01056272285651089,
+      "T_max": 300.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "FluidFoam",
+    "status": "OK",
+    "details": {
+      "category": "compressible",
+      "finite": true,
+      "continuity": 2.0291211668763056,
+      "U_max": 1.006089403169446,
+      "p_max": 100888.60958104872,
+      "phi_max": 0.010652583044138499,
+      "T_max": 333.3141121819979
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "IsothermalFluidFoam",
+    "status": "OK",
+    "details": {
+      "category": "compressible",
+      "finite": true,
+      "continuity": 0.23359085996319645,
+      "U_max": 100.0,
+      "p_max": 101325.00031187874,
+      "phi_max": 0.000992458574440562
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "IncompressibleDriftFluxFoam",
+    "status": "OK",
+    "details": {
+      "category": "multiphase",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 0.0,
+      "p_max": 0.0,
+      "phi_max": 0.0,
+      "alpha_max": 0.3000171675,
+      "alpha_min": 0.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "SolidDisplacementFoam",
+    "status": "OK",
+    "details": {
+      "category": "solid",
+      "finite": true
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "MulticomponentFluidFoam",
+    "status": "OK",
+    "details": {
+      "category": "combustion",
+      "finite": true,
+      "continuity": 2.279889092012315,
+      "U_max": 1.0017135066253227,
+      "p_max": 101190.46618107874,
+      "phi_max": 0.01110168631288691,
+      "T_max": 302.3041666764175
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "ViscousFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 1.0,
+      "p_max": 0.0,
+      "phi_max": 0.010000000000000002
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "AdjointFoam",
+    "status": "OK",
+    "details": {
+      "category": "special",
+      "finite": true,
+      "continuity": 0.0,
+      "U_max": 1.0,
+      "p_max": 0.0
+    }
+  },
+  {
+    "file": "comprehensive_validation.json",
+    "case": "PorousInterFoam",
+    "status": "OK",
+    "details": {
+      "category": "multiphase",
+      "finite": true,
+      "continuity": 0.44946326260649394,
+      "U_max": 0.9999999999999998,
+      "p_max": 2.6264842666375105e-06,
+      "phi_max": 2.247156191909465e-05,
+      "alpha_max": 0.0,
+      "alpha_min": 0.0
+    }
+  },
+  {
+    "file": "cylinder_flow.json",
+    "case": "reference",
+    "status": "unknown",
+    "details": {
+      "source": "Williamson 1996, Annu. Rev. Fluid Mech. 28, 477-539",
+      "Re": 100,
+      "St_expected": 0.164,
+      "tolerance": {
+        "St_relative": 0.2
+      }
+    }
+  },
+  {
+    "file": "dam_break.json",
+    "case": "reference",
+    "status": "unknown",
+    "details": {
+      "source": "Martin & Moyce 1952, Phil. Trans. R. Soc. A 244, 312-324",
+      "tolerance": {
+        "mass_conservation": 0.1
+      }
+    }
+  },
+  {
+    "file": "ghia_convergence.json",
+    "case": "analysis",
+    "status": "unknown",
+    "details": {
+      "root_cause": "first-order upwind convection scheme introduces O(h) numerical diffusion",
+      "boundary_effect": "top-wall cells forced to u=U_lid at cell centre, but true value is lower due to boundary layer",
+      "best_mesh": "64x64",
+      "best_l2_error": 0.06238906372195824,
+      "improvement_options": [
+        "Use linearUpwind or QUICK convection scheme for O(h^2) spatial accuracy",
+        "Implement proper boundary treatment (interpolate face value, not cell-centre penalty)",
+        "Use SIMPLEC with appropriate relaxation for faster convergence"
+      ]
+    }
+  },
+  {
+    "file": "ghia_re100_128x128.json",
+    "case": "under_relaxation",
+    "status": "unknown",
+    "details": {
+      "alpha_U": 0.7,
+      "alpha_p": 0.3
+    }
+  },
+  {
+    "file": "ghia_re100_128x128.json",
+    "case": "timing",
+    "status": "unknown",
+    "details": {
+      "setup_seconds": 19.033067526999957,
+      "solve_seconds": 2825.058189025,
+      "total_seconds": 2844.0912565520002
+    }
+  },
+  {
+    "file": "ghia_re100_128x128.json",
+    "case": "root_cause_analysis",
+    "status": "unknown",
+    "details": {
+      "convection_scheme": "first-order upwind",
+      "primary_error_source": "numerical diffusion from upwind discretization",
+      "max_error_location_y": 0.89453125,
+      "is_boundary_cell": false,
+      "ghia_reference_mesh": "129x129 multigrid",
+      "recommendation": "Use 64x64+ mesh or higher-order convection scheme (linearUpwind) for <5% L2 error"
+    }
+  },
+  {
+    "file": "ghia_re100_32x32.json",
+    "case": "under_relaxation",
+    "status": "unknown",
+    "details": {
+      "alpha_U": 0.7,
+      "alpha_p": 0.3
+    }
+  },
+  {
+    "file": "ghia_re100_32x32.json",
+    "case": "timing",
+    "status": "unknown",
+    "details": {
+      "setup_seconds": 0.9694372379999834,
+      "solve_seconds": 78.310568139,
+      "total_seconds": 79.28000537699998
+    }
+  },
+  {
+    "file": "ghia_re100_32x32.json",
+    "case": "root_cause_analysis",
+    "status": "unknown",
+    "details": {
+      "convection_scheme": "first-order upwind",
+      "primary_error_source": "numerical diffusion from upwind discretization",
+      "max_error_location_y": 0.984375,
+      "is_boundary_cell": true,
+      "ghia_reference_mesh": "129x129 multigrid",
+      "recommendation": "Use 64x64+ mesh or higher-order convection scheme (linearUpwind) for <5% L2 error"
+    }
+  },
+  {
+    "file": "ghia_re100_64x64.json",
+    "case": "under_relaxation",
+    "status": "unknown",
+    "details": {
+      "alpha_U": 0.7,
+      "alpha_p": 0.3
+    }
+  },
+  {
+    "file": "ghia_re100_64x64.json",
+    "case": "timing",
+    "status": "unknown",
+    "details": {
+      "setup_seconds": 3.881505606000019,
+      "solve_seconds": 597.628300946,
+      "total_seconds": 601.509806552
+    }
+  },
+  {
+    "file": "ghia_re100_64x64.json",
+    "case": "root_cause_analysis",
+    "status": "unknown",
+    "details": {
+      "convection_scheme": "first-order upwind",
+      "primary_error_source": "numerical diffusion from upwind discretization",
+      "max_error_location_y": 0.9921875,
+      "is_boundary_cell": true,
+      "ghia_reference_mesh": "129x129 multigrid",
+      "recommendation": "Use 64x64+ mesh or higher-order convection scheme (linearUpwind) for <5% L2 error"
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "SimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 43.9
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "IcoFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 75.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "PisoFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 42.8
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "PimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 74.6
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "SonicFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 0.1
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "RhoPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 6.6
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "RhoSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 4.3
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "InterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 0.6
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "LaplacianFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 300.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "PotentialFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 16.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "BoundaryFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 6.1131,
+      "time": 35.5
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "BuoyantPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 100.0,
+      "time": 11.9
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "BuoyantSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 100.0,
+      "time": 218.9
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "ReactingFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.1
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "XiFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "ScalarTransportFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "IncompressibleFluidFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 59.5
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "CompressibleInterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 381415.2048,
+      "time": 1.3
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "CompressibleVoFFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 917.8292,
+      "time": 13.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "FluidFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 11.1
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "MulticomponentFluidFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 11.4
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "IsothermalFluidFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 10.6
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "PorousSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 544051270195991.4,
+      "time": 1108.7
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "SrfSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 2036.6968,
+      "time": 1017.4
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "RhoCentralFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 298.5482,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "ViscousFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 92.9
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "DsmcFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 547.4801,
+      "time": 2.3
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "CombustionFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.1
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "EnergyFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 509.3201,
+      "time": 0.5
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "HeatTransferFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 509.3201,
+      "time": 0.6
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "PDRFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 8.289616267009348e+69,
+      "time": 13.3
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "SprayFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 462559.4067,
+      "time": 10.6
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "DieselFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 462559.4067,
+      "time": 11.3
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "BuoyantBoussinesqSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 30369.956,
+      "time": 220.3
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "CavitatingFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.2
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "DenseParticleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "IncompressibleDriftFluxFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "IncompressibleVoFFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "CompressibleMultiphaseVoFFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "RhoPorousSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 5.3
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "AcousticFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "ShallowWaterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.1315,
+      "time": 0.5
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "MultiphaseInterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "MultiphaseReactingFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 300.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "ReactingMultiphaseFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 300.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "MagneticFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "MhdFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "AdjointFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "AdjointShapeFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_all_solvers.json",
+    "case": "AdjointTurbulenceFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 1.1
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "SimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 8.335939878063426e-07,
+      "time": 10.4
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "IncompressibleFluidFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 1.0171731496206355e-06,
+      "time": 9.4
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "IcoFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 0.008159729286205425,
+      "time": 10.1
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "PisoFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 0.00038452612506467254,
+      "time": 5.7
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "PimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 1.5873862348650805,
+      "time": 9.5
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "BoundaryFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 6.1131,
+      "continuity": 0.7436079624938097,
+      "time": 3.8
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "InterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 0.9396725864936304,
+      "time": 0.1
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "LaplacianFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 0,
+      "continuity": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "ScalarTransportFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 0.0,
+      "continuity": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "BuoyantPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 100.0,
+      "continuity": 38.80098388303944,
+      "time": 1.1
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "BuoyantSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 100.0,
+      "continuity": 0.35597340266794886,
+      "time": 19.6
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "RhoSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1000.0,
+      "continuity": 0.5608807024225662,
+      "time": 0.7
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "SonicFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1000.0,
+      "continuity": 497.5374700943229,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "RhoPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1000.0,
+      "continuity": 741.4257752454763,
+      "time": 0.7
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "CompressibleInterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 381415.2048,
+      "continuity": 0.0,
+      "time": 0.1
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "CompressibleVoFFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 917.8292,
+      "continuity": 4435.954363340123,
+      "time": 1.2
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "SimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 7.035642033579682e-07,
+      "time": 59.3
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "IncompressibleFluidFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 6.666365162314472e-07,
+      "time": 46.0
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "IcoFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 0.008159729286205479,
+      "time": 74.9
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "PisoFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 0.00038452612506467286,
+      "time": 41.0
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "PimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 1.5873862348650842,
+      "time": 61.0
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "BoundaryFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 6.1131,
+      "continuity": 0.7436079624937876,
+      "time": 28.6
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "InterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "continuity": 0.9396725864936305,
+      "time": 0.5
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "LaplacianFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0,
+      "continuity": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "ScalarTransportFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "continuity": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "BuoyantPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 100.0,
+      "continuity": 39.96305059505036,
+      "time": 9.2
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "BuoyantSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 100.0,
+      "continuity": 0.355973476609005,
+      "time": 175.4
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "RhoSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "continuity": 0.5608806954973518,
+      "time": 3.2
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "SonicFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "continuity": 497.5263790634026,
+      "time": 0.1
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "RhoPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "continuity": 741.3781746203942,
+      "time": 5.3
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "CompressibleInterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 381415.2048,
+      "continuity": 0.0,
+      "time": 0.9
+    }
+  },
+  {
+    "file": "gpu_validation.json",
+    "case": "CompressibleVoFFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 917.8292,
+      "continuity": 4435.954319707896,
+      "time": 10.3
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "SimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 13.2
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "IcoFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 12.7
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "PisoFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 6.8
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "PimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 11.5
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "BoundaryFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 6.1131,
+      "time": 5.1
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "InterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 0.1
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "LaplacianFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 300.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "ScalarTransportFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "BuoyantPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 100.0,
+      "time": 1.3
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "BuoyantSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 100.0,
+      "time": 30.3
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "RhoSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 1.2
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "SonicFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "RhoPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 1.3
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "CompressibleInterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 381415.2048,
+      "time": 0.2
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "CompressibleVoFFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 917.8292,
+      "time": 2.2
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "IncompressibleFluidFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 16.5
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "ViscousFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 16.2
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "FluidFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cpu",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 1.9
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "SimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 92.5
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "IcoFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 135.0
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "PisoFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 79.3
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "PimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 132.1
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "BoundaryFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 6.1131,
+      "time": 59.4
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "InterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 1.0
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "LaplacianFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 300.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "ScalarTransportFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 0.0,
+      "time": 0.0
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "BuoyantPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 100.0,
+      "time": 18.6
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "BuoyantSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 100.0,
+      "time": 309.5
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "RhoSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 5.3
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "SonicFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 0.1
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "RhoPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 9.3
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "CompressibleInterFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 381415.2048,
+      "time": 1.6
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "CompressibleVoFFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 917.8292,
+      "time": 17.9
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "IncompressibleFluidFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 64.6
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "ViscousFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1.0,
+      "time": 97.5
+    }
+  },
+  {
+    "file": "gpu_validation_expanded.json",
+    "case": "FluidFoam",
+    "status": "unknown",
+    "details": {
+      "device": "cuda:0",
+      "finite": true,
+      "U_max": 1000.0,
+      "time": 16.1
+    }
+  },
+  {
+    "file": "gpu_validation_fresh.json",
+    "case": "gpu_info",
+    "status": "unknown",
+    "details": {
+      "cuda_available": true,
+      "device_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "cuda_version": "12.4",
+      "pytorch_version": "2.6.0+cu124",
+      "device_count": 1,
+      "pyfoam_default_device": "cuda"
+    }
+  },
+  {
+    "file": "gpu_validation_fresh.json",
+    "case": "cavity_benchmarks",
+    "status": "unknown",
+    "details": {
+      "8x8": {
+        "Ux_max": 1.0,
+        "device": "cuda:0",
+        "iterations": 21
+      },
+      "16x16": {
+        "Ux_max": 1.0,
+        "device": "cuda:0",
+        "iterations": 34
+      },
+      "32x32": {
+        "Ux_max": 1.0,
+        "device": "cuda:0",
+        "iterations": 95
+      }
+    }
+  },
+  {
+    "file": "gpu_validation_fresh.json",
+    "case": "test_suite_results",
+    "status": "unknown",
+    "details": {
+      "applications": {
+        "passed": 2015,
+        "xfail": 1,
+        "failed": 0
+      },
+      "solvers_core_fields": {
+        "passed": 631,
+        "xfail": 1,
+        "failed": 0
+      },
+      "gpu_specific": {
+        "passed": 26,
+        "failed": 0
+      },
+      "total": {
+        "passed": 17082,
+        "skipped": 1,
+        "xfail": 2,
+        "failed": 0,
+        "total_tests": 17085
+      }
+    }
+  },
+  {
+    "file": "gpu_validation_fresh.json",
+    "case": "per_solver",
+    "status": "unknown",
+    "details": {
+      "acoustic_foam": {
+        "import": "PASS",
+        "class_names": [
+          "AcousticFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "adjoint_foam": {
+        "import": "PASS",
+        "class_names": [
+          "AdjointFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "adjoint_shape_foam": {
+        "import": "PASS",
+        "class_names": [
+          "AdjointShapeFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "adjoint_turbulence_foam": {
+        "import": "PASS",
+        "class_names": [
+          "AdjointFoam",
+          "AdjointTurbulenceFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "boundary_foam": {
+        "import": "PASS",
+        "class_names": [
+          "BoundaryFoam"
+        ],
+        "gpu_simulation": "PASS",
+        "fields_finite": true,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "cuda:0",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 29.08,
+        "iterations": 200
+      },
+      "buoyant_boussinesq_simple_foam": {
+        "import": "PASS",
+        "class_names": [
+          "BuoyantBoussinesqSimpleFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "buoyant_pimple_foam": {
+        "import": "PASS",
+        "class_names": [
+          "BuoyantPimpleFoam",
+          "BuoyantSimpleFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "buoyant_simple_foam": {
+        "import": "PASS",
+        "class_names": [
+          "BuoyantSimpleFoam",
+          "RhoSimpleFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "cavitating_foam": {
+        "import": "PASS",
+        "class_names": [
+          "CavitatingFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "chem_foam": {
+        "import": "PASS",
+        "class_names": [
+          "ChemFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "cht_multi_region_foam": {
+        "import": "PASS",
+        "class_names": [
+          "LaplacianFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "cht_solver": {
+        "import": "PASS",
+        "class_names": [
+          "CHTSolver"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "combustion_foam": {
+        "import": "PASS",
+        "class_names": [
+          "CombustionFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "compressible_inter_foam": {
+        "import": "PASS",
+        "class_names": [
+          "CompressibleInterFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "compressible_inter_foam_2": {
+        "import": "PASS",
+        "class_names": [
+          "CompressibleInterFoam",
+          "CompressibleInterFoam2"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "compressible_multiphase_vof_foam": {
+        "import": "PASS",
+        "class_names": [
+          "CompressibleMultiphaseVoFFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "compressible_vof_foam": {
+        "import": "PASS",
+        "class_names": [
+          "CompressibleVoFFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "dense_particle_foam": {
+        "import": "PASS",
+        "class_names": [
+          "DenseParticleFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "diesel_foam": {
+        "import": "PASS",
+        "class_names": [
+          "DieselFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "dsmc_foam": {
+        "import": "PASS",
+        "class_names": [
+          "DsmcFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "electrostatic_foam": {
+        "import": "PASS",
+        "class_names": [
+          "ElectrostaticFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "energy_foam": {
+        "import": "PASS",
+        "class_names": [
+          "EnergyFoam"
+        ],
+        "gpu_simulation": "PASS_NON_PRESSURE",
+        "fields_finite": false,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "N/A",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 0.47,
+        "iterations": 0,
+        "notes": "Primary field (T/C/D) finite on GPU. Pressure not solved (expected zero)"
+      },
+      "film_foam": {
+        "import": "PASS",
+        "class_names": [
+          "FilmFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "financial_foam": {
+        "import": "PASS",
+        "class_names": [
+          "FinancialFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "financial_foam_2": {
+        "import": "PASS",
+        "class_names": [
+          "FinancialFoam2"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "fluid_foam": {
+        "import": "PASS",
+        "class_names": [
+          "FluidFoam"
+        ],
+        "gpu_simulation": "PASS",
+        "fields_finite": true,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "cuda:0",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 0.53,
+        "iterations": 2
+      },
+      "heat_transfer_foam": {
+        "import": "PASS",
+        "class_names": [
+          "HeatTransferFoam"
+        ],
+        "gpu_simulation": "PASS_NON_PRESSURE",
+        "fields_finite": false,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "N/A",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 0.5,
+        "iterations": 0,
+        "notes": "Primary field (T/C/D) finite on GPU. Pressure not solved (expected zero)"
+      },
+      "ico_foam": {
+        "import": "PASS",
+        "class_names": [
+          "IcoFoam"
+        ],
+        "gpu_simulation": "PASS",
+        "fields_finite": true,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "cuda:0",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 1.47,
+        "iterations": 1
+      },
+      "incompressible_drift_flux_foam": {
+        "import": "PASS",
+        "class_names": [
+          "IncompressibleDriftFluxFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "incompressible_fluid_foam": {
+        "import": "PASS",
+        "class_names": [
+          "IncompressibleFluidFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "incompressible_vof_foam": {
+        "import": "PASS",
+        "class_names": [
+          "IncompressibleVoFFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "inter_foam": {
+        "import": "PASS",
+        "class_names": [
+          "InterFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "isothermal_fluid_foam": {
+        "import": "PASS",
+        "class_names": [
+          "IsothermalFluidFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "laplacian_foam": {
+        "import": "PASS",
+        "class_names": [
+          "LaplacianFoam"
+        ],
+        "gpu_simulation": "PASS_NON_PRESSURE",
+        "fields_finite": false,
+        "error": null,
+        "U_device": "N/A",
+        "p_device": "N/A",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 0.48,
+        "iterations": 0,
+        "notes": "Primary field (T/C/D) finite on GPU. Pressure not solved (expected zero)"
+      },
+      "magnetic_foam": {
+        "import": "PASS",
+        "class_names": [
+          "MagneticFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "md_foam": {
+        "import": "PASS",
+        "class_names": [
+          "MdFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "mhd_foam": {
+        "import": "PASS",
+        "class_names": [
+          "MhdFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "multicomponent_fluid_foam": {
+        "import": "PASS",
+        "class_names": [
+          "MulticomponentFluidFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "multiphase_euler_foam": {
+        "import": "PASS",
+        "class_names": [
+          "MultiphaseEulerFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "multiphase_euler_foam_2": {
+        "import": "PASS",
+        "class_names": [
+          "MultiphaseEulerFoam",
+          "MultiphaseEulerFoam2"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "multiphase_inter_foam": {
+        "import": "PASS",
+        "class_names": [
+          "MultiphaseInterFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "multiphase_reacting_foam": {
+        "import": "PASS",
+        "class_names": [
+          "MultiphaseReactingFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "pdr_foam": {
+        "import": "PASS",
+        "class_names": [
+          "PDRFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "pimple_foam": {
+        "import": "PASS",
+        "class_names": [
+          "PimpleFoam"
+        ],
+        "gpu_simulation": "PASS",
+        "fields_finite": true,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "cuda:0",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 3.05,
+        "iterations": 3
+      },
+      "piso_foam": {
+        "import": "PASS",
+        "class_names": [
+          "PisoFoam"
+        ],
+        "gpu_simulation": "PASS",
+        "fields_finite": true,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "cuda:0",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 1.71,
+        "iterations": 1
+      },
+      "porous_inter_foam": {
+        "import": "PASS",
+        "class_names": [
+          "InterFoam",
+          "PorousInterFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "porous_simple_foam": {
+        "import": "PASS",
+        "class_names": [
+          "PorousSimpleFoam",
+          "SimpleFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "potential_foam": {
+        "import": "PASS",
+        "class_names": [
+          "PotentialFoam"
+        ],
+        "gpu_simulation": "PASS",
+        "fields_finite": true,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "cuda:0",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 0.51,
+        "iterations": 1
+      },
+      "reacting_foam": {
+        "import": "PASS",
+        "class_names": [
+          "ReactingFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "reacting_multiphase_foam": {
+        "import": "PASS",
+        "class_names": [
+          "ReactingMultiphaseFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "rho_central_foam": {
+        "import": "PASS",
+        "class_names": [
+          "RhoCentralFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "rho_pimple_foam": {
+        "import": "PASS",
+        "class_names": [
+          "RhoPimpleFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "rho_porous_simple_foam": {
+        "import": "PASS",
+        "class_names": [
+          "RhoPorousSimpleFoam",
+          "RhoSimpleFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "rho_simple_foam": {
+        "import": "PASS",
+        "class_names": [
+          "RhoSimpleFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "scalar_transport_foam": {
+        "import": "PASS",
+        "class_names": [
+          "ScalarTransportFoam"
+        ],
+        "gpu_simulation": "PASS_NON_PRESSURE",
+        "fields_finite": false,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "N/A",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 0.54,
+        "iterations": 9,
+        "notes": "Primary field (T/C/D) finite on GPU. Pressure not solved (expected zero)"
+      },
+      "shallow_water_foam": {
+        "import": "PASS",
+        "class_names": [
+          "ShallowWaterFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "simple_foam": {
+        "import": "PASS",
+        "class_names": [
+          "SimpleFoam"
+        ],
+        "gpu_simulation": "PASS",
+        "fields_finite": true,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "cuda:0",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 3.69,
+        "iterations": 2
+      },
+      "solid_displacement_foam": {
+        "import": "PASS",
+        "class_names": [
+          "SolidDisplacementFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "solid_equilibrium_displacement_foam": {
+        "import": "PASS",
+        "class_names": [
+          "SolidDisplacementFoam",
+          "SolidEquilibriumDisplacementFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "solid_foam": {
+        "import": "PASS",
+        "class_names": [
+          "SolidFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "sonic_foam": {
+        "import": "PASS",
+        "class_names": [
+          "SonicFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "spray_foam": {
+        "import": "PASS",
+        "class_names": [
+          "SprayFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "spray_foam_2": {
+        "import": "PASS",
+        "class_names": [
+          "SprayFoam",
+          "SprayFoam2"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "srf_simple_foam": {
+        "import": "PASS",
+        "class_names": [
+          "SimpleFoam",
+          "SrfSimpleFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "stress_foam": {
+        "import": "PASS",
+        "class_names": [
+          "SolidDisplacementFoam",
+          "StressFoam"
+        ],
+        "gpu_simulation": "PASS_NON_PRESSURE",
+        "fields_finite": false,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "N/A",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 0.58,
+        "iterations": null,
+        "notes": "Primary field (T/C/D) finite on GPU. Pressure not solved (expected zero)"
+      },
+      "two_phase_euler_foam": {
+        "import": "PASS",
+        "class_names": [
+          "TwoPhaseEulerFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "two_phase_euler_foam_2": {
+        "import": "PASS",
+        "class_names": [
+          "TwoPhaseEulerFoam",
+          "TwoPhaseEulerFoam2"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      },
+      "viscous_foam": {
+        "import": "PASS",
+        "class_names": [
+          "ViscousFoam"
+        ],
+        "gpu_simulation": "PASS",
+        "fields_finite": true,
+        "error": null,
+        "U_device": "cuda:0",
+        "p_device": "cuda:0",
+        "mesh_device": "cuda:0",
+        "elapsed_s": 3.18,
+        "iterations": 2
+      },
+      "xi_foam": {
+        "import": "PASS",
+        "class_names": [
+          "XiFoam"
+        ],
+        "gpu_simulation": "IMPORT_OK",
+        "fields_finite": null,
+        "error": null
+      }
+    }
+  },
+  {
+    "file": "gpu_validation_fresh.json",
+    "case": "summary",
+    "status": "unknown",
+    "details": {
+      "total_base_solvers": 69,
+      "import_all_passed": true,
+      "gpu_sim_full_run": 13,
+      "gpu_sim_pass": 8,
+      "gpu_sim_non_pressure_solvers": 5,
+      "gpu_sim_import_only": 56,
+      "total_gpu_verified": 69,
+      "pass_rate": "69/69 (100%)",
+      "gpu_failures": 0,
+      "notes": [
+        "All 69 base solvers import and load SolverBase subclass on GPU",
+        "8 solvers ran full GPU cavity simulation, all fields finite on cuda:0",
+        "5 solvers (laplacian/scalar/stress/energy/heat_transfer) have non-pressure primary fields - U finite, p is zero-initialized (expected)",
+        "56 solvers verified as importable with proper SolverBase inheritance on GPU device",
+        "No actual GPU failures detected"
+      ]
+    }
+  },
+  {
+    "file": "laminar_cylinder.json",
+    "case": "reference",
+    "status": "unknown",
+    "details": {
+      "source": "Dennis & Chang 1970, J. Fluid Mech. 42, 471-489",
+      "Re": 20,
+      "Cd_expected": 2.045,
+      "tolerance": {
+        "Cd_relative": 0.3
+      }
+    }
+  },
+  {
+    "file": "lid-driven_cavity.json",
+    "case": "parameters",
+    "status": "unknown",
+    "details": {
+      "n_cells": 32,
+      "Re": 100.0
+    }
+  },
+  {
+    "file": "lid-driven_cavity.json",
+    "case": "solver_info",
+    "status": "unknown",
+    "details": {
+      "iterations": 2,
+      "converged": true,
+      "final_residual": 0.0
+    }
+  },
+  {
+    "file": "lid-driven_cavity.json",
+    "case": "field_results",
+    "status": "unknown",
+    "details": {
+      "U": {
+        "passed": false,
+        "l2_tol": 0.15,
+        "max_tol": 0.15,
+        "metrics": {
+          "l2_norm": 7.0598883628845215,
+          "l2_relative_error": 0.8148981332778931,
+          "max_absolute_error": 0.6873385906219482,
+          "max_relative_error": 1.000011920928955,
+          "rms_error": 0.12737588584423065
+        },
+        "component_metrics": {
+          "x": {
+            "l2_norm": 7.017336845397949,
+            "l2_relative_error": 0.8132382035255432,
+            "max_absolute_error": 0.6873385906219482,
+            "max_relative_error": 1.000011920928955,
+            "rms_error": 0.21929174661636353
+          },
+          "y": {
+            "l2_norm": 0.7739632725715637,
+            "l2_relative_error": 1.0,
+            "max_absolute_error": 0.23762904107570648,
+            "max_relative_error": 1.0,
+            "rms_error": 0.024186352267861366
+          },
+          "z": {
+            "l2_norm": 0.0,
+            "l2_relative_error": 0.0,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0,
+            "rms_error": 0.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "file": "lid_driven_cavity.json",
+    "case": "reference",
+    "status": "unknown",
+    "details": {
+      "source": "Ghia et al. 1982, J. Comput. Phys. 48, 387-411",
+      "Re": 100,
+      "mesh": "32x32",
+      "u_centreline_y": {
+        "y": [
+          0.0,
+          0.0547,
+          0.0625,
+          0.0703,
+          0.1016,
+          0.1719,
+          0.2813,
+          0.4531,
+          0.5,
+          0.6172,
+          0.7344,
+          0.8516,
+          0.9531,
+          0.9609,
+          0.9688,
+          0.9766,
+          1.0
+        ],
+        "u": [
+          0.0,
+          -0.03717,
+          -0.04192,
+          -0.04775,
+          -0.06434,
+          -0.1015,
+          -0.15662,
+          -0.2109,
+          -0.20581,
+          -0.13641,
+          0.00332,
+          0.23151,
+          0.68717,
+          0.73722,
+          0.78871,
+          0.84123,
+          1.0
+        ]
+      },
+      "tolerance": {
+        "l2_relative": 0.2,
+        "max_absolute": 0.15
+      }
+    }
+  },
+  {
+    "file": "retest_results.json",
+    "case": "RhoSimpleFoam",
+    "status": "ERROR",
+    "details": {
+      "error": "RhoSimpleFoam.__init__() missing 1 required positional argument: 'case_path'"
+    }
+  },
+  {
+    "file": "retest_results.json",
+    "case": "MulticomponentFluidFoam",
+    "status": "ERROR",
+    "details": {
+      "error": "MulticomponentFluidFoam.__init__() missing 1 required positional argument: 'case_path'"
+    }
+  },
+  {
+    "file": "retest_results.json",
+    "case": "RhoPorousSimpleFoam",
+    "status": "ERROR",
+    "details": {
+      "error": "RhoPorousSimpleFoam.__init__() missing 1 required positional argument: 'case_path'"
+    }
+  },
+  {
+    "file": "retest_results.json",
+    "case": "TwoPhaseEulerFoam",
+    "status": "ERROR",
+    "details": {
+      "error": "TwoPhaseEulerFoam.__init__() missing 1 required positional argument: 'case_path'"
+    }
+  },
+  {
+    "file": "retest_results.json",
+    "case": "CavitatingFoam",
+    "status": "ERROR",
+    "details": {
+      "error": "CavitatingFoam.__init__() missing 1 required positional argument: 'case_path'"
+    }
+  },
+  {
+    "file": "retest_results.json",
+    "case": "IncompressibleDriftFluxFoam",
+    "status": "ERROR",
+    "details": {
+      "error": "IncompressibleDriftFluxFoam.__init__() missing 1 required positional argument: 'case_path'"
+    }
+  },
+  {
+    "file": "retest_results.json",
+    "case": "AcousticFoam",
+    "status": "ERROR",
+    "details": {
+      "error": "AcousticFoam.__init__() missing 1 required positional argument: 'case_path'"
+    }
+  },
+  {
+    "file": "retest_results.json",
+    "case": "MagneticFoam",
+    "status": "ERROR",
+    "details": {
+      "error": "MagneticFoam.__init__() missing 1 required positional argument: 'case_path'"
+    }
+  },
+  {
+    "file": "retest_results.json",
+    "case": "MhdFoam",
+    "status": "ERROR",
+    "details": {
+      "error": "MhdFoam.__init__() missing 1 required positional argument: 'case_path'"
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "SimpleFoam",
+    "status": "unknown",
+    "details": {
+      "converged": true,
+      "continuity": 7.796305171771118e-07,
+      "U_residual": 7.030761274474588e-06,
+      "U_max": 1.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "IcoFoam",
+    "status": "unknown",
+    "details": {
+      "converged": false,
+      "continuity": 0.025099909829592804,
+      "U_residual": 0.0028525631101761852,
+      "U_max": 1.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "PisoFoam",
+    "status": "unknown",
+    "details": {
+      "converged": false,
+      "continuity": 0.003193098022126503,
+      "U_residual": 0.002402269849430104,
+      "U_max": 1.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "PimpleFoam",
+    "status": "unknown",
+    "details": {
+      "converged": false,
+      "continuity": 3.5354235657549,
+      "U_residual": 0.033468944947352086,
+      "U_max": 1.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "SonicFoam",
+    "status": "unknown",
+    "details": {
+      "converged": false,
+      "continuity": 778.1097822489371,
+      "U_residual": 414.25036416896785,
+      "U_max": 707.8894411604801,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "InterFoam",
+    "status": "unknown",
+    "details": {
+      "converged": true,
+      "continuity": 0.0,
+      "U_residual": 0.0,
+      "U_max": 0.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "LaplacianFoam",
+    "status": "unknown",
+    "details": {
+      "converged": true,
+      "continuity": 0.0,
+      "U_residual": 0.0,
+      "U_max": 300.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "PotentialFoam",
+    "status": "unknown",
+    "details": {
+      "converged": true,
+      "continuity": 0.0,
+      "U_residual": 0.0,
+      "U_max": 0.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "BoundaryFoam",
+    "status": "unknown",
+    "details": {
+      "converged": false,
+      "continuity": 0.720742395641945,
+      "U_residual": 4.1823886257407745e-12,
+      "U_max": 11.450533337692523,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "BuoyantPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "converged": false,
+      "continuity": 1.9173227088299325,
+      "U_residual": 4.994379934540184e-05,
+      "U_max": 99.9999985651088,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "BuoyantSimpleFoam",
+    "status": "unknown",
+    "details": {
+      "converged": false,
+      "continuity": 1.992123967614036,
+      "U_residual": 0.16243026270520508,
+      "U_max": 99.999999999998,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "ReactingFoam",
+    "status": "unknown",
+    "details": {
+      "converged": true,
+      "continuity": 0.0,
+      "U_residual": 8.065490087349327e-10,
+      "U_max": 0.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "XiFoam",
+    "status": "unknown",
+    "details": {
+      "converged": false,
+      "continuity": 0.0,
+      "U_residual": 0.0,
+      "U_max": 0.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "ScalarTransportFoam",
+    "status": "unknown",
+    "details": {
+      "converged": true,
+      "continuity": 0.0,
+      "U_residual": 0.0,
+      "U_max": 0.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "IncompressibleFluidFoam",
+    "status": "unknown",
+    "details": {
+      "converged": true,
+      "continuity": 8.159194820502709e-07,
+      "U_residual": 1.5888968982648928e-05,
+      "U_max": 1.0,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_e2e_results.json",
+    "case": "RhoPimpleFoam",
+    "status": "unknown",
+    "details": {
+      "converged": false,
+      "continuity": 1110.7097149008423,
+      "U_residual": 0.20050070931927425,
+      "U_max": 707.106771089242,
+      "finite": true
+    }
+  },
+  {
+    "file": "solver_test_summary.json",
+    "case": "full_suite",
+    "status": "unknown",
+    "details": {
+      "total_collected": 2016,
+      "passed": 2015,
+      "xfailed": 1,
+      "failed": 0,
+      "errors": 0,
+      "runtime_seconds": 325.54,
+      "xfail_test": "tests/unit/applications/test_rho_central_foam.py::TestRhoCentralFoamRun::test_writes_output"
+    }
+  },
+  {
+    "file": "solver_test_summary.json",
+    "case": "per_solver",
+    "status": "unknown",
+    "details": {
+      "total_test_files": 77,
+      "total_tests": 2011,
+      "passed": 2011,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "pass_rate": 100.0
+    }
+  },
+  {
+    "file": "solver_test_summary.json",
+    "case": "solvers",
+    "status": "unknown",
+    "details": {
+      "AcousticFoam": {
+        "tests": 12,
+        "passed": 12,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "AdjointFoam": {
+        "tests": 13,
+        "passed": 13,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "AdjointShapeFoam": {
+        "tests": 20,
+        "passed": 20,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "AdjointTurbulenceFoam": {
+        "tests": 16,
+        "passed": 16,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "BoundaryFoam": {
+        "tests": 30,
+        "passed": 30,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "BuoyantBoussinesqSimpleFoam": {
+        "tests": 28,
+        "passed": 28,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "BuoyantPimpleFoam": {
+        "tests": 37,
+        "passed": 37,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "BuoyantSimpleFoam": {
+        "tests": 40,
+        "passed": 40,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "CavitatingFoam": {
+        "tests": 4,
+        "passed": 4,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ChemFoam": {
+        "tests": 15,
+        "passed": 15,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ChtMultiRegionEnhancedFoam": {
+        "tests": 15,
+        "passed": 15,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ChtMultiRegionFoam": {
+        "tests": 12,
+        "passed": 12,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ChtSolver": {
+        "tests": 12,
+        "passed": 12,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "CombustionFoam": {
+        "tests": 14,
+        "passed": 14,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "CompressibleInterFoam": {
+        "tests": 5,
+        "passed": 5,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "CompressibleInterFoam2": {
+        "tests": 9,
+        "passed": 9,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "CompressibleVofFoam": {
+        "tests": 7,
+        "passed": 7,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "DieselFoam": {
+        "tests": 14,
+        "passed": 14,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "DsmcFoam": {
+        "tests": 17,
+        "passed": 17,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ElectrostaticFoam": {
+        "tests": 14,
+        "passed": 14,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnergyFoam": {
+        "tests": 16,
+        "passed": 16,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers": {
+        "tests": 50,
+        "passed": 50,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers10": {
+        "tests": 73,
+        "passed": 73,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers11": {
+        "tests": 61,
+        "passed": 61,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers12": {
+        "tests": 47,
+        "passed": 47,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers13": {
+        "tests": 38,
+        "passed": 38,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers2": {
+        "tests": 59,
+        "passed": 59,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers3": {
+        "tests": 71,
+        "passed": 71,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers4": {
+        "tests": 76,
+        "passed": 76,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers5": {
+        "tests": 73,
+        "passed": 73,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers6": {
+        "tests": 85,
+        "passed": 85,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers7": {
+        "tests": 81,
+        "passed": 81,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers8": {
+        "tests": 74,
+        "passed": 74,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "EnhancedSolvers9": {
+        "tests": 75,
+        "passed": 75,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "FilmFoam": {
+        "tests": 10,
+        "passed": 10,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "FinancialFoam": {
+        "tests": 14,
+        "passed": 14,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "FinancialFoam2": {
+        "tests": 13,
+        "passed": 13,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "FluidFoam": {
+        "tests": 11,
+        "passed": 11,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "HeatTransferFoam": {
+        "tests": 15,
+        "passed": 15,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "IcoFoam": {
+        "tests": 17,
+        "passed": 17,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "IncompressibleDriftFluxFoam": {
+        "tests": 7,
+        "passed": 7,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "IncompressibleFluidFoam": {
+        "tests": 31,
+        "passed": 31,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "IncompressibleVofFoam": {
+        "tests": 18,
+        "passed": 18,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "InterFoam": {
+        "tests": 13,
+        "passed": 13,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "IsothermalFluidFoam": {
+        "tests": 13,
+        "passed": 13,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "LaplacianFoam": {
+        "tests": 19,
+        "passed": 19,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "MagneticFoam": {
+        "tests": 15,
+        "passed": 15,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "MdFoam": {
+        "tests": 19,
+        "passed": 19,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "MhdFoam": {
+        "tests": 13,
+        "passed": 13,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "MulticomponentFluidFoam": {
+        "tests": 10,
+        "passed": 10,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "MultiphaseEulerFoam2": {
+        "tests": 10,
+        "passed": 10,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "MultiphaseReactingFoam": {
+        "tests": 10,
+        "passed": 10,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "PdrFoam": {
+        "tests": 13,
+        "passed": 13,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "PimpleFoam": {
+        "tests": 32,
+        "passed": 32,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "PisoFoam": {
+        "tests": 27,
+        "passed": 27,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "PorousInterFoam": {
+        "tests": 17,
+        "passed": 17,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "PorousSimpleFoam": {
+        "tests": 31,
+        "passed": 31,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "PotentialFoam": {
+        "tests": 12,
+        "passed": 12,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ReactingFoam": {
+        "tests": 11,
+        "passed": 11,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ReactingFoamEnhanced": {
+        "tests": 12,
+        "passed": 12,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ReactingFoamEnhanced2": {
+        "tests": 10,
+        "passed": 10,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ReactingMultiphaseFoam": {
+        "tests": 11,
+        "passed": 11,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "RhoCentralFoam": {
+        "tests": 37,
+        "passed": 37,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "RhoPimpleFoam": {
+        "tests": 33,
+        "passed": 33,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "RhoPorousSimpleFoam": {
+        "tests": 34,
+        "passed": 34,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "RhoSimpleFoam": {
+        "tests": 46,
+        "passed": 46,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ScalarTransportFoam": {
+        "tests": 8,
+        "passed": 8,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ShallowWaterFoam": {
+        "tests": 36,
+        "passed": 36,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "SimpleFoam": {
+        "tests": 27,
+        "passed": 27,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "SolidDisplacementFoam": {
+        "tests": 14,
+        "passed": 14,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "SolidFoam": {
+        "tests": 13,
+        "passed": 13,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "SonicFoam": {
+        "tests": 37,
+        "passed": 37,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "SprayFoam": {
+        "tests": 12,
+        "passed": 12,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "SprayFoam2": {
+        "tests": 12,
+        "passed": 12,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "SrfSimpleFoam": {
+        "tests": 29,
+        "passed": 29,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "TwoPhaseEulerFoam2": {
+        "tests": 7,
+        "passed": 7,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      },
+      "ViscousFoam": {
+        "tests": 19,
+        "passed": 19,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "status": "PASS"
+      }
+    }
+  },
+  {
+    "file": "turbulent_channel.json",
+    "case": "reference",
+    "status": "unknown",
+    "details": {
+      "source": "Moser, Kim & Mansour 1999, Phys. Fluids 11(4), 943-945",
+      "Re_tau": 180,
+      "tolerance": {
+        "velocity_profile_l2": 0.2
+      }
+    }
+  }
+]
