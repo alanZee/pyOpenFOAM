@@ -48,9 +48,9 @@ Clang 编译器 — 均因同一模板名称查找 bug 失败。这是上游 Ope
 
 **Docker 状态**: Docker Desktop 已恢复正常（重启后）。OpenFOAM v11 镜像已重新拉取 (2.86GB)。
 
-**参照数据存储**: 229 个参照算例数据存储在 Hugging Face Hub
-（`AlanZee/pyOpenFOAM-reference-data`，1.18GB），GitHub 仓库仅存储代码。
-覆盖 OpenFOAM-13 全部 225 个教程中的 199 个（88.4%），40 个为 v13 新增教程
+**参照数据存储**: 232 个参照算例数据存储在 Hugging Face Hub
+（`AlanZee/pyOpenFOAM-reference-data`，1.24GB），GitHub 仓库仅存储代码。
+覆盖 OpenFOAM-13 全部 225 个教程中的 202 个（90%），37 个为 v13 新增教程
 （legacy/mesh/resources/multiRegion 等类别，v11 不支持）。
 HuggingFace 已添加 README 文档。
 
