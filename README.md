@@ -10,6 +10,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.0+](https://img.shields.io/badge/pytorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
 [![Tests](https://img.shields.io/badge/tests-2041+-brightgreen.svg)](#testing)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-Reference_Data-ffd21e.svg)](https://huggingface.co/datasets/AlanZee/pyOpenFOAM-reference-data)
 
 [English](#overview) | [中文](README_zh.md)
 
@@ -37,6 +38,32 @@
 - **Rigid Body Dynamics** — Joints, restraints, motion solvers
 - **Wave Models** — Airy, Stokes, Cnoidal wave theories
 - **Comprehensive Tools** — checkMesh, setFields, renumberMesh, foamToVTK, and more
+
+---
+
+## Reference Data
+
+OpenFOAM reference simulation data is available on HuggingFace:
+
+**[AlanZee/pyOpenFOAM-reference-data](https://huggingface.co/datasets/AlanZee/pyOpenFOAM-reference-data)**
+
+| File | Size | Description |
+|------|------|-------------|
+| `openfoam-reference-data.tar.gz` | 2.42 GB | 246 OpenFOAM v11 reference cases (92% of v13 tutorials) |
+| `pyopenfoam-simulation-results.tar.gz` | 47 KB | pyOpenFOAM validation results (34 JSON files) |
+
+```python
+from huggingface_hub import hf_hub_download
+import tarfile
+
+path = hf_hub_download(
+    repo_id="AlanZee/pyOpenFOAM-reference-data",
+    filename="openfoam-reference-data.tar.gz",
+    repo_type="dataset"
+)
+with tarfile.open(path, "r:gz") as tar:
+    tar.extractall("validation/reference/openfoam/")
+```
 
 ---
 
