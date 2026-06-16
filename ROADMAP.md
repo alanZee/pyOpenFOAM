@@ -15,7 +15,7 @@
 |------|--------|--------|------|
 | 已注册求解器 | 64 solver 实现 (覆盖全部 21 个 OpenFOAM 求解器类别) | 对应 OpenFOAM-13 全部 | ✅ |
 | 求解器有真实物理 | 84/84 (100%) | 全部 | ✅ |
-| OpenFOAM 参照对比 | **232 算例已生成 (90% v13 教程覆盖)** | 267 算例 | ⚠️ |
+| OpenFOAM 参照对比 | **238 算例已生成 (93% v13 教程覆盖)** | 267 算例 | ⚠️ |
 | **教程求解器覆盖** | **240/240 (100%)** | 240/240 | **✅** |
 | Cavity 20x20 精度 | 0.9% 误差 (vs Ghia) | <5% | ✅ |
 | Cavity 32x32 精度 | 1.0% 误差 | <5% | ✅ |
@@ -71,11 +71,11 @@ Clang 编译器 — 均因同一模板名称查找 bug 失败。这是上游 Ope
 
 **Docker 状态**: Docker Desktop 已恢复正常（重启后）。OpenFOAM v11 镜像已重新拉取 (2.86GB)。
 
-**参照数据存储**: 232 个参照算例数据存储在 Hugging Face Hub
-（`AlanZee/pyOpenFOAM-reference-data`，1.24GB），GitHub 仓库仅存储代码。
-覆盖 OpenFOAM-13 全部 225 个教程中的 202 个（90%），37 个为 v13 新增教程
-（legacy/mesh/resources/multiRegion 等类别，v11 不支持）。
-HuggingFace 已添加 README 文档。
+**参照数据存储**: 238 个参照算例数据存储在 Hugging Face Hub
+（`AlanZee/pyOpenFOAM-reference-data`，约 1.3GB），GitHub 仓库仅存储代码。
+覆盖 OpenFOAM-13 全部 225 个教程中的 208 个（92%），31 个为 v13 新增教程
+（legacy/mesh/resources 等类别，v11 不支持）。
+HuggingFace 已添加 README 文档和 pyOpenFOAM 仿真结果。
 
 ## 已完成阶段
 
