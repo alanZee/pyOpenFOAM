@@ -223,9 +223,10 @@ def create_solver(
 
         # Scipy-based solvers (much faster for large problems)
         try:
-            from pyfoam.solvers.scipy_solver import ScipyPCGSolver, ScipyBiCGStabSolver
+            from pyfoam.solvers.scipy_solver import ScipyPCGSolver, ScipyBiCGStabSolver, ScipyDirectSolver
             _register_solver("SCIPYPCG", ScipyPCGSolver)
             _register_solver("SCIPYBICGSTAB", ScipyBiCGStabSolver)
+            _register_solver("SCIPYDIRECT", ScipyDirectSolver)
         except ImportError:
             pass
 
