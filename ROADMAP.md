@@ -35,7 +35,8 @@
 - **原因**: SIMPLE 求解器 Python 开销主导（16x16: 471ms/iter, 32x32: ~2s/iter）
 - **影响**: 128x128 网格需约 30s/iter，1000 次迭代约 8 小时
 - **已尝试**: torch.no_grad()（无显著改善）, scipy 稀疏求解器（瓶颈在矩阵组装）
-- **根因**: PyTorch 张量操作 Python 开销，非算法问题
+- **ScipyDirect**: 压力方程 0.035s/iter（57x 加速），但用于动量方程导致发散
+- **根因**: PyTorch 张量操作 Python 开销，非算法问题；triton 不支持 Windows
 
 ### 2. 37 个 v13 教程无法验证
 - **原因**: v13 新增类别（legacy/mesh/resources/multiRegion 等）在 v11 Docker 中不存在
