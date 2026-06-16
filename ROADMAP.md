@@ -15,14 +15,14 @@
 |------|--------|--------|------|
 | 已注册求解器 | 64 solver 实现 (覆盖全部 21 个 OpenFOAM 求解器类别) | 对应 OpenFOAM-13 全部 | ✅ |
 | 求解器有真实物理 | 84/84 (100%) | 全部 | ✅ |
-| OpenFOAM 参照对比 | **238 算例已生成 (93% v13 教程覆盖)** | 267 算例 | ⚠️ |
+| OpenFOAM 参照对比 | **246 算例已生成 (92% v13 教程覆盖)** | 267 算例 | ⚠️ |
 | **教程求解器覆盖** | **240/240 (100%)** | 240/240 | **✅** |
 | Cavity 20x20 精度 | 0.9% 误差 (vs Ghia) | <5% | ✅ |
 | Cavity 32x32 精度 | 1.0% 误差 | <5% | ✅ |
 | Cavity Re=400 | 39.5% (32x32 QUICK), 网格太粗 | <5% | ❌* |
 | Couette 精度 | 0.001% 内部误差 | <5% | ✅ |
 | Poiseuille 精度 | 0.02% 内部误差 | <5% | ✅ |
-| Docker/OpenFOAM 参照 | v11, 232 算例 | 可用 | ⚠️ |
+| Docker/OpenFOAM 参照 | v11, 246 算例 | 可用 | ⚠️ |
 | 单元测试 (CPU) | 17,130 pass | 全部通过 | ✅ |
 | 单元测试 (GPU) | 17,082 pass | 全部通过 | ✅ |
 | 应用测试 | **2,063 pass** | 全部通过 | ✅ |
@@ -40,7 +40,7 @@
 
 ### 2. 37 个 v13 教程无法验证
 - **原因**: v13 新增类别（legacy/mesh/resources/multiRegion 等）在 v11 Docker 中不存在
-- **状态**: 232/267 教程有参照数据（90% 覆盖）
+- **状态**: 246/267 教程有参照数据（90% 覆盖）
 - **阻塞**: OpenFOAM Foundation 未发布 v13 Docker 镜像
 
 ### 3. OpenFOAM-13 编译失败
@@ -71,7 +71,7 @@ Clang 编译器 — 均因同一模板名称查找 bug 失败。这是上游 Ope
 
 **Docker 状态**: Docker Desktop 已恢复正常（重启后）。OpenFOAM v11 镜像已重新拉取 (2.86GB)。
 
-**参照数据存储**: 238 个参照算例数据存储在 Hugging Face Hub
+**参照数据存储**: 246 个参照算例数据存储在 Hugging Face Hub
 （`AlanZee/pyOpenFOAM-reference-data`，约 1.3GB），GitHub 仓库仅存储代码。
 覆盖 OpenFOAM-13 全部 225 个教程中的 208 个（92%），31 个为 v13 新增教程
 （legacy/mesh/resources 等类别，v11 不支持）。
