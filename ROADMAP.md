@@ -44,13 +44,13 @@
 - **阻塞**: OpenFOAM Foundation 未发布 v13 Docker 镜像
 
 ### 3. OpenFOAM-13 编译失败
-- **原因**: GCC 模板 bug（上游 OpenFOAM Foundation 代码缺陷）
-- **已尝试**: GCC 11/12/13, Clang（需要完整 CRLF 修复）
-- **状态**: 需等待官方修复
+- **原因**: 源码在 Windows 上提取导致系统性大小写问题
+- **已尝试**: GCC 9/10/11/14, 持久化 Docker 容器, tar 复制
+- **具体问题**: `PrimitivePatch.H` vs `primitivePatch.H`、`PointHit` vs `pointHit` 等数百个大小写不一致
+- **状态**: 需在 Linux 系统上重新下载源码或等待官方 Docker 镜像
 
 ### 4. Docker 状态
-- **当前**: 500 Internal Server Error（containerd 数据库损坏）
-- **需要**: 用户手动重置 Docker Desktop
+- **当前**: 已恢复正常，持久化 GCC 10 容器 `of13build` 可用
 
 *高 Re (400) 精度受限于网格分辨率（32x32 太粗，Ghia 基准用 129x129）。
 QUICK 格式已实现但对 Re=400 精度改善有限（39.5% vs 40.5%）。
