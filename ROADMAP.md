@@ -43,11 +43,12 @@
 - **状态**: 246/267 教程有参照数据（90% 覆盖）
 - **阻塞**: OpenFOAM Foundation 未发布 v13 Docker 镜像
 
-### 3. OpenFOAM-13 编译失败
-- **原因**: 源码在 Windows 上提取导致系统性大小写问题
-- **已尝试**: GCC 9/10/11/14, 持久化 Docker 容器, tar 复制
-- **具体问题**: `PrimitivePatch.H` vs `primitivePatch.H`、`PointHit` vs `pointHit` 等数百个大小写不一致
-- **状态**: 需在 Linux 系统上重新下载源码或等待官方 Docker 镜像
+### 3. OpenFOAM-13 编译
+- **状态**: ✅ 编译成功（GCC 10, Ubuntu 22.04 Docker 容器）
+- **方法**: 在 Linux 容器内 git clone 源码（避免 Windows 大小写问题）
+- **已编译**: 108 个库, foamRun + blockMesh + 5 个求解器
+- **已验证**: incompressibleFluid_boxTurb16 教程运行成功
+- **待编译**: 其他求解器模块（incompressibleVoF, XiFluid 等）
 
 ### 4. Docker 状态
 - **当前**: 已恢复正常，持久化 GCC 10 容器 `of13build` 可用
