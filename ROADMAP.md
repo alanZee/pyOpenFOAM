@@ -46,8 +46,9 @@
 ### 3. OpenFOAM-13 编译
 - **状态**: ✅ 编译成功（GCC 10, Ubuntu 22.04 Docker 容器）
 - **方法**: 在 Linux 容器内 git clone 源码（避免 Windows 大小写问题）
-- **已编译**: 108 个库, foamRun + blockMesh + 5 个求解器
+- **已编译**: 120 个库, 9 个二进制文件（foamRun, blockMesh, setFields, decomposePar 等）
 - **已验证**: incompressibleFluid_boxTurb16 教程运行成功
+- **已打包**: Docker 镜像上传到 HuggingFace（622MB）
 - **待编译**: 其他求解器模块（incompressibleVoF, XiFluid 等）
 
 ### 4. Docker 状态
