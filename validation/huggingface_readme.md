@@ -99,9 +99,31 @@ p = case.read_field("p")
 
 | File | Size | Description |
 |------|------|-------------|
-| `openfoam-reference-data.tar.gz` | 1.24 GB | 232 OpenFOAM v11 reference cases |
+| `openfoam-reference-data.tar.gz` | 2.42 GB | 246 OpenFOAM v11 reference cases (92% of v13 tutorials) |
 | `pyopenfoam-simulation-results.tar.gz` | 47 KB | pyOpenFOAM validation results (34 JSON files) |
+| `openfoam13-compiled.tar.gz` | 622 MB | Compiled OpenFOAM-13 Docker image (113 libs, 9 binaries) |
 | `README.md` | - | This file |
+
+### OpenFOAM-13 Docker Image
+
+The `openfoam13-compiled.tar.gz` contains a Docker image with OpenFOAM-13 pre-compiled.
+
+```bash
+# Load the image
+docker load < openfoam13-compiled.tar.gz
+
+# Run a tutorial
+docker run --rm -it openfoam13-compiled bash -c "
+source /openfoam13/etc/bashrc
+cd /openfoam13/tutorials/incompressibleFluid/boxTurb16
+blockMesh && foamRun
+"
+```
+
+**Compiled components:**
+- 113 shared libraries (OpenFOAM, finiteVolume, meshTools, etc.)
+- 9 binaries: foamRun, blockMesh, setFields, decomposePar, reconstructPar, etc.
+- Solver modules: incompressibleFluid, fluidSolver, movingMesh, etc.
 
 ## Generation
 
