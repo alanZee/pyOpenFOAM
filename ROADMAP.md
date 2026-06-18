@@ -224,8 +224,8 @@ HuggingFace 已添加 README 文档和 pyOpenFOAM 仿真结果。
   - 与 OpenFOAM 参照结果对比
   - 与解析解对比（如有）
   - 计算 L2 误差
-- [ ] F3. 生成逐算例报告
-  - `validation/results/per_case_report.md`
+- [x] F3. 生成逐算例报告
+  - `validation/results/validation_report.md` — 684 算例，336 OK，18 ERROR
   - 每个算例：状态、精度、GPU 支持、可微分支持
 - [ ] F4. 更新 validation_report.md
 - [ ] F5. commit + push
