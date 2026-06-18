@@ -1,0 +1,9 @@
+{
+  "mesh": "64x64",
+  "Re": 400,
+  "iterations": 23,
+  "elapsed_s": 128.72335386276245,
+  "converged": false,
+  "continuity": NaN,
+  "s_per_iter": 5.596667559250541
+}
