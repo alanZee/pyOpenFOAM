@@ -1,119 +1,119 @@
 # pyOpenFOAM 逐算例验证报告
 
-**总计**: 102 个唯一算例
+**总计**: 684 个唯一算例
 
 ## 统计摘要
 
 | 状态 | 数量 |
 |------|------|
-| ERROR | 1 |
-| OK | 84 |
-| SKIP | 0 |
-| unknown | 17 |
+| ERROR | 18 |
+| OK | 336 |
+| SKIP | 2 |
+| unknown | 328 |
 
 ## 逐算例详情
 
-| 算例 | 状态 | 来源文件 |
-|------|------|----------|
-| AcousticFoam | OK | base_solvers_validation, comprehensive_validation, gpu_all_solvers, retest_results, all_solvers_validation |
-| AdjointFoam | OK | base_solvers_validation, gpu_all_solvers, comprehensive_validation, all_solvers_validation |
-| AdjointShapeFoam | OK | base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| AdjointTurbulenceFoam | OK | base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| BoundaryFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| BuoyantBoussinesqSimpleFoam | OK | base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| BuoyantPimpleFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| BuoyantSimpleFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| CavitatingFoam | OK | base_solvers_validation, comprehensive_validation, gpu_all_solvers, retest_results, all_solvers_validation |
-| ChemFoam | OK | base_solvers_validation, comprehensive_validation |
-| ChtMultiRegionEnhancedFoam | OK | base_solvers_validation |
-| ChtMultiRegionFoam | OK | base_solvers_validation |
-| ChtSolver | OK | base_solvers_validation |
-| CombustionFoam | OK | base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| CompressibleInterFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| CompressibleInterFoam2 | OK | base_solvers_validation |
-| CompressibleMultiphaseVoFFoam | OK | gpu_all_solvers, all_solvers_validation |
-| CompressibleVoFFoam | OK | gpu_validation_expanded, comprehensive_validation, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| CompressibleVofFoam | OK | base_solvers_validation |
-| DenseParticleFoam | OK | gpu_all_solvers, all_solvers_validation |
-| DieselFoam | OK | base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| DsmcFoam | OK | base_solvers_validation, gpu_all_solvers, comprehensive_validation, all_solvers_validation |
-| ElectrostaticFoam | OK | base_solvers_validation, comprehensive_validation |
-| EnergyFoam | OK | base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| EnhancedSolvers | OK | base_solvers_validation |
-| EnhancedSolvers10 | OK | base_solvers_validation |
-| EnhancedSolvers11 | OK | base_solvers_validation |
-| EnhancedSolvers12 | OK | base_solvers_validation |
-| EnhancedSolvers13 | OK | base_solvers_validation |
-| EnhancedSolvers2 | OK | base_solvers_validation |
-| EnhancedSolvers3 | OK | base_solvers_validation |
-| EnhancedSolvers4 | OK | base_solvers_validation |
-| EnhancedSolvers5 | OK | base_solvers_validation |
-| EnhancedSolvers6 | OK | base_solvers_validation |
-| EnhancedSolvers7 | OK | base_solvers_validation |
-| EnhancedSolvers8 | OK | base_solvers_validation |
-| EnhancedSolvers9 | OK | base_solvers_validation |
-| FilmFoam | OK | base_solvers_validation |
-| FinancialFoam | OK | base_solvers_validation, comprehensive_validation |
-| FinancialFoam2 | OK | base_solvers_validation |
-| FluidFoam | OK | base_solvers_validation, gpu_validation_expanded, comprehensive_validation, gpu_all_solvers, all_solvers_validation |
-| HeatTransferFoam | OK | base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| IcoFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| IncompressibleDriftFluxFoam | OK | base_solvers_validation, comprehensive_validation, gpu_all_solvers, retest_results, all_solvers_validation |
-| IncompressibleFluidFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| IncompressibleVoFFoam | OK | gpu_all_solvers, comprehensive_validation, all_solvers_validation |
-| IncompressibleVofFoam | OK | base_solvers_validation |
-| InterFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| IsothermalFluidFoam | OK | base_solvers_validation, gpu_all_solvers, comprehensive_validation, all_solvers_validation |
-| LaplacianFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| MagneticFoam | OK | base_solvers_validation, comprehensive_validation, gpu_all_solvers, retest_results, all_solvers_validation |
-| MdFoam | OK | base_solvers_validation, comprehensive_validation |
-| MhdFoam | OK | base_solvers_validation, comprehensive_validation, gpu_all_solvers, retest_results, all_solvers_validation |
-| MulticomponentFluidFoam | OK | base_solvers_validation, comprehensive_validation, gpu_all_solvers, retest_results, all_solvers_validation |
-| MultiphaseEulerFoam2 | OK | base_solvers_validation |
-| MultiphaseInterFoam | OK | gpu_all_solvers, all_solvers_validation |
-| MultiphaseReactingFoam | OK | base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| PDRFoam | OK | gpu_all_solvers, comprehensive_validation, all_solvers_validation |
-| PdrFoam | OK | base_solvers_validation |
-| PimpleFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| PisoFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| PorousInterFoam | OK | base_solvers_validation, comprehensive_validation |
-| PorousSimpleFoam | OK | base_solvers_validation, gpu_all_solvers, comprehensive_validation, all_solvers_validation |
-| PotentialFoam | OK | base_solvers_validation, comprehensive_validation, solver_e2e_results, gpu_all_solvers, all_solvers_validation |
-| ReactingFoam | OK | base_solvers_validation, comprehensive_validation, solver_e2e_results, gpu_all_solvers, all_solvers_validation |
-| ReactingFoamEnhanced | OK | base_solvers_validation |
-| ReactingFoamEnhanced2 | OK | base_solvers_validation |
-| ReactingMultiphaseFoam | OK | base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| RhoCentralFoam | OK | base_solvers_validation, gpu_all_solvers, comprehensive_validation, all_solvers_validation |
-| RhoPimpleFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| RhoPorousSimpleFoam | OK | retest_results, base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| RhoSimpleFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, gpu_all_solvers, all_solvers_validation, gpu_validation, retest_results |
-| ScalarTransportFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| ShallowWaterFoam | OK | base_solvers_validation, gpu_all_solvers, comprehensive_validation, all_solvers_validation |
-| SimpleFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| SolidDisplacementFoam | OK | base_solvers_validation, comprehensive_validation |
-| SolidFoam | OK | base_solvers_validation |
-| SonicFoam | OK | base_solvers_validation, comprehensive_validation, gpu_validation_expanded, solver_e2e_results, gpu_all_solvers, all_solvers_validation, gpu_validation |
-| SprayFoam | OK | base_solvers_validation, gpu_all_solvers, all_solvers_validation |
-| SprayFoam2 | OK | base_solvers_validation |
-| SrfSimpleFoam | OK | base_solvers_validation, gpu_all_solvers, comprehensive_validation, all_solvers_validation |
-| TwoPhaseEulerFoam | ERROR | comprehensive_validation, retest_results |
-| TwoPhaseEulerFoam2 | OK | base_solvers_validation |
-| ViscousFoam | OK | base_solvers_validation, gpu_validation_expanded, comprehensive_validation, gpu_all_solvers, all_solvers_validation |
-| XiFoam | OK | gpu_all_solvers, all_solvers_validation, solver_e2e_results |
-| analysis | unknown | ghia_convergence |
-| cavity_benchmarks | unknown | gpu_validation_fresh |
-| cavity_flow_validation | unknown | cavity_flow_validation |
-| field_results | unknown | lid-driven_cavity |
-| full_suite | unknown | solver_test_summary |
-| gpu_info | unknown | gpu_validation_fresh |
-| parameters | unknown | lid-driven_cavity |
-| per_solver | unknown | solver_test_summary, gpu_validation_fresh |
-| reference | unknown | laminar_cylinder, cylinder_flow, turbulent_channel, lid_driven_cavity, dam_break |
-| root_cause_analysis | unknown | ghia_re100_128x128, ghia_re100_64x64, ghia_re100_32x32 |
-| solver_info | unknown | lid-driven_cavity |
-| solver_tutorial_count | unknown | all_tutorials_validation |
-| solvers | unknown | solver_test_summary |
-| summary | unknown | gpu_validation_fresh |
-| test_suite_results | unknown | gpu_validation_fresh |
-| timing | unknown | ghia_re100_128x128, ghia_re100_64x64, ghia_re100_32x32 |
-| under_relaxation | unknown | ghia_re100_128x128, ghia_re100_64x64, ghia_re100_32x32 |
+| 算例 | 状态 | 来源 |
+|------|------|------|
+| AcousticFoam | OK | per_case_report, all_solvers_validation, retest_results, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| AdjointFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| AdjointShapeFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation |
+| AdjointTurbulenceFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation |
+| BoundaryFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| BuoyantBoussinesqSimpleFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation |
+| BuoyantPimpleFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| BuoyantSimpleFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| CavitatingFoam | OK | per_case_report, all_solvers_validation, retest_results, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| ChemFoam | OK | per_case_report, comprehensive_validation, base_solvers_validation |
+| ChtMultiRegionEnhancedFoam | OK | per_case_report, base_solvers_validation |
+| ChtMultiRegionFoam | OK | per_case_report, base_solvers_validation |
+| ChtSolver | OK | per_case_report, base_solvers_validation |
+| CombustionFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation |
+| CompressibleInterFoam | OK | gpu_validation_expanded, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| CompressibleInterFoam2 | OK | per_case_report, base_solvers_validation |
+| CompressibleMultiphaseVoFFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers |
+| CompressibleVoFFoam | OK | gpu_validation_expanded, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, comprehensive_validation |
+| CompressibleVofFoam | OK | per_case_report, base_solvers_validation |
+| DenseParticleFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers |
+| DieselFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation |
+| DsmcFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| ElectrostaticFoam | OK | per_case_report, comprehensive_validation, base_solvers_validation |
+| EnergyFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation |
+| EnhancedSolvers | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers10 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers11 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers12 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers13 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers2 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers3 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers4 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers5 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers6 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers7 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers8 | OK | per_case_report, base_solvers_validation |
+| EnhancedSolvers9 | OK | per_case_report, base_solvers_validation |
+| FilmFoam | OK | per_case_report, base_solvers_validation |
+| FinancialFoam | OK | per_case_report, comprehensive_validation, base_solvers_validation |
+| FinancialFoam2 | OK | per_case_report, base_solvers_validation |
+| FluidFoam | OK | gpu_validation_expanded, all_solvers_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| HeatTransferFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation |
+| IcoFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| IncompressibleDriftFluxFoam | OK | per_case_report, all_solvers_validation, retest_results, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| IncompressibleFluidFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| IncompressibleVoFFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, comprehensive_validation |
+| IncompressibleVofFoam | OK | per_case_report, base_solvers_validation |
+| InterFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| IsothermalFluidFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| LaplacianFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| MagneticFoam | OK | per_case_report, all_solvers_validation, retest_results, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| MdFoam | OK | per_case_report, comprehensive_validation, base_solvers_validation |
+| MhdFoam | OK | per_case_report, all_solvers_validation, retest_results, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| MulticomponentFluidFoam | OK | per_case_report, all_solvers_validation, retest_results, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| MultiphaseEulerFoam2 | OK | per_case_report, base_solvers_validation |
+| MultiphaseInterFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers |
+| MultiphaseReactingFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation |
+| PDRFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, comprehensive_validation |
+| PdrFoam | OK | per_case_report, base_solvers_validation |
+| PimpleFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| PisoFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| PorousInterFoam | OK | per_case_report, comprehensive_validation, base_solvers_validation |
+| PorousSimpleFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| PotentialFoam | OK | solver_e2e_results, per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| ReactingFoam | OK | solver_e2e_results, per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| ReactingFoamEnhanced | OK | per_case_report, base_solvers_validation |
+| ReactingFoamEnhanced2 | OK | per_case_report, base_solvers_validation |
+| ReactingMultiphaseFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation |
+| RhoCentralFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| RhoPimpleFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| RhoPorousSimpleFoam | OK | per_case_report, all_solvers_validation, retest_results, gpu_all_solvers, base_solvers_validation |
+| RhoSimpleFoam | OK | gpu_validation_expanded, all_solvers_validation, gpu_validation, per_case_report, retest_results, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| ScalarTransportFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| ShallowWaterFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| SimpleFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| SolidDisplacementFoam | OK | per_case_report, comprehensive_validation, base_solvers_validation |
+| SolidFoam | OK | per_case_report, base_solvers_validation |
+| SonicFoam | OK | gpu_validation_expanded, solver_e2e_results, all_solvers_validation, gpu_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| SprayFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation |
+| SprayFoam2 | OK | per_case_report, base_solvers_validation |
+| SrfSimpleFoam | OK | per_case_report, all_solvers_validation, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| TwoPhaseEulerFoam | ERROR | per_case_report, retest_results, comprehensive_validation |
+| TwoPhaseEulerFoam2 | OK | per_case_report, base_solvers_validation |
+| ViscousFoam | OK | gpu_validation_expanded, all_solvers_validation, per_case_report, gpu_all_solvers, base_solvers_validation, comprehensive_validation |
+| XiFoam | OK | per_case_report, all_solvers_validation, solver_e2e_results, gpu_all_solvers |
+| analysis | unknown | per_case_report, ghia_convergence |
+| cavity_benchmarks | unknown | per_case_report, gpu_validation_fresh |
+| cavity_flow_validation | unknown | per_case_report, cavity_flow_validation |
+| field_results | unknown | per_case_report, lid-driven_cavity |
+| full_suite | unknown | per_case_report, solver_test_summary |
+| gpu_info | unknown | per_case_report, gpu_validation_fresh |
+| parameters | unknown | per_case_report, lid-driven_cavity |
+| per_solver | unknown | per_case_report, gpu_validation_fresh, solver_test_summary |
+| reference | unknown | dam_break, laminar_cylinder, per_case_report, lid_driven_cavity, cylinder_flow, turbulent_channel |
+| root_cause_analysis | unknown | per_case_report, ghia_re100_128x128, ghia_re100_64x64, ghia_re100_32x32 |
+| solver_info | unknown | per_case_report, lid-driven_cavity |
+| solver_tutorial_count | unknown | per_case_report, all_tutorials_validation |
+| solvers | unknown | per_case_report, solver_test_summary |
+| summary | unknown | per_case_report, gpu_validation_fresh |
+| test_suite_results | unknown | per_case_report, gpu_validation_fresh |
+| timing | unknown | per_case_report, ghia_re100_128x128, ghia_re100_64x64, ghia_re100_32x32 |
+| under_relaxation | unknown | per_case_report, ghia_re100_128x128, ghia_re100_64x64, ghia_re100_32x32 |
