@@ -1,0 +1,12 @@
+{
+  "mesh": "32x32",
+  "Re": 400,
+  "iterations": 1000,
+  "elapsed_s": 1175.5901470184326,
+  "converged": false,
+  "continuity": 0.08066176347984272,
+  "s_per_iter": 1.1755901470184327,
+  "p_solver": "SCIPYDIRECT",
+  "relaxation_U": 0.2,
+  "relaxation_p": 0.1
+}
