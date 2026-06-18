@@ -1,0 +1,9 @@
+{
+  "mesh": "32x32",
+  "Re": 400,
+  "iterations": 500,
+  "converged": false,
+  "continuity": 2.847316579945787e-05,
+  "relaxation_U": 0.2,
+  "relaxation_p": 0.1
+}
