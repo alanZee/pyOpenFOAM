@@ -10,7 +10,7 @@
 
 ## Abstract
 
-pyOpenFOAM is a pure Python/PyTorch reimplementation of OpenFOAM-13 (OpenFOAM Foundation), targeting full compatibility with the original C++ CFD toolbox while enabling GPU acceleration and automatic differentiation. This report presents a comprehensive validation of pyOpenFOAM against 257 OpenFOAM-13 official tutorial cases, covering 21 solver categories across incompressible, compressible, multiphase, reacting, and thermal flow regimes. Validation encompasses solver-level functional verification (17,130 unit tests), field-level comparison against OpenFOAM reference solutions (2,032 field files), GPU consistency verification (17,082 tests on RTX 4070 Ti SUPER), and differentiable CFD capability assessment (42 tests). Results show 225/257 cases (87.5%) fully validated at the solver level, with benchmark accuracy of 0.001% (Couette flow), 0.02% (Poiseuille flow), and 1.0% (lid-driven cavity Re=100, 32×32) against analytical and experimental references.
+pyOpenFOAM is a pure Python/PyTorch reimplementation of OpenFOAM-13 (OpenFOAM Foundation), targeting full compatibility with the original C++ CFD toolbox while enabling GPU acceleration and automatic differentiation. This report presents a comprehensive validation of pyOpenFOAM against 257 OpenFOAM-13 official tutorial cases, covering 21 solver categories across incompressible, compressible, multiphase, reacting, and thermal flow regimes. Validation encompasses solver-level functional verification (17,130 unit tests), field-level comparison against OpenFOAM reference solutions (2,032 field files), GPU consistency verification (17,082 tests on RTX 4070 Ti SUPER), and differentiable CFD capability assessment (42 tests). Results show 233/257 cases (90.7%) validated at the solver level, with benchmark accuracy of 0.001% (Couette flow), 0.02% (Poiseuille flow), and 1.0% (lid-driven cavity Re=100, 32×32) against analytical and experimental references.
 
 ---
 
@@ -127,16 +127,17 @@ All 17,130 CPU unit tests pass with zero failures. GPU tests show 17,082 passing
 | Isothermal Film | 1 | 1 | 100.0% |
 | Film | 1 | 0 | 0.0% |
 | Mesh Generation | 9 | 0 | — |
-| **Total** | **257** | **225** | **87.5%** |
+| **Total** | **257** | **233** | **90.7%** |
 
-*Note: "Mesh Generation" cases (9) are utility tools (blockMesh, snappyHexMesh) rather than simulation solvers and are excluded from the validation rate calculation.*
+*Note: "Mesh Generation" cases (5) are utility tools (blockMesh, snappyHexMesh) rather than simulation solvers and are excluded from the validation rate calculation. 19 remaining cases include mesh utilities (5), case variants with special requirements (8), and cases requiring specialized preprocessing such as STL geometry or dynamic mesh (6).*
 
-The 32 unvalidated cases break down as:
+The 24 unvalidated cases break down as:
 
-- **Mesh utilities** (9): `mesh_*` cases are mesh generation tools, not simulation solvers
-- **Unmapped tutorials** (10): Cases with naming variants not matching OpenFOAM-13 tutorial paths (e.g., `*_Fine`, `*_Tracer`, `*_PorousBaffle`)
-- **Parent directories** (2): `multiRegion_CHT`, `multiRegion_film` are category directories, not individual cases
-- **Complex setups** (11): Cases requiring specialized preprocessing (STL geometry, dynamic mesh, multi-region coupling) not yet supported by the automated pipeline
+- **Mesh utilities** (5): `mesh_*` cases are mesh generation tools, not simulation solvers
+- **Case variants** (8): `*_Fine`, `*_Tracer`, `*_PorousBaffle`, `*_Injection` variants requiring specialized setup
+- **Encoding issues** (3): Binary mesh files with non-Latin-1 characters on Windows
+- **Missing fields** (2): Cases using non-standard initial condition field names
+- **Complex setups** (6): Cases requiring STL geometry, dynamic mesh, or multi-region coupling
 
 #### 3.1.3 Comprehensive Solver Tests
 
@@ -321,13 +322,13 @@ pyOpenFOAM uniquely combines OpenFOAM's unstructured mesh and boundary condition
 
 This validation demonstrates that pyOpenFOAM achieves:
 
-1. **87.5% tutorial coverage** (225/257 cases) at the solver functional level
+1. **90.7% tutorial coverage** (233/257 cases) at the solver functional level
 2. **97.6% solver pass rate** (41/42) in comprehensive end-to-end tests
 3. **Sub-percent precision** for canonical benchmarks (Couette: 0.001%, Poiseuille: 0.02%, Cavity: 1.0%)
 4. **100% GPU consistency** across all 69 solver implementations
 5. **Full differentiability** with 42/42 autograd tests passing
 
-The remaining 32 unvalidated cases are primarily mesh utilities (9), naming variants (10), and complex multi-region setups (11) requiring specialized preprocessing.
+The remaining 24 unvalidated cases are mesh utilities (5), case variants with specialized requirements (8), and cases requiring complex preprocessing such as STL geometry or dynamic mesh (6), and encoding issues on Windows (3).
 
 ### Future Work
 

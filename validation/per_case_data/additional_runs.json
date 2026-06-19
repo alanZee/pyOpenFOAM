@@ -1,0 +1,54 @@
+[
+  {
+    "case": "XiFluid_moriyoshiHomogeneous",
+    "status": "OK",
+    "solver": "XiFoam",
+    "elapsed": 11.117805480957031
+  },
+  {
+    "case": "fluid_roomHeating",
+    "status": "ERROR",
+    "error": "File not found: validation\\_work\\fluid_roomHeating\\0\\U"
+  },
+  {
+    "case": "incompressibleFluid_drivaerFastback",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode character '\\ufffd' in position 7: ordinal not in range(256)"
+  },
+  {
+    "case": "incompressibleFluid_hopperParticles",
+    "status": "SKIP",
+    "reason": "no_mesh"
+  },
+  {
+    "case": "incompressibleFluid_mixerVesselHorizontal2DParticles",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode characters in position 0-7: ordinal not in range(256)"
+  },
+  {
+    "case": "incompressibleFluid_moodyChart",
+    "status": "OK",
+    "solver": "IncompressibleFluidFoam",
+    "elapsed": 4.4257707595825195
+  },
+  {
+    "case": "incompressibleFluid_pitzDailyScalarTransport",
+    "status": "ERROR",
+    "error": "Expected key (word or string), got LBRACE ('{')"
+  },
+  {
+    "case": "incompressibleVoF_damBreak",
+    "status": "ERROR",
+    "error": "File not found: validation\\_work\\incompressibleVoF_damBreak\\0\\U"
+  },
+  {
+    "case": "legacy_incompressible_icoFoam_cavity",
+    "status": "SKIP",
+    "reason": "no_0"
+  },
+  {
+    "case": "multicomponentFluid_SandiaD_LTS",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode characters in position 16-23: ordinal not in range(256)"
+  }
+]

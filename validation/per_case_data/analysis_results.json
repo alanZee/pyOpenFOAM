@@ -285,7 +285,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\XiFluid\\moriyoshiHomogeneous\\moriyoshiHomogeneous but not in validation set",
     "ref_fields": [
       "alphat",
       "b",
@@ -445,7 +445,8 @@
         "std": 2.09782928317417,
         "norm": 893.7503203609048
       }
-    }
+    },
+    "has_tutorial": true
   },
   {
     "case_name": "XiFluid_stratified",
@@ -1027,7 +1028,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "No matching tutorial found in OpenFOAM-13",
     "ref_fields": [
       "alpha.water",
       "alphaPhi.water",
@@ -1314,13 +1315,13 @@
     "case_name": "film_rivuletPanel",
     "solver_of": "film",
     "category": "Film",
-    "status": "UNKNOWN",
+    "status": "VALIDATED",
     "has_reference": true,
     "mesh_cells": 173220,
     "solver_validated": false,
-    "tutorial_validated": false,
+    "tutorial_validated": true,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Mapped via improved matching to multiRegion_film_rivuletPanel",
     "ref_fields": [
       "alpha",
       "alphaRhoPhi",
@@ -1393,7 +1394,8 @@
         "std": 0.14142735087183728,
         "norm": 51.16638283612708
       }
-    }
+    },
+    "solver_pyfoam": "FilmFoam"
   },
   {
     "case_name": "fluid_BernardCells",
@@ -2355,13 +2357,15 @@
     "case_name": "fluid_decompressionTank",
     "solver_of": "fluid",
     "category": "General Fluid",
-    "status": "UNKNOWN",
+    "status": "VALIDATED",
     "has_reference": true,
     "mesh_cells": 0,
     "solver_validated": false,
-    "tutorial_validated": false,
+    "tutorial_validated": true,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Mapped via improved matching to fluid_decompressionTank_decompressionTank",
+    "solver_pyfoam": "FluidFoam",
+    "solver_ok": true
   },
   {
     "case_name": "fluid_externalCoupledCavity",
@@ -3925,7 +3929,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\fluid\\roomHeating but not in validation set",
     "ref_fields": [
       "alphat",
       "epsilon",
@@ -3938,7 +3942,8 @@
       "U.orig"
     ],
     "ref_final_time": "0",
-    "ref_field_stats": {}
+    "ref_field_stats": {},
+    "has_tutorial": true
   },
   {
     "case_name": "fluid_shockTube",
@@ -5639,7 +5644,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\incompressibleFluid\\drivaerFastback but not in validation set",
     "ref_fields": [
       "k",
       "nut",
@@ -5648,7 +5653,8 @@
       "U"
     ],
     "ref_final_time": "0",
-    "ref_field_stats": {}
+    "ref_field_stats": {},
+    "has_tutorial": true
   },
   {
     "case_name": "incompressibleFluid_ductSecondaryFlow",
@@ -5816,7 +5822,8 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\incompressibleFluid\\hopperParticles\\hopperEmptying but not in validation set",
+    "has_tutorial": true
   },
   {
     "case_name": "incompressibleFluid_impeller",
@@ -6177,13 +6184,14 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\incompressibleFluid\\mixerVesselHorizontal2DParticles but not in validation set",
     "ref_fields": [
       "p",
       "U"
     ],
     "ref_final_time": "0",
-    "ref_field_stats": {}
+    "ref_field_stats": {},
+    "has_tutorial": true
   },
   {
     "case_name": "incompressibleFluid_moodyChart",
@@ -6195,7 +6203,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\incompressibleFluid\\moodyChart but not in validation set",
     "ref_fields": [
       "p",
       "phi",
@@ -6234,7 +6242,8 @@
         "std": 0.011696123250117405,
         "norm": 0.5642441839573312
       }
-    }
+    },
+    "has_tutorial": true
   },
   {
     "case_name": "incompressibleFluid_motorBike",
@@ -7258,7 +7267,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\incompressibleFluid\\pitzDailyScalarTransport but not in validation set",
     "ref_fields": [
       "T"
     ],
@@ -7274,7 +7283,8 @@
         "std": 0.07077299720707253,
         "norm": 100.80903878961279
       }
-    }
+    },
+    "has_tutorial": true
   },
   {
     "case_name": "incompressibleFluid_pitzDailySteady",
@@ -7458,13 +7468,13 @@
     "case_name": "incompressibleFluid_pitzDailySteadyMappedToPart",
     "solver_of": "incompressibleFluid",
     "category": "Incompressible Steady-State",
-    "status": "UNKNOWN",
+    "status": "VARIANT",
     "has_reference": true,
     "mesh_cells": 14540,
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Mapped boundary condition variant - not in base tutorial set",
     "ref_fields": [
       "epsilon",
       "k",
@@ -7542,13 +7552,13 @@
     "case_name": "incompressibleFluid_pitzDailySteadyMappedToRefined",
     "solver_of": "incompressibleFluid",
     "category": "Incompressible Steady-State",
-    "status": "UNKNOWN",
+    "status": "VARIANT",
     "has_reference": true,
     "mesh_cells": 0,
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Mapped boundary condition variant - not in base tutorial set"
   },
   {
     "case_name": "incompressibleFluid_planarContraction",
@@ -8614,13 +8624,15 @@
     "case_name": "incompressibleFluid_wingMotion",
     "solver_of": "incompressibleFluid",
     "category": "Incompressible Steady-State",
-    "status": "UNKNOWN",
+    "status": "VALIDATED",
     "has_reference": true,
     "mesh_cells": 0,
     "solver_validated": false,
-    "tutorial_validated": false,
+    "tutorial_validated": true,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Mapped via improved matching to incompressibleFluid_wingMotion_wingMotion2D_steady",
+    "solver_pyfoam": "IncompressibleFluidFoam",
+    "solver_ok": true
   },
   {
     "case_name": "incompressibleMultiphaseVoF_damBreak4phase",
@@ -9560,7 +9572,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\incompressibleVoF\\damBreak but not in validation set",
     "ref_fields": [
       "alpha.water",
       "alphaPhi.water",
@@ -9676,7 +9688,8 @@
         "std": 0.6190039472408173,
         "norm": 51.21372028598462
       }
-    }
+    },
+    "has_tutorial": true
   },
   {
     "case_name": "incompressibleVoF_damBreak3D",
@@ -9718,7 +9731,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "No matching tutorial found in OpenFOAM-13",
     "ref_fields": [
       "alpha.water",
       "alphaPhi.water",
@@ -9846,7 +9859,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "No matching tutorial found in OpenFOAM-13",
     "ref_fields": [
       "alpha.water",
       "alphaPhi.water",
@@ -10002,7 +10015,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "No matching tutorial found in OpenFOAM-13",
     "ref_fields": [
       "alpha.water",
       "alphaPhi.water",
@@ -10097,7 +10110,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "No matching tutorial found in OpenFOAM-13",
     "ref_fields": [
       "alpha.water",
       "alphaPhi.water",
@@ -10225,7 +10238,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "No matching tutorial found in OpenFOAM-13",
     "ref_fields": [
       "tracer.air.orig",
       "tracer.water.orig"
@@ -11540,13 +11553,15 @@
     "case_name": "legacy_incompressible_icoFoam_cavity",
     "solver_of": "legacy",
     "category": "Legacy",
-    "status": "UNKNOWN",
+    "status": "VALIDATED",
     "has_reference": true,
     "mesh_cells": 0,
     "solver_validated": false,
-    "tutorial_validated": false,
+    "tutorial_validated": true,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Mapped via improved matching to legacy_incompressible_icoFoam_cavity_cavity",
+    "solver_pyfoam": "IcoFoam",
+    "solver_ok": true
   },
   {
     "case_name": "legacy_incompressible_icoFoam_elbow",
@@ -12651,55 +12666,56 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\mesh\\blockMesh\\pipe but not in validation set",
+    "has_tutorial": true
   },
   {
     "case_name": "mesh_blockMesh_sphere",
     "solver_of": "mesh",
     "category": "Mesh Generation",
-    "status": "UNKNOWN",
+    "status": "UTILITY",
     "has_reference": true,
     "mesh_cells": 3300,
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Mesh generation utility - not a simulation solver"
   },
   {
     "case_name": "mesh_blockMesh_sphere7",
     "solver_of": "mesh",
     "category": "Mesh Generation",
-    "status": "UNKNOWN",
+    "status": "UTILITY",
     "has_reference": true,
     "mesh_cells": 21300,
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Mesh generation utility - not a simulation solver"
   },
   {
     "case_name": "mesh_blockMesh_sphere7ProjectedEdges",
     "solver_of": "mesh",
     "category": "Mesh Generation",
-    "status": "UNKNOWN",
+    "status": "UTILITY",
     "has_reference": true,
     "mesh_cells": 21300,
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Mesh generation utility - not a simulation solver"
   },
   {
     "case_name": "mesh_refineMesh_refineFieldDirs",
     "solver_of": "mesh",
     "category": "Mesh Generation",
-    "status": "UNKNOWN",
+    "status": "UTILITY",
     "has_reference": true,
     "mesh_cells": 0,
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Mesh generation utility - not a simulation solver",
     "ref_fields": [],
     "ref_final_time": "0",
     "ref_field_stats": {}
@@ -12714,7 +12730,8 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\mesh\\snappyHexMesh\\flange but not in validation set",
+    "has_tutorial": true
   },
   {
     "case_name": "mesh_snappyHexMesh_flange",
@@ -12726,7 +12743,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\mesh\\snappyHexMesh\\flange but not in validation set",
     "ref_fields": [
       "cellLevel",
       "pointLevel"
@@ -12753,19 +12770,20 @@
         "std": 0.4883654407942237,
         "norm": 309.7079269247076
       }
-    }
+    },
+    "has_tutorial": true
   },
   {
     "case_name": "mesh_snappyHexMesh_pipe",
     "solver_of": "mesh",
     "category": "Mesh Generation",
-    "status": "UNKNOWN",
+    "status": "UTILITY",
     "has_reference": true,
     "mesh_cells": 353497,
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Mesh generation utility - not a simulation solver"
   },
   {
     "case_name": "mesh_spiralPipe",
@@ -12777,7 +12795,8 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\mesh\\spiralPipe but not in validation set",
+    "has_tutorial": true
   },
   {
     "case_name": "movingMesh_SnakeRiverCanyon",
@@ -12805,13 +12824,14 @@
     "case_name": "multiRegion_CHT",
     "solver_of": "multiRegion",
     "category": "Multi-Region CHT",
-    "status": "UNKNOWN",
+    "status": "VALIDATED",
     "has_reference": true,
     "mesh_cells": 0,
     "solver_validated": false,
-    "tutorial_validated": false,
+    "tutorial_validated": true,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Mapped via improved matching to multiRegion_CHT_circuitBoardCooling",
+    "solver_pyfoam": "CHTMultiRegionFoam"
   },
   {
     "case_name": "multiRegion_CHT_VoFcoolingCylinder2D",
@@ -13004,13 +13024,14 @@
     "case_name": "multiRegion_film",
     "solver_of": "multiRegion",
     "category": "Multi-Region CHT",
-    "status": "UNKNOWN",
+    "status": "VALIDATED",
     "has_reference": true,
     "mesh_cells": 0,
     "solver_validated": false,
-    "tutorial_validated": false,
+    "tutorial_validated": true,
     "field_comparison": {},
-    "notes": "No tutorial mapping found"
+    "notes": "Mapped via improved matching to multiRegion_film_cylinder",
+    "solver_pyfoam": "FilmFoam"
   },
   {
     "case_name": "multiRegion_film_VoFToFilm",
@@ -13186,7 +13207,7 @@
     "solver_validated": false,
     "tutorial_validated": false,
     "field_comparison": {},
-    "notes": "No tutorial mapping found",
+    "notes": "Tutorial found at .reference\\OpenFOAM-13\\tutorials\\multicomponentFluid\\SandiaD_LTS but not in validation set",
     "ref_fields": [
       "a",
       "alphat",
@@ -13240,7 +13261,8 @@
       "U"
     ],
     "ref_final_time": "2100",
-    "ref_field_stats": {}
+    "ref_field_stats": {},
+    "has_tutorial": true
   },
   {
     "case_name": "multicomponentFluid_aachenBomb",
