@@ -1,0 +1,9 @@
+{
+  "mesh": "128x128",
+  "Re": 400,
+  "iterations": 5000,
+  "elapsed_s": 85698.36103534698,
+  "converged": false,
+  "continuity": 0.009859768469766956,
+  "s_per_iter": 17.139672207069395
+}
