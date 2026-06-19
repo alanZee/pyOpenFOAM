@@ -264,8 +264,49 @@ def read_foam_file(
     if not path.exists():
         raise FileNotFoundError(f"File not found: {path}")
 
-    content = path.read_text(encoding="utf-8", errors="replace")
-    return split_header_body(content)
+    # Read as bytes first to detect binary format
+    raw = path.read_bytes()
+
+    # Find FoamFile header section
+    foamfile_idx = raw.find(b"FoamFile")
+    if foamfile_idx < 0:
+        raise ValueError("No FoamFile header found in content")
+
+    # Find the closing brace of the header block
+    brace_pos = raw.find(b"{", foamfile_idx)
+    if brace_pos < 0:
+        raise ValueError("No opening brace found after FoamFile")
+
+    # Find matching closing brace
+    depth = 0
+    i = brace_pos
+    while i < len(raw):
+        if raw[i:i+1] == b"{":
+            depth += 1
+        elif raw[i:i+1] == b"}":
+            depth -= 1
+            if depth == 0:
+                header_end = i
+                break
+        i += 1
+    else:
+        raise ValueError("Unmatched braces in FoamFile header")
+
+    header_bytes = raw[:header_end + 1]
+    header_text = header_bytes.decode("ascii", errors="replace")
+
+    is_binary = b"binary" in header_bytes
+
+    if is_binary:
+        # Binary: body as latin-1 (byte-preserving)
+        body_bytes = raw[header_end + 1:]
+        body_text = body_bytes.decode("latin-1")
+    else:
+        body_text = raw[header_end + 1:].decode("utf-8", errors="replace")
+
+    header = parse_header(header_text)
+    body_text = body_text.lstrip("\n\r ")
+    return header, body_text
 
 
 def write_foam_file(
