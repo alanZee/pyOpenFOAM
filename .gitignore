@@ -56,9 +56,10 @@ AGENTS.md
 000.txt
 CLAUDE.md
 .claude/
-validation/reference/openfoam/
 .test_cases/
+
+# Large data files (stored on HuggingFace)
+validation/reference/openfoam/
 validation/reference-data.tar.gz
 openfoam-reference-data.tar.gz
-validation/reference-data.tar.gz
 pyopenfoam-simulation-results.tar.gz
