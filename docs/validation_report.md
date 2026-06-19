@@ -298,14 +298,15 @@ See `validation/per_case_data/analysis_results.json` for the complete 257-case d
 
 ### 4.5 Complete Case Inventory (257 Cases)
 
-The full inventory of all 257 OpenFOAM-13 reference cases is maintained in `validation/per_case_data/case_inventory.json`. Each entry includes:
+The full per-case inventory for all 257 OpenFOAM-13 reference cases is documented below and in `validation/per_case_data/final_per_case_report.json`. Each case includes:
 
-- `case_name`: Reference case identifier
-- `category`: Solver category (21 categories)
-- `solver_pyfoam`: Mapped pyOpenFOAM solver class
-- `tutorial_validated`: Whether the solver has been validated against this tutorial
-- `solver_ok`: Whether the solver passed comprehensive verification
-- `ref_field_stats`: Field-level statistics (min, max, mean, std, norm) for all fields in the OpenFOAM reference
+- **Validated**: Whether pyOpenFOAM solver runs successfully on this tutorial (Y/N)
+- **Ref Fields**: Number of OpenFOAM reference fields with readable statistics
+- **L2 Data**: Number of fields with computed L2 error (requires both pyOpenFOAM output and OpenFOAM reference)
+
+Legend: Y = solver validated, N = not validated (see exclusion reasons below)
+
+See `docs/per_case_table.md` for the complete 257-case table organized by category.
 
 #### Cases Not Validated (24 total)
 
