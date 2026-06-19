@@ -43,7 +43,7 @@
 
 ## Reference Data
 
-OpenFOAM reference simulation data is available on HuggingFace:
+OpenFOAM reference simulation data and Docker image are available on HuggingFace:
 
 **[AlanZee/pyOpenFOAM-reference-data](https://huggingface.co/datasets/AlanZee/pyOpenFOAM-reference-data)**
 
@@ -51,6 +51,7 @@ OpenFOAM reference simulation data is available on HuggingFace:
 |------|------|-------------|
 | `openfoam-reference-data.tar.gz` | 2.42 GB | 257 OpenFOAM reference cases (96% of v13 tutorials) |
 | `pyopenfoam-simulation-results.tar.gz` | 47 KB | pyOpenFOAM validation results (34 JSON files) |
+| Docker image | 622 MB | OpenFOAM-13 compiled environment (122 libs, 9 binaries) |
 
 ```python
 from huggingface_hub import hf_hub_download
@@ -141,7 +142,7 @@ pyfoam/
 ├── io/                 # OpenFOAM file format I/O (ASCII + binary), VTK/Gmsh/Fluent
 ├── mesh/               # PolyMesh, FvMesh, mesh generation (blockMesh, snappyHexMesh)
 ├── fields/             # volScalarField, volVectorField, surfaceScalarField
-├── boundary/           # 30+ BC types (velocity, pressure, turbulence, VOF, thermal)
+├── boundary/           # 408+ BC types (velocity, pressure, turbulence, VOF, thermal)
 ├── discretisation/     # fvm/fvc operators, interpolation schemes
 ├── solvers/            # PCG, PBiCGSTAB, GAMG, SIMPLE/SIMPLEC/PISO/PIMPLE
 ├── turbulence/         # RANS, LES, DES models + wall functions (100+ variants)
@@ -183,21 +184,21 @@ pyfoam/
 
 13 benchmark cases defined against analytical solutions and published experimental/numerical data:
 
-| Case | Solver | Reference |
-|------|--------|-----------|
-| Couette Flow | icoFoam | Couette analytical solution |
-| Poiseuille Flow | icoFoam | Hagen-Poiseuille analytical solution |
-| Lid-Driven Cavity (Re=100) | icoFoam | Ghia et al. 1982 |
-| Taylor-Green Vortex | icoFoam | Taylor & Green 1937 |
-| Backward Facing Step | simpleFoam | Driver & Seegmiller 1985 |
-| Sod Shock Tube | rhoCentralFoam | Sod 1978 |
-| Natural Convection (Ra=10^5) | buoyantBoussinesqSimpleFoam | de Vahl Davis 1983 |
-| Dam Break | interFoam | Martin & Moyce 1952 |
-| Turbulent Channel (Re_tau=180) | simpleFoam + kOmegaSST | Moser, Kim & Mansour 1999 |
-| Compressible Nozzle | rhoCentralFoam | Isentropic nozzle theory |
-| Laminar Cylinder (Re=20) | icoFoam | Dennis & Chang 1970 |
-| Cylinder Flow (Re=100) | pisoFoam | Williamson 1996 |
-| Turbulent Duct (Re=10000) | simpleFoam + kOmegaSST | Petukhov 1970 |
+| Case | Solver | Accuracy | Reference |
+|------|--------|----------|-----------|
+| Couette Flow | icoFoam | 0.001% (internal) | Couette analytical solution |
+| Poiseuille Flow | icoFoam | 0.02% (internal) | Hagen-Poiseuille analytical solution |
+| Lid-Driven Cavity (Re=100) | icoFoam | 0.9% (20x20) / 1.0% (32x32) | Ghia et al. 1982 |
+| Taylor-Green Vortex | icoFoam | — | Taylor & Green 1937 |
+| Backward Facing Step | simpleFoam | — | Driver & Seegmiller 1985 |
+| Sod Shock Tube | rhoCentralFoam | — | Sod 1978 |
+| Natural Convection (Ra=10^5) | buoyantBoussinesqSimpleFoam | — | de Vahl Davis 1983 |
+| Dam Break | interFoam | — | Martin & Moyce 1952 |
+| Turbulent Channel (Re_tau=180) | simpleFoam + kOmegaSST | — | Moser, Kim & Mansour 1999 |
+| Compressible Nozzle | rhoCentralFoam | — | Isentropic nozzle theory |
+| Laminar Cylinder (Re=20) | icoFoam | — | Dennis & Chang 1970 |
+| Cylinder Flow (Re=100) | pisoFoam | — | Williamson 1996 |
+| Turbulent Duct (Re=10000) | simpleFoam + kOmegaSST | — | Petukhov 1970 |
 
 ```bash
 python validation/run_all.py

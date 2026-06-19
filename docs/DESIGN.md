@@ -1,7 +1,7 @@
 # pyOpenFOAM 顶层设计文档
 
 **版本**: v1.0
-**日期**: 2026-05-17
+**日期**: 2026-06-19
 
 ---
 
@@ -36,7 +36,7 @@ pyfoam/
 │   ├── geometric_field.py
 │   └── field_arithmetic.py
 │
-├── boundary/           # 边界条件（20+ 种）
+├── boundary/           # 边界条件（408+ 种）
 │   ├── boundary_condition.py  # RTS 注册表
 │   ├── fixed_value.py, zero_gradient.py, cyclic.py, ...
 │   ├── velocity_bcs.py, pressure_bcs.py, turbulence_bcs.py
@@ -77,7 +77,7 @@ pyfoam/
 │   ├── parallel_field.py, parallel_solver.py
 │   └── parallel_io.py
 │
-├── applications/       # 应用求解器（30+ 个）
+├── applications/       # 应用求解器（64 个）
 │   ├── solver_base.py
 │   ├── simple_foam.py, ico_foam.py, piso_foam.py, ...
 │   ├── rho_simple_foam.py, sonic_foam.py, ...
@@ -94,6 +94,30 @@ pyfoam/
 │   ├── linear_solver.py
 │   └── simple.py
 │
+├── lagrangian/         # 拉格朗日粒子
+│   ├── particle_tracking.py, spray.py, collision.py
+│   └── breakup.py, evaporation.py
+│
+├── fv/                 # fvModels 与 fvConstraints
+│   ├── fv_models.py
+│   └── fv_constraints.py
+│
+├── ode/                # ODE 求解器族
+│   ├── euler.py, rk4.py, rkf45.py
+│   └── rosenbrock.py
+│
+├── rigid_body/         # 刚体动力学
+│   ├── rigid_body_solver.py, joints.py
+│   └── constraints.py
+│
+├── structural/         # 结构力学
+│   ├── displacement_solver.py
+│   └── elastic_model.py
+│
+├── waves/              # 波浪模型
+│   ├── airy.py, stokes.py
+│   └── cnoidal.py
+│
 ├── mesh_generation/    # 网格生成
 │   ├── block_mesh.py
 │   └── snappy_hex_mesh.py
@@ -102,6 +126,10 @@ pyfoam/
 │   ├── gmsh_to_foam.py
 │   ├── fluent_mesh_to_foam.py
 │   └── foam_to_vtk.py
+│
+├── tools/              # 工具（296 个）
+│   ├── check_mesh.py, set_fields.py
+│   └── decompose_par.py, foam_to_vtk.py
 │
 ├── models/             # 空（桩）
 └── utils/              # 空（桩）

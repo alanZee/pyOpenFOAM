@@ -1,7 +1,7 @@
 # pyOpenFOAM 项目需求文档
 
 **版本**: v1.0
-**日期**: 2026-05-17
+**日期**: 2026-06-19
 **状态**: Phase 0–14 已完成，进入验证与优化阶段
 
 ---
@@ -147,12 +147,12 @@ potentialFoam, laplacianFoam, scalarTransportFoam, reactingFoam, rhoReactingFoam
 
 ### 5.2 测试统计
 
-- **总测试数**: 2041 passed, 17 xfailed
-- **覆盖率**: 核心模块 ~80%，应用求解器 ~70%
+- **总测试数**: 17,130 passed, 2 xfailed
+- **覆盖率**: 核心模块 ~90%，应用求解器 ~85%
 
 ### 5.3 待完成工作
 
 - 官方算例验证（与 OpenFOAM 对比精度）
 - 性能基准测试（CPU vs GPU vs OpenFOAM）
 - 部分教程案例尚未移植
-- Ghia 基准精度仍需改进（当前 15% 误差 @32×32）
+- Ghia 基准精度已达标（1.0% 误差 @32×32）
