@@ -53,6 +53,10 @@ Validation scripts are in `validation/`. The primary entry point is `python vali
 
 ## 3. Solver Functional Validation
 
+![Solver Validation Status](figures/solver_status.png)
+
+*Figure 1: Distribution of solver functional validation results across 102 tested modules.*
+
 ### 3.1 Base Solver End-to-End Tests
 
 50 unique solver classes were validated end-to-end. Each solver was instantiated with a case directory, run for a fixed number of iterations, and checked for finite field values.
@@ -144,6 +148,10 @@ Validation scripts are in `validation/`. The primary entry point is `python vali
 
 ### 4.1 Lid-Driven Cavity (Ghia et al., 1982, Re = 100)
 
+![Ghia Validation](figures/ghia_validation.png)
+
+*Figure 2: Centerline velocity profiles compared against Ghia et al. (1982) benchmark at Re=100 for three mesh resolutions.*
+
 **Reference**: Ghia, K.N., Ghia, U., Shin, C.T. (1982). "High-Re solutions for incompressible flow using the Navier-Stokes equations and a multigrid method." *J. Comput. Phys.*, 48, 387-411.
 
 **Configuration**: SIMPLE solver, first-order upwind convection scheme, under-relaxation alpha_U = 0.7, alpha_p = 0.3, convergence tolerance 1e-4.
@@ -202,6 +210,10 @@ The parabolic profile is well-resolved by the second-order pressure-velocity cou
 
 ### 4.4 High-Re Cavity (Re = 400)
 
+![Re=400 Convergence](figures/re400_convergence.png)
+
+*Figure 3: Re=400 cavity convergence behavior across different mesh sizes and relaxation strategies.*
+
 **Configuration**: SIMPLE solver, varying mesh sizes and relaxation factors.
 
 | Mesh | Relaxation (U/p) | Iterations | Solve Time | Continuity Error | Status |
@@ -222,7 +234,23 @@ The parabolic profile is well-resolved by the second-order pressure-velocity cou
 
 ---
 
-## 5. GPU Validation
+## 5. Performance Benchmarks
+
+![Solver Performance](figures/solver_performance.png)
+
+*Figure 4: SIMPLE solver iteration time by mesh size on CPU.*
+
+![Accuracy Summary](figures/accuracy_summary.png)
+
+*Figure 5: Precision benchmark summary across all validated cases.*
+
+---
+
+## 6. Reference Case Coverage
+
+![Coverage by Category](figures/coverage_by_category.png)
+
+*Figure 6: Distribution of 257 reference cases across OpenFOAM solver categories.*
 
 ### 5.1 GPU Solver Verification
 
