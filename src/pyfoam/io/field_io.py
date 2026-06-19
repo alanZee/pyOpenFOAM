@@ -344,22 +344,28 @@ def parse_internal_field(
             raise ValueError("Cannot find opening '(' for nonuniform data")
 
         if is_binary:
-            # Binary: skip any non-data bytes between ( and start of doubles
-            # OpenFOAM binary format: ( <raw doubles> )
-            # Some files have extra bytes (pickle header etc.) after (
-            # Strategy: read n*tensor_size doubles starting after (
+            # Binary: skip marker bytes after ( to find actual data
+            # OpenFOAM binary format: ( + <6 bytes metadata> <raw doubles> )
+            # The + marker (0x2b) indicates binary label count follows
             data_start = paren_start + 1
+            raw = content[data_start:].encode("latin-1")
             tensor_size = _tensor_size_for_type(scalar_type)
             n_values = n * tensor_size
-            # Encode to latin-1 to get raw bytes
-            raw_bytes = content[data_start:].encode("latin-1")
-            reader = BinaryReader(raw_bytes)
+
+            # Skip the + marker and metadata (7 bytes: 1 for +, 6 for label)
+            if raw[0:1] == b"+":
+                skip = 7  # + label(6 bytes)
+                raw = raw[skip:]
+
+            reader = BinaryReader(raw)
             try:
                 arr = reader.read_doubles(n_values)
             except EOFError:
-                # Fallback: try to find data after the count line
-                # Some formats have extra metadata between ( and actual data
-                raise
+                # Try without skip (standard format)
+                raw2 = content[data_start:].encode("latin-1")
+                reader2 = BinaryReader(raw2)
+                arr = reader2.read_doubles(n_values)
+
             if tensor_size == 1:
                 return torch.tensor(arr, dtype=get_default_dtype(), device=get_device()), False
             else:
