@@ -1,0 +1,12 @@
+{
+  "total_cases": 257,
+  "validated": 225,
+  "coverage_pct": 87.5,
+  "categories": 21,
+  "field_files": 2032,
+  "field_types": 376,
+  "unit_tests_cpu": 17130,
+  "unit_tests_gpu": 17082,
+  "differentiable_tests": 42,
+  "solver_e2e": 69
+}

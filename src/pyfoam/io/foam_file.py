@@ -203,14 +203,37 @@ def split_header_body(content: str) -> tuple[FoamFileHeader, str]:
     Raises:
         ValueError: If no FoamFile header is found.
     """
-    content_stripped = _strip_comments(content)
-    match = _HEADER_PATTERN.search(content_stripped)
-    if match is None:
+    # Find FoamFile in original content (skip leading comments)
+    foamfile_match = re.search(r'\bFoamFile\b', content)
+    if foamfile_match is None:
         raise ValueError("No FoamFile header found in content")
 
+    # Find the opening brace
+    brace_pos = content.find('{', foamfile_match.end())
+    if brace_pos < 0:
+        raise ValueError("No opening brace found after FoamFile")
+
+    # Find matching closing brace (account for nesting)
+    depth = 0
+    in_string = False
+    i = brace_pos
+    while i < len(content):
+        ch = content[i]
+        if ch == '"' and (i == 0 or content[i - 1] != '\\'):
+            in_string = not in_string
+        elif not in_string:
+            if ch == '{':
+                depth += 1
+            elif ch == '}':
+                depth -= 1
+                if depth == 0:
+                    body_start = i + 1
+                    break
+        i += 1
+    else:
+        raise ValueError("Unmatched braces in FoamFile header")
+
     header = parse_header(content)
-    # Body starts after the header block's closing brace
-    body_start = match.end()
     body = content[body_start:].lstrip("\n\r ")
     return header, body
 

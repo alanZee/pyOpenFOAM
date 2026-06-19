@@ -274,7 +274,12 @@ class Tokenizer:
                 self._pos += 1
             else:
                 break
-        return self._text[start:self._pos]
+        word = self._text[start:self._pos]
+        if not word:
+            # Advance past unrecognized character to prevent infinite loop
+            self._pos += 1
+            return self._text[start:self._pos]
+        return word
 
     def _read_number(self) -> str:
         """Read a number (integer or float, possibly scientific)."""

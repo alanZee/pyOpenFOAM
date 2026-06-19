@@ -1,0 +1,2572 @@
+[
+  {
+    "case": "XiFluid_1D",
+    "category": "XiFluid",
+    "tutorial_validated": true,
+    "solver": "XiFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "XiFluid_engine2Valve2D",
+    "category": "XiFluid",
+    "tutorial_validated": true,
+    "solver": "XiFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "XiFluid_kivaTest",
+    "category": "XiFluid",
+    "tutorial_validated": true,
+    "solver": "XiFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1.39619e-12"
+  },
+  {
+    "case": "XiFluid_moriyoshiHomogeneous",
+    "category": "XiFluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 71,
+    "final_time": "0.015"
+  },
+  {
+    "case": "XiFluid_stratified",
+    "category": "XiFluid",
+    "tutorial_validated": true,
+    "solver": "XiFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "compressibleMultiphaseVoF_damBreak4phaseLaminar",
+    "category": "compressibleMultiphaseVoF",
+    "tutorial_validated": true,
+    "solver": "CompressibleMultiphaseVoFFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9.95"
+  },
+  {
+    "case": "compressibleVoF_ballValve",
+    "category": "compressibleVoF",
+    "tutorial_validated": true,
+    "solver": "CompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "compressibleVoF_climbingRod",
+    "category": "compressibleVoF",
+    "tutorial_validated": true,
+    "solver": "CompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9.5"
+  },
+  {
+    "case": "compressibleVoF_damBreak",
+    "category": "compressibleVoF",
+    "tutorial_validated": true,
+    "solver": "CompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1"
+  },
+  {
+    "case": "compressibleVoF_damBreakInjection",
+    "category": "compressibleVoF",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 21,
+    "final_time": "1"
+  },
+  {
+    "case": "compressibleVoF_depthCharge2D",
+    "category": "compressibleVoF",
+    "tutorial_validated": true,
+    "solver": "CompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.5"
+  },
+  {
+    "case": "compressibleVoF_depthCharge3D",
+    "category": "compressibleVoF",
+    "tutorial_validated": true,
+    "solver": "CompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "compressibleVoF_sloshingTank2D",
+    "category": "compressibleVoF",
+    "tutorial_validated": true,
+    "solver": "CompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "40"
+  },
+  {
+    "case": "compressibleVoF_throttle",
+    "category": "compressibleVoF",
+    "tutorial_validated": true,
+    "solver": "CompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "4e-05"
+  },
+  {
+    "case": "film_rivuletPanel",
+    "category": "film",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.5"
+  },
+  {
+    "case": "fluid_BernardCells",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "950"
+  },
+  {
+    "case": "fluid_aerofoilNACA0012",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.09"
+  },
+  {
+    "case": "fluid_aerofoilNACA0012Steady",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1575"
+  },
+  {
+    "case": "fluid_angledDuct",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "10"
+  },
+  {
+    "case": "fluid_angledDuctExplicitFixedCoeff",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "516"
+  },
+  {
+    "case": "fluid_angledDuctLTS",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "500"
+  },
+  {
+    "case": "fluid_annularThermalMixer",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.06"
+  },
+  {
+    "case": "fluid_blockedChannel",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.03"
+  },
+  {
+    "case": "fluid_buoyantCavity",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1000"
+  },
+  {
+    "case": "fluid_cavity",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1"
+  },
+  {
+    "case": "fluid_decompressionTank",
+    "category": "fluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "fluid_externalCoupledCavity",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "100"
+  },
+  {
+    "case": "fluid_forwardStep",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9.5"
+  },
+  {
+    "case": "fluid_helmholtzResonance",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "fluid_hotRadiationRoom",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "600"
+  },
+  {
+    "case": "fluid_hotRadiationRoomFvDOM",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "300"
+  },
+  {
+    "case": "fluid_hotRoom",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2000"
+  },
+  {
+    "case": "fluid_hotRoomBoussinesq",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2000"
+  },
+  {
+    "case": "fluid_hotRoomBoussinesqSteady",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2000"
+  },
+  {
+    "case": "fluid_hotRoomComfort",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2300"
+  },
+  {
+    "case": "fluid_iglooWithFridges",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "4000"
+  },
+  {
+    "case": "fluid_mixerVessel2DMRF",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.1"
+  },
+  {
+    "case": "fluid_nacaAirfoil",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "fluid_pitzDaily",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.057"
+  },
+  {
+    "case": "fluid_prism",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.0004"
+  },
+  {
+    "case": "fluid_roomHeating",
+    "category": "fluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "fluid_shockTube",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.007"
+  },
+  {
+    "case": "fluid_squareBend",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "148"
+  },
+  {
+    "case": "fluid_squareBendLiq",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.5"
+  },
+  {
+    "case": "fluid_squareBendLiqSteady",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "291"
+  },
+  {
+    "case": "fluid_stackPlume",
+    "category": "fluid",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleDenseParticleFluid_Goldschmidt",
+    "category": "incompressibleDenseParticleFluid",
+    "tutorial_validated": true,
+    "solver": "DenseParticleFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.03"
+  },
+  {
+    "case": "incompressibleDenseParticleFluid_GoldschmidtMPPIC",
+    "category": "incompressibleDenseParticleFluid",
+    "tutorial_validated": true,
+    "solver": "DenseParticleFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2.07"
+  },
+  {
+    "case": "incompressibleDenseParticleFluid_column",
+    "category": "incompressibleDenseParticleFluid",
+    "tutorial_validated": true,
+    "solver": "DenseParticleFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1"
+  },
+  {
+    "case": "incompressibleDenseParticleFluid_cyclone",
+    "category": "incompressibleDenseParticleFluid",
+    "tutorial_validated": true,
+    "solver": "DenseParticleFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleDenseParticleFluid_injectionChannel",
+    "category": "incompressibleDenseParticleFluid",
+    "tutorial_validated": true,
+    "solver": "DenseParticleFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.07"
+  },
+  {
+    "case": "incompressibleDriftFlux_dahl",
+    "category": "incompressibleDriftFlux",
+    "tutorial_validated": true,
+    "solver": "IncompressibleDriftFluxFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "950"
+  },
+  {
+    "case": "incompressibleDriftFlux_mixerVessel2DMRF",
+    "category": "incompressibleDriftFlux",
+    "tutorial_validated": true,
+    "solver": "IncompressibleDriftFluxFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "10"
+  },
+  {
+    "case": "incompressibleDriftFlux_tank3D",
+    "category": "incompressibleDriftFlux",
+    "tutorial_validated": true,
+    "solver": "IncompressibleDriftFluxFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1400"
+  },
+  {
+    "case": "incompressibleFluid_T3A",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "280"
+  },
+  {
+    "case": "incompressibleFluid_TJunction",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1.5"
+  },
+  {
+    "case": "incompressibleFluid_TJunctionFan",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1.5"
+  },
+  {
+    "case": "incompressibleFluid_airFoil2D",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "313"
+  },
+  {
+    "case": "incompressibleFluid_ballValve",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleFluid_blockedChannel",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.03"
+  },
+  {
+    "case": "incompressibleFluid_boxTurb16",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 41,
+    "final_time": "10"
+  },
+  {
+    "case": "incompressibleFluid_cavity",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9.5"
+  },
+  {
+    "case": "incompressibleFluid_cavityCoupledU",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9.5"
+  },
+  {
+    "case": "incompressibleFluid_channel395",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "incompressibleFluid_cylinder",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "501"
+  },
+  {
+    "case": "incompressibleFluid_drivaerFastback",
+    "category": "incompressibleFluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleFluid_ductSecondaryFlow",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "5207"
+  },
+  {
+    "case": "incompressibleFluid_elipsekkLOmega",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.02"
+  },
+  {
+    "case": "incompressibleFluid_flowWithOpenBoundary",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "100"
+  },
+  {
+    "case": "incompressibleFluid_hopperParticles",
+    "category": "incompressibleFluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "incompressibleFluid_impeller",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "3.2"
+  },
+  {
+    "case": "incompressibleFluid_mixerSRF",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "900"
+  },
+  {
+    "case": "incompressibleFluid_mixerVessel2D",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "5"
+  },
+  {
+    "case": "incompressibleFluid_mixerVessel2DMRF",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "500"
+  },
+  {
+    "case": "incompressibleFluid_mixerVesselHorizontal2DParticles",
+    "category": "incompressibleFluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleFluid_moodyChart",
+    "category": "incompressibleFluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2"
+  },
+  {
+    "case": "incompressibleFluid_motorBike",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": false,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "incompressibleFluid_motorBikeSteady",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleFluid_motorBike_motorBike",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleFluid_movingCone",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.0099"
+  },
+  {
+    "case": "incompressibleFluid_offsetCylinder",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2"
+  },
+  {
+    "case": "incompressibleFluid_oscillatingInlet",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "5"
+  },
+  {
+    "case": "incompressibleFluid_pipeCyclic",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "242"
+  },
+  {
+    "case": "incompressibleFluid_pitzDaily",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.3"
+  },
+  {
+    "case": "incompressibleFluid_pitzDailyLES",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.046"
+  },
+  {
+    "case": "incompressibleFluid_pitzDailyLESDevelopedInlet",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.1"
+  },
+  {
+    "case": "incompressibleFluid_pitzDailyLTS",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1000"
+  },
+  {
+    "case": "incompressibleFluid_pitzDailyPulse",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1"
+  },
+  {
+    "case": "incompressibleFluid_pitzDailyScalarTransport",
+    "category": "incompressibleFluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.0886"
+  },
+  {
+    "case": "incompressibleFluid_pitzDailySteady",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "287"
+  },
+  {
+    "case": "incompressibleFluid_pitzDailySteadyExperimentalInlet",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "786"
+  },
+  {
+    "case": "incompressibleFluid_pitzDailySteadyMappedToPart",
+    "category": "incompressibleFluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "171"
+  },
+  {
+    "case": "incompressibleFluid_pitzDailySteadyMappedToRefined",
+    "category": "incompressibleFluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "incompressibleFluid_planarContraction",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.25"
+  },
+  {
+    "case": "incompressibleFluid_planarCouette",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9.5"
+  },
+  {
+    "case": "incompressibleFluid_planarPoiseuille",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9"
+  },
+  {
+    "case": "incompressibleFluid_porousBlockage",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "100"
+  },
+  {
+    "case": "incompressibleFluid_propeller",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleFluid_roomResidenceTime",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "756"
+  },
+  {
+    "case": "incompressibleFluid_rotor2D",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2"
+  },
+  {
+    "case": "incompressibleFluid_rotor2DSRF",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2"
+  },
+  {
+    "case": "incompressibleFluid_rotorDisk",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "103"
+  },
+  {
+    "case": "incompressibleFluid_simpleRushtonMRF",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleFluid_simpleRushtonNCC",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleFluid_turbineSiting",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "172"
+  },
+  {
+    "case": "incompressibleFluid_venturiTube",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "50"
+  },
+  {
+    "case": "incompressibleFluid_waveSubSurface",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleFluid_windAroundBuildings",
+    "category": "incompressibleFluid",
+    "tutorial_validated": true,
+    "solver": "IncompressibleFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "250"
+  },
+  {
+    "case": "incompressibleFluid_wingMotion",
+    "category": "incompressibleFluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "incompressibleMultiphaseVoF_damBreak4phase",
+    "category": "incompressibleMultiphaseVoF",
+    "tutorial_validated": true,
+    "solver": "MultiphaseInterFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "6"
+  },
+  {
+    "case": "incompressibleMultiphaseVoF_damBreak4phaseFineLaminar",
+    "category": "incompressibleMultiphaseVoF",
+    "tutorial_validated": true,
+    "solver": "MultiphaseInterFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleMultiphaseVoF_damBreak4phaseLaminar",
+    "category": "incompressibleMultiphaseVoF",
+    "tutorial_validated": true,
+    "solver": "MultiphaseInterFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "6"
+  },
+  {
+    "case": "incompressibleMultiphaseVoF_mixerVessel2DMRF",
+    "category": "incompressibleMultiphaseVoF",
+    "tutorial_validated": true,
+    "solver": "MultiphaseInterFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "4"
+  },
+  {
+    "case": "incompressibleVoF_DTCHull",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_DTCHullMoving",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_DTCHullWave",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_angledDuct",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "10"
+  },
+  {
+    "case": "incompressibleVoF_capillaryRise",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.05"
+  },
+  {
+    "case": "incompressibleVoF_cavitatingBullet",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_climbingRod",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9.5"
+  },
+  {
+    "case": "incompressibleVoF_containerDischarge2D",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1.5"
+  },
+  {
+    "case": "incompressibleVoF_damBreak",
+    "category": "incompressibleVoF",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1"
+  },
+  {
+    "case": "incompressibleVoF_damBreak3D",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 101,
+    "final_time": "2"
+  },
+  {
+    "case": "incompressibleVoF_damBreakFine",
+    "category": "incompressibleVoF",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 21,
+    "final_time": "1"
+  },
+  {
+    "case": "incompressibleVoF_damBreakInjection",
+    "category": "incompressibleVoF",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 21,
+    "final_time": "1"
+  },
+  {
+    "case": "incompressibleVoF_damBreakLaminar",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1"
+  },
+  {
+    "case": "incompressibleVoF_damBreakLaminarFine",
+    "category": "incompressibleVoF",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 21,
+    "final_time": "1"
+  },
+  {
+    "case": "incompressibleVoF_damBreakPorousBaffle",
+    "category": "incompressibleVoF",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1"
+  },
+  {
+    "case": "incompressibleVoF_damBreakTracer",
+    "category": "incompressibleVoF",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_floatingObject",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "6"
+  },
+  {
+    "case": "incompressibleVoF_floatingObjectWaves",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.2"
+  },
+  {
+    "case": "incompressibleVoF_forcedUpstreamWave",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_mixerVessel",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_mixerVessel2DMRF",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "4"
+  },
+  {
+    "case": "incompressibleVoF_mixerVesselHorizontal2D",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1.63"
+  },
+  {
+    "case": "incompressibleVoF_nozzleFlow2D",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "4e-06"
+  },
+  {
+    "case": "incompressibleVoF_parshallFlume",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_planingHullW3",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_propeller",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_rotatingCube",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 40,
+    "final_time": "1.33"
+  },
+  {
+    "case": "incompressibleVoF_sloshingCylinder",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.5"
+  },
+  {
+    "case": "incompressibleVoF_sloshingTank2D",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "40"
+  },
+  {
+    "case": "incompressibleVoF_sloshingTank2D3DoF",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "40"
+  },
+  {
+    "case": "incompressibleVoF_sloshingTank3D",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "12.5"
+  },
+  {
+    "case": "incompressibleVoF_sloshingTank3D3DoF",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "4.3"
+  },
+  {
+    "case": "incompressibleVoF_sloshingTank3D6DoF",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "10.5"
+  },
+  {
+    "case": "incompressibleVoF_testTubeMixer",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1"
+  },
+  {
+    "case": "incompressibleVoF_trayedPipe",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 401,
+    "final_time": "2"
+  },
+  {
+    "case": "incompressibleVoF_waterChannel",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "200"
+  },
+  {
+    "case": "incompressibleVoF_wave",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_wave3D",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "incompressibleVoF_weirOverflow",
+    "category": "incompressibleVoF",
+    "tutorial_validated": true,
+    "solver": "IncompressibleVoFFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "60"
+  },
+  {
+    "case": "isothermalFilm_rivuletPanel",
+    "category": "isothermalFilm",
+    "tutorial_validated": true,
+    "solver": "FilmFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1.22"
+  },
+  {
+    "case": "isothermalFluid_potentialFreeSurfaceMovingOscillatingBox",
+    "category": "isothermalFluid",
+    "tutorial_validated": true,
+    "solver": "IsothermalFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "20"
+  },
+  {
+    "case": "isothermalFluid_potentialFreeSurfaceOscillatingBox",
+    "category": "isothermalFluid",
+    "tutorial_validated": true,
+    "solver": "IsothermalFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "20"
+  },
+  {
+    "case": "legacy_basic_laplacianFoam_flange",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "LaplacianFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "3"
+  },
+  {
+    "case": "legacy_compressible_rhoPorousSimpleFoam_angledDuctImplicit",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "RhoPorousSimpleFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "56"
+  },
+  {
+    "case": "legacy_electromagnetics_mhdFoam_hartmann",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "MhdFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2"
+  },
+  {
+    "case": "legacy_incompressible_adjointShapeOptimisationFoam_pitzDaily",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "AdjointFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1000"
+  },
+  {
+    "case": "legacy_incompressible_icoFoam_cavity",
+    "category": "legacy",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "legacy_incompressible_icoFoam_elbow",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "IcoFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "10"
+  },
+  {
+    "case": "legacy_incompressible_porousSimpleFoam_angledDuctImplicit",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "PorousSimpleFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "100"
+  },
+  {
+    "case": "legacy_incompressible_shallowWaterFoam_squareBump",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "ShallowWaterFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "100"
+  },
+  {
+    "case": "legacy_lagrangian_dsmcFoam_freeSpacePeriodic",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "DsmcFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.001"
+  },
+  {
+    "case": "legacy_lagrangian_dsmcFoam_freeSpaceStream",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "DsmcFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.002"
+  },
+  {
+    "case": "legacy_lagrangian_dsmcFoam_supersonicCorner",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "DsmcFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "legacy_lagrangian_dsmcFoam_wedge15Ma5",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "DsmcFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "0.02"
+  },
+  {
+    "case": "legacy_lagrangian_mdEquilibrationFoam_periodicCubeArgon",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "MdFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "5e-12"
+  },
+  {
+    "case": "legacy_lagrangian_mdEquilibrationFoam_periodicCubeWater",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "MdFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "8e-13"
+  },
+  {
+    "case": "legacy_lagrangian_mdFoam_nanoNozzle",
+    "category": "legacy",
+    "tutorial_validated": true,
+    "solver": "MdFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "mesh_blockMesh_pipe",
+    "category": "mesh",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "mesh_blockMesh_sphere",
+    "category": "mesh",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "mesh_blockMesh_sphere7",
+    "category": "mesh",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "mesh_blockMesh_sphere7ProjectedEdges",
+    "category": "mesh",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "mesh_refineMesh_refineFieldDirs",
+    "category": "mesh",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "mesh_snappyHexMesh",
+    "category": "mesh",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "mesh_snappyHexMesh_flange",
+    "category": "mesh",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "mesh_snappyHexMesh_pipe",
+    "category": "mesh",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "mesh_spiralPipe",
+    "category": "mesh",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "movingMesh_SnakeRiverCanyon",
+    "category": "movingMesh",
+    "tutorial_validated": true,
+    "solver": "FluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiRegion_CHT",
+    "category": "multiRegion",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "multiRegion_CHT_VoFcoolingCylinder2D",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "CHTMultiRegionFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "5"
+  },
+  {
+    "case": "multiRegion_CHT_circuitBoardCooling",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "CHTMultiRegionFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "2500"
+  },
+  {
+    "case": "multiRegion_CHT_coolingCylinder2D",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "CHTMultiRegionFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "20"
+  },
+  {
+    "case": "multiRegion_CHT_coolingSphere",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "CHTMultiRegionFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiRegion_CHT_heatExchanger",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "CHTMultiRegionFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 2,
+    "final_time": "200"
+  },
+  {
+    "case": "multiRegion_CHT_heatedDuct",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "CHTMultiRegionFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiRegion_CHT_multiphaseCoolingCylinder2D",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "CHTMultiRegionFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "5"
+  },
+  {
+    "case": "multiRegion_CHT_reverseBurner",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "CHTMultiRegionFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiRegion_CHT_shellAndTubeHeatExchanger",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "CHTMultiRegionFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "multiRegion_CHT_wallBoiling",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "CHTMultiRegionFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiRegion_film",
+    "category": "multiRegion",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 0,
+    "final_time": ""
+  },
+  {
+    "case": "multiRegion_film_VoFToFilm",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "FilmFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "5"
+  },
+  {
+    "case": "multiRegion_film_cylinder",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "FilmFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 2,
+    "final_time": "20"
+  },
+  {
+    "case": "multiRegion_film_cylinderDripping",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "FilmFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "1"
+  },
+  {
+    "case": "multiRegion_film_cylinderVoF",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "FilmFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 2,
+    "final_time": "6"
+  },
+  {
+    "case": "multiRegion_film_hotBoxes",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "FilmFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiRegion_film_rivuletBox",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "FilmFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiRegion_film_rivuletPanel",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "FilmFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiRegion_film_splashPanel",
+    "category": "multiRegion",
+    "tutorial_validated": true,
+    "solver": "FilmFoam",
+    "solver_ok": false,
+    "has_mesh": false,
+    "time_dirs": 1,
+    "final_time": "1"
+  },
+  {
+    "case": "multicomponentFluid_DLR_A_LTS",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multicomponentFluid_SandiaD_LTS",
+    "category": "multicomponentFluid",
+    "tutorial_validated": false,
+    "solver": "",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "2100"
+  },
+  {
+    "case": "multicomponentFluid_aachenBomb",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "5e-05"
+  },
+  {
+    "case": "multicomponentFluid_counterFlowFlame2D",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.5"
+  },
+  {
+    "case": "multicomponentFluid_counterFlowFlame2DLTS",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1000"
+  },
+  {
+    "case": "multicomponentFluid_counterFlowFlame2DLTS_GRI_TDAC",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "1500"
+  },
+  {
+    "case": "multicomponentFluid_counterFlowFlame2D_GRI",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.05"
+  },
+  {
+    "case": "multicomponentFluid_counterFlowFlame2D_GRI_TDAC",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.5"
+  },
+  {
+    "case": "multicomponentFluid_filter",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "5"
+  },
+  {
+    "case": "multicomponentFluid_lockExchange",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "100"
+  },
+  {
+    "case": "multicomponentFluid_membrane",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "10"
+  },
+  {
+    "case": "multicomponentFluid_nc7h16",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "5e-05"
+  },
+  {
+    "case": "multicomponentFluid_parcelInBox",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.5"
+  },
+  {
+    "case": "multicomponentFluid_simplifiedSiwek",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.5"
+  },
+  {
+    "case": "multicomponentFluid_smallPoolFire2D",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "0.8"
+  },
+  {
+    "case": "multicomponentFluid_smallPoolFire3D",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multicomponentFluid_verticalChannel",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.04"
+  },
+  {
+    "case": "multicomponentFluid_verticalChannelLTS",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "200"
+  },
+  {
+    "case": "multicomponentFluid_verticalChannelSteady",
+    "category": "multicomponentFluid",
+    "tutorial_validated": true,
+    "solver": "MulticomponentFluidFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "500"
+  },
+  {
+    "case": "multiphaseEuler_Grossetete",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2"
+  },
+  {
+    "case": "multiphaseEuler_LBend",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.9"
+  },
+  {
+    "case": "multiphaseEuler_bed",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "20"
+  },
+  {
+    "case": "multiphaseEuler_boilingBed",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumn",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "43"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnEvaporating",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnEvaporatingDissolving",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnEvaporatingReacting",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "3"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnIATE",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "46"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnLES",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "42"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnLaminar",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "41"
+  },
+  {
+    "case": "multiphaseEuler_bubblePipe",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiphaseEuler_damBreak4phase",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 2,
+    "final_time": "5.36"
+  },
+  {
+    "case": "multiphaseEuler_fluidisedBed",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiphaseEuler_fluidisedBedLaminar",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.48"
+  },
+  {
+    "case": "multiphaseEuler_hydrofoil",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiphaseEuler_injection",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "10"
+  },
+  {
+    "case": "multiphaseEuler_mixerVessel2D",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2.9"
+  },
+  {
+    "case": "multiphaseEuler_mixerVessel2DMRF",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "3.3"
+  },
+  {
+    "case": "multiphaseEuler_pipeBend",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiphaseEuler_steamInjection",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "10"
+  },
+  {
+    "case": "multiphaseEuler_titaniaSynthesis",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiphaseEuler_titaniaSynthesisSurface",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiphaseEuler_wallBoilingIATE",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiphaseEuler_wallBoilingPolydisperse",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "multiphaseEuler_wallBoilingPolydisperseTwoGroups",
+    "category": "multiphaseEuler",
+    "tutorial_validated": true,
+    "solver": "MultiphaseEulerFoam",
+    "solver_ok": false,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "potentialFoam_cylinder",
+    "category": "potentialFoam",
+    "tutorial_validated": true,
+    "solver": "PotentialFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "potentialFoam_pitzDaily",
+    "category": "potentialFoam",
+    "tutorial_validated": true,
+    "solver": "PotentialFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0"
+  },
+  {
+    "case": "shockFluid_LadenburgJet60psi",
+    "category": "shockFluid",
+    "tutorial_validated": true,
+    "solver": "RhoCentralFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "2e-05"
+  },
+  {
+    "case": "shockFluid_biconic25-55Run35",
+    "category": "shockFluid",
+    "tutorial_validated": true,
+    "solver": "RhoCentralFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "5e-05"
+  },
+  {
+    "case": "shockFluid_diffuserIntake",
+    "category": "shockFluid",
+    "tutorial_validated": true,
+    "solver": "RhoCentralFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.002"
+  },
+  {
+    "case": "shockFluid_forwardStep",
+    "category": "shockFluid",
+    "tutorial_validated": true,
+    "solver": "RhoCentralFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "4"
+  },
+  {
+    "case": "shockFluid_movingCone",
+    "category": "shockFluid",
+    "tutorial_validated": true,
+    "solver": "RhoCentralFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "9.5e-06"
+  },
+  {
+    "case": "shockFluid_obliqueShock",
+    "category": "shockFluid",
+    "tutorial_validated": true,
+    "solver": "RhoCentralFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "10"
+  },
+  {
+    "case": "shockFluid_shockTube",
+    "category": "shockFluid",
+    "tutorial_validated": true,
+    "solver": "RhoCentralFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.007"
+  },
+  {
+    "case": "shockFluid_wedge15Ma5",
+    "category": "shockFluid",
+    "tutorial_validated": true,
+    "solver": "RhoCentralFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "0.2"
+  },
+  {
+    "case": "solidDisplacement_beamEndLoad",
+    "category": "solidDisplacement",
+    "tutorial_validated": true,
+    "solver": "SolidDisplacementFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "10000"
+  },
+  {
+    "case": "solidDisplacement_plateHole",
+    "category": "solidDisplacement",
+    "tutorial_validated": true,
+    "solver": "SolidDisplacementFoam",
+    "solver_ok": true,
+    "has_mesh": true,
+    "time_dirs": 1,
+    "final_time": "100"
+  }
+]

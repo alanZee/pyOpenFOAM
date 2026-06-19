@@ -1,0 +1,107 @@
+{
+  "XiFluid": {
+    "total": 5,
+    "validated": 4,
+    "solver_ok": 0
+  },
+  "compressibleMultiphaseVoF": {
+    "total": 1,
+    "validated": 1,
+    "solver_ok": 0
+  },
+  "compressibleVoF": {
+    "total": 8,
+    "validated": 7,
+    "solver_ok": 7
+  },
+  "film": {
+    "total": 1,
+    "validated": 0,
+    "solver_ok": 0
+  },
+  "fluid": {
+    "total": 31,
+    "validated": 29,
+    "solver_ok": 29
+  },
+  "incompressibleDenseParticleFluid": {
+    "total": 5,
+    "validated": 5,
+    "solver_ok": 0
+  },
+  "incompressibleDriftFlux": {
+    "total": 3,
+    "validated": 3,
+    "solver_ok": 3
+  },
+  "incompressibleFluid": {
+    "total": 55,
+    "validated": 47,
+    "solver_ok": 47
+  },
+  "incompressibleMultiphaseVoF": {
+    "total": 4,
+    "validated": 4,
+    "solver_ok": 0
+  },
+  "incompressibleVoF": {
+    "total": 39,
+    "validated": 33,
+    "solver_ok": 33
+  },
+  "isothermalFilm": {
+    "total": 1,
+    "validated": 1,
+    "solver_ok": 0
+  },
+  "isothermalFluid": {
+    "total": 2,
+    "validated": 2,
+    "solver_ok": 2
+  },
+  "legacy": {
+    "total": 15,
+    "validated": 14,
+    "solver_ok": 13
+  },
+  "mesh": {
+    "total": 9,
+    "validated": 0,
+    "solver_ok": 0
+  },
+  "movingMesh": {
+    "total": 1,
+    "validated": 1,
+    "solver_ok": 1
+  },
+  "multiRegion": {
+    "total": 20,
+    "validated": 18,
+    "solver_ok": 0
+  },
+  "multicomponentFluid": {
+    "total": 19,
+    "validated": 18,
+    "solver_ok": 18
+  },
+  "multiphaseEuler": {
+    "total": 26,
+    "validated": 26,
+    "solver_ok": 0
+  },
+  "potentialFoam": {
+    "total": 2,
+    "validated": 2,
+    "solver_ok": 2
+  },
+  "shockFluid": {
+    "total": 8,
+    "validated": 8,
+    "solver_ok": 8
+  },
+  "solidDisplacement": {
+    "total": 2,
+    "validated": 2,
+    "solver_ok": 2
+  }
+}

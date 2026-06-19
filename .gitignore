@@ -61,5 +61,6 @@ CLAUDE.md
 # Large data files (stored on HuggingFace)
 validation/reference/openfoam/
 validation/reference-data.tar.gz
+validation/_work/
 openfoam-reference-data.tar.gz
 pyopenfoam-simulation-results.tar.gz

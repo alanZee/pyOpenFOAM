@@ -235,6 +235,8 @@ pytest tests/unit/solvers/ -q
 | [PROPOSAL.md](docs/PROPOSAL.md) | Requirements, goals, benchmarks, solver list |
 | [DESIGN.md](docs/DESIGN.md) | Top-level architecture and design decisions |
 | [ROADMAP.md](docs/ROADMAP.md) | Future plans and remaining work |
+| [Validation Report](docs/validation_report.md) | Comprehensive 257-case validation with 8 figures |
+| [Per-Case Data](validation/per_case_data/) | JSON data for all 257 reference cases |
 
 ---
 
