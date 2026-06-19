@@ -9,7 +9,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.0+](https://img.shields.io/badge/pytorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
-[![Tests](https://img.shields.io/badge/tests-2041+-brightgreen.svg)](#testing)
+[![Tests](https://img.shields.io/badge/tests-17130+-brightgreen.svg)](#testing)
 [![HuggingFace](https://img.shields.io/badge/HuggingFace-Reference_Data-ffd21e.svg)](https://huggingface.co/datasets/AlanZee/pyOpenFOAM-reference-data)
 
 [English](#overview) | [中文](README_zh.md)
@@ -24,11 +24,11 @@
 
 ### Key Features
 
-- **30+ OpenFOAM Solvers** — Incompressible, compressible, multiphase, thermal, and more
+- **64 OpenFOAM Solvers** — Incompressible, compressible, multiphase, thermal, and more
 - **GPU Acceleration** — All field operations use PyTorch tensors on CUDA/MPS
 - **Differentiable CFD** — `torch.autograd` support through custom autograd functions
 - **OpenFOAM Compatible** — Read/write existing OpenFOAM cases natively
-- **20+ Boundary Conditions** — Velocity, pressure, turbulence, VOF, thermal
+- **408+ Boundary Conditions** — Velocity, pressure, turbulence, VOF, thermal
 - **Full Turbulence Library** — RANS (k-epsilon, k-omega SST, S-A, v2f), LES (Smagorinsky, WALE), DES
 - **Mesh Tools** — blockMesh, snappyHexMesh, gmsh/fluent/VTK converters
 - **MPI Parallel** — Domain decomposition, halo exchange, parallel I/O
@@ -49,7 +49,7 @@ OpenFOAM reference simulation data is available on HuggingFace:
 
 | File | Size | Description |
 |------|------|-------------|
-| `openfoam-reference-data.tar.gz` | 2.42 GB | 246 OpenFOAM v11 reference cases (92% of v13 tutorials) |
+| `openfoam-reference-data.tar.gz` | 2.42 GB | 257 OpenFOAM reference cases (96% of v13 tutorials) |
 | `pyopenfoam-simulation-results.tar.gz` | 47 KB | pyOpenFOAM validation results (34 JSON files) |
 
 ```python
@@ -148,7 +148,7 @@ pyfoam/
 ├── thermophysical/     # Perfect gas, Sutherland, JANAF, psi/rho-based thermo
 ├── multiphase/         # VOF + MULES, interFoam, Euler-Euler, cavitation
 ├── parallel/           # MPI decomposition, halo exchange, parallel I/O
-├── applications/       # 35+ solvers (incompressible, compressible, multiphase, thermal)
+├── applications/       # 130+ solvers (incompressible, compressible, multiphase, thermal)
 ├── tools/              # checkMesh, setFields, renumberMesh, foamToVTK, etc.
 ├── postprocessing/     # FunctionObject framework, forces, y+, VTK output
 ├── differentiable/     # Differentiable operators, linear solver, SIMPLE
@@ -215,7 +215,7 @@ pytest tests/unit/ -q --tb=no
 pytest tests/unit/solvers/ -q
 ```
 
-**Results**: 2041 passed, 17 xfailed (~130 seconds)
+**Results**: 17,130 passed, 2 xfailed (~410 seconds)
 
 ---
 

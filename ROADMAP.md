@@ -38,46 +38,31 @@
 - **ScipyDirect**: 压力方程 0.035s/iter（57x 加速），但用于动量方程导致发散
 - **根因**: PyTorch 张量操作 Python 开销，非算法问题；triton 不支持 Windows
 
-### 2. 37 个 v13 教程无法验证
-- **原因**: v13 新增类别（legacy/mesh/resources/multiRegion 等）在 v11 Docker 中不存在
-- **状态**: 246/267 教程有参照数据（90% 覆盖）
-- **阻塞**: OpenFOAM Foundation 未发布 v13 Docker 镜像
+### 2. 剩余 v13 教程
+- **状态**: 257/267 教程有参照数据（96% 覆盖）
+- **剩余**: 10 个 utility/resource 目录（legacy/mesh/resources），非模拟算例
+- **已编译**: OpenFOAM-13 已成功编译（GCC 10, Docker 容器），可运行 v13 教程
 
 ### 3. OpenFOAM-13 编译
 - **状态**: ✅ 编译成功（GCC 10, Ubuntu 22.04 Docker 容器）
 - **方法**: 在 Linux 容器内 git clone 源码（避免 Windows 大小写问题）
-- **已编译**: 120 个库, 9 个二进制文件（foamRun, blockMesh, setFields, decomposePar 等）
-- **已验证**: incompressibleFluid_boxTurb16 教程运行成功
+- **已编译**: 122 个库, 9 个二进制文件（foamRun, blockMesh, setFields, decomposePar 等）
+- **已验证**: incompressibleFluid_boxTurb16 等教程运行成功
 - **已打包**: Docker 镜像上传到 HuggingFace（622MB）
-- **待编译**: 其他求解器模块（incompressibleVoF, XiFluid 等）
 
 ### 4. Docker 状态
 - **当前**: 已恢复正常，持久化 GCC 10 容器 `of13build` 可用
 
 *高 Re (400) 精度受限于网格分辨率（32x32 太粗，Ghia 基准用 129x129）。
-QUICK 格式已实现但对 Re=400 精度改善有限（39.5% vs 40.5%）。
 Re=100 精度达标（20x20: 0.9%, 32x32: 1.0%）。
-SIMPLE 求解器性能：16x16 约 0.6s/iter，32x32 约 2.0s/iter（Python 开销主导）。
-128x128 网格需约 30s/iter，1000 次迭代约 8 小时。
-已实现 scipy 稀疏求解器（ScipyPCG/ScipyBiCGStab）但瓶颈在矩阵组装而非求解。
+SIMPLE 求解器性能：16x16 约 0.5s/iter，32x32 约 2.0s/iter（Python 开销主导）。
+128x128 网格需约 17s/iter，5000 次迭代约 24 小时。
+已实现 scipy 稀疏求解器（ScipyPCG/ScipyBiCGStab/ScipyDirect）。
 
-**OpenFOAM-13 编译状态**: OpenFOAM-13 (2025-07-08) 有多个 C++ 兼容性问题：
-1. `Foam::UList::size_` 模板友元声明在 GCC 11/12/13 均无法编译（`Foam::token` 和
-   `Foam::UPstream::commsStruct` 特化时 `List<T>` 无法访问继承成员）
-2. `List<T>::size(int)` setter 隐藏 `UList<T>::size()` getter（GCC 13 名称查找更严格）
-3. `UPstream.C` 缺少 `#include <cstring>`（`memmove` 未声明）
-4. 所有源文件使用 CRLF 行尾，需批量转换
-已尝试的修复方案：public `size_`、`using UList<T>::size_`、显式 `size()` getter、
-Clang 编译器 — 均因同一模板名称查找 bug 失败。这是上游 OpenFOAM Foundation 代码缺陷，
-需等待官方修复。使用 Docker OpenFOAM v11 作为参照（API 与 v13 基本兼容）。
-
-**Docker 状态**: Docker Desktop 已恢复正常（重启后）。OpenFOAM v11 镜像已重新拉取 (2.86GB)。
-
-**参照数据存储**: 246 个参照算例数据存储在 Hugging Face Hub
-（`AlanZee/pyOpenFOAM-reference-data`，约 1.3GB），GitHub 仓库仅存储代码。
-覆盖 OpenFOAM-13 全部 225 个教程中的 208 个（92%），31 个为 v13 新增教程
-（legacy/mesh/resources 等类别，v11 不支持）。
-HuggingFace 已添加 README 文档和 pyOpenFOAM 仿真结果。
+**参照数据存储**: 257 个参照算例数据存储在 Hugging Face Hub
+（`AlanZee/pyOpenFOAM-reference-data`，2.42GB），GitHub 仓库仅存储代码。
+覆盖 OpenFOAM-13 全部 267 个教程中的 257 个（96%）。
+HuggingFace 已添加 README 文档、pyOpenFOAM 仿真结果和 OpenFOAM-13 Docker 镜像（622MB）。
 
 ## 已完成阶段
 
@@ -109,9 +94,9 @@ HuggingFace 已添加 README 文档和 pyOpenFOAM 仿真结果。
 - [x] MhdFoam: 张量索引修复（先前提交）
 - [x] IsothermalFluidFoam: 压力/密度截断 + 速度限制
 
-### 阶段 3：测试基线 ✅
-- [x] 17,197+ 单元测试通过
-- [x] 50 求解器端到端验证
+### 阶段 4：测试基线 ✅
+- [x] 17,130 单元测试通过
+- [x] 84 求解器端到端验证
 - [x] GPU 验证（RTX 4070 Ti SUPER）
 
 ## 待完成阶段
