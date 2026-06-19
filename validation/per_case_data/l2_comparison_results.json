@@ -1,0 +1,195 @@
+[
+  {
+    "case": "XiFluid_1D",
+    "status": "ERROR",
+    "error": "File not found: validation\\_work\\l2_XiFluid_1D\\0\\U"
+  },
+  {
+    "case": "XiFluid_stratified",
+    "status": "OK",
+    "solver": "XiFoam",
+    "elapsed": 7.9,
+    "py_time": "2e-05",
+    "ref_time": "0",
+    "field_errors": {},
+    "n_fields": 0
+  },
+  {
+    "case": "compressibleMultiphaseVoF_damBreak4phaseLaminar",
+    "status": "ERROR",
+    "error": "CompressibleMultiphaseVoFFoam.__init__() missing 1 required positional argument: 'phases'"
+  },
+  {
+    "case": "compressibleVoF_ballValve",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode character '\\u0ff8' in position 6: ordinal not in range(256)"
+  },
+  {
+    "case": "compressibleVoF_climbingRod",
+    "status": "ERROR",
+    "error": "File not found: validation\\_work\\l2_compressibleVoF_climbingRod\\0\\alpha.water"
+  },
+  {
+    "case": "compressibleVoF_damBreak",
+    "status": "ERROR",
+    "error": "File not found: validation\\_work\\l2_compressibleVoF_damBreak\\0\\alpha.water"
+  },
+  {
+    "case": "compressibleVoF_depthCharge2D",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode characters in position 16-30: ordinal not in range(256)"
+  },
+  {
+    "case": "compressibleVoF_depthCharge3D",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode characters in position 24-30: ordinal not in range(256)"
+  },
+  {
+    "case": "compressibleVoF_sloshingTank2D",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode character '\\ufffd' in position 6: ordinal not in range(256)"
+  },
+  {
+    "case": "compressibleVoF_throttle",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode character '\\ufffd' in position 10: ordinal not in range(256)"
+  },
+  {
+    "case": "fluid_BernardCells",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode characters in position 22-27: ordinal not in range(256)"
+  },
+  {
+    "case": "fluid_aerofoilNACA0012",
+    "status": "ERROR",
+    "error": "Unexpected token for value: Token(HASH, '#')"
+  },
+  {
+    "case": "fluid_aerofoilNACA0012Steady",
+    "status": "ERROR",
+    "error": "Unexpected token for value: Token(HASH, '#')"
+  },
+  {
+    "case": "fluid_angledDuct",
+    "status": "OK",
+    "solver": "FluidFoam",
+    "elapsed": 71.3,
+    "py_time": "5",
+    "ref_time": "10",
+    "field_errors": {
+      "T": 0.001768,
+      "U": 1.0,
+      "p": 0.000511
+    },
+    "n_fields": 3
+  },
+  {
+    "case": "fluid_angledDuctExplicitFixedCoeff",
+    "status": "OK",
+    "solver": "FluidFoam",
+    "elapsed": 87.5,
+    "py_time": "5",
+    "ref_time": "516",
+    "field_errors": {
+      "T": 0.14491,
+      "U": 1.0,
+      "p": 0.014981
+    },
+    "n_fields": 3
+  },
+  {
+    "case": "fluid_angledDuctLTS",
+    "status": "OK",
+    "solver": "FluidFoam",
+    "elapsed": 105.8,
+    "py_time": "11",
+    "ref_time": "500",
+    "field_errors": {
+      "T": 10.503423,
+      "U": 0.999994,
+      "p": 0.015107
+    },
+    "n_fields": 3
+  },
+  {
+    "case": "fluid_annularThermalMixer",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode character '\\ufffd' in position 1: ordinal not in range(256)"
+  },
+  {
+    "case": "fluid_blockedChannel",
+    "status": "ERROR",
+    "error": "Unexpected token for value: Token(RBRACE, '}')"
+  },
+  {
+    "case": "fluid_buoyantCavity",
+    "status": "OK",
+    "solver": "FluidFoam",
+    "elapsed": 347.0,
+    "py_time": "5",
+    "ref_time": "1000",
+    "field_errors": {
+      "T": 0.015997,
+      "U": 1.0,
+      "p": 0.008404
+    },
+    "n_fields": 3
+  },
+  {
+    "case": "fluid_cavity",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode character '\\ufffd' in position 26: ordinal not in range(256)"
+  },
+  {
+    "case": "fluid_externalCoupledCavity",
+    "status": "OK",
+    "solver": "FluidFoam",
+    "elapsed": 375.9,
+    "py_time": "5",
+    "ref_time": "100",
+    "field_errors": {
+      "T": 0.075446,
+      "U": 1.0,
+      "p": 0.035693
+    },
+    "n_fields": 3
+  },
+  {
+    "case": "fluid_forwardStep",
+    "status": "OK",
+    "solver": "FluidFoam",
+    "elapsed": 15.9,
+    "py_time": "0.036",
+    "ref_time": "9.5",
+    "field_errors": {
+      "T": 434.452021,
+      "U": 1.0,
+      "p": 0.829263
+    },
+    "n_fields": 3
+  },
+  {
+    "case": "fluid_hotRadiationRoom",
+    "status": "OK",
+    "solver": "FluidFoam",
+    "elapsed": 195.0,
+    "py_time": "6",
+    "ref_time": "600",
+    "field_errors": {
+      "T": 0.007468,
+      "U": 1.0,
+      "p": 0.003541
+    },
+    "n_fields": 3
+  },
+  {
+    "case": "fluid_hotRadiationRoomFvDOM",
+    "status": "ERROR",
+    "error": "'latin-1' codec can't encode characters in position 24-30: ordinal not in range(256)"
+  },
+  {
+    "case": "fluid_hotRoom",
+    "status": "ERROR",
+    "error": "File not found: validation\\_work\\l2_fluid_hotRoom\\0\\T"
+  }
+]

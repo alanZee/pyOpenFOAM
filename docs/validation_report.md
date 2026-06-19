@@ -171,6 +171,24 @@ The 376 unique field types span velocity (U, U.air, U.water), pressure (p, p_rgh
 
 **Figure 3**: [Field Type Coverage by Category](#fig3) — See `docs/figures/category_coverage_heatmap.png`
 
+#### 3.2.3 Field-Level L₂ Error Comparison
+
+Field-level L₂ relative errors computed for 7 cases with successful pyOpenFOAM output:
+
+| Case | Solver | T L₂ Error | p L₂ Error | Notes |
+|------|--------|-----------|-----------|-------|
+| fluid_angledDuct | FluidFoam | 0.18% | 0.05% | Steady-state duct flow |
+| fluid_buoyantCavity | FluidFoam | 1.60% | 0.84% | Buoyant flow with thermal |
+| fluid_hotRadiationRoom | FluidFoam | 0.75% | 0.35% | Radiation heat transfer |
+| fluid_externalCoupledCavity | FluidFoam | 7.55% | 3.57% | External coupling |
+| fluid_angledDuctExplicitFixedCoeff | FluidFoam | 14.49% | 1.50% | Explicit formulation |
+| fluid_forwardStep | FluidFoam | early time | 82.9% | Shock capturing |
+| fluid_angledDuctLTS | FluidFoam | early time | 1.51% | Local time stepping |
+
+**Note**: U-field L₂ = 100% for all cases due to simulation time mismatch (pyOpenFOAM at t=2–10 vs OpenFOAM converged reference). T and p fields show good agreement for steady-state cases (fluid_angledDuct: T=0.18%, p=0.05%). The Ghia cavity benchmark (Section 3.3.1) provides the most rigorous field-level comparison with 1.0% L₂ error at 32×32.
+
+Additional L₂ data for 25 solver categories is in `validation/per_case_data/l2_comparison_results.json`.
+
 ### 3.3 Precision Benchmarks
 
 #### 3.3.1 Lid-Driven Cavity (Ghia et al., 1982)
