@@ -304,10 +304,10 @@ The full inventory of all 257 OpenFOAM-13 reference cases is maintained in `vali
 | mesh_spiralPipe | Mesh Generation | Utility tool, not a simulation | Excluded |
 | incompressibleVoF_damBreakFine | Incompressible VoF | Fine-mesh variant of damBreak | Pending |
 | incompressibleVoF_damBreakLaminarFine | Incompressible VoF | Fine-mesh variant | Pending |
-| incompressibleVoF_damBreakTracer | Incompressible VoF | Tracer variant | Pending |
-| incompressibleVoF_damBreakPorousBaffle | Incompressible VoF | Porous baffle variant | Pending |
-| incompressibleVoF_damBreakInjection | Incompressible VoF | Injection variant | Pending |
-| compressibleVoF_damBreakInjection | Compressible VoF | Injection variant | Pending |
+| incompressibleVoF_damBreakTracer | Incompressible VoF | No mesh in reference data | Pending |
+| incompressibleVoF_damBreakPorousBaffle | Incompressible VoF | No initial conditions in reference | Pending |
+| incompressibleVoF_damBreakInjection | Incompressible VoF | VoF field naming (alpha.water vs U) | Pending |
+| compressibleVoF_damBreakInjection | Compressible VoF | VoF field naming | Pending |
 | incompressibleFluid_pitzDailySteadyMappedToPart | Incompressible | Mapped BC variant | Pending |
 | incompressibleFluid_pitzDailySteadyMappedToRefined | Incompressible | Mapped BC variant | Pending |
 | incompressibleFluid_drivaerFastback | Incompressible | Requires STL geometry | Pending |
