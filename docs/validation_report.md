@@ -278,6 +278,49 @@ All shock tube and compressible benchmark cases validated, including the Sod sho
 
 See `validation/per_case_data/analysis_results.json` for the complete 257-case dataset with per-case status, field statistics, and solver mapping.
 
+### 4.5 Complete Case Inventory (257 Cases)
+
+The full inventory of all 257 OpenFOAM-13 reference cases is maintained in `validation/per_case_data/case_inventory.json`. Each entry includes:
+
+- `case_name`: Reference case identifier
+- `category`: Solver category (21 categories)
+- `solver_pyfoam`: Mapped pyOpenFOAM solver class
+- `tutorial_validated`: Whether the solver has been validated against this tutorial
+- `solver_ok`: Whether the solver passed comprehensive verification
+- `ref_field_stats`: Field-level statistics (min, max, mean, std, norm) for all fields in the OpenFOAM reference
+
+#### Cases Not Validated (24 total)
+
+| Case | Category | Reason | Status |
+|------|----------|--------|--------|
+| mesh_blockMesh_pipe | Mesh Generation | Utility tool, not a simulation | Excluded |
+| mesh_blockMesh_sphere | Mesh Generation | Utility tool, not a simulation | Excluded |
+| mesh_blockMesh_sphere7 | Mesh Generation | Utility tool, not a simulation | Excluded |
+| mesh_blockMesh_sphere7ProjectedEdges | Mesh Generation | Utility tool, not a simulation | Excluded |
+| mesh_refineMesh_refineFieldDirs | Mesh Generation | Utility tool, not a simulation | Excluded |
+| mesh_snappyHexMesh | Mesh Generation | Utility tool, not a simulation | Excluded |
+| mesh_snappyHexMesh_flange | Mesh Generation | Utility tool, not a simulation | Excluded |
+| mesh_snappyHexMesh_pipe | Mesh Generation | Utility tool, not a simulation | Excluded |
+| mesh_spiralPipe | Mesh Generation | Utility tool, not a simulation | Excluded |
+| incompressibleVoF_damBreakFine | Incompressible VoF | Fine-mesh variant of damBreak | Pending |
+| incompressibleVoF_damBreakLaminarFine | Incompressible VoF | Fine-mesh variant | Pending |
+| incompressibleVoF_damBreakTracer | Incompressible VoF | Tracer variant | Pending |
+| incompressibleVoF_damBreakPorousBaffle | Incompressible VoF | Porous baffle variant | Pending |
+| incompressibleVoF_damBreakInjection | Incompressible VoF | Injection variant | Pending |
+| compressibleVoF_damBreakInjection | Compressible VoF | Injection variant | Pending |
+| incompressibleFluid_pitzDailySteadyMappedToPart | Incompressible | Mapped BC variant | Pending |
+| incompressibleFluid_pitzDailySteadyMappedToRefined | Incompressible | Mapped BC variant | Pending |
+| incompressibleFluid_drivaerFastback | Incompressible | Requires STL geometry | Pending |
+| incompressibleFluid_hopperParticles | Incompressible | Requires DEM particles | Pending |
+| incompressibleFluid_mixerVesselHorizontal2DParticles | Incompressible | Requires particle tracking | Pending |
+| multicomponentFluid_SandiaD_LTS | Multicomponent | Binary mesh encoding (Windows) | Pending |
+| multiRegion_CHT | Multi-Region CHT | Category directory, not individual case | Excluded |
+| multiRegion_film | Multi-Region Film | Category directory, not individual case | Excluded |
+| film_rivuletPanel | Film | Multi-region coupling required | Pending |
+
+*Excluded*: Not simulation cases (mesh utilities, category directories).
+*Pending*: Simulation cases that require specialized preprocessing not yet supported by the automated validation pipeline.
+
 **Figure 7**: [Coverage by Category](#fig7) — See `docs/figures/coverage_by_category.png`
 
 **Figure 8**: [Validation Dashboard](#fig8) — See `docs/figures/validation_timeline.png`
