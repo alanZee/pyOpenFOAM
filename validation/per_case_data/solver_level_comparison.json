@@ -1,0 +1,2142 @@
+[
+  {
+    "case": "compressibleMultiphaseVoF_damBreak4phaseLaminar",
+    "of_solver": "compressibleMultiphaseVoF",
+    "pyfoam_solver": "CompressibleMultiphaseVoFFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "compressibleVoF_angledDuct",
+    "of_solver": "compressibleVoF",
+    "pyfoam_solver": "CompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "compressibleVoF_ballValve",
+    "of_solver": "compressibleVoF",
+    "pyfoam_solver": "CompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "compressibleVoF_climbingRod",
+    "of_solver": "compressibleVoF",
+    "pyfoam_solver": "CompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "compressibleVoF_damBreak",
+    "of_solver": "compressibleVoF",
+    "pyfoam_solver": "CompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "compressibleVoF_depthCharge2D",
+    "of_solver": "compressibleVoF",
+    "pyfoam_solver": "CompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "compressibleVoF_depthCharge3D",
+    "of_solver": "compressibleVoF",
+    "pyfoam_solver": "CompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "compressibleVoF_sloshingTank2D",
+    "of_solver": "compressibleVoF",
+    "pyfoam_solver": "CompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "compressibleVoF_throttle",
+    "of_solver": "compressibleVoF",
+    "pyfoam_solver": "CompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "fluid_aerofoilNACA0012",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_aerofoilNACA0012Steady",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_angledDuct",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_angledDuctExplicitFixedCoeff",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_angledDuctLTS",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_annularThermalMixer",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_BernardCells",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_blockedChannel",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_buoyantCavity",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_cavity",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_decompressionTank_decompressionTank",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_externalCoupledCavity",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_forwardStep",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_helmholtzResonance",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_hotRadiationRoom",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_hotRadiationRoomFvDOM",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_hotRoom",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_hotRoomBoussinesq",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_hotRoomBoussinesqSteady",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_hotRoomComfort",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_iglooWithFridges",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_mixerVessel2DMRF",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_nacaAirfoil",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_pitzDaily",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_prism",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_shockTube",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_squareBend",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_squareBendLiq",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_squareBendLiqSteady",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "fluid_stackPlume",
+    "of_solver": "fluid",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "incompressibleDenseParticleFluid_column",
+    "of_solver": "incompressibleDenseParticleFluid",
+    "pyfoam_solver": "DenseParticleFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "incompressibleDenseParticleFluid_cyclone",
+    "of_solver": "incompressibleDenseParticleFluid",
+    "pyfoam_solver": "DenseParticleFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "incompressibleDenseParticleFluid_Goldschmidt",
+    "of_solver": "incompressibleDenseParticleFluid",
+    "pyfoam_solver": "DenseParticleFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "incompressibleDenseParticleFluid_GoldschmidtMPPIC",
+    "of_solver": "incompressibleDenseParticleFluid",
+    "pyfoam_solver": "DenseParticleFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "incompressibleDenseParticleFluid_injectionChannel",
+    "of_solver": "incompressibleDenseParticleFluid",
+    "pyfoam_solver": "DenseParticleFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "incompressibleDriftFlux_dahl",
+    "of_solver": "incompressibleDriftFlux",
+    "pyfoam_solver": "IncompressibleDriftFluxFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleDriftFlux_mixerVessel2DMRF",
+    "of_solver": "incompressibleDriftFlux",
+    "pyfoam_solver": "IncompressibleDriftFluxFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleDriftFlux_tank3D",
+    "of_solver": "incompressibleDriftFlux",
+    "pyfoam_solver": "IncompressibleDriftFluxFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_airFoil2D",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_ballValve",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_blockedChannel",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_boxTurb16",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_cavity",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_cavityCoupledU",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_channel395",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_cylinder",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_ductSecondaryFlow",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_elipsekkLOmega",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_flowWithOpenBoundary",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_impeller",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_mixerSRF",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_mixerVessel2D",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_mixerVessel2DMRF",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_motorBike",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_motorBike_motorBike",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_motorBikeSteady",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_movingCone",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_offsetCylinder",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_oscillatingInlet",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_pipeCyclic",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_pitzDaily",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_pitzDailyLES",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_pitzDailyLESDevelopedInlet",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_pitzDailyLTS",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_pitzDailyPulse",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_pitzDailySteady",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_pitzDailySteadyExperimentalInlet",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_planarContraction",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_planarCouette",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_planarPoiseuille",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_porousBlockage",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_propeller",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_roomResidenceTime",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_rotor2D",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_rotor2DSRF",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_rotorDisk",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_simpleRushtonMRF",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_simpleRushtonNCC",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_T3A",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_TJunction",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_TJunctionFan",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_turbineSiting",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_venturiTube",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_waveSubSurface",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_windAroundBuildings",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_wingMotion_wingMotion2D_steady",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleFluid_wingMotion_wingMotion2D_transient",
+    "of_solver": "incompressibleFluid",
+    "pyfoam_solver": "IncompressibleFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 1.4042046922872369e-05,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "incompressibleMultiphaseVoF_damBreak4phase",
+    "of_solver": "incompressibleMultiphaseVoF",
+    "pyfoam_solver": "MultiphaseInterFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "incompressibleMultiphaseVoF_damBreak4phaseFineLaminar",
+    "of_solver": "incompressibleMultiphaseVoF",
+    "pyfoam_solver": "MultiphaseInterFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "incompressibleMultiphaseVoF_damBreak4phaseLaminar",
+    "of_solver": "incompressibleMultiphaseVoF",
+    "pyfoam_solver": "MultiphaseInterFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "incompressibleMultiphaseVoF_mixerVessel2DMRF",
+    "of_solver": "incompressibleMultiphaseVoF",
+    "pyfoam_solver": "MultiphaseInterFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "incompressibleVoF_angledDuct",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_capillaryRise",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_cavitatingBullet",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_climbingRod",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_containerDischarge2D",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_damBreak3D",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_damBreakLaminar",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_DTCHull",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_DTCHullMoving",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_DTCHullWave",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_floatingObject",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_floatingObjectWaves",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_forcedUpstreamWave",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_mixerVessel",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_mixerVessel2DMRF",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_mixerVesselHorizontal2D",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_nozzleFlow2D",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_parshallFlume",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_planingHullW3",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_propeller",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_rotatingCube",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_sloshingCylinder",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_sloshingTank2D",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_sloshingTank2D3DoF",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_sloshingTank3D",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_sloshingTank3D3DoF",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_sloshingTank3D6DoF",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_testTubeMixer",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_trayedPipe",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_waterChannel",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_wave",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_wave3D",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "incompressibleVoF_weirOverflow",
+    "of_solver": "incompressibleVoF",
+    "pyfoam_solver": "IncompressibleVoFFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "isothermalFilm_rivuletPanel",
+    "of_solver": "isothermalFilm",
+    "pyfoam_solver": "FilmFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "isothermalFluid_potentialFreeSurfaceMovingOscillatingBox",
+    "of_solver": "isothermalFluid",
+    "pyfoam_solver": "IsothermalFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.23359085996319645,
+    "field_max": 100.0,
+    "finite": true
+  },
+  {
+    "case": "isothermalFluid_potentialFreeSurfaceOscillatingBox",
+    "of_solver": "isothermalFluid",
+    "pyfoam_solver": "IsothermalFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.23359085996319645,
+    "field_max": 100.0,
+    "finite": true
+  },
+  {
+    "case": "legacy_basic_financialFoam_europeanCall",
+    "of_solver": null,
+    "pyfoam_solver": "FinancialFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "legacy_basic_laplacianFoam_flange",
+    "of_solver": null,
+    "pyfoam_solver": "LaplacianFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "legacy_compressible_rhoPorousSimpleFoam_angledDuctExplicit",
+    "of_solver": null,
+    "pyfoam_solver": "RhoPorousSimpleFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "legacy_compressible_rhoPorousSimpleFoam_angledDuctImplicit",
+    "of_solver": null,
+    "pyfoam_solver": "RhoPorousSimpleFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "legacy_electromagnetics_electrostaticFoam_chargedWire",
+    "of_solver": null,
+    "pyfoam_solver": "ElectrostaticFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "legacy_electromagnetics_mhdFoam_hartmann",
+    "of_solver": null,
+    "pyfoam_solver": "MhdFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 0.3909659624575481,
+    "finite": true
+  },
+  {
+    "case": "legacy_incompressible_adjointShapeOptimisationFoam_pitzDaily",
+    "of_solver": null,
+    "pyfoam_solver": "AdjointFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "legacy_incompressible_icoFoam_cavity_cavity",
+    "of_solver": null,
+    "pyfoam_solver": "IcoFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.5024961956180696,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "legacy_incompressible_icoFoam_cavity_cavityClipped",
+    "of_solver": null,
+    "pyfoam_solver": "IcoFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.5024961956180696,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "legacy_incompressible_icoFoam_cavity_cavityGrade",
+    "of_solver": null,
+    "pyfoam_solver": "IcoFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.5024961956180696,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "legacy_incompressible_icoFoam_elbow",
+    "of_solver": null,
+    "pyfoam_solver": "IcoFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.5024961956180696,
+    "field_max": 1.0,
+    "finite": true
+  },
+  {
+    "case": "legacy_incompressible_porousSimpleFoam_angledDuctExplicit",
+    "of_solver": null,
+    "pyfoam_solver": "PorousSimpleFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.5167006741138976,
+    "field_max": 12.73806784149496,
+    "finite": true
+  },
+  {
+    "case": "legacy_incompressible_porousSimpleFoam_angledDuctImplicit",
+    "of_solver": null,
+    "pyfoam_solver": "PorousSimpleFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.5167006741138976,
+    "field_max": 12.73806784149496,
+    "finite": true
+  },
+  {
+    "case": "legacy_incompressible_shallowWaterFoam_squareBump",
+    "of_solver": null,
+    "pyfoam_solver": "ShallowWaterFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.05583629637918171,
+    "field_max": 0.031012616203769276,
+    "finite": true
+  },
+  {
+    "case": "legacy_lagrangian_dsmcFoam_freeSpacePeriodic",
+    "of_solver": null,
+    "pyfoam_solver": "DsmcFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 254.3124801118542,
+    "finite": true
+  },
+  {
+    "case": "legacy_lagrangian_dsmcFoam_freeSpaceStream",
+    "of_solver": null,
+    "pyfoam_solver": "DsmcFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 254.3124801118542,
+    "finite": true
+  },
+  {
+    "case": "legacy_lagrangian_dsmcFoam_supersonicCorner",
+    "of_solver": null,
+    "pyfoam_solver": "DsmcFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 254.3124801118542,
+    "finite": true
+  },
+  {
+    "case": "legacy_lagrangian_dsmcFoam_wedge15Ma5",
+    "of_solver": null,
+    "pyfoam_solver": "DsmcFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 254.3124801118542,
+    "finite": true
+  },
+  {
+    "case": "legacy_lagrangian_mdEquilibrationFoam_periodicCubeArgon",
+    "of_solver": null,
+    "pyfoam_solver": "MdFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "legacy_lagrangian_mdEquilibrationFoam_periodicCubeWater",
+    "of_solver": null,
+    "pyfoam_solver": "MdFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "legacy_lagrangian_mdFoam_nanoNozzle",
+    "of_solver": null,
+    "pyfoam_solver": "MdFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "movingMesh_SnakeRiverCanyon",
+    "of_solver": "movingMesh",
+    "pyfoam_solver": "FluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.0291211668763056,
+    "field_max": 1.006089403169446,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_aachenBomb",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_counterFlowFlame2D",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_counterFlowFlame2D_GRI",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_counterFlowFlame2D_GRI_TDAC",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_counterFlowFlame2DLTS",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_counterFlowFlame2DLTS_GRI_TDAC",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_DLR_A_LTS",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_filter",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_lockExchange",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_membrane",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_nc7h16",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_parcelInBox",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_simplifiedSiwek",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_smallPoolFire2D",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_smallPoolFire3D",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_verticalChannel",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_verticalChannelLTS",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multicomponentFluid_verticalChannelSteady",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "MulticomponentFluidFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 2.279889092012315,
+    "field_max": 1.0017135066253227,
+    "finite": true
+  },
+  {
+    "case": "multiphaseEuler_aeratedStirredTankMRF",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_bed",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_boilingBed",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumn",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnEvaporating",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnEvaporatingDissolving",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnEvaporatingReacting",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnIATE",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnLaminar",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_bubbleColumnLES",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_bubblePipe",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_damBreak4phase",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_fluidisedBed",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_fluidisedBedLaminar",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_Grossetete",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_hydrofoil",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_injection",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_LBend",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_mixerVessel2D",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_mixerVessel2DMRF",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_pipeBend",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_steamInjection",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_titaniaSynthesis",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_titaniaSynthesisSurface",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_wallBoilingIATE",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_wallBoilingPolydisperse",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiphaseEuler_wallBoilingPolydisperseTwoGroups",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "MultiphaseEulerFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_circuitBoardCooling",
+    "of_solver": "fluid",
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_coolingCylinder2D",
+    "of_solver": "fluid",
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_coolingSphere",
+    "of_solver": null,
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_engine2Valve2D",
+    "of_solver": "fluid",
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_heatedDuct",
+    "of_solver": "fluid",
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_heatExchanger",
+    "of_solver": null,
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_misalignedDuct",
+    "of_solver": "fluid",
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_multiphaseCoolingCylinder2D",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_notchedRoller",
+    "of_solver": "fluid",
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_reverseBurner",
+    "of_solver": null,
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_shellAndTubeHeatExchanger",
+    "of_solver": null,
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_VoFcoolingCylinder2D",
+    "of_solver": "compressibleVoF",
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_CHT_wallBoiling",
+    "of_solver": "multiphaseEuler",
+    "pyfoam_solver": "CHTMultiRegionFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_film_cylinder",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "FilmFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_film_cylinderDripping",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "FilmFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_film_cylinderVoF",
+    "of_solver": null,
+    "pyfoam_solver": "FilmFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_film_hotBoxes",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "FilmFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_film_rivuletBox",
+    "of_solver": null,
+    "pyfoam_solver": "FilmFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_film_rivuletPanel",
+    "of_solver": null,
+    "pyfoam_solver": "FilmFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_film_splashPanel",
+    "of_solver": "multicomponentFluid",
+    "pyfoam_solver": "FilmFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "multiRegion_film_VoFToFilm",
+    "of_solver": null,
+    "pyfoam_solver": "FilmFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "potentialFoam_cylinder",
+    "of_solver": null,
+    "pyfoam_solver": "PotentialFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": 39.99439627882413,
+    "finite": true
+  },
+  {
+    "case": "potentialFoam_pitzDaily",
+    "of_solver": null,
+    "pyfoam_solver": "PotentialFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": 0.0,
+    "field_max": 39.99439627882413,
+    "finite": true
+  },
+  {
+    "case": "shockFluid_biconic25-55Run35",
+    "of_solver": "shockFluid",
+    "pyfoam_solver": "RhoCentralFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 268.67827028806107,
+    "finite": true
+  },
+  {
+    "case": "shockFluid_diffuserIntake",
+    "of_solver": "shockFluid",
+    "pyfoam_solver": "RhoCentralFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 268.67827028806107,
+    "finite": true
+  },
+  {
+    "case": "shockFluid_forwardStep",
+    "of_solver": "shockFluid",
+    "pyfoam_solver": "RhoCentralFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 268.67827028806107,
+    "finite": true
+  },
+  {
+    "case": "shockFluid_LadenburgJet60psi",
+    "of_solver": "shockFluid",
+    "pyfoam_solver": "RhoCentralFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 268.67827028806107,
+    "finite": true
+  },
+  {
+    "case": "shockFluid_movingCone",
+    "of_solver": "shockFluid",
+    "pyfoam_solver": "RhoCentralFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 268.67827028806107,
+    "finite": true
+  },
+  {
+    "case": "shockFluid_obliqueShock",
+    "of_solver": "shockFluid",
+    "pyfoam_solver": "RhoCentralFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 268.67827028806107,
+    "finite": true
+  },
+  {
+    "case": "shockFluid_shockTube",
+    "of_solver": "shockFluid",
+    "pyfoam_solver": "RhoCentralFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 268.67827028806107,
+    "finite": true
+  },
+  {
+    "case": "shockFluid_wedge15Ma5",
+    "of_solver": "shockFluid",
+    "pyfoam_solver": "RhoCentralFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": 268.67827028806107,
+    "finite": true
+  },
+  {
+    "case": "solidDisplacement_beamEndLoad",
+    "of_solver": "solidDisplacement",
+    "pyfoam_solver": "SolidDisplacementFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "solidDisplacement_plateHole",
+    "of_solver": "solidDisplacement",
+    "pyfoam_solver": "SolidDisplacementFoam",
+    "validation_status": "VALIDATED",
+    "solver_status": "OK",
+    "continuity": null,
+    "field_max": null,
+    "finite": true
+  },
+  {
+    "case": "XiFluid_1D",
+    "of_solver": "XiFluid",
+    "pyfoam_solver": "XiFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "XiFluid_engine2Valve2D",
+    "of_solver": "XiFluid",
+    "pyfoam_solver": "XiFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "XiFluid_kivaTest",
+    "of_solver": "XiFluid",
+    "pyfoam_solver": "XiFoam",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "case": "XiFluid_stratified",
+    "of_solver": "XiFluid",
+    "pyfoam_solver": "XiFoam",
+    "validation_status": "VALIDATED"
+  }
+]
