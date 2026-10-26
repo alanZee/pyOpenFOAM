@@ -249,6 +249,10 @@ We welcome contributions! Priority areas:
 3. **Performance** — Optimize GPU memory and computation
 4. **Documentation** — Improve tutorials and examples
 
+`
+I've been tied up with other commitments lately and don't currently have the bandwidth to actively maintain this project. If you're interested in it, I would be more than happy to welcome further contributions! You can contact me at 12334047@zju.edu.cn if you need any help (for example, with merging PRs or becoming a Contractor). Please prefix your email subject with "pyOpenFOAM" so I can spot it right away.
+`
+
 ---
 
 ## License
